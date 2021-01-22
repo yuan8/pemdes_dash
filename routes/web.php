@@ -14,12 +14,17 @@
 Auth::routes();
 
 Route::get('/',function(){
+	
 	return redirect()->route('index');
+
 })->name('home');
 
+	
+Route::prefix('admin')->middleware('auth:web')->group(function(){
+	Route::get('/','AdminCtrl@index')->name('admin.index');
+});
 
 Route::prefix('v')->group(function(){
-	Route::get('/admin','AdminCtrl@index')->name('admin.index');
 	Route::get('/', 'HomeCtrl@index')->name('index');
 
 	Route::get('/kependudukan', 'DASH\KependudukanCtrl@index')->name('d.kependudukan');

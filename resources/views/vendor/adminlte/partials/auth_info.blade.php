@@ -29,7 +29,7 @@
       <li class="user-body">
         <ul class="control-sidebar-menu">
           <li style="border-bottom: 1px solid #ddd">
-            <a href="{{route('index',['tahun'=>$GLOBALS['tahun_access']])}}">
+            <a href="{{route('index',[])}}">
               <i class="menu-icon ion ion-speedometer bg-primary"></i>
               <div class="menu-info" style="padding-top: 5px;">
                 <h4 class="control-sidebar-subheading">PORTAL</h4>
@@ -38,7 +38,7 @@
             </a>
           </li>
            <li style="border-bottom: 1px solid #ddd">
-            <a href="{{route('admin.index',['tahun'=>$GLOBALS['tahun_access']])}}">
+            <a href="{{route('admin.index',[])}}">
               <i class="menu-icon ion ion-speedometer bg-primary"></i>
               <div class="menu-info" style="padding-top: 5px;">
                 <h4 class="control-sidebar-subheading">ADMIN</h4>

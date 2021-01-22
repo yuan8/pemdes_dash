@@ -33,7 +33,7 @@ class MENUPROVIDER extends ServiceProvider
             'top'=>[
                  [
                     'text'=>('Data'),
-                    'href'=>route('query.data',['tahun'=>$GLOBALS['tahun_access']??env('TAHUN')] ),
+                    'href'=>route('query.data' ),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-file',
 
