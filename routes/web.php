@@ -18,7 +18,7 @@ Route::get('/',function(){
 })->name('home');
 
 
-Route::prefix('data/')->group(function(){
+Route::prefix('v')->group(function(){
 	Route::get('/admin','AdminCtrl@index')->name('admin.index');
 	Route::get('/', 'HomeCtrl@index')->name('index');
 

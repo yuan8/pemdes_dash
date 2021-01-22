@@ -20,9 +20,7 @@ class Category extends Migration
             $table->string('name');
             $table->string('slug');
             $table->string('image_path')->nullable();
-            $table->string('image_path2')->nullable();
-            $table->string('contact')->nullable();
-            $table->string('source_direct')->nullable();
+            $table->string('route')->nullable();
             $table->mediumText('description')->nullable();
             $table->timestamps();
         });

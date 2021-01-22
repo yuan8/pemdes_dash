@@ -15,21 +15,21 @@ class DatGroup extends Migration
     {
         //
 
-         Schema::create('data_group', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('id_data')->unsigned();
-            $table->bigInteger('id_category')->unsigned();
+        //  Schema::create('data_group', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->bigInteger('id_data')->unsigned();
+        //     $table->bigInteger('id_category')->unsigned();
 
-            $table->foreign('id_category')
-                  ->references('id')->on('category')
-                  ->onDelete('cascade')->onUpdate('cascade');
+        //     $table->foreign('id_category')
+        //           ->references('id')->on('category')
+        //           ->onDelete('cascade')->onUpdate('cascade');
 
-             $table->foreign('id_data')
-                  ->references('id')->on('data')
-                  ->onDelete('cascade')->onUpdate('cascade');
+        //      $table->foreign('id_data')
+        //           ->references('id')->on('data')
+        //           ->onDelete('cascade')->onUpdate('cascade');
 
 
-        });
+        // });
     }
 
     /**

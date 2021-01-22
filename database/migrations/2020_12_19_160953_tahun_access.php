@@ -13,13 +13,13 @@ class TahunAccess extends Migration
     public function up()
     {
         //
-        Schema::create('tahun_access', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('tahun')->unique();
-            $table->timestamps();
-        });
+        // Schema::create('tahun_access', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->integer('tahun')->unique();
+        //     $table->timestamps();
+        // });
 
-        DB::table('tahun_access')->insert(['tahun'=>date('Y')]);
+        // DB::table('tahun_access')->insert(['tahun'=>date('Y')]);
 
 
     }
