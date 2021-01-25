@@ -1,6 +1,6 @@
 @extends('vendor.adminlte.master')
 @php
-$CONF_THEM='page';
+$CONF_THEM='page_white';
 $CONF_MENU=MENUS::dashboard();
 
 if(isset($bind_side_left)){
@@ -21,7 +21,11 @@ if(isset($bind_side_left)){
 
     <link rel="stylesheet"
           href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config($CONF_THEM.'.skin', 'blue') . '.min.css')}} ">
-  
+    <style type="text/css">
+        .navbar-brand{
+            background: #151e63;
+        }
+    </style>
     @stack('css')
     @yield('css')
     <link rel="stylesheet" type="text/css" href="{{asset('bower_components/jquery-treetable/css/jquery.treetable.css')}}">
@@ -72,7 +76,7 @@ if(isset($bind_side_left)){
 
                         @endif
 
-                        <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="navbar-brand">
+                        <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="navbar-brand text-white">
                             {!! config($CONF_THEM.'.logo', '<b>Admin</b>LTE') !!} 
                         </a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">

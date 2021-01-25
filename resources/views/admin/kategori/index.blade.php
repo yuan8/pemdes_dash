@@ -2,7 +2,7 @@
 @section('content_header')
 <h4>KATEGORI</h4>
 <div class="btn-group">
-<button class="btn btn-primary">TAMBAH</button>
+<a href="{{route('admin.kategori.create')}}" class="btn btn-primary">TAMBAH</a>
 	
 </div>
 @stop
@@ -11,6 +11,15 @@
 @section('content')
 
 <div class="box box-solid">
+	<div class="box-header">
+		<form action="{{route('admin.kategori.index')}}" method="get">
+		<select class="form-control" name="jenis" onchange="$(this).parent().submit()">
+			<option value="PRIMER_" {{$req->jenis=='PRIMER_'?'selected':''}}>KATEGORI PRIMER</option>
+			<option value="SEKUNDER_" {{$req->jenis=='SEKUNDER_'?'selected':''}}>KATEGORI PENDUKUNG</option>
+		</select>
+			
+		</form>
+	</div>
 	<div class="box-body">
 		<table class="table-bordered table" id="table-id">
 			<thead>
@@ -48,7 +57,12 @@
 @section('js')
 <script type="text/javascript">
 	$('#table-id').dataTable({
-		'lengthPage':false,
+		'pageLength':false,
+		'lengthChange':false,
+		'ordering':false,
+		'paging':false
+
+
 	});
 </script>
 

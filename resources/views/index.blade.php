@@ -1,8 +1,7 @@
 @extends('vendor.adminlte.dashboard')
 
-
-@section('content')
-<div class="banner-content text-center p-10 p-b-50 background-primary" style="position: relative; min-height: 100px; margin-bottom: 50px;">
+@section('content_header')
+<div class="banner-content text-center p-10 p-b-50" style="position: relative; min-height: 100px; margin-bottom: 50px; background: transparent;">
 
 	<p class="text-white"><b>SELAMAT DATANG DI DASHBOARD</b></p>
 	<h3 class="text-white"><b>BINA PEMERINTAHAN DESA</b></h3>
@@ -21,13 +20,17 @@
 	</div>
 
 	</div>
+@stop
+
+@section('content')
+
 <div class="container" style="">
-	<h3 class="text-center text-primary"><b>TELURUSI BERDASARKAN GROUP TOPIK </b></h3>
+	<h3 class="text-center text-primary"><b>TELURUSI BERDASARKAN GROUP TOPIK DATA PRIMER </b></h3>
 	<div class="col-md-8 col-md-offset-2">
 		<div class="owl-carousel owl-theme">
 	  	@foreach($tema as $t)
 	  	<div class="item text-center" >
-				<a href="{{route(($t->source_direct??'index'),['id'=>$t->id,'slug'=>'slug-test'])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
+				<a href="{{route(($t->route??'index'),['id'=>$t->id,'slug'=>'slug-test'])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
 					<div class="box box-solid" >
 						<div class="box-body" style="min-height:180px;">
 							<img data-toggle="tooltip" data-placement="top" title="" src="{{$t->image_path}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
@@ -47,12 +50,12 @@
 </div>
 
 <div class="container" style="">
-	<h3 class="text-center text-primary"><b>TELURUSI BERDASARKAN GROUP TOPIK</b></h3>
+	<h3 class="text-center text-primary"><b>TELURUSI BERDASARKAN GROUP TOPIK DANA PENDUKUNG</b></h3>
 	<div class="col-md-8 col-md-offset-2">
 		<div class="owl-carousel owl-theme">
-	  	@foreach($tema as $t)
+	  	@foreach($tema2 as $t)
 	  	<div class="item text-center" >
-				<a href="{{route(($t->source_direct??'index'),['id'=>$t->id,'slug'=>'slug-test'])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
+				<a href="{{route(($t->route??'index'),['id'=>$t->id,'slug'=>'slug-test'])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
 					<div class="box box-solid" >
 						<div class="box-body" style="min-height:180px;">
 							<img data-toggle="tooltip" data-placement="top" title="" src="{{$t->image_path}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">

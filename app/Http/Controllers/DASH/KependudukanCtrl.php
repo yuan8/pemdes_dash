@@ -10,8 +10,28 @@ class KependudukanCtrl extends Controller
     //
 
     public function index(){
+      $bind_side_left=[
+            [
+                    'text'=>('Data'),
+                    'href'=>route('query.data' ),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
 
-      return view('dash.kependudukan.penduduk');
+               ],
+                [
+                    'text'=>('Data'),
+                    'href'=>route('query.data' ),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
+
+                ],
+
+
+      ];
+
+      // 
+
+      return view('dash.kependudukan.penduduk')->with(['bind_side_left'=>$bind_side_left]);
 
     }
 
@@ -81,17 +101,20 @@ class KependudukanCtrl extends Controller
 
       return view('chart.column')->with(
         ['series'=>$series,'title'=>'DATA PENDUDUK PER PROVINSI','subtitle'=>'',
-        'child_f_prefix'=>"get_point_2(",
-        'child_f_surfix'=>")"
-      ])->render().view('chart.table')->with(['series'=>$series])->render();
+          'child_f_prefix'=>"get_point_2(",
+          'child_f_surfix'=>")",
+          'scope_map'=>'idn',
+        ])->render().view('chart.table')->with(['series'=>$series])->render();
+
     }
 
     public function get_jp_kota($kodepemda){
-      $data=DB::table('master_daerah as p')
-      ->leftJoin('jumlah_penduduk_dan_kk as jp',DB::raw("left(jp.kode_desa,4)"),'=','p.id')
-      ->where('p.kode_daerah_parent',$kodepemda)
-      ->selectRaw("p.id,p.nama_pemda as name,sum(jp.penduduk_pria) as jumlah_l,sum(jp.penduduk_wanita) as jumlah_p,sum(jp.kepala_keluarga) as jumlah_kk")
-      ->groupBy('p.id')
+      $pemda=DB::table('provinsi')->where('kdprovinsi','=',$kodepemda)->first();
+      $data=DB::table('kabkota as p')
+      ->leftJoin('jumlah_penduduk_dan_kk as jp',DB::raw("left(jp.kode_desa,4)"),'=','p.kdkabkota')
+      ->where(DB::raw("left(p.kdkabkota,2)"),$kodepemda)
+      ->selectRaw("p.kdkabkota as id,p.nmkabkota as name,sum(jp.penduduk_pria) as jumlah_l,sum(jp.penduduk_wanita) as jumlah_p,sum(jp.kepala_keluarga) as jumlah_kk")
+      ->groupBy('p.kdkabkota')
       ->get();
       $series=[
         [
@@ -140,7 +163,7 @@ class KependudukanCtrl extends Controller
       }
 
       return view('chart.column')->with(
-        ['series'=>$series,'title'=>'DATA PENDUDUK PER KOTA/KAB '.DB::table('master_daerah')->find($kodepemda)->nama_pemda,'subtitle'=>'',
+        ['series'=>$series,'title'=>'DATA PENDUDUK PER KOTA/KAB  PROVINSI '.$pemda->nmprovinsi,'subtitle'=>'',
         'child_f_prefix'=>"get_point_3(",
         'child_f_surfix'=>")"
       ])->render().view('chart.table')->with(['series'=>$series])->render();

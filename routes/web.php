@@ -23,6 +23,10 @@ Route::get('/',function(){
 Route::prefix('admin')->middleware('auth:web')->group(function(){
 	Route::get('/','ADMIN\AdminCtrl@index')->name('admin.index');
 	Route::get('/ketagori','ADMIN\KategoriCtrl@index')->name('admin.kategori.index');
+	Route::get('/ketagori/form/create','ADMIN\KategoriCtrl@create')->name('admin.kategori.create');
+	Route::post('/ketagori/form/create','ADMIN\KategoriCtrl@store')->name('admin.kategori.store');
+
+
 
 });
 

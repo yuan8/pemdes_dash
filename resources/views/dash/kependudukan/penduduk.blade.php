@@ -1,11 +1,12 @@
-@extends('vendor.adminlte.dashboard')
+@extends('vendor.adminlte.dashboard_white')
 
 @section('content_header')
-  <h4 class="text-center"><b>KEPENDUDUKAN</b></h4>
+  <h2 class="text-center text-white" style="padding: 10px;"><b>KEPENDUDUKAN</b></h2>
 @stop
 
 
 @section('content')
+
 <div class="" id="container-1">
 
 </div>
@@ -17,6 +18,9 @@
 <div class="" id="container-3">
 
 </div>
+
+ 
+
 @stop
 
 

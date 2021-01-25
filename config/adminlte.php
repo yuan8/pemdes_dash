@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'title' => 'PORTAL DATA',
+    'title' => 'DASHBOARD',
 
     'title_prefix' => '',
 
@@ -30,9 +30,9 @@ return [
     |
     */
 
-     'logo' => '<b>PORTAL DATA</b>',
+     'logo' => '<b>DASHBOARD</b>',
 
-    'logo_mini' => '<b>P</b>D',
+    'logo_mini' => '<b>D</b>ash',
     /*
     |--------------------------------------------------------------------------
     | Skin Color

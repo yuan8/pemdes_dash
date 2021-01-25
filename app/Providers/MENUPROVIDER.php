@@ -29,7 +29,9 @@ class MENUPROVIDER extends ServiceProvider
 
     static function dashboard(){
         $menu=[
-            'side_left'=>[],
+            'side_left'=>[
+               
+            ],
             'top'=>[
                  [
                     'text'=>('Data'),

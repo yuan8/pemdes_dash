@@ -3,11 +3,11 @@
 	padding: 0px;
 }
 .container-full .content-header{
-	padding: 0px;
+	/*padding: unset;*/
 }
 
 .text-white{
-	color: #fff;
+	color: #fff!important;
 }
 .p-10{
 	padding: 10px;
@@ -50,6 +50,19 @@
     left: -30px;
 }
 
+.main-header .navbar{
+	/*position: absolute;*/
+	background: transparent!important;
+
+}
+.wrapper{
+	  background-image: linear-gradient(to bottom, #003f80, #00599d, #0074b9, #0091d4, #00aeef)!important;
+
+}
+
+.main-header .navbar a{
+	font-size:20px;
+}
 
 .owl-carousel .next-slide {
     right: -30px;
@@ -64,5 +77,9 @@
 }
 
 .background-primary{
-	background: linear-gradient(163deg, rgba(146,146,232,1) 17%, rgba(51,122,183,1) 52%, rgba(42,67,111,1) 88%);
+	    background-image: linear-gradient(to bottom, #003f80, #00599d, #0074b9, #0091d4, #00aeef)!important;
+}
+
+.content-header {
+	padding-top: 70px;
 }

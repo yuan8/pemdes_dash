@@ -25,6 +25,7 @@
     <script src="{{asset('bower_components/datatables/media/js/jquery.dataTables.js')}}" charset="utf-8"></script>
     <script src="{{asset('bower_components/datatables/media/js/dataTables.bootstrap.js')}}" charset="utf-8"></script>
 
+
     <!-- <link rel="stylesheet" href="{{asset('bower_components/datatables/media/css/jquery.dataTables.css')}}"> -->
     <link rel="stylesheet" href="{{asset('bower_components/datatables/media/css/dataTables.bootstrap.css')}}">
 
@@ -70,7 +71,7 @@
 <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.slimscroll.min.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/vendor/bootstrap/dist/js/bootstrap.js') }}"></script>
 <script src="{{ asset('bower_components/highcharts/highstock.js') }}"></script>
-
+<script src="{{asset('bower_components/highcharts/modules/map.js')}}" charset="utf-8"></script>
 
 
 @yield('adminlte_js')

@@ -13,7 +13,7 @@ return [
     |
     */
 
-      'title' => 'DASHBOARD',
+    'title' => 'DASHBOARD',
 
     'title_prefix' => '',
 
@@ -44,7 +44,7 @@ return [
     |
     */
 
-    'skin' => 'blue',
+    'skin' => 'black',
 
     /*
     |--------------------------------------------------------------------------
