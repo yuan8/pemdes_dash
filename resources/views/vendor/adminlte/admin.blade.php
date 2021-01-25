@@ -1,16 +1,35 @@
-@extends('adminlte::master')
+@extends('vendor.adminlte.master')
 @php
 $CONF_THEM='adminlte';
 $CONF_MENU=MENUS::admin();
 @endphp
 
 @section('adminlte_css')
+
+      <script type="text/javascript" src="{{asset('bower_components/js-xlsx/dist/xlsx.core.min.js')}}"></script>
+
+    <script type="text/javascript" src="{{asset('bower_components/file-saverjs/FileSaver.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('bower_components/jquery-export/libs/jsPDF/jspdf.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('bower_components/jquery-export/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js')}}"></script>
+      <script type="text/javascript" src="{{asset('bower_components/jquery-export/tableExport.min.js')}}"></script>
+
+
     <link rel="stylesheet"
           href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config($CONF_THEM.'.skin', 'blue') . '.min.css')}} ">
+    <style type="text/css">
+        .navbar-brand{
+            background: #151e63;
+        }
+    </style>
     @stack('css')
     @yield('css')
     <link rel="stylesheet" type="text/css" href="{{asset('bower_components/jquery-treetable/css/jquery.treetable.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('bower_components/jquery-treetable/css/jquery.treetable.theme.default.css?v'.date('i'))}}">
+
+
+
+
+
 @stop
 
 @section('body_class', 'skin-' . config($CONF_THEM.'.skin', 'blue') . ' sidebar-mini ' . (config($CONF_THEM.'.layout') ? [
@@ -25,11 +44,11 @@ $CONF_MENU=MENUS::admin();
         <!-- Main Header -->
         <header class="main-header">
             @if(config($CONF_THEM.'.layout') == 'top-nav')
-            <nav class="navbar navbar-static-top">
-                <div class="container">
+            <nav class="navbar navbar-static-top" data-spy="affix" data-offset-top="100" style="min-width: 100vw;">
+                <div class="container-fluid">
                     <div class="navbar-header">
                         <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="navbar-brand">
-                            {!! config($CONF_THEM.'.logo', '<b>Admin</b>LTE') !!}
+                            {!! config($CONF_THEM.'.logo', '<b>Admin</b>LTE') !!} 
                         </a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
                             <i class="fa fa-bars"></i>
@@ -39,7 +58,7 @@ $CONF_MENU=MENUS::admin();
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                         <ul class="nav navbar-nav">
-                            @each('adminlte::partials.menu-item-top-nav', [], 'item')
+                            @each('vendor.adminlte.partials.menu-item-top-nav', $CONF_MENU['top'], 'item')
                         </ul>
                     </div>
                     <!-- /.navbar-collapse -->
@@ -53,18 +72,20 @@ $CONF_MENU=MENUS::admin();
             </a>
 
             <!-- Header Navbar -->
-            <nav class="navbar navbar-static-top" role="navigation">
+            <nav class="navbar navbar-static-top "  role="navigation">
                 <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle fa5" data-toggle="push-menu" role="button">
-                    <span class="sr-only">{{ trans('adminlte::adminlte.toggle_navigation') }}</span>
+                    <span class="sr-only">{{ trans('vendor.adminlte.adminlte.toggle_navigation') }}</span>
                 </a>
             @endif
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
 
-                    <ul class="nav navbar-nav">
+
+
                       @include('vendor.adminlte.partials.auth_info')
-                        
+
+
                     </ul>
                 </div>
                 @if(config($CONF_THEM.'.layout') == 'top-nav')
@@ -82,7 +103,7 @@ $CONF_MENU=MENUS::admin();
 
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu" data-widget="tree">
-                    @each('adminlte::partials.menu-item', $CONF_MENU['side_left'], 'item')
+                    @each('vendor.adminlte.partials.menu-item', $CONF_MENU['side_left'], 'item')
                 </ul>
                 <!-- /.sidebar-menu -->
             </section>
@@ -92,11 +113,9 @@ $CONF_MENU=MENUS::admin();
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            
 
             @if(config($CONF_THEM.'.layout') == 'top-nav')
-
-            <div class="container">
+            <div class="container-full">
             @endif
 
             <!-- Content Header (Page header) -->
@@ -105,7 +124,7 @@ $CONF_MENU=MENUS::admin();
             </section>
 
             <!-- Main content -->
-            <section class="content">
+            <section class="content" style="padding-bottom: 30px;">
 
                 @yield('content')
 
@@ -124,9 +143,9 @@ $CONF_MENU=MENUS::admin();
         </footer>
         @endif
 
-        @if(config($CONF_THEM.'.right_sidebar'))
+        @if(config($CONF_THEM.'.right_sidebar') and (config($CONF_THEM.'.layout') != 'top-nav'))
             <aside class="control-sidebar control-sidebar-{{config($CONF_THEM.'.right_sidebar_theme')}}">
-                @include('adminlte::partials.right-side-bar')
+                @yield('right-sidebar')
             </aside>
             <!-- /.control-sidebar -->
             <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
@@ -162,7 +181,7 @@ $CONF_MENU=MENUS::admin();
                         toggleState = 'closed';
                     }
                     document.cookie = "toggleState="+toggleState;
-                } 
+                }
             });
 
 
@@ -173,14 +192,45 @@ $CONF_MENU=MENUS::admin();
                 if(toggleState == 'closed'){
                     if($.AdminLTESidebarTweak.options.NoTransitionAfterReload){
                         $("body").addClass('sidebar-collapse hold-transition').delay(100).queue(function(){
-                            $(this).removeClass('hold-transition'); 
+                            $(this).removeClass('hold-transition');
                         });
                     }else{
                         $("body").addClass('sidebar-collapse');
                     }
                 }
-            } 
+            }
         })
+
+
+       function EXPORT_PDF(div,filename='EXPORT-'){
+         $(div).tableExport({fileName: filename,
+                        type: 'pdf',
+                        jspdf: {
+                            docDefinition:{pageOrientation:'landscape'},
+                            format: 'bestfit',
+                            autotable: {styles: {overflow: 'linebreak'}},
+                            margins: {left:5, right:5, top:5, bottom:5},
+
+                        }
+
+                       });
+       }
+
+       function EXPORT_EXCEL(div,filename='EXPORT'){
+
+             $(div).tableExport({
+                        fileName: filename,
+                        type:'excel',
+                        mso: {fileFormat:'xlsx'}
+
+                    });
+       }
+
+       if($('.datatable-auto').html()!==undefined){
+            $('.datatable-auto').dataTable({
+                lengthChange:false
+            });
+       }
 
     </script>
 @stop

@@ -21,7 +21,9 @@ Route::get('/',function(){
 
 	
 Route::prefix('admin')->middleware('auth:web')->group(function(){
-	Route::get('/','AdminCtrl@index')->name('admin.index');
+	Route::get('/','ADMIN\AdminCtrl@index')->name('admin.index');
+	Route::get('/ketagori','ADMIN\KategoriCtrl@index')->name('admin.kategori.index');
+
 });
 
 Route::prefix('v')->group(function(){

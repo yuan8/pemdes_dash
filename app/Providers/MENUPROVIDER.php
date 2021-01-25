@@ -79,4 +79,31 @@ class MENUPROVIDER extends ServiceProvider
 
         return $menu;
     }
+
+
+    public static function admin(){
+
+        $menu=[
+            'top'=>[],
+            'side_left'=>[
+                 [
+                    'text'=>('KATEGORI'),
+                    'href'=>route('admin.kategori.index'),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
+
+                ],
+                 [
+                    'text'=>('USERS'),
+                    'href'=>'#',
+                    'class'=>'',
+                    'icon'=>'fa fa-users',
+
+                ],
+                 
+            ],
+            'side_right'=>[]
+        ];
+        return $menu;
+    }
 }

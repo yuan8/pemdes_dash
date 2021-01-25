@@ -32,7 +32,7 @@
             <a href="{{route('index',[])}}">
               <i class="menu-icon ion ion-speedometer bg-primary"></i>
               <div class="menu-info" style="padding-top: 5px;">
-                <h4 class="control-sidebar-subheading">PORTAL</h4>
+                <h4 class="control-sidebar-subheading">DASHBOARD</h4>
 
               </div>
             </a>

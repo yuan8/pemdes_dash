@@ -2,7 +2,7 @@
 
 
 @section('content')
-<div class="banner-content text-center p-10 p-b-50" style="position: relative; background:linear-gradient(163deg, rgba(146,146,232,1) 17%, rgba(51,122,183,1) 52%, rgba(42,67,111,1) 88%); min-height: 100px; margin-bottom: 50px;">
+<div class="banner-content text-center p-10 p-b-50 background-primary" style="position: relative; min-height: 100px; margin-bottom: 50px;">
 
 	<p class="text-white"><b>SELAMAT DATANG DI DASHBOARD</b></p>
 	<h3 class="text-white"><b>BINA PEMERINTAHAN DESA</b></h3>
@@ -69,6 +69,52 @@
 
 		</div>
 	</div>
+</div>
+
+<div class="row background-primary">
+	<div class="col-md-12">
+		<h4 class="text-center text-white"><b>STATISTIK DATA</b></h4>
+
+	</div>
+	<div class="container">
+		<div class="col-md-3">
+		<div class="box box-solid">
+			<div class="box-body">
+
+				<h3>3000 <small>P</small></h3>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="box box-solid">
+			<div class="box-body">
+
+				<h3>3000 <small>P</small></h3>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="box box-solid">
+			<div class="box-body">
+
+				<h3>3000 <small>P</small></h3>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="box box-solid">
+			<div class="box-body">
+
+				<h3>3000 <small>P</small></h3>
+
+			</div>
+		</div>
+	</div>
+	</div>
+	
 </div>
 @stop
 
