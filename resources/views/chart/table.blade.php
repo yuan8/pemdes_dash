@@ -5,7 +5,7 @@
   <div class="box-header with-border">
     <h5 class="text-center" ><b>{{isset($title)?$title:''}}</b></h5>
   </div>
-  <div class="box-body">
+  <div class="box-body table-responsive">
     <table class="table table-bordered" id="table-{{$id_dom}}">
       <thead>
         <th>NO</th>

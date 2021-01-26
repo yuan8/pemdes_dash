@@ -41,6 +41,14 @@ Route::prefix('v')->group(function(){
 
 	Route::get('/pendidikan/penduduk/d/{kodepemda}', 'DASH\PendidikanCtrl@get_pp_desa')->name('d.pendidikan.chart.d');
 
+
+	Route::get('/pekerjaan', 'DASH\PekerjaanCtrl@index')->name('d.pekerjaan');
+	Route::get('/pekerjaan/penduduk/p', 'DASH\PekerjaanCtrl@get_pp_provinsi')->name('d.pekerjaan.data');
+	Route::get('/pekerjaan/penduduk/k/{kodepemda}', 'DASH\PekerjaanCtrl@get_pp_kota')->name('d.pekerjaan.chart.k');
+	Route::get('/pekerjaan/penduduk/kc/{kodepemda}', 'DASH\PekerjaanCtrl@get_pp_kecamatan')->name('d.pekerjaan.chart.kc');
+
+	Route::get('/pekerjaan/penduduk/d/{kodepemda}', 'DASH\PekerjaanCtrl@get_pp_desa')->name('d.pekerjaan.chart.d');
+
 	Route::get('/kewilayahan', 'DASH\KewilayahanCtrl@index')->name('d.kewilayahan');
 
 
