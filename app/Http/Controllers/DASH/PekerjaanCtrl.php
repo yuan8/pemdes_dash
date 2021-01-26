@@ -482,7 +482,7 @@ class PeKerjaanCtrl extends Controller
 
     public function get_pp_kecamatan($kodepemda){
     	$pemda=DB::table('kabkota')->where('kdkabkota','=',$kodepemda)->first();
-    	$title_max='4 JENIS PEKERJAAN DENGAN JUMLAH JIWA TERTINGGI ';
+    	$title_max='4 JENIS PEKERJAAN DENGAN JUMLAH JIWA TERTINGGI KECAMATAN '.$pemda->nmkabkota;;
     	$title='JENIS PEKERJAAN PENDUDUK PER KECAMATAN '.$pemda->nmkabkota;
 
       $data=DB::table('kecamatan as p')
