@@ -142,7 +142,7 @@
 		 		navText:["<div class='nav-btn prev-slide'><i class='fa fa-chevron-left fa-3x text-primary opacity-50'></i></div>","<div class='nav-btn next-slide'><i class='fa fa-chevron-right fa-3x text-primary opacity-50'></i></div>"],
 		 		lazyload : true,
 		 		loop : true,
-		 		items : 5,
+		 		items : 3,
 		 		dots : true,
 		 		responsiveClass:true,
 			    responsive:{
@@ -154,10 +154,7 @@
 			            items:3,
 			            nav:true
 			        },
-			        1000:{
-			            items:5,
-			            nav:true,
-			        }
+			       
 			    }
 			});
 
