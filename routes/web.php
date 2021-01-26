@@ -32,11 +32,14 @@ Route::prefix('admin')->middleware('auth:web')->group(function(){
 
 Route::prefix('v')->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
+	Route::get('/category/{id}/{slug?}', 'KategoriCtrl@index')->name('kategori.index');
+
 
 	Route::get('/kependudukan', 'DASH\KependudukanCtrl@index')->name('d.kependudukan');
 	Route::get('/kependudukan/penduduk/p', 'DASH\KependudukanCtrl@get_jp_provinsi')->name('d.kependudukan.chart.p');
 	Route::get('/kependudukan/penduduk/k/{kodepemda}', 'DASH\KependudukanCtrl@get_jp_kota')->name('d.kependudukan.chart.k');
 	Route::get('/kependudukan/penduduk/d/{kodepemda}', 'DASH\KependudukanCtrl@get_jp_desa')->name('d.kependudukan.chart.d');
+	Route::get('/kependudukan/penduduk/kc/{kodepemda}', 'DASH\KependudukanCtrl@get_jp_kecamatan')->name('d.kependudukan.chart.kc');
 
 
 

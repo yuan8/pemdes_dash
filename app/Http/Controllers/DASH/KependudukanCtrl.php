@@ -10,28 +10,11 @@ class KependudukanCtrl extends Controller
     //
 
     public function index(){
-      $bind_side_left=[
-            [
-                    'text'=>('Data'),
-                    'href'=>route('query.data' ),
-                    'class'=>'',
-                    'icon'=>'fa fa-file',
-
-               ],
-                [
-                    'text'=>('Data'),
-                    'href'=>route('query.data' ),
-                    'class'=>'',
-                    'icon'=>'fa fa-file',
-
-                ],
-
-
-      ];
+      $bind_side_left=null;
 
       // 
 
-      return view('dash.kependudukan.penduduk')->with(['bind_side_left'=>$bind_side_left]);
+      return view('dash.kependudukan.penduduk');
 
     }
 
@@ -72,6 +55,8 @@ class KependudukanCtrl extends Controller
 
       ];
 
+      $series_map=[];
+
 
       foreach ($data as $key => $value) {
           $series[0]['data'][]=[
@@ -81,6 +66,9 @@ class KependudukanCtrl extends Controller
             'route'=>route('d.kependudukan.chart.k',['kodepemda'=>$value->id])
 
           ];
+
+          
+
           $series[1]['data'][]=[
             'name'=>$value->name,
             'y'=>(float)$value->jumlah_p,
@@ -97,13 +85,49 @@ class KependudukanCtrl extends Controller
 
 
           ];
+
+          $series_map[]=[
+            'id'=>$value->id,
+            'name'=>$value->name,
+            'value'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
+            'y'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
+            'data_map'=>[
+              [
+                
+                  'name'=>'JUMLAH PENDUDUK PRIA',
+                  'y'=>(float)$value->jumlah_l,
+                  'satuan'=>'Jiwa'
+                
+              ],
+              [
+                
+                  'name'=>'JUMLAH PENDUDUK PEREMPUAN',
+                  'y'=>(float)$value->jumlah_p,
+                  'satuan'=>'Jiwa'
+                
+              ],
+              [
+                
+                  'name'=>'JUMLAH KEPALA KELUARGA',
+                  'y'=>(float)$value->jumlah_kk,
+                  'satuan'=>'Jiwa'
+                
+              ]
+            ]
+          ];
       }
 
-      return view('chart.column')->with(
-        ['series'=>$series,'title'=>'DATA PENDUDUK PER PROVINSI','subtitle'=>'',
+      return view('chart.compone_chart_2')->with(
+        [ 'series'=>$series,
+          'series_map'=>$series_map,
+          'chart'=>[
+            'chart.bar','chart.map'
+          ],
+          'title'=>'DATA PENDUDUK PER PROVINSI','subtitle'=>'',
           'child_f_prefix'=>"get_point_2(",
           'child_f_surfix'=>")",
           'scope_map'=>'idn',
+
         ])->render().view('chart.table')->with(['series'=>$series])->render();
 
     }
@@ -134,6 +158,106 @@ class KependudukanCtrl extends Controller
         ]
 
       ];
+      $series_map=[];
+      foreach ($data as $key => $value) {
+          $series[0]['data'][]=[
+            'name'=>$value->name,
+            'y'=>(float)$value->jumlah_l,
+            'satuan'=>'Jiwa','id'=>$value->id,
+            'route'=>route('d.kependudukan.chart.kc',['kodepemda'=>$value->id])
+
+          ];
+          $series[1]['data'][]=[
+            'name'=>$value->name,
+            'y'=>(float)$value->jumlah_p,
+            'satuan'=>'Jiwa','id'=>$value->id,
+            'route'=>route('d.kependudukan.chart.kc',['kodepemda'=>$value->id])
+
+
+
+          ];
+          $series[2]['data'][]=[
+            'name'=>$value->name,
+            'y'=>(float)$value->jumlah_kk,
+            'satuan'=>'Jiwa','id'=>$value->id,
+            'route'=>route('d.kependudukan.chart.kc',['kodepemda'=>$value->id])
+
+
+
+          ];
+
+          $series_map[]=[
+            'id'=>$value->id,
+            'name'=>$value->name,
+
+            'data_map'=>[
+              [
+                
+                  'name'=>'JUMLAH PENDUDUK PRIA',
+                  'y'=>(float)$value->jumlah_l,
+                  'satuan'=>'Jiwa',
+                
+              ],
+              [
+                
+                  'name'=>'JUMLAH PENDUDUK PEREMPUAN',
+                  'y'=>(float)$value->jumlah_p,
+                  'satuan'=>'Jiwa'
+                
+              ],
+              [
+                
+                  'name'=>'JUMLAH KEPALA KELUARGA',
+                  'y'=>(float)$value->jumlah_kk,
+                  'satuan'=>'Jiwa'
+                
+              ]
+            ]
+          ];
+      }
+
+     return view('chart.compone_chart_2')->with(
+      [ 'series'=>$series,
+          'series_map'=>$series_map,
+          'chart'=>[
+            'chart.bar','chart.map'
+          ],
+        'title'=>'DATA PENDUDUK PER KOTA/KAB  PROVINSI '.$pemda->nmprovinsi,
+        'subtitle'=>'',
+        'child_f_prefix'=>"get_point_3(",
+          'child_f_surfix'=>")",
+          'scope_map'=>'idn_'.$kodepemda,
+
+        ])->render().view('chart.table')->with(['series'=>$series])->render();
+    }
+
+     public function get_jp_kecamatan($kodepemda){
+      $pemda=DB::table('kabkota')->where('kdkabkota','=',$kodepemda)->first();
+      $data=DB::table('kecamatan as p')
+      ->leftJoin('jumlah_penduduk_dan_kk as jp',DB::raw("left(jp.kode_desa,7)"),'=','p.kdkecamatan')
+      ->where(DB::raw("left(p.kdkecamatan,4)"),'like',$kodepemda)
+      ->selectRaw("p.kdkecamatan as id,p.nmkecamatan as name,sum(jp.penduduk_pria) as jumlah_l,sum(jp.penduduk_wanita) as jumlah_p,sum(jp.kepala_keluarga) as jumlah_kk")
+      ->groupBy('p.kdkecamatan')
+      ->get();
+      $series=[
+        [
+          'name'=>'JUMLAH PENDUDUK PRIA',
+          'data'=>[]
+
+        ],
+        [
+          'name'=>'JUMLAH PENDUDUK PEREMPUAN',
+          'data'=>[]
+
+        ],
+        [
+          'name'=>'JUMLAH KEPALA KELUARGA',
+          'data'=>[]
+
+        ]
+
+      ];
+      $series_map=[];
       foreach ($data as $key => $value) {
           $series[0]['data'][]=[
             'name'=>$value->name,
@@ -160,19 +284,27 @@ class KependudukanCtrl extends Controller
 
 
           ];
+
+         
       }
 
-      return view('chart.column')->with(
-        ['series'=>$series,'title'=>'DATA PENDUDUK PER KOTA/KAB  PROVINSI '.$pemda->nmprovinsi,'subtitle'=>'',
-        'child_f_prefix'=>"get_point_3(",
-        'child_f_surfix'=>")"
-      ])->render().view('chart.table')->with(['series'=>$series])->render();
+     return view('chart.bar')->with(
+      [ 'series'=>$series,
+        
+        'title'=>'DATA PENDUDUK PER-KECAMATAN '.$pemda->nmkabkota,
+        'subtitle'=>'',
+        'child_f_prefix'=>"get_point_4(",
+        'child_f_surfix'=>")",
+
+        ])->render().view('chart.table')->with(['series'=>$series])->render();
     }
 
+
     public function get_jp_desa($kodepemda){
+      $pemda=DB::table('kecamatan')->where('kdkecamatan','=',$kodepemda)->first();
       $data=DB::table('master_desa as p')
       ->leftJoin('jumlah_penduduk_dan_kk as jp',DB::raw("jp.kode_desa"),'=','p.kode_dagri')
-      ->where(DB::raw("left(p.kode_dagri,4)"),'like',DB::raw("'".$kodepemda."'"))
+      ->where(DB::raw("left(p.kode_dagri,7)"),'like',DB::raw("'".$kodepemda."'"))
       ->selectRaw("p.kode_dagri AS id,p.desa as name,sum(jp.penduduk_pria) as jumlah_l,sum(jp.penduduk_wanita) as jumlah_p,sum(jp.kepala_keluarga) as jumlah_kk")
       ->groupBy('p.kode_dagri')
       ->get();
@@ -220,8 +352,10 @@ class KependudukanCtrl extends Controller
           ];
       }
 
-      return view('chart.column')->with(
-        ['series'=>$series,'title'=>'DATA PENDUDUK PER DESA  '.DB::table('master_daerah')->find($kodepemda)->nama_pemda,'subtitle'=>'',
+      return view('chart.bar')->with(
+        ['series'=>$series,
+        'title'=>'DATA PENDUDUK PER-DESA  KECAMATAN '.$pemda->nmkecamatan,
+        'subtitle'=>'',
 
       ])->render().view('chart.table')->with(['series'=>$series])->render();
     }

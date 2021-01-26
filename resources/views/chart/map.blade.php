@@ -1,35 +1,26 @@
 <?php
-$id_dom='c_column_'.rand(0,100).'_'.date('is');
- ?>
- 
+$id_dom='c_map_'.rand(0,100).'_'.date('is');
+  ?>
+
+@if($scope_map=='idn')
+  <script type="text/javascript" src="{{asset('bower_components/L_MAP/ind/ind.js')}}"></script>
+@else
+  <script type="text/javascript" src="{{asset('bower_components/L_MAP/'.$scope_map.'.js')}}"></script>
+@endif
 <div id="{{$id_dom}}" style="width:100%"></div>
-
-
 <script type="text/javascript">
-  
-Highcharts.chart('{{$id_dom}}', {
+	Highcharts.mapChart('{{$id_dom}}', {
     chart: {
-        type: 'column',
+        // type:'map',
+        map:'{{$scope_map}}',
         height:400,
-
     },
     title: {
         text: '{{$title}}'
     },
     subtitle: {
     },
-    xAxis: {
-      type: "category",
-      min:0,
-      max:5,
-    },
-    yAxis: {
-        min: 0,
-
-    },
-    scrollbar:{
-         enabled:true
-    },
+   
     tooltip: {
         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
@@ -39,9 +30,10 @@ Highcharts.chart('{{$id_dom}}', {
         useHTML: true
     },
     plotOptions: {
-        bar: {
+        map: {
             pointPadding: 0.2,
             borderWidth: 0,
+            joinBy: 'id',
             dataLabels: {
                enabled: true
            },
@@ -59,6 +51,13 @@ Highcharts.chart('{{$id_dom}}', {
         }
 
     },
-    series: <?=json_encode($series) ?>
+    series:[
+    {
+    	name:"",
+    	data:<?=json_encode($series_map) ?>
+    }
+    ]
 });
+
+
 </script>

@@ -9,8 +9,8 @@ class HomeCtrl extends Controller
     //
 
     public function index(){
-    	$tema=DB::table('category')->whereIn('type',['PRIMER_'])->get();
-    	$tema2=DB::table('category')->whereIn('type',['SEKUNDER_'])->get();
+    	$tema=DB::table('category')->whereIn('type',['PRIMER_'])->where('id_parent','=',null)->get();
+    	$tema2=DB::table('category')->whereIn('type',['SEKUNDER_'])->where('id_parent','=',null)->get();
     	// $tema=[];
     	// $tema2=[];
     	return view('index')->with(['tema'=>$tema,'tema2'=>$tema2]);

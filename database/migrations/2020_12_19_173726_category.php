@@ -18,11 +18,16 @@ class Category extends Migration
             $table->bigIncrements('id');
             $table->string('type');
             $table->string('name');
+            $table->bigInteger('id_parent')->nullable();
             $table->string('slug');
             $table->string('image_path')->nullable();
             $table->string('route')->nullable();
             $table->mediumText('description')->nullable();
             $table->timestamps();
+            $table->foreign('id_parent')
+                  ->references('id')->on('category')
+                  ->onDelete('cascade')->onUpdate('cascade');
+
         });
 
     }

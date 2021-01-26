@@ -33,7 +33,7 @@
 				<a href="{{route(($t->route??'index'),['id'=>$t->id,'slug'=>'slug-test'])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
 					<div class="box box-solid" >
 						<div class="box-body" style="min-height:180px;">
-							<img data-toggle="tooltip" data-placement="top" title="" src="{{$t->image_path}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
+							<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
 							<p><b>{{$t->name}}</b></p>
 
 						</div>

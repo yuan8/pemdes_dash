@@ -39,8 +39,8 @@
 					<tr>
 						<td></td>
 						<td>{{$key+1}}</td>
-						<td>{{strreplace('_',' ',$$d->type)}}</td>
-						<td><img src="{{asset($d->image_path)}}"></td>
+						<td>{{str_replace('_',' ',$d->type)}}</td>
+						<td><img style="width:20px;" src="{{asset($d->image_path)}}"></td>
 						<td>{{$d->name}}</td>
 						<td>{{$d->route}}</td>
 						<td>{{$d->description}}</td>

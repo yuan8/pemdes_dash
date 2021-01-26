@@ -1,15 +1,15 @@
 <?php
-$id_dom='c_column_'.rand(0,100).'_'.date('is');
+$id_dom='c_bar_'.rand(0,100).'_'.date('is');
  ?>
  
 <div id="{{$id_dom}}" style="width:100%"></div>
 
 
 <script type="text/javascript">
-  
+	
 Highcharts.chart('{{$id_dom}}', {
     chart: {
-        type: 'column',
+        type: 'bar',
         height:400,
 
     },

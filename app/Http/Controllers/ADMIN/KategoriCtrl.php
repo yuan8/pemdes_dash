@@ -32,7 +32,7 @@ class KategoriCtrl extends Controller
     	if($request->image_path){
     		$image_path=Storage::put('/public/c/image',$request->image_path);
     		if($image_path){
-    			$image_path=Storage::link($image_path);
+    			$image_path=Storage::url($image_path);
     		}
     	}
     	DB::table('category')->insert([
