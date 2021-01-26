@@ -34,6 +34,15 @@ Route::prefix('v')->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
 	Route::get('/category/{id}/{slug?}', 'KategoriCtrl@index')->name('kategori.index');
 
+	Route::get('/pendidikan', 'DASH\PendidikanCtrl@index')->name('d.pendidikan');
+	Route::get('/pendidikan/penduduk/p', 'DASH\PendidikanCtrl@get_pp_provinsi')->name('d.pendidikan.data');
+	Route::get('/pendidikan/penduduk/k/{kodepemda}', 'DASH\PendidikanCtrl@get_pp_kota')->name('d.pendidikan.chart.k');
+	Route::get('/pendidikan/penduduk/kc/{kodepemda}', 'DASH\PendidikanCtrl@get_pp_kecamatan')->name('d.pendidikan.chart.kc');
+
+	Route::get('/pendidikan/penduduk/d/{kodepemda}', 'DASH\PendidikanCtrl@get_pp_desa')->name('d.pendidikan.chart.d');
+
+	Route::get('/kewilayahan', 'DASH\KewilayahanCtrl@index')->name('d.kewilayahan');
+
 
 	Route::get('/kependudukan', 'DASH\KependudukanCtrl@index')->name('d.kependudukan');
 	Route::get('/kependudukan/penduduk/p', 'DASH\KependudukanCtrl@get_jp_provinsi')->name('d.kependudukan.chart.p');

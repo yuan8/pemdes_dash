@@ -1,7 +1,7 @@
 @extends('vendor.adminlte.dashboard')
 
 @section('content_header')
-  <h2 class="text-center text-white" style="padding: 10px;"><b>JUMLAH PENDUDUK</b></h2>
+  <h2 class="text-center text-white" style="padding: 10px;"><b>JENIS PERKERJAAN</b></h2>
 @stop
 
 
@@ -34,7 +34,7 @@
   function get_point_1(){
     $('#container-1').html('<h5 class="text-center">Loading</h5>');
 
-    $.get('{{route('d.kependudukan.chart.p')}}',function(res){
+    $.get('{{route('d.pendidikan.data')}}',function(res){
       $('#container-1').html(res);
       $('#container-2').html('');
       $('#container-3').html('');

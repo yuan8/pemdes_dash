@@ -3,13 +3,13 @@
  ?>
 <div class="box box-solid">
   <div class="box-header with-border">
-
+    <h5 class="text-center" ><b>{{isset($title)?$title:''}}</b></h5>
   </div>
   <div class="box-body">
     <table class="table table-bordered" id="table-{{$id_dom}}">
       <thead>
         <th>NO</th>
-
+        <th>ACTION</th>
         <th>KODE DAERAH</th>
         <th>NAMA DAERAH</th>
 
@@ -23,6 +23,16 @@
             <tr>
 
             <td>{{$key+1}}</td>
+            <td>
+              @if(isset($series[0]['data'][$key]['route']))
+              @if(isset($child_f_prefix))
+                <button class="btn btn-primary btn-xs" onclick="{{isset($child_f_prefix)?($child_f_prefix."'".$series[0]['data'][$key]['route']."'".$child_f_surfix):'javascript:void(0)'}}">Detail</button>
+                @else
+                -
+                @endif
+              @endif
+
+            </td>
             <td>{{$series[0]['data'][$key]['id']}}</td>
             <td>{{strtoupper($series[0]['data'][$key]['name'])}}</td>
 
