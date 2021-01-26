@@ -64,6 +64,7 @@
 
 .main-header .navbar-static-top.affix{
 	/*position: absolute;*/
+	  background-image: linear-gradient(to bottom, #003f80, #00599d, #0074b9, #0091d4, #00aeef)!important;
 	
 
 }
