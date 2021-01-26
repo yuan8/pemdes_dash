@@ -34,7 +34,7 @@
 			</div>
 			<div class="form-group">
 				<label>IMAGE</label>
-				<input type="file" accept="image/jpg,png" name="image_path" required="">
+				<input type="file" accept="image/png" name="image_path" required="">
 			</div>
 		</div>
 		<div class="box-footer">
