@@ -91,6 +91,8 @@ class KependudukanCtrl extends Controller
             'name'=>$value->name,
             'value'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
             'y'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
+            'route'=>route('d.kependudukan.chart.k',['kodepemda'=>$value->id]),
+
             'data_map'=>[
               [
                 
@@ -112,6 +114,13 @@ class KependudukanCtrl extends Controller
                   'y'=>(float)$value->jumlah_kk,
                   'satuan'=>'Jiwa'
                 
+              ],
+               [
+                
+                  'name'=>'TOTAL PENDUDUK',
+                  'y'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
+                  'satuan'=>'Jiwa'
+                
               ]
             ]
           ];
@@ -123,6 +132,7 @@ class KependudukanCtrl extends Controller
           'chart'=>[
             'chart.bar','chart.map'
           ],
+          'legend_map'=>'JUMLAH PENDUDUK',
           'title'=>'DATA PENDUDUK PER PROVINSI','subtitle'=>'',
           'child_f_prefix'=>"get_point_2(",
           'child_f_surfix'=>")",
@@ -189,6 +199,12 @@ class KependudukanCtrl extends Controller
           $series_map[]=[
             'id'=>$value->id,
             'name'=>$value->name,
+            'y'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
+            'value'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
+            
+            'route'=>route('d.kependudukan.chart.k',['kodepemda'=>$value->id]),
+
+
 
             'data_map'=>[
               [
@@ -211,6 +227,13 @@ class KependudukanCtrl extends Controller
                   'y'=>(float)$value->jumlah_kk,
                   'satuan'=>'Jiwa'
                 
+              ],
+              [
+                
+                  'name'=>'TOTAL PENDUDUK',
+                  'y'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
+                  'satuan'=>'Jiwa'
+                
               ]
             ]
           ];
@@ -221,12 +244,13 @@ class KependudukanCtrl extends Controller
           'series_map'=>$series_map,
           'chart'=>[
             'chart.bar','chart.map'
-          ],
+        ],
+        'legend_map'=>'JUMLAH PENDUDUK',
         'title'=>'DATA PENDUDUK PER KOTA/KAB  PROVINSI '.$pemda->nmprovinsi,
         'subtitle'=>'',
         'child_f_prefix'=>"get_point_3(",
-          'child_f_surfix'=>")",
-          'scope_map'=>'idn_'.$kodepemda,
+        'child_f_surfix'=>")",
+        'scope_map'=>'idn_'.$kodepemda,
 
         ])->render().view('chart.table')->with(['series'=>$series])->render();
     }
@@ -295,6 +319,8 @@ class KependudukanCtrl extends Controller
         'subtitle'=>'',
         'child_f_prefix'=>"get_point_4(",
         'child_f_surfix'=>")",
+        'legend_map'=>'JUMALAH PENDUDUK',
+
 
         ])->render().view('chart.table')->with(['series'=>$series])->render();
     }
