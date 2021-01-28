@@ -201,8 +201,8 @@ class KependudukanCtrl extends Controller
             'name'=>$value->name,
             'y'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
             'value'=>(float)$value->jumlah_l+(float)$value->jumlah_p,
-            
-            'route'=>route('d.kependudukan.chart.k',['kodepemda'=>$value->id]),
+
+            'route'=>route('d.kependudukan.chart.kc',['kodepemda'=>$value->id]),
 
 
 

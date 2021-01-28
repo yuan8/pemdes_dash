@@ -48,7 +48,16 @@ Route::prefix('v')->group(function(){
 	Route::get('/luas-desa/kewilayahan/k/{kodepemda}', 'DASH\LuasDesaCtrl@get_kota')->name('d.luas_desa.chart.k');
 	Route::get('/luas-desa/kewilayahan/kc/{kodepemda}', 'DASH\LuasDesaCtrl@get_kecamatan')->name('d.luas_desa.chart.kc');
 
-	Route::get('/luas-desa/kewilayahan/d/{kodepemda}', 'DASH\LuasDesaCtrl@get_pp_desa')->name('d.luas_desa.chart.d');
+	Route::get('/luas-desa/kewilayahan/d/{kodepemda}', 'DASH\LuasDesaCtrl@get_desa')->name('d.luas_desa.chart.d');
+
+
+
+	Route::get('/peta-batas', 'DASH\PenetapanBatasCtrl@index')->name('d.peta_batas');
+	Route::get('/peta-batas/kewilayahan/p', 'DASH\PenetapanBatasCtrl@get_provinsi')->name('d.peta_batas.data');
+	Route::get('/peta-batas/kewilayahan/k/{kodepemda}', 'DASH\PenetapanBatasCtrl@get_kota')->name('d.peta_batas.chart.k');
+	Route::get('/peta-batas/kewilayahan/kc/{kodepemda}', 'DASH\PenetapanBatasCtrl@get_kecamatan')->name('d.peta_batas.chart.kc');
+
+	Route::get('/peta-batas/kewilayahan/d/{kodepemda}', 'DASH\PenetapanBatasCtrl@get_desa')->name('d.peta_batas.chart.d');
 
 
 
