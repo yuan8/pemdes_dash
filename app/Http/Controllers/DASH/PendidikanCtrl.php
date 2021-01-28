@@ -255,7 +255,7 @@ class PendidikanCtrl extends Controller
             'name'=>$value->name,
             'y'=>(float)$value->tidak_sekolah,
             'satuan'=>'Jiwa','id'=>$value->id,
-            'route'=>route('d.pendidikan.chart.d',['kodepemda'=>$value->id])
+            'route'=>route('d.pendidikan.chart.',['kodepemda'=>$value->id])
 
           ];
 
@@ -303,10 +303,10 @@ class PendidikanCtrl extends Controller
     	$title='TINGKAT PENDIDIKAN PENDUDUK PER KECAMATAN '.$pemda->nmkecamatan;
 
       $data=DB::table('master_desa as p')
-      ->leftJoin('dash_ddk_pendidikan as jp',DB::raw("(jp.kode_desa)"),'=','p.kode_dagri')
-      ->selectRaw("p.kode_dagri as id,p.desa as name,sum(jp.tidak_sekolah) as tidak_sekolah,sum(jp.sd) as sd,sum(jp.smp) as smp,sum(jp.sma) as sma,sum(jp.pt) as pt")
-      ->groupBy('p.kode_dagri')
-      ->where(DB::raw("left(p.kode_dagri,7)"),'=',$kodepemda)
+      ->leftJoin('dash_ddk_pendidikan as jp',DB::raw("(jp.kode_desa)"),'=','p.kode_bps')
+      ->selectRaw("p.kode_bps as id,p.desa as name,sum(jp.tidak_sekolah) as tidak_sekolah,sum(jp.sd) as sd,sum(jp.smp) as smp,sum(jp.sma) as sma,sum(jp.pt) as pt")
+      ->groupBy('p.kode_bps')
+      ->where(DB::raw("left(p.kode_bps,7)"),'=',$kodepemda)
 
       ->get();
 

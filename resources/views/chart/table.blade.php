@@ -8,24 +8,44 @@
   <div class="box-body table-responsive">
     <table class="table table-bordered" id="table-{{$id_dom}}">
       <thead>
-        <th>NO</th>
-        <th>ACTION</th>
-        <th>KODE DAERAH</th>
-        <th>NAMA DAERAH</th>
+        <tr>
+          <th rowspan="2">ACTION</th>
+          <th rowspan="2">KODE DAERAH</th>
+          <th rowspan="2" >NAMA DAERAH</th>
 
-        <?php foreach ($series as $key => $value): ?>
-          <th>{{strtoupper($value['name'])}}</th>
-        <?php endforeach; ?>
+          <?php foreach ($series as $key => $value): ?>
+            <th colspan="2">{{strtoupper($value['name'])}}</th>
+
+          <?php endforeach; ?>
+        </tr>
+        <tr>
+          <?php foreach ($series as $key => $value): ?>
+            <th >NILAI</th>
+            <th >SATUAN</th>
+          <?php endforeach; ?>
+          
+        </tr>
+        <tr>
+          <th>(1)</th>
+          <th>(2)</th>
+          <th>(3)</th>
+          <?php foreach ($series as $key => $value): ?>
+            <th >{{($key*2)+4}}</th>
+            <th >{{($key*2)+5}}</th>
+          <?php endforeach; ?>
+
+        </tr>
       </thead>
       <tbody>
         <?php if (isset($series[0])): ?>
           <?php foreach ($series[0]['data'] as $key => $d): ?>
             <tr>
 
-            <td>{{$key+1}}</td>
             <td>
               @if(isset($series[0]['data'][$key]['route']))
+
               @if(isset($child_f_prefix))
+             
                 <button class="btn btn-primary btn-xs" onclick="{{isset($child_f_prefix)?($child_f_prefix."'".$series[0]['data'][$key]['route']."'".$child_f_surfix):'javascript:void(0)'}}">Detail</button>
                 @else
                 -
@@ -39,6 +59,8 @@
               <?php for ($i=0;$i<count($series);$i++): ?>
 
                   <td>{{number_format($series[$i]['data'][$key]['y'])}}</td>
+                  <td>{{($series[$i]['data'][$key]['satuan'])}}</td>
+
 
 
               <?php endfor; ?>

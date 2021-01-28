@@ -9,18 +9,35 @@ $id_dom='c_map_'.rand(0,100).'_'.date('is');
 @endif
 <div id="{{$id_dom}}" style="width:100%"></div>
 <script type="text/javascript">
-	Highcharts.mapChart('{{$id_dom}}', {
+	$(function(){
+        setTimeout(function(){
+    Highcharts.mapChart('{{$id_dom}}', {
     chart: {
-        // type:'map',
-        map:'{{$scope_map}}',
-        height:400,
+        type:"map",
+        height:500,
     },
     title: {
         text: '{{$title}}'
     },
     subtitle: {
     },
-   
+    joinBy:['id','id'],
+    data:[{
+        id:11,
+        name:'ACEH',
+        value:100,
+        y:100
+    }],
+    mapData:Highcharts.maps["{{$scope_map}}"],
+    xAxis: {
+        labels: {
+            enabled: false
+        }
+    },
+    mapNavigation: {
+        enabled: true,
+        enableButtons: false
+    },
     tooltip: {
         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
@@ -29,11 +46,12 @@ $id_dom='c_map_'.rand(0,100).'_'.date('is');
         shared: true,
         useHTML: true
     },
+      allAreas: true,
+    
     plotOptions: {
         map: {
             pointPadding: 0.2,
             borderWidth: 0,
-            joinBy: 'id',
             dataLabels: {
                enabled: true
            },
@@ -51,13 +69,10 @@ $id_dom='c_map_'.rand(0,100).'_'.date('is');
         }
 
     },
-    series:[
-    {
-    	name:"",
-    	data:<?=json_encode($series_map) ?>
-    }
-    ]
+
 });
 
+        },2000);
+    })
 
 </script>

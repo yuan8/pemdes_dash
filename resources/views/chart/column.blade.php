@@ -10,7 +10,7 @@ $id_dom='c_column_'.rand(0,100).'_'.date('is');
 Highcharts.chart('{{$id_dom}}', {
     chart: {
         type: 'column',
-        height:400,
+        height:500,
 
     },
     title: {

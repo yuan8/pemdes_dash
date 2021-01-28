@@ -10,7 +10,7 @@ $id_dom='c_bar_'.rand(0,100).'_'.date('is');
 Highcharts.chart('{{$id_dom}}', {
     chart: {
         type: 'bar',
-        height:400,
+        height:500,
 
     },
     title: {
@@ -23,10 +23,33 @@ Highcharts.chart('{{$id_dom}}', {
       min:0,
       max:5,
     },
-    yAxis: {
-        min: 0,
+    yAxis: 
+        @if(isset($satuan))
+         [
+         @foreach($satuan as $key=>$s)
+          { 
+          labels: {
+            format: '{value} {{$s['satuan']}}',
+          },
+          title: {
+            text: '{{$s['title']}}',
+            
+          },
+          @if($key==0)
+          opposite: true
+          @endif
+          },
 
-    },
+          @endforeach
+          ],
+         
+         
+        @else
+        {
+        min: 0,
+        },
+
+        @endif
     scrollbar:{
          enabled:true
     },
