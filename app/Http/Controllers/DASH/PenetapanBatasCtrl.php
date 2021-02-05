@@ -10,7 +10,7 @@ class PenetapanBatasCtrl extends Controller
     //
 
     public function index(Request $request){
-    	$category=DB::table('category')->where('id',$request->id)->first();
+    	$category=DB::table('data')->where('id',$request->id)->first();
     	return view('dash.kewilayahan.peta_batas.index')->with(['category'=>$category]);
     }
 
