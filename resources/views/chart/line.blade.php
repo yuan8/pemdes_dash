@@ -1,15 +1,15 @@
 <?php
-$id_dom='c_column_'.rand(0,100).'_'.date('is');
+$id_dom='c_line_'.rand(0,100).'_'.date('is');
  ?>
  
 <div id="{{$id_dom}}" style="width:100%"></div>
 
 
 <script type="text/javascript">
-  
+	
 Highcharts.chart('{{$id_dom}}', {
     chart: {
-        type: 'column',
+        type: 'line',
         height:500,
 
     },
@@ -62,7 +62,7 @@ Highcharts.chart('{{$id_dom}}', {
         useHTML: true
     },
     plotOptions: {
-        column: {
+        line: {
             pointPadding: 0.2,
             borderWidth: 0,
             dataLabels: {

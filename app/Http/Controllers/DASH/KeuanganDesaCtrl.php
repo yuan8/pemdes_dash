@@ -69,17 +69,25 @@ class KeuanganDesaCtrl extends Controller
 
 	public function show($index){
 
-		$knop=['JUMLAH','JUMLAH YANG MELAPOR','REALISASI','ANGGARAN','RATA2 ANGGARAN/DESA','RATA2 REALISASI/DESA'];
+		$knop=['URAIAN','TAHUN'];
 		$data=static::getData($index);
 
 		$series=[];
 
 		foreach($data['header'] as $ked=>$h){
-		if(in_array($h,$knop)){
+		if(!in_array($h,$knop)){
 			$series[$ked]=[
 				'name'=>$h,
 				'data'=>[]
 			];
+
+			if(in_array($data['header'][$ked],['%','PERSEN'])){
+				$series[$ked]['yAxis']=1;
+			}
+
+			else{
+				$series[$ked]['yAxis']=0;
+			}
 		}
 	}
 		
@@ -89,12 +97,26 @@ class KeuanganDesaCtrl extends Controller
 
 			foreach ($d as $keyd => $dt) {
 				if($keyd>0){
-					if(in_array($data['header'][$keyd],$knop)){
-						$series[$keyd]['data'][]=[
+
+					if(!in_array($data['header'][$keyd],$knop)){
+						$DP=[
 						'name'=>$d[0],
-						'y'=>(float)$dt
+						'y'=>(float)$dt,
+						
+						'satuan'=>in_array($data['header'][$keyd], ['%','PERSEN'])?'%':''
 					];
+
+					if(in_array($data['header'][$keyd],['%','PERSEN'])){
+						$DP['yAxis']=2;
 					}
+
+					else{
+						$DP['yAxis']=1;
+					}
+
+						$series[$keyd]['data'][]=$DP;
+					}
+
 					
 				}
 			}
@@ -102,7 +124,19 @@ class KeuanganDesaCtrl extends Controller
 		}
 
 
-		return view('dash.keuangan_desa.data',['data'=>$data,'series'=>array_values($series)]);
+		return view('dash.keuangan_desa.data',[
+			'satuan'=>[
+				[
+            		'satuan'=>'-',
+            		'title'=>'-'
+            	],
+            	[
+            		'satuan'=>'%',
+            		'title'=>'%'
+            	]
+
+            ],
+			'data'=>$data,'series'=>array_values($series)]);
 	}
 
 

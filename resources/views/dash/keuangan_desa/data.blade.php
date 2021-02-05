@@ -8,7 +8,7 @@
 <div class="row">
 
 	<div class="col-md-12">
-		@include('chart.pie',['data'=>$data])
+		@include('chart.column',['data'=>$data,'series'=>$series,'title'=>$data['title']])
 	</div>
 	<div class="col-md-12 table-responsive">
 		<table class="table-bordered table">
