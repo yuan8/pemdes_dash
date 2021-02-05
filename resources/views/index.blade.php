@@ -34,7 +34,7 @@
 					<div class="box box-solid" >
 						<div class="box-body" style="min-height:180px;">
 							<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
-							<p><b>{{$t->name}} {{$t->route}}</b></p>
+							<p><b>{{$t->name}}</b></p>
 
 						</div>
 

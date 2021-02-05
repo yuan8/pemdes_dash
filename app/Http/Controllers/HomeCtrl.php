@@ -10,10 +10,7 @@ class HomeCtrl extends Controller
 
     public function index(){
 
-    	DB::table('category')->where('type','TEMA_PRIMER')->where('id_parent','=',null)->update(['type'=>'TEMA_PRIMER','route'=>'query.data.categorycal']);
-
-    	DB::table('category')->where('type','TEMA_SEKUNDER')->where('id_parent','=',null)->update(['type'=>'TEMA_SEKUNDER','route'=>'query.data.categorycal']);
-
+    
 
 
     	$tema=DB::table('category')->whereIn('type',['TEMA_PRIMER'])->where('id_parent','=',null)->get();
