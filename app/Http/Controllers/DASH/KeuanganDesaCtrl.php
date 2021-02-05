@@ -69,7 +69,7 @@ class KeuanganDesaCtrl extends Controller
 
 	public function show($index){
 
-		$knop=['URAIAN','TAHUN'];
+		$knop=['URAIAN','TAHUN','WILAYAH PEMERINTAHAN'];
 		$data=static::getData($index);
 
 		$series=[];
