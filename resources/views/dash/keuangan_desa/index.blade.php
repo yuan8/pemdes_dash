@@ -26,6 +26,8 @@
 <script type="text/javascript">
 	
 	function getData(index){
+			$('#container_level_1').html('<h5 class="text-center">Loading</h5>');
+
 		$.get('{{url('v/keuangan-desa/data')}}/'+index,function(res){
 			
 			$('#container_level_1').html(res);
