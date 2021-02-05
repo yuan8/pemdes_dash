@@ -34,6 +34,9 @@ Route::prefix('v')->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
 	Route::get('/category/{id}/{slug?}', 'KategoriCtrl@index')->name('kategori.index');
 
+	Route::get('/category-data/{id}/{slug?}', 'KategoriCtrl@data')->name('kategori.data');
+
+
 	Route::get('/pendidikan', 'DASH\PendidikanCtrl@index')->name('d.pendidikan');
 	Route::get('/pendidikan/penduduk/p', 'DASH\PendidikanCtrl@get_pp_provinsi')->name('d.pendidikan.data');
 	Route::get('/pendidikan/penduduk/k/{kodepemda}', 'DASH\PendidikanCtrl@get_pp_kota')->name('d.pendidikan.chart.k');
@@ -62,6 +65,13 @@ Route::prefix('v')->group(function(){
 
 
 
+	Route::get('/potensi/iklim-tanah-erosi', 'DASH\PotensiCtrl@iklim')->name('d.potensi.iklim');
+	Route::get('/potensi/iklim-tanah-erosi/p', 'DASH\PotensiCtrl@iklim_p')->name('d.potensi.iklim.p');
+	Route::get('/potensi/iklim-tanah-erosi/k/{kodepemda}', 'DASH\PotensiCtrl@iklim_k')->name('d.potensi.iklim.k');
+	Route::get('/potensi/iklim-tanah-erosi/kc/{kodepemda}', 'DASH\PotensiCtrl@iklim_kc')->name('d.potensi.iklim.kc');
+	Route::get('/potensi/iklim-tanah-erosi/d/{kodepemda}', 'DASH\PotensiCtrl@iklim_d')->name('d.potensi.iklim.d');
+
+
 
 	Route::get('/pekerjaan', 'DASH\PekerjaanCtrl@index')->name('d.pekerjaan');
 	Route::get('/pekerjaan/penduduk/p', 'DASH\PekerjaanCtrl@get_pp_provinsi')->name('d.pekerjaan.data');
@@ -82,6 +92,11 @@ Route::prefix('v')->group(function(){
 
 
 	Route::get('/query-data', 'DataCtrl@index')->name('query.data');
+	Route::get('/instansi', 'DataCtrl@instansi')->name('organisasi');
+	Route::get('/tema', 'DataCtrl@tema')->name('tema');
+
+	Route::get('/query-data-type/{type}', 'DataCtrl@delivery_type')->name('query.data.delivery');
+
 	Route::get('/query-data-category/{id_category}/{slug}', 'DataCtrl@categorical')->name('query.data.categorycal');
 
 	Route::get('/data/{id}/{slug}', 'DataCtrl@detail')->name('query.data.detail');

@@ -13,22 +13,22 @@ class Category extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('category', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('type');
-            $table->string('name');
-            $table->bigInteger('id_parent')->nullable();
-            $table->string('slug');
-            $table->string('image_path')->nullable();
-            $table->string('route')->nullable();
-            $table->mediumText('description')->nullable();
-            $table->timestamps();
-            $table->foreign('id_parent')
-                  ->references('id')->on('category')
-                  ->onDelete('cascade')->onUpdate('cascade');
+        // //
+        // Schema::create('category', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->string('type');
+        //     $table->string('name');
+        //     $table->bigInteger('id_parent')->nullable();
+        //     $table->string('slug');
+        //     $table->string('image_path')->nullable();
+        //     $table->string('route')->nullable();
+        //     $table->mediumText('description')->nullable();
+        //     $table->timestamps();
+        //     $table->foreign('id_parent')
+        //           ->references('id')->on('category')
+        //           ->onDelete('cascade')->onUpdate('cascade');
 
-        });
+        // });
 
     }
 
@@ -40,7 +40,7 @@ class Category extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('category');
+        // Schema::dropIfExists('category');
 
     }
 }

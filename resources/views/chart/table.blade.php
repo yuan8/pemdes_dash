@@ -26,9 +26,9 @@
           
         </tr>
         <tr>
-          <th>(1)</th>
-          <th>(2)</th>
-          <th>(3)</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
           <?php foreach ($series as $key => $value): ?>
             <th >{{($key*2)+4}}</th>
             <th >{{($key*2)+5}}</th>

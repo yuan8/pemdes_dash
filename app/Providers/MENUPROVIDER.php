@@ -41,29 +41,29 @@ class MENUPROVIDER extends ServiceProvider
 
                 ],
                  [
-                    'text'=>('Organisasi'),
-                    'href'=>'#',
+                    'text'=>('Instansi'),
+                    'href'=>route('organisasi'),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-users',
 
                 ],
                  [
-                    'text'=>('Topik'),
-                    'href'=>'#',
+                    'text'=>('Tema'),
+                    'href'=>route('tema'),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-hashtag',
 
                 ],
                  [
                     'text'=>('Visualisasi'),
-                    'href'=>'#',
+                    'href'=>route('query.data.delivery',['type'=>'visualisasi']),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-eye',
 
                 ],
                  [
                     'text'=>('Infografis'),
-                    'href'=>'#',
+                    'href'=>route('query.data.delivery',['type'=>'infografis']),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-image',
 

@@ -11,7 +11,7 @@
 
 	<div class="col-md-3">
 		
-		@if(isset($data))
+	@if(isset($data))
 		<div class="box-solid box c-fix"  data-spy="affix" data-offset-top="200">
 			<div class="box-header text-center">
 				<img style="max-height: 200px;" src="{{asset($data->image_path)}}" class="img-thumbnail img-responsive">

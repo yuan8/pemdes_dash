@@ -227,6 +227,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'MENUS' => App\Providers\MENUPROVIDER::class,
         'YDB' => App\Providers\YDBPROVIDER::class,
+        'HPV' => App\Providers\HELPERPROVIDER::class,
+
 
 
 
