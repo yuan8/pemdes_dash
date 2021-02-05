@@ -82,6 +82,11 @@ Route::prefix('v')->group(function(){
 
 	Route::get('/kewilayahan', 'DASH\KewilayahanCtrl@index')->name('d.kewilayahan');
 
+	Route::get('/keuangan-desa/', 'DASH\KeuanganDesaCtrl@index')->name('d.keuangan_desa.index');
+	Route::get('/keuangan-desa/data/{index}', 'DASH\KeuanganDesaCtrl@show')->name('d.keuangan_desa.show');
+
+
+
 
 	Route::get('/kependudukan', 'DASH\KependudukanCtrl@index')->name('d.kependudukan');
 	Route::get('/kependudukan/penduduk/p', 'DASH\KependudukanCtrl@get_jp_provinsi')->name('d.kependudukan.chart.p');
