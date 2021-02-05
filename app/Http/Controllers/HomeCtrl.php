@@ -14,11 +14,9 @@ class HomeCtrl extends Controller
 
 
     	$tema=DB::table('category')->whereIn('type',['TEMA_PRIMER'])->where('id_parent','=',null)->get();
-
     	
     	$tema2=DB::table('category')->whereIn('type',['TEMA_SEKUNDER'])->where('id_parent','=',null)->get();
-    	// $tema=[];
-    	// $tema2=[];
+    	
     	return view('index')->with(['tema'=>$tema,'tema2'=>$tema2]);
 
     }
