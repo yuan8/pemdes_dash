@@ -33,12 +33,28 @@ class KeuanganDesaCtrl extends Controller
     			}
         	}
 
-        	return array(
+        	
+
+        	$return= array(
         		'title'=>$sheet->getCell('A1')->getCalculatedValue(),
         		'header'=>$sheet->toArray()[1]??'REKAP KEUANGAN',
         		'data'=>$data
 
         	);
+
+        	foreach ($return['data'] as $key => $d) {
+        		$dx=[];
+        		foreach($d as $keyd=>$dt){
+        			if($keyd>0){
+        				$dx[$keyd]=(float)str_replace(',', '', $dt);
+        			}else{
+        				$dx[$keyd]=$dt;
+        			}
+        		}
+        		$return['data'][$key]=$dx;
+        	}
+
+        	return $return;
 
       
 
@@ -52,8 +68,41 @@ class KeuanganDesaCtrl extends Controller
 
 
 	public function show($index){
+
+		$knop=['JUMLAH','JUMLAH YANG MELAPOR','REALISASI','ANGGARAN','RATA2 ANGGARAN/DESA','RATA2 REALISASI/DESA'];
 		$data=static::getData($index);
-		return view('dash.keuangan_desa.data',['data'=>$data]);
+
+		$series=[];
+
+		foreach($data['header'] as $ked=>$h){
+		if(in_array($h,$knop)){
+			$series[$ked]=[
+				'name'=>$h,
+				'data'=>[]
+			];
+		}
+	}
+		
+
+		foreach ($data['data'] as $key => $d) {
+			# code...
+
+			foreach ($d as $keyd => $dt) {
+				if($keyd>0){
+					if(in_array($data['header'][$keyd],$knop)){
+						$series[$keyd]['data'][]=[
+						'name'=>$d[0],
+						'y'=>(float)$dt
+					];
+					}
+					
+				}
+			}
+
+		}
+
+
+		return view('dash.keuangan_desa.data',['data'=>$data,'series'=>array_values($series)]);
 	}
 
 

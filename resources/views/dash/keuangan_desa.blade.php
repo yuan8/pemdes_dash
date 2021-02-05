@@ -22,7 +22,7 @@
 				<tr>
 				
 					@foreach($dt as $d)
-						<th>{{$d}}</th>
+						<th>{{is_number($d)?number_format($d,2,'.',','):$d}}</th>
 					@endforeach
 				</tr>
 

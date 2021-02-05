@@ -1,7 +1,16 @@
-<h3 class="text-center"><b>{{$data['title']}}</b></h3>
 
-<div class="box box-solid">
+
+<h3 class="text-center"><b>{{$data['title']}}</b></h3>
+		<div class="box box-solid">
 	<div class="box-body">
+
+
+<div class="row">
+
+	<div class="col-md-12">
+		@include('chart.pie',['data'=>$data])
+	</div>
+	<div class="col-md-12 table-responsive">
 		<table class="table-bordered table">
 			<thead>
 				<tr>
@@ -16,7 +25,8 @@
 				<tr>
 				
 					@foreach($dt as $d)
-						<th>{{$d}}</th>
+						<th>{{is_numeric($d)?number_format($d,2,',','.'):$d}}</th>
+
 					@endforeach
 				</tr>
 
@@ -24,5 +34,7 @@
 
 			</tbody>
 		</table>
+	</div>
+</div>
 	</div>
 </div>
