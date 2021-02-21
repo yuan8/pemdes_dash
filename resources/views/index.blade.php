@@ -12,7 +12,7 @@
 			<div class="input-group" style="border: 2px solid #6db3ee;border-radius: 30px; overflow: hidden; ">
       <input type="text" class="form-control" name="q" placeholder="Cari Data,Tema,Instansi" style="height: 55px;">
       <span class="input-group-btn">
-        <button class="btn btn-primary" type="submit" style="height: 55px; min-width: 100px;"><i class="fa fa-search"></i></button>
+        <button class="btn btn-primary background-blue" type="submit" style="height: 55px; min-width: 100px;"><i class="fa fa-search"></i></button>
       </span>
     </div>
 		</form>
@@ -25,7 +25,7 @@
 @section('content')
 
 <div class="container" style="">
-	<h3 class="text-center text-primary"><b>TELURUSI BERDASARKAN GROUP TEMA DATA UTAMA </b></h3>
+	<h3 class="text-center text-primary"><b>DATA UTAMA </b></h3>
 	<div class="col-md-8 col-md-offset-2">
 		<div class="owl-carousel owl-theme">
 	  	@foreach($tema as $t)
@@ -50,7 +50,7 @@
 </div>
 
 <div class="container" style="">
-	<h3 class="text-center text-primary"><b>TELURUSI BERDASARKAN GROUP TEMA DATA PENDUKUNG</b></h3>
+	<h3 class="text-center text-primary"><b>DATA PENDUKUNG</b></h3>
 	<div class="col-md-8 col-md-offset-2">
 		<div class="owl-carousel owl-theme">
 	  	@foreach($tema2 as $t)

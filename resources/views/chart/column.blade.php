@@ -21,7 +21,7 @@ Highcharts.chart('{{$id_dom}}', {
     xAxis: {
       type: "category",
       min:0,
-      max:5,
+      max:{{isset($series[0])?count($series[0]['data'])-1:5}},
     },
     yAxis: 
         @if(isset($satuan))

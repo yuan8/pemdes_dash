@@ -7,7 +7,7 @@
 @elseif($type=='INFOGRAFIS')
 <i class="fa fa-image"></i>
 @elseif($type=='VISUALISASI')
-<i class="fa fa-chart"></i>
+<i class="fa fa-chart-bar"></i>
 @else
 <i class="fa fa-times"></i>
 

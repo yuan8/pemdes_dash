@@ -102,17 +102,10 @@ class KeuanganDesaCtrl extends Controller
 						$DP=[
 						'name'=>$d[0],
 						'y'=>(float)$dt,
-						
 						'satuan'=>in_array($data['header'][$keyd], ['%','PERSEN'])?'%':''
-					];
+						];
 
-					if(in_array($data['header'][$keyd],['%','PERSEN'])){
-						$DP['yAxis']=2;
-					}
-
-					else{
-						$DP['yAxis']=1;
-					}
+						
 
 						$series[$keyd]['data'][]=$DP;
 					}
@@ -122,6 +115,8 @@ class KeuanganDesaCtrl extends Controller
 			}
 
 		}
+
+		$series=(array_values($series));
 
 
 		return view('dash.keuangan_desa.data',[

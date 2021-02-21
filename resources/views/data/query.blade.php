@@ -4,7 +4,7 @@
 
 @stop
 @section('content')
-<div class="banner-content text-center p-10 p-b-50" style="position: relative; background:linear-gradient(163deg, rgba(146,146,232,1) 17%, rgba(51,122,183,1) 52%, rgba(42,67,111,1) 88%); min-height: 100px; margin-bottom: 50px;">
+<div class="banner-content text-center p-10 p-b-50 background-primary" style="position: relative;  min-height: 100px; margin-bottom: 50px;">
 	<ol class="breadcrumb text-left">
     <li><a href="{{url('')}}"><i class="fa fa-dashboard"></i> Home</a></li>
     <li class="active text-capitalize">{{ strtolower((!empty($instansi)) ?str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type)).' - '.$instansi->name:(isset($title)?$title:'Cari Data'))}}</li>

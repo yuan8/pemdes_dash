@@ -40,6 +40,14 @@ class MENUPROVIDER extends ServiceProvider
                     'icon'=>'fa fa-file',
 
                 ],
+
+                 [
+                    'text'=>('Index Desa'),
+                    'href'=>route('organisasi'),
+                    'top_nav_class'=>'',
+                    'icon'=>'fa fa-tag',
+
+                ],
                  [
                     'text'=>('Instansi'),
                     'href'=>route('organisasi'),
@@ -55,8 +63,8 @@ class MENUPROVIDER extends ServiceProvider
 
                 ],
                  [
-                    'text'=>('Visualisasi'),
-                    'href'=>route('query.data.delivery',['type'=>'visualisasi']),
+                    'text'=>('Publikasi'),
+                    'href'=>route('query.data.delivery',['type'=>'publikasi']),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-eye',
 

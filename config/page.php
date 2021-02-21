@@ -13,7 +13,7 @@ return [
     |
     */
 
-      'title' => 'DASHBOARD',
+    'title' => 'DASHBOARD',
 
     'title_prefix' => '',
 
@@ -30,7 +30,7 @@ return [
     |
     */
 
-     'logo' => '<b>DASHBOARD</b>',
+    'logo' => '<b>DASHBOARD</b>',
 
     'logo_mini' => '<b>D</b>ash',
     /*

@@ -72,8 +72,8 @@ if(isset($bind_side_left)){
 
                         @endif
 
-                        <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="navbar-brand">
-                            {!! config($CONF_THEM.'.logo', '<b>Admin</b>LTE') !!} 
+                        <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="navbar-brand background-primary " style="padding: 5px 10px 5px 10px; "  >
+                             <img src="{{url('logo.png')}}"  style="height:100%;" >
                         </a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
                             <i class="fa fa-bars"></i>
