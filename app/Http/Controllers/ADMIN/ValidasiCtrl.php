@@ -83,9 +83,8 @@ class ValidasiCtrl extends Controller
 
 		$data=DB::table($table[$data_index]['table'].' as d')
 		->join('master_desa as md','md.kode_bps','=','d.kode_desa')
-		->leftJoin('kecamatan as mkc','mkc.kdkecamatan','=',DB::raw("left('d.kode_desa',7)"))
-
-		->selectRaw('md.desa as Nama_Desa, mkc.nmkecamatan as Nama_Kecamatan,d.*');
+		->leftJoin('kecamatan as mkc',DB::raw("left(d.kode_desa,7)"),DB::raw('='),DB::raw('mkc.kdkecamatan'))
+		->selectRaw(" 'Belum Terverifikasi' as Status_Verifikasi_Data,md.desa as Nama_Desa, mkc.nmkecamatan as Nama_Kecamatan,d.*");
 		if(count($where)>0){
 			$data=$data->where($where);
 		}
