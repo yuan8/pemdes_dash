@@ -25,11 +25,6 @@ $CONF_MENU=MENUS::admin();
     @yield('css')
     <link rel="stylesheet" type="text/css" href="{{asset('bower_components/jquery-treetable/css/jquery.treetable.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('bower_components/jquery-treetable/css/jquery.treetable.theme.default.css?v'.date('i'))}}">
-
-
-
-
-
 @stop
 
 @section('body_class', 'skin-' . config($CONF_THEM.'.skin', 'blue') . ' sidebar-mini ' . (config($CONF_THEM.'.layout') ? [
@@ -64,7 +59,7 @@ $CONF_MENU=MENUS::admin();
                     <!-- /.navbar-collapse -->
             @else
             <!-- Logo -->
-            <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="logo">
+            <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="logo background-blue" style="height:60px;">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini">{!! config($CONF_THEM.'.logo_mini', '<b>A</b>LT') !!}</span>
                 <!-- logo for regular state and mobile devices -->
@@ -72,20 +67,15 @@ $CONF_MENU=MENUS::admin();
             </a>
 
             <!-- Header Navbar -->
-            <nav class="navbar navbar-static-top "  role="navigation">
+            <nav class="background-blue x navbar navbar-static-top "  role="navigation">
                 <!-- Sidebar toggle button-->
-                <a href="#" class="sidebar-toggle fa5" data-toggle="push-menu" role="button">
+                <a href="#" class="sidebar-toggle fa5 " data-toggle="push-menu" role="button">
                     <span class="sr-only">{{ trans('vendor.adminlte.adminlte.toggle_navigation') }}</span>
                 </a>
             @endif
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
-
-
-
                       @include('vendor.adminlte.partials.auth_info')
-
-
                     </ul>
                 </div>
                 @if(config($CONF_THEM.'.layout') == 'top-nav')
@@ -96,7 +86,7 @@ $CONF_MENU=MENUS::admin();
 
         @if(config($CONF_THEM.'.layout') != 'top-nav')
         <!-- Left side column. contains the logo and sidebar -->
-        <aside class="main-sidebar">
+        <aside class="main-sidebar" style="padding-top: 80px;">
 
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
@@ -119,7 +109,7 @@ $CONF_MENU=MENUS::admin();
             @endif
 
             <!-- Content Header (Page header) -->
-            <section class="content-header">
+            <section class="content-header background-blue-y text-white" style="padding-bottom: 10px;">
                 @yield('content_header')
             </section>
 

@@ -21,7 +21,6 @@ if(isset($bind_side_left)){
 
     <link rel="stylesheet"
           href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config($CONF_THEM.'.skin', 'blue') . '.min.css')}} ">
-  
     @stack('css')
     @yield('css')
     <link rel="stylesheet" type="text/css" href="{{asset('bower_components/jquery-treetable/css/jquery.treetable.css')}}">
@@ -46,7 +45,7 @@ if(isset($bind_side_left)){
         <!-- Main Header -->
         <header class="main-header">
             @if(config($CONF_THEM.'.layout') == 'top-nav')
-            <nav class="navbar navbar-static-top" data-spy="affix" data-offset-top="100" style="min-width: 100vw;">
+            <nav class=" navbar navbar-static-top " data-spy="affix" data-offset-top="100" style="min-width: 100vw;">
                 <div class="container-fluid">
                     <div class="navbar-header">
                         @if($CONF_MENU['side_left'])
@@ -97,7 +96,7 @@ if(isset($bind_side_left)){
             </a>
 
             <!-- Header Navbar -->
-            <nav class="navbar navbar-static-top "  role="navigation">
+            <nav class="background-blue navbar navbar-static-top "  role="navigation">
                 <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle fa5" data-toggle="push-menu" role="button">
                     <span class="sr-only">{{ trans('vendor.adminlte.adminlte.toggle_navigation') }}</span>

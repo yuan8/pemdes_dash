@@ -17,9 +17,13 @@
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/vendor/Ionicons/css/ionicons.min.css') }}">
 
     <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
+    
 
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/AdminLTE.min.css') }}">
+
     <link rel="stylesheet" type="text/css" href="{{asset('/css/app.css?v='.date('i'))}}">
 
     <script src="{{asset('bower_components/datatables/media/js/jquery.dataTables.js')}}" charset="utf-8"></script>

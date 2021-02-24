@@ -14,10 +14,12 @@
 Auth::routes();
 
 Route::get('/',function(){
-	
 	return redirect()->route('index');
-
 })->name('home');
+
+Route::get('/home',function(){
+	return redirect()->route('index');
+})->name('home.index');
 
 	
 Route::prefix('admin')->middleware('auth:web')->group(function(){
@@ -26,9 +28,15 @@ Route::prefix('admin')->middleware('auth:web')->group(function(){
 	Route::get('/ketagori/form/create','ADMIN\KategoriCtrl@create')->name('admin.kategori.create');
 	Route::post('/ketagori/form/create','ADMIN\KategoriCtrl@store')->name('admin.kategori.store');
 
+	Route::prefix('validasi')->group(function(){
+		Route::get('/','ADMIN\ValidasiCtrl@index')->name('admin.validasi.index');
+		Route::get('/data','ADMIN\ValidasiCtrl@data')->name('admin.validasi.data');
 
+	});
 
 });
+
+
 
 Route::prefix('v')->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');

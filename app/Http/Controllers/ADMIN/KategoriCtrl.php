@@ -12,7 +12,7 @@ class KategoriCtrl extends Controller
 
     public function index(Request $request){
 
-    	$jenis='PRIMER_';
+    	$jenis='TEMA_PRIMER';
     	if($request->jenis){
     		$jenis=$request->jenis;
     	}

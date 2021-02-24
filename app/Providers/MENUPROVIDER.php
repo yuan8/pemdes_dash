@@ -103,6 +103,13 @@ class MENUPROVIDER extends ServiceProvider
                     'icon'=>'fa fa-file',
 
                 ],
+                [
+                    'text'=>('VERIFIKASI DAN VALIDASI DATA'),
+                    'href'=>route('admin.validasi.index'),
+                    'class'=>'',
+                    'icon'=>'fa fa-check',
+                ],
+                 
                  [
                     'text'=>('USERS'),
                     'href'=>'#',

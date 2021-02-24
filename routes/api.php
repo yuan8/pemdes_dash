@@ -16,3 +16,13 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::prefix('/meta')->group(function () {
+    Route::get('kota/{provinsi?}','API\KodeDaerahCtrl@kota')->name('api.meta.kota');
+    Route::get('kecamatan/{kota?}','API\KodeDaerahCtrl@kecamatan')->name('api.meta.kecamatan');
+    Route::get('desa/{kecamatan?}','API\KodeDaerahCtrl@desa')->name('api.meta.desa');
+
+
+
+});

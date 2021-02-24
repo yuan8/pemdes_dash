@@ -53,4 +53,21 @@ class HELPERPROVIDER extends ServiceProvider
 	  return $text;
 	}
 
+
+	static function table_data(){
+		return [
+			[
+				'name'=>'Data Potensi Iklim Tanah Erosi',
+				'table'=>'dash_potensi_iklim_tanah_erosi'
+			],
+			[
+				'table'=>'dash_potensi_jenis_lahan',
+				'name'=>'Data Potensi Jenis Lahan'
+			],
+
+		];
+
+		
+	}
+
 }

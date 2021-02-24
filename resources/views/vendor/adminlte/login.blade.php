@@ -23,7 +23,7 @@ $CONF_MENU=MENUS::dashboard();
 
                 <div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">
                     <input type="email" name="email" class="form-control" value="{{ old('email') }}"
-                           placeholder="{{ trans('adminlte::adminlte.email') }}">
+                           placeholder="email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     @if ($errors->has('email'))
                         <span class="help-block">
@@ -33,7 +33,7 @@ $CONF_MENU=MENUS::dashboard();
                 </div>
                 <div class="form-group has-feedback {{ $errors->has('password') ? 'has-error' : '' }}">
                     <input type="password" name="password" class="form-control"
-                           placeholder="{{ trans('adminlte::adminlte.password') }}">
+                           placeholder="password">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     @if ($errors->has('password'))
                         <span class="help-block">
@@ -45,20 +45,20 @@ $CONF_MENU=MENUS::dashboard();
                     <div class="col-xs-8">
                         <div class="icheck-primary">
                             <input type="checkbox" name="remember" id="remember">
-                            <label for="remember">{{ trans('adminlte::adminlte.remember_me') }}</label>
+                            <label for="remember">Remember</label>
                         </div>
                     </div>
                     <!-- /.col -->
                     <div class="col-xs-4">
                         <button type="submit" class="btn btn-primary btn-block btn-flat">
-                            {{ trans('adminlte::adminlte.sign_in') }}
+                            LOGIN
                         </button>
                     </div>
                     <!-- /.col -->
                 </div>
             </form>
             <br>
-            <p>
+           {{--  <p>
                 <a href="{{ url(config('adminlte.password_reset_url', 'password/reset')) }}" class="text-center">
                     {{ trans('adminlte::adminlte.i_forgot_my_password') }}
                 </a>
@@ -69,7 +69,7 @@ $CONF_MENU=MENUS::dashboard();
                         {{ trans('adminlte::adminlte.register_a_new_membership') }}
                     </a>
                 </p>
-            @endif
+            @endif --}}
         </div>
         <!-- /.login-box-body -->
     </div><!-- /.login-box -->

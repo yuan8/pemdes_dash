@@ -14,8 +14,8 @@
 	<div class="box-header">
 		<form action="{{route('admin.kategori.index')}}" method="get">
 		<select class="form-control" name="jenis" onchange="$(this).parent().submit()">
-			<option value="PRIMER_" {{$req->jenis=='PRIMER_'?'selected':''}}>KATEGORI PRIMER</option>
-			<option value="SEKUNDER_" {{$req->jenis=='SEKUNDER_'?'selected':''}}>KATEGORI PENDUKUNG</option>
+			<option value="TEMA_PRIMER" {{$req->jenis=='TEMA_PRIMER'?'selected':''}}>TEMA DATA UTAMA</option>
+			<option value="TEMA_SEKUNDER" {{$req->jenis=='TEMA_SEKUNDER'?'selected':''}}>DATA DATA PENDUKUNG</option>
 		</select>
 			
 		</form>
