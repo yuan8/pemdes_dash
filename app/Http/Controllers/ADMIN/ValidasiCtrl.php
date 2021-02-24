@@ -27,6 +27,7 @@ class ValidasiCtrl extends Controller
 		];
 
 
+
 		if($request->kdprovinsi){
 			$kodedaerah['kdprovinsi']=$request->kdprovinsi;
 		}
@@ -58,25 +59,53 @@ class ValidasiCtrl extends Controller
 	public function data(Request $request){
 		$table=HPV::table_data();
 		$data_index=0;
+		$daerah=NULL;
 		if($request->data){
 			$data_index=$request->data;
 		}
 		$where=[];
 		if($request->kdprovinsi){
 			$where[]=[DB::raw("left(d.kode_desa,2)"),'=',$request->kdprovinsi];
+			$daerah=DB::table('provinsi')
+
+			->where('kdprovinsi',$request->kdprovinsi)
+			->selectRaw("
+				'' as parent,
+				kdprovinsi as id,'PROVINSI' as jenis,nmprovinsi as name")
+			->first();
 		}
+
 
 		if($request->kdkota){
 			$where[]=[DB::raw("left(d.kode_desa,4)"),'=',$request->kdkota];
+			$daerah=DB::table('kabkota')
+			->where('kdkabkota',$request->kdkota)
+			->selectRaw("'".$daerah->jenis.' '.$daerah->name." -> ' as parent,kdkabkota as id,'KAB/KOTA' as jenis,nmkabkota as name")
+			->first();
 		}
+
+
 
 		if($request->kdkecamatan){
 			$where[]=[DB::raw("left(d.kode_desa,7)"),'=',$request->kdkecamatan];
+			$daerah=DB::table('kecamatan')
+			->where('kdkecamatan',$request->kdkecamatan)->selectRaw("'".$daerah->parent." ".$daerah->name." -> ' as parent,
+				kdkecamatan as id,'KECAMATAN' as jenis,nmkecamatan as name")
+			->first();
 		}
 
+
 		if($request->kddesa){
-			$where[]=[DB::raw("(d.kode_desa"),'=',$request->kddesa];
+			$where[]=[DB::raw("(d.kode_desa)"),'=',$request->kddesa];
+
+			$daerah=DB::table('master_desa')
+			->where('kode_bps',$request->kddesa)->selectRaw("'".$daerah->parent." ".$daerah->jenis." ".$daerah->name." -> ' as parent,
+				kode_bps as id, 'DESA' as jenis,desa as name")
+			->first();
+
 		}
+
+
 
 		
 
@@ -89,9 +118,18 @@ class ValidasiCtrl extends Controller
 			$data=$data->where($where);
 		}
 
-		$data=$data->get();
+		$data=$data->paginate(10);
 
-		return view('admin.validasi.data')->with(['data'=>$data,'data_index'=>$data_index,'table'=>$table]);
+		$data=$data->appends([
+			'kddesa'=>$request->kddesa,
+			'kdprovinsi'=>$request->kdprovinsi,
+			'kdkota'=>$request->kdkota,
+			'kdkecamatan'=>$request->kdkecamatan,
+			'data'=>$request->data,
+		]);
+
+		return view('admin.validasi.data')
+		->with(['daerah'=>$daerah,'data'=>$data,'data_index'=>$data_index,'table'=>$table]);
 	}
 
 

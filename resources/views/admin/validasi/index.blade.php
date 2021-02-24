@@ -24,7 +24,7 @@
 <div class="form-group">
 
 				<label>PROVINSI</label>
-				<select class="form-control" name="kdprovinsi" id='provinsi'>
+				<select class="form-control" name="kdprovinsi" id='provinsi' required="">
 					@foreach($provinsi as $key=>$t)
 						<option value="{{$t->kdprovinsi}}">{{$t->nmprovinsi}}</option>
 					@endforeach

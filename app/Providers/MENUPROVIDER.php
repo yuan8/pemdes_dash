@@ -100,8 +100,14 @@ class MENUPROVIDER extends ServiceProvider
                     'text'=>('KATEGORI'),
                     'href'=>route('admin.kategori.index'),
                     'class'=>'',
-                    'icon'=>'fa fa-file',
+                    'icon'=>'fa fa-circle',
 
+                ],
+                [
+                    'text'=>('DATA'),
+                    'href'=>route('admin.data.index'),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
                 ],
                 [
                     'text'=>('VERIFIKASI DAN VALIDASI DATA'),

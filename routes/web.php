@@ -34,6 +34,13 @@ Route::prefix('admin')->middleware('auth:web')->group(function(){
 
 	});
 
+	Route::prefix('data')->group(function(){
+		Route::get('/','ADMIN\DataCtrl@index')->name('admin.data.index');
+		Route::get('/data','ADMIN\DataCtrl@data')->name('admin.data.detail');
+		Route::get('/data/create/{jenis}','ADMIN\DataCtrl@create')->name('admin.data.create');
+
+	});
+
 });
 
 

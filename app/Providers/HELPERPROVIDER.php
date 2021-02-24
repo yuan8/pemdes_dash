@@ -64,6 +64,10 @@ class HELPERPROVIDER extends ServiceProvider
 				'table'=>'dash_potensi_jenis_lahan',
 				'name'=>'Data Potensi Jenis Lahan'
 			],
+			[
+				'table'=>'dash_potensi_jumlah_penduduk',
+				'name'=>'Data Potensi Jumlah Penduduk'
+			]
 
 		];
 
