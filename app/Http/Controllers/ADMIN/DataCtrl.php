@@ -92,10 +92,10 @@ class DataCtrl extends Controller
 		$path=Storage::put('public/publication/DATASET/'.date('Y'),$request->file);
 		$path=Storage::url($path);
 		$ext = pathinfo($path, PATHINFO_EXTENSION);
-		$size=fie_size($request->file)??0;
+		$size=filesize($request->file)??0;
 		$size=$size / 1048576;
 		$data=DB::table('data')
-		
+
 		->insert([
 			'name'=>$request->name,
 			'delivery_type'=>'DATASET',
