@@ -26,6 +26,13 @@ class DataCtrl extends Controller
 		if($request->kategori){
 			$where[]=['gc.id_category','=',$request->kategori];
 			$Orwhere[]=['gc.id_category','=',$request->kategori];
+			$pilih_kategori=(array)DB::table('category')
+				->selectRaw("concat(replace(type,'_',' '),' - ',name) as text,id ")
+				->where([
+					['id','=',$request->kategori],
+					
+				])
+				->first();
 
 		}
 
@@ -43,9 +50,64 @@ class DataCtrl extends Controller
 		}
 
 		$data=$data->paginate(10);
+		$data->appends([
+			'kategori'=>$request->kategori,
+			'q'=>$request->q,
+			'jenis'=>$request->jenis,
+		]);
 
-		return view('admin.data.index')->with(['data'=>$data,'request'=>$request]);
+		return view('admin.data.index')->with(['pilih_kategori'=>isset($pilih_kategori)?$pilih_kategori['text']:null,'data'=>$data,'request'=>$request]);
 
+	}
+
+	public function create($jenis){
+		switch ($jenis) {
+			case 'DATASET':
+				return view('admin.data.handle.create_data_set')->with(['JENIS'=>'DATASET']);
+				# code...
+				break;
+			
+			default:
+				# code...
+				break;
+		}
+	}
+
+	public function store($jenis,Request $request){
+		switch ($jenis) {
+			case 'DATASET':
+				return static::store_dataset($request);
+				# code...
+				break;
+			
+			default:
+				# code...
+				break;
+		}
+	}
+
+
+	static function store_dataset(Request $request){
+		$path=Storage::put('public/publication/DATASET/'.date('Y'),$request->file);
+		$path=Storage::url($path);
+		$ext = pathinfo($path, PATHINFO_EXTENSION);
+		
+		$data=DB::table('data')
+		->insert([
+			'name'=>$request->name,
+			'delivery_type'=>'DATASET',
+			'type'=>'DOKUMEN',
+			'extension'=>$ext,
+			'year'=>date('Y'),
+			'keywords'=>($request->keywords)?json_encode($request->keywords,true):'[]',
+			'document_path'=>$path
+		]);
+
+		if($data){
+			return back();
+		}else{
+			return abort(500);
+		}
 	}
 
 }

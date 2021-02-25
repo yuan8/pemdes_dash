@@ -253,10 +253,11 @@ class DataCtrl extends Controller
     }
 
 
-    public function detail($tahun,$id,$slug=null){
+    public function detail($id,$slug=null){
         $instansi=null;
         $data=DB::table('data as d')
         ->where('id',$id)->first();
+
         // dd($data);
 
         if($data){

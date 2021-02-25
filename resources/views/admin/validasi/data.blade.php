@@ -6,8 +6,11 @@
 	<label>DATA</label>
 	<form method="get" action="{{url()->full()}}">
 		<div class="row">
-			<div class="col-md-6">
-				<select class="form-control" name="data" onchange="$(this).parent().parent().parent().submit()">
+		<div class="col-md-6">
+			@foreach($req as $keyr=>$r)
+				<input type="hidden" name="{{$keyr}}" value="{{$r}}">
+			@endforeach
+			<select class="form-control" name="data"  id="data" onchange="$(this).parent().parent().parent().submit()">
 		@foreach($table as $key=>$t)
 			<option value="{{$key}}" {{$data_index==$key?'selected':''}} >{{$t['name']}}</option>
 		@endforeach
@@ -15,6 +18,10 @@
 			</div>
 		</div>
 	</form>
+
+	<script type="text/javascript">
+		$('#data').select2();
+	</script>
 </div>
 <hr style="border-color: #fff">
 
@@ -67,15 +74,19 @@
 			<thead>
 				<tr>
 					@foreach($data[0] as $key=>$x)
-						<th>{{str_replace('_',' ',$key)}}</th>
+						@if(HPV::vdata($key))
+							<th>{{str_replace('_',' ',$key)}}</th>
+						@endif
 					@endforeach
 				</tr>
 			</thead>
 			<tbody>
 				@foreach($data as $d)
 					<tr>
-						@foreach($d as $x)
-							<td>{{$x}}</td>
+						@foreach($d as $kk=> $x)
+							@if(HPV::vdata($kk))
+								<td>{{HPV::nformat($x,$kk)}}</td>
+							@endif
 						@endforeach
 					</tr>
 				@endforeach

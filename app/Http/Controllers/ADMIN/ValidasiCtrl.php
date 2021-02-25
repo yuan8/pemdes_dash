@@ -128,8 +128,15 @@ class ValidasiCtrl extends Controller
 			'data'=>$request->data,
 		]);
 
+		$req=[
+			'kddesa'=>$request->kddesa,
+			'kdprovinsi'=>$request->kdprovinsi,
+			'kdkota'=>$request->kdkota,
+			'kdkecamatan'=>$request->kdkecamatan,
+		];
+
 		return view('admin.validasi.data')
-		->with(['daerah'=>$daerah,'data'=>$data,'data_index'=>$data_index,'table'=>$table]);
+		->with(['daerah'=>$daerah,'data'=>$data,'req'=>$req,'data_index'=>$data_index,'table'=>$table]);
 	}
 
 

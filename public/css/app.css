@@ -52,7 +52,7 @@
 
 .main-header .navbar-static-top{
 	/*position: absolute;*/
-	background: transparent;
+	background: transparent!important;
 
 }
 

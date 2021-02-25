@@ -23,6 +23,11 @@ Route::prefix('/meta')->group(function () {
     Route::get('kecamatan/{kota?}','API\KodeDaerahCtrl@kecamatan')->name('api.meta.kecamatan');
     Route::get('desa/{kecamatan?}','API\KodeDaerahCtrl@desa')->name('api.meta.desa');
 
+    Route::middleware('auth:api')->group(function(){
+    	Route::get('kategori','API\KetegoriCtrl@get')->name('api.meta.kategori');
+    	Route::get('instansi','API\KetegoriCtrl@instansi')->name('api.meta.instansi');
+
+    });
 
 
 });

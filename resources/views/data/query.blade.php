@@ -76,7 +76,7 @@
 
                   	@else
                   		<div class="btn-group">
-                  		<a href="" class="btn btn-success btn-xs">Download</a>
+                  		<a href="{{url($d->document_path)}}" download="" class="btn btn-success btn-xs">Download</a>
                   		<a href="{{route('query.data.detail',['id'=>$d->id,'slug'=>'ddd'])}}" class="btn btn-info btn-xs">Lihat Data</a>
 
                   		</div>

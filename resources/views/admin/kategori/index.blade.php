@@ -2,7 +2,7 @@
 @section('content_header')
 <h4>KATEGORI</h4>
 <div class="btn-group">
-<a href="{{route('admin.kategori.create')}}" class="btn btn-primary">TAMBAH</a>
+<a href="{{route('admin.kategori.create')}}" class="btn btn-success">TAMBAH KATEGORI</a>
 	
 </div>
 @stop
@@ -37,7 +37,10 @@
 			<tbody>
 				@foreach($data as $key=>$d)
 					<tr>
-						<td></td>
+						<td>
+							<a href="{{route('admin.kategori.edit',['id'=>$d->id])}}" class="btn btn-warning btn-xs"><i class="fa fa-pen"></i> Edit</a>
+							
+						</td>
 						<td>{{$key+1}}</td>
 						<td>{{str_replace('_',' ',$d->type)}}</td>
 						<td><img style="width:20px;" src="{{asset($d->image_path)}}"></td>
@@ -61,7 +64,6 @@
 		'lengthChange':false,
 		'ordering':false,
 		'paging':false
-
 
 	});
 </script>

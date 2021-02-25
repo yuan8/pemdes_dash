@@ -4,7 +4,7 @@
 
 @stop
 @section('content')
-<div class="banner-content text-center p-10 p-b-50" style="position: relative; background:linear-gradient(163deg, rgba(146,146,232,1) 17%, rgba(51,122,183,1) 52%, rgba(42,67,111,1) 88%); min-height: 100px; margin-bottom: 50px;">
+<div class="banner-content text-center p-10 p-b-50 background-blue" style="position: relative; min-height: 100px; margin-bottom: 50px;">
 	<ol class="breadcrumb text-left">
     <li><a href="{{url('')}}"><i class="fa fa-dashboard"></i> Home</a></li>
     <li class="active text-capitalize">{{ strtolower((!empty($instansi)) ?str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type)).' - '.$instansi->name:(isset($title)?$title:'Cari Data'))}}</li>
@@ -24,7 +24,7 @@
 			<div class="input-group" style="border: 2px solid #6db3ee;border-radius: 30px; overflow: hidden; ">
       <input type="text" class="form-control" name="q" value="{{$request->q}}" placeholder="Cari {{isset($title)?strtolower($title):'Data'}}" style="height: 55px;">
       <span class="input-group-btn">
-        <button class="btn btn-primary" type="submit" style="height: 55px; min-width: 100px;"><i class="fa fa-search"></i></button>
+        <button class="btn btn-primary background-blue" type="submit" style="height: 55px; min-width: 100px;"><i class="fa fa-search"></i></button>
       </span>
     </div>
 		</form>
@@ -56,7 +56,7 @@
 		@endforeach
 
 		@if(count($data)<1)
-			<h5 class="text-center"><b>BELUM TERDAPAT DATA ORGANISASI</b></h5>
+			<h5 class="text-center"><b>BELUM TERDAPAT DATA INSTANSI "{{$request->q}}"</b></h5>
 		@endif
 	</div>
 		{{$data->links()}}

@@ -26,6 +26,8 @@ Route::prefix('admin')->middleware('auth:web')->group(function(){
 	Route::get('/','ADMIN\AdminCtrl@index')->name('admin.index');
 	Route::get('/ketagori','ADMIN\KategoriCtrl@index')->name('admin.kategori.index');
 	Route::get('/ketagori/form/create','ADMIN\KategoriCtrl@create')->name('admin.kategori.create');
+
+	Route::get('/ketagori/form/edit/{id}','ADMIN\KategoriCtrl@edit')->name('admin.kategori.edit');
 	Route::post('/ketagori/form/create','ADMIN\KategoriCtrl@store')->name('admin.kategori.store');
 
 	Route::prefix('validasi')->group(function(){
@@ -38,6 +40,11 @@ Route::prefix('admin')->middleware('auth:web')->group(function(){
 		Route::get('/','ADMIN\DataCtrl@index')->name('admin.data.index');
 		Route::get('/data','ADMIN\DataCtrl@data')->name('admin.data.detail');
 		Route::get('/data/create/{jenis}','ADMIN\DataCtrl@create')->name('admin.data.create');
+		Route::post('/data/create/{jenis}','ADMIN\DataCtrl@store')->name('admin.data.store');
+
+		Route::get('/data/update/{id}','ADMIN\DataCtrl@edit')->name('admin.data.edit');
+		Route::put('/data/update/{id}','ADMIN\DataCtrl@update')->name('admin.data.update');
+
 
 	});
 
@@ -126,7 +133,7 @@ Route::prefix('v')->group(function(){
 
 	Route::get('/query-data-category/{id_category}/{slug}', 'DataCtrl@categorical')->name('query.data.categorycal');
 
-	Route::get('/data/{id}/{slug}', 'DataCtrl@detail')->name('query.data.detail');
+	Route::get('/data-detail/{id}/{slug?}', 'DataCtrl@detail')->name('query.data.detail');
 
 
 });

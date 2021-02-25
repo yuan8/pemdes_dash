@@ -3,19 +3,20 @@
 <h4>DATA</h4>
 <div class="btn-group">
 <a href="{{route('admin.data.create',['type'=>'VISUALISASI'])}}" class="btn btn-success">TAMBAH DATA VISUALISASI</a>
-<a href="{{route('admin.data.create',['type'=>'DATA_SET'])}}" class="btn btn-success">TAMBAH DATA SET</a>
+<a href="{{route('admin.data.create',['type'=>'DATASET'])}}" class="btn btn-success">TAMBAH DATA SET</a>
 <a href="{{route('admin.data.create',['type'=>'INFOGRAFIS'])}}" class="btn btn-success">TAMBAH DATA INFOGRAFIS</a>
 
 </div>
 <hr style="background: #fff; border-color: #fff;">
-<div class="row">
+<form method="get">
+	<div class="row">
 	<div class="col-md-4">
 		<div class="form-group">
 			<label>TEMA</label>
 			<select class="form-control" id="tema" name="tema">
 				<option value="">SEMUA</option>
-				<option value="TEMA_PRIMER">TEMA UTAMA</option>
-				<option value="TEMA_SEKUNDER">TEMA PENDUKUNG</option>
+				<option value="TEMA_PRIMER" {{$request->tema=='TEMA_PRIMER'?'selected':''}}>TEMA UTAMA</option>
+				<option value="TEMA_SEKUNDER" {{$request->tema=='TEMA_SEKUNDER'?'selected':''}}>TEMA PENDUKUNG</option>
 			</select>
 		</div>
 
@@ -26,7 +27,6 @@
 		<div class="form-group">
 			<label>KATEGORI</label>
 			<select class="form-control" id="kategori" name="kategori">
-				<option value="">SEMUA</option>
 			</select>
 		</div>
 
@@ -38,9 +38,9 @@
 			<label>JENIS</label>
 			<select class="form-control" id="jenis" name="jenis">
 				<option value="">SEMUA</option>
-				<option value="VISUALISASI">VISUALISASI</option>
-				<option value="DATA_SET">DATA SET</option>
-				<option value="INFOGRAFIS">INFOGRAFIS</option>
+				<option value="VISUALISASI" {{$request->jenis=='VISUALISASI'?'selected':''}} >VISUALISASI</option>
+				<option value="DATASET"  {{$request->jenis=='DATASET'?'selected':''}}>DATASET</option>
+				<option value="INFOGRAFIS"  {{$request->jenis=='INFOGRAFIS'?'selected':''}}>INFOGRAFIS</option>
 
 
 			</select>
@@ -48,7 +48,14 @@
 
 		
 	</div>
+	<div class="col-md-2">
+		<div class="btn-group">
+		<button type="submit" class="btn btn-success">Filter</button>
+	</div>
+	</div>
 </div>
+	
+</form>
 @stop
 
 
@@ -65,15 +72,17 @@
 					<th>JUDUL</th>
 					<th>DESKRIPSI</th>
 
-
-
-
 				</tr>
 			</thead>
 			<tbody>
 				@foreach($data as $d)
 					<tr>
-						<td></td>
+						<td>
+							<a href="{{route('query.data.detail',['id'=>$d->id,'slug'=>HPV::slugify($d->name)])}}" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
+							<a href="" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
+							<a href="" class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </a>
+
+						</td>
 						<td>{{$d->delivery_type}}</td>
 						<td>{{str_replace('_',' ',$d->tema)}}</td>
 
@@ -86,13 +95,67 @@
 
 			</tbody>
 		</table>
+		{{$data->links()}}
 	</div>
 </div>
 @stop
 
 @section('js')
 <script type="text/javascript">
-	
+
+
+
+	function ketegori(){
+		$('#kategori').val(null).trigger('change');
+		if($('#tema').val()){
+			$('#kategori').select2({
+				'ajax':{
+					'url':'{{route('api.meta.kategori')}}?tema='+$('#tema').val(),
+					headers:{
+						'Authorization':'Bearer {{Auth::User()->api_token}}',
+						 "Content-Type" : "application/json",
+					},
+					data: function (term, page) {
+			            return {
+			                q: term.term,
+			                tema:$('#tema').val()
+			            };
+			        },
+			        results: function (data, page) {
+			            console.log(data);
+			            return {
+			                results: data.itemName,
+			                more: more
+			            };
+			        }
+				}
+			})
+		}
+
+
+	}
+
+	$('#kategori').select2();
+	$('#tema').select2();
+	$('#tema').on('change',function(){
+		ketegori();
+	});
+
+	$('#tema').trigger('change');
+
+
+
+
+	$('#jenis').select2();
+
+
+	@if($request->kategori)
+		$('#kategori').html('<option selected value="{{$request->kategori}}}">{{$pilih_kategori}}</option>').trigger('change');
+	@endif
+
+
+
+
 </script>
 
 @stop
