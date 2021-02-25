@@ -45,7 +45,7 @@
 		@if(isset($instansi))
 		<div class="box-solid box c-fix"  data-spy="affix" data-offset-top="200">
 			<div class="box-header text-center">
-				<img style="max-height: 200px;" src="{{$instansi->image_path}}" class="img-thumbnail img-responsive">
+				<img style="max-height: 200px;" src="{{url($instansi->image_path)}}" class="img-thumbnail img-responsive">
 			</div>
 			<div class="box-body">
 				<h3><b>{{str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type))}} - {{$instansi->name}}</b></h3>
