@@ -30,7 +30,7 @@
 			</div>
 			<div class="form-group">
 				<label>ROUTE</label>
-				<input type="text" class="form-control" name="route" required="">
+				<input type="text" class="form-control" name="route" >
 			</div>
 			<div class="form-group">
 				<label>IMAGE</label>

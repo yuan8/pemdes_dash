@@ -23,10 +23,14 @@
 
 			</div>
 
-
 			<div class="form-group">
 				<label>DESKRIPSI</label>
 				<textarea class="form-control" name="description">{!!$data->description!!}</textarea>
+			</div>
+
+			<div class="form-group">
+				<label>ROUTE</label>
+				<input type="text" class="form-control" name="route" value="{{$data->route}}">
 			</div>
 			
 			<div class="form-group">

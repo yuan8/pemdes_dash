@@ -50,6 +50,8 @@ class KategoriCtrl extends Controller
         }
             $data['name']=$request->name;
             $data['type']=$request->jenis;
+            $data['route']=$request->route??'query.data.categorycal';
+
             $data['description']=$request->description;
 
          DB::table('category')->where('id',$id)->update($data);
@@ -72,7 +74,7 @@ class KategoriCtrl extends Controller
     		'name'=>$request->name,
     		'description'=>$request->description,
     		'type'=>$request->jenis,
-    		'route'=>$request->route,
+    		'route'=>$request->route??'query.data.categorycal',
     		'image_path'=>$image_path
     	]);
 

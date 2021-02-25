@@ -50,7 +50,7 @@
 				<div class="box-body">
 					<div class="form-group">
 						<label>INSTANSI</label>
-						<select class="form-control" id="instansi"  name="id_instansi" required="">	
+						<select class="form-control" id="instansi"   name="id_instansi" required="">	
 						</select>
 					</div>
 					<div class="form-group">

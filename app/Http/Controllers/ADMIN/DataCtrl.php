@@ -27,10 +27,10 @@ class DataCtrl extends Controller
 			$where[]=['gc.id_category','=',$request->kategori];
 			$Orwhere[]=['gc.id_category','=',$request->kategori];
 			$pilih_kategori=(array)DB::table('category')
+
 				->selectRaw("concat(replace(type,'_',' '),' - ',name) as text,id ")
 				->where([
 					['id','=',$request->kategori],
-					
 				])
 				->first();
 
@@ -39,7 +39,8 @@ class DataCtrl extends Controller
 		$data=DB::table('data as d')
 		->leftJoin('data_group as gc','gc.id_data','=','d.id')
 		->leftJoin('category as c','c.id','=','gc.id_category')
-		->selectRaw('c.name as nama_category,c.type as tema ,d.*');
+		->selectRaw("group_concat(c.name) as nama_category,c.type as tema ,d.*")
+		->groupBy('d.id');
 
 		if(count($where)){
 			$data=$data->where($where);
@@ -91,14 +92,19 @@ class DataCtrl extends Controller
 		$path=Storage::put('public/publication/DATASET/'.date('Y'),$request->file);
 		$path=Storage::url($path);
 		$ext = pathinfo($path, PATHINFO_EXTENSION);
-		
+		$size=fie_size($request->file)??0;
+		$size=$size / 1048576;
 		$data=DB::table('data')
+		
 		->insert([
 			'name'=>$request->name,
 			'delivery_type'=>'DATASET',
 			'type'=>'DOKUMEN',
 			'extension'=>$ext,
+			'description'=>$request->description,
+			'id_instansi'=>$request->id_instansi??15,
 			'year'=>date('Y'),
+			'size'=>$size,
 			'keywords'=>($request->keywords)?json_encode($request->keywords,true):'[]',
 			'document_path'=>$path
 		]);
