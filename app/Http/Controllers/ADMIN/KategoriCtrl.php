@@ -50,10 +50,9 @@ class KategoriCtrl extends Controller
         }
             $data['name']=$request->name;
             $data['type']=$request->jenis;
-            $data['name']=$request->description;
+            $data['description']=$request->description;
 
-
-        DB::table('category')->where('id',$id)->update($data);
+         DB::table('category')->where('id',$id)->update($data);
 
         return back();
 
