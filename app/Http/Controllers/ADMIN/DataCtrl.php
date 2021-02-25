@@ -102,7 +102,7 @@ class DataCtrl extends Controller
 			'type'=>'DOKUMEN',
 			'extension'=>$ext,
 			'description'=>$request->description,
-			'id_instansi'=>$request->id_instansi??15,
+			'organization_id'=>$request->id_instansi??15,
 			'year'=>date('Y'),
 			'size'=>$size,
 			'keywords'=>($request->keywords)?json_encode($request->keywords,true):'[]',
