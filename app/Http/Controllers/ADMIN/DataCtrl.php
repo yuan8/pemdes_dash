@@ -88,7 +88,7 @@ class DataCtrl extends Controller
 	}
 
 
-	static function store_dataset($tahun,Request $request){
+	static function store_dataset(Request $request){
 		$JSON=static::create_json_dataset($request->file);
 
 
@@ -122,7 +122,7 @@ class DataCtrl extends Controller
 		}
 	}
 
-	static function create_json_dataset($tahun,$data){
+	static function create_json_dataset($data){
 		$dataArray=[];
 		$start_data=6;
 		$start_header=3;

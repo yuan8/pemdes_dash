@@ -32,6 +32,8 @@ class ValidateCtrl extends Controller
 				return view('admin.validasi.api.form.create')->with(['data'=>$data,'table'=>$table]);
 
 			}
+		}else{
+			return '';
 		}
 	}
 

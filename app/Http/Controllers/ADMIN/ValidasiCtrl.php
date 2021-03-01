@@ -140,6 +140,7 @@ class ValidasiCtrl extends Controller
 			['cfm.table','=',DB::RAW("'".$table[$data_index]['table']."'") ],
 			['cfm.tahun','=',DB::RAW($tahun)]
 		])
+		->where('d.tahun',$tahun)
 		->selectRaw(" (case when (cfm.id) then 'Valid' else 'Belum Divalidasi' end)  as Status_Verifikasi_Data, md.desa as Nama_Desa, mkc.nmkecamatan as Nama_Kecamatan,d.*");
 		if(count($where)>0){
 			$data=$data->where($where);

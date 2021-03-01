@@ -5,7 +5,7 @@
 @stop
 
 @section('content')
-	<form action="{{route('admin.data.store',['jenis'=>'DATASET'])}}" enctype='multipart/form-data' method="post">
+	<form action="{{route('admin.data.store',['tahun'=>$GLOBALS['tahun_access'],'jenis'=>'DATASET'])}}" enctype='multipart/form-data' method="post">
 		@csrf
 
 		<div class="row">

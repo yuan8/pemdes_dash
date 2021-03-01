@@ -1,15 +1,15 @@
 <ul class="nav navbar-nav">
                       
-
+<li>
+    <a href="#"  ><i class="fa fa-calendar"></i> Pindah Tahun</a>
+  </li>
 @if(Auth::check())
 @if(config($CONF_THEM.'.right_sidebar') and (in_array(Auth::User()->role,[1,3])))
   <li>
     <a href="#" data-toggle="control-sidebar" ><i class="fa fa-link"></i> URUSAN</a>
   </li>
 @endif
-<li>
-    <a href="#"  ><i class="fa fa-calendar"></i> PINDAH TAHUN</a>
-  </li>
+
  <li class="dropdown user user-menu ">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
       <img src="{{asset('asset/user.png')}}" class="user-image" alt="User Image">

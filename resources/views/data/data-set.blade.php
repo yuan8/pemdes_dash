@@ -5,7 +5,7 @@
 <div class="banner-content text-center p-10 p-b-50 background-blue" style="position: relative;  min-height: 100px; margin-bottom: 50px;">
 	<ol class="breadcrumb text-left">
     <li><a href="{{url('')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class=" text-capitalize"><a href="{{route('query.data.categorycal',['id'=>$instansi->id,'slug'=>'slug-test'])}}">{{ strtolower((!empty($instansi)) ?$instansi->type.' - '.$instansi->name:'')}}</a>  </li>
+    <li class=" text-capitalize"><a href="{{route('query.data.categorycal',['tahun'=>$GLOBALS['tahun_access'],'id'=>$instansi->id,'slug'=>'slug-test'])}}">{{ strtolower((!empty($instansi)) ?$instansi->type.' - '.$instansi->name:'')}}</a>  </li>
     <li class="text-capitalize">
     	{{strtolower($data->name)}}
     </li>

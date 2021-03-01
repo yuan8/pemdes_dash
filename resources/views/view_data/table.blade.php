@@ -15,7 +15,7 @@
 		<table class="table table-bordered" id="table-{{$id_dom}}">
 			<thead>
 				<tr>
-						@if($level!=10)
+					@if($level!=10)
 
 					<th rowspan="2">AKSI</th>
 					@endif
