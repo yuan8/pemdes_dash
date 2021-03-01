@@ -137,8 +137,9 @@ class KependudukanCtrl extends Controller
           'child_f_prefix'=>"get_point_2(",
           'child_f_surfix'=>")",
           'scope_map'=>'idn',
-
-        ])->render().view('chart.table')->with(['series'=>$series])->render();
+        ])->render().
+        view('chart.table')->with(['series'=>$series,'child_f_prefix'=>"get_point_2(",
+          'child_f_surfix'=>")"])->render();
 
     }
 
@@ -252,7 +253,8 @@ class KependudukanCtrl extends Controller
         'child_f_surfix'=>")",
         'scope_map'=>'idn_'.$kodepemda,
 
-        ])->render().view('chart.table')->with(['series'=>$series])->render();
+        ])->render().view('chart.table')->with(['series'=>$series,'child_f_prefix'=>"get_point_3(",
+          'child_f_surfix'=>")"])->render();
     }
 
      public function get_jp_kecamatan($kodepemda){
@@ -322,7 +324,8 @@ class KependudukanCtrl extends Controller
         'legend_map'=>'JUMALAH PENDUDUK',
 
 
-        ])->render().view('chart.table')->with(['series'=>$series])->render();
+        ])->render().view('chart.table')->with(['series'=>$series,'child_f_prefix'=>"get_point_4(",
+          'child_f_surfix'=>")"])->render();
     }
 
 
@@ -363,7 +366,8 @@ class KependudukanCtrl extends Controller
           $series[1]['data'][]=[
             'name'=>$value->name,
             'y'=>(float)$value->jumlah_p,
-          'id'=>$value->id,
+            'id'=>$value->id,
+            'satuan'=>'Jiwa'
 
 
 
@@ -372,8 +376,6 @@ class KependudukanCtrl extends Controller
             'name'=>$value->name,
             'y'=>(float)$value->jumlah_kk,
             'satuan'=>'Jiwa','id'=>$value->id,
-
-
 
           ];
       }

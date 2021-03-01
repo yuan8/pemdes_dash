@@ -31,3 +31,7 @@ Route::prefix('/meta')->group(function () {
 
 
 });
+
+Route::prefix('data/admin/{tahun}')->middleware(['auth:api','bindTahun'])->group(function(){
+	Route::get('validation-form/{table}/{id}','API\ValidateCtrl@form')->name('api.data.validate.form');
+});

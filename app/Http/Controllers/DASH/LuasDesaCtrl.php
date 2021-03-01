@@ -20,7 +20,7 @@ use DB;
         ->selectRaw("p.kdprovinsi as id,
         	(select count(distinct(d.kode_bps)) from master_desa as d where left(d.kode_bps,2)=p.kdprovinsi) as jumlah_desa,
         	count(distinct(jp.kode_desa)) as jumlah_desa_mengisi,
-        	p.nmprovinsi as name,sum(jp.luas_wilayah) as luas_wilayah,sum(jp.penetapan_batas) as penetapan_batas,sum(jp.peta_batas) as peta_batas")
+        	p.nmprovinsi as name ,sum(jp.luas_wilayah) as luas_wilayah,sum(jp.penetapan_batas) as penetapan_batas,sum(jp.peta_batas) as peta_batas")
         ->groupBy('p.kdprovinsi')
         ->where('p.kdprovinsi','<>',0)
         ->get();
@@ -61,18 +61,13 @@ use DB;
               'satuan'=>'Desa',
               'id'=>$value->id,
               'route'=>route('d.luas_desa.chart.k',['kodepemda'=>$value->id])
-
-
             ];
-
-            
 
             $series[1]['data'][]=[
               'name'=>$value->name,
               'y'=>(float)$value->jumlah_desa_mengisi,
               'satuan'=>'Desa',
               'id'=>$value->id,
-
               'route'=>route('d.luas_desa.chart.k',['kodepemda'=>$value->id])
 
 
@@ -83,10 +78,7 @@ use DB;
               'y'=>(float)$value->luas_wilayah,
               'satuan'=>'Ha',
               'id'=>$value->id,
-
               'route'=>route('d.luas_desa.chart.k',['kodepemda'=>$value->id])
-
-
             ];
             
 
@@ -96,7 +88,6 @@ use DB;
               'value'=>(float)$value->luas_wilayah,
               'y'=>(float)$value->luas_wilayah,
               'route'=>route('d.luas_desa.chart.k',['kodepemda'=>$value->id]),
-
               'data_map'=>[
                 [
                   
@@ -123,6 +114,7 @@ use DB;
               ]
             ];
         }
+
           return view('chart.compone_chart_2')->with(
         	[ 'series'=>$series,
             'series_map'=>$series_map,

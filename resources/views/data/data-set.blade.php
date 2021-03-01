@@ -17,13 +17,13 @@
 
 	</div>
 
-	<div class="container">
+	<div class="">
 		<div class="box box-solid">
 			<div class="box-body">
 				<h5><b>Deskripsi</b></h5>
 				<p>{!!nl2br($data->description)!!}</p>
 				<hr>
-				<h5><b>Meta Data</b></h5>
+				{{-- <h5><b>Meta Data</b></h5>
 				<table class="table table-bordered">
 					<thead>
 						<tr>
@@ -55,11 +55,10 @@
 					</tbody>
 				</table>
 				<hr>
-				<h5><b>Data</b></h5>
+				<h5><b>Data</b></h5> --}}
 				<div class="btn-group" style="">
-					<a href="{{url($data->document_path)}}" download="" class="btn btn-primary"> <i class="fa fa-download"></i> Download </a>
+					
 				</div>
-				<hr>
 				@if(in_array(strtolower($data->extension), ['xlsx','xls','csv']))
 				<div class="">
 					@include('partials.show-table-data')

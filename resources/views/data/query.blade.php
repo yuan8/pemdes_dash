@@ -72,17 +72,18 @@
                    <div class="progress">
               	<div class="progress"></div>
               </div>
-                  	@if($d->delivery_type=='VISUALISASI')
+                  	@if($d->delivery_type=='AUTOMATION')
 
-                  	@else
+                  	@elseif($d->type=='DATASET')
                   		<div class="btn-group">
                   		<a href="{{url($d->document_path)}}" download="" class="btn btn-success btn-xs">Download</a>
-                  		<a href="{{route('query.data.detail',['id'=>$d->id,'slug'=>'ddd'])}}" class="btn btn-info btn-xs">Lihat Data</a>
+                  		<a href="{{route('query.data.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>'ddd'])}}" class="btn btn-info btn-xs">Lihat Data</a>
 
                   		</div>
-                   - {{Carbon\Carbon::parse($d->updated_at)->format('d F Y h:i')}}
 
                   	@endif
+                   - {{Carbon\Carbon::parse($d->updated_at)->format('d F Y h:i')}}
+                  	
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -114,7 +115,6 @@
 	</style>
 
 	<script type="text/javascript">
-	console.log('run');
 
 		$(function(){
 			setTimeout(function(){

@@ -10,7 +10,7 @@ class KategoriCtrl extends Controller
 {
     //
 
-    public function index(Request $request){
+    public function index($tahun,Request $request){
 
     	$jenis='TEMA_PRIMER';
     	if($request->jenis){
@@ -23,12 +23,12 @@ class KategoriCtrl extends Controller
 
 
 
-    public function create(){
+    public function create($tahun){
     	return view('admin.kategori.create');
 
     }
 
-    public function edit($id){
+    public function edit($tahun,$id){
         $data=DB::table('category')->where('id',$id)->first();
         if($data){
             return view('admin.kategori.edit')->with(['data'=>$data]);
@@ -38,7 +38,7 @@ class KategoriCtrl extends Controller
 
     }
 
-    public function update($id,Request $request){
+    public function update($tahun,$id,Request $request){
         $image_path=null;
         $data=[];
         if($request->image_path){
@@ -60,7 +60,7 @@ class KategoriCtrl extends Controller
 
     }
 
-    public function store(Request $request){
+    public function store($tahun,Request $request){
 
     	$image_path=null;
 

@@ -7,7 +7,7 @@
 
 @section('content')
 
-	<form method="get" action="{{route('admin.validasi.data')}}">
+	<form method="get" action="{{route('admin.validasi.data',['tahun'=>$GLOBALS['tahun_access']])}}">
 		<div class="row">
 			<div class="col-md-6">
 <div class="form-group">

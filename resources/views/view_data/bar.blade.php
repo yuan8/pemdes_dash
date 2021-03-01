@@ -12,6 +12,7 @@ var xx=Highcharts.chart('{{$id_dom}}', {
         type: 'bar',
         height:500,
         marginLeft:100,
+        marginBottom:100,
 
     },
     title: {
@@ -22,7 +23,9 @@ var xx=Highcharts.chart('{{$id_dom}}', {
     xAxis: {
       type: "category",
       margin:0.1,
-
+      labels:{
+        text:''
+      },
       min:0,
       max:3,
       maxPadding:3,
@@ -31,31 +34,9 @@ var xx=Highcharts.chart('{{$id_dom}}', {
         padding:0
       }
     },
-    yAxis: 
-        @if(isset($satuan))
-         [
-         @foreach($satuan as $key=>$s)
-          { 
-          labels: {
-            format: '{value} {{$s['satuan']}}',
-          },
-          title: {
-            text: '{{$s['title']}}',
-            
-          },
-          @if($key==0)
-            opposite: true
-          @endif
-          },
-          @endforeach
-          ],
-         
-        @else
-        {
-        min: 0,
-        },
-
-        @endif
+    yAxis:{
+      
+    },
     scrollbar:{
          enabled:true
     },
@@ -83,15 +64,13 @@ var xx=Highcharts.chart('{{$id_dom}}', {
           events:{
             click:function(e){
               if(e.point.route!=undefined){
-                @if(isset($child_f_prefix))
-                {{$child_f_prefix}}e.point.route{{$child_f_surfix}}
-                @endif
+                get_data('#dom_l_'+e.point.next_dom,e.point.route);
               }
             }
           }
         }
 
     },
-    series: <?=json_encode($series) ?>
+    series: <?=json_encode($data_type['series']) ?>
 });
 </script>

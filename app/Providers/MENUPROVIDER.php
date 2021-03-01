@@ -35,7 +35,7 @@ class MENUPROVIDER extends ServiceProvider
             'top'=>[
                  [
                     'text'=>('Data'),
-                    'href'=>route('query.data' ),
+                    'href'=>route('query.data',['tahun'=>$GLOBALS['tahun_access']]),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-file',
 
@@ -43,35 +43,35 @@ class MENUPROVIDER extends ServiceProvider
 
                  [
                     'text'=>('Index Desa'),
-                    'href'=>route('organisasi'),
+                    'href'=>route('organisasi',['tahun'=>$GLOBALS['tahun_access']]),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-tag',
 
                 ],
                  [
                     'text'=>('Instansi'),
-                    'href'=>route('organisasi'),
+                    'href'=>route('organisasi',['tahun'=>$GLOBALS['tahun_access']]),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-users',
 
                 ],
                  [
                     'text'=>('Tema'),
-                    'href'=>route('tema'),
+                    'href'=>route('tema',['tahun'=>$GLOBALS['tahun_access']]),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-hashtag',
 
                 ],
                  [
                     'text'=>('Publikasi'),
-                    'href'=>route('query.data.delivery',['type'=>'publikasi']),
+                    'href'=>route('query.data.delivery',['tahun'=>$GLOBALS['tahun_access'],'type'=>'publikasi']),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-eye',
 
                 ],
                  [
                     'text'=>('Infografis'),
-                    'href'=>route('query.data.delivery',['type'=>'infografis']),
+                    'href'=>route('query.data.delivery',['tahun'=>$GLOBALS['tahun_access'],'type'=>'infografis']),
                     'top_nav_class'=>'',
                     'icon'=>'fa fa-image',
 
@@ -98,20 +98,20 @@ class MENUPROVIDER extends ServiceProvider
             'side_left'=>[
                  [
                     'text'=>('KATEGORI'),
-                    'href'=>route('admin.kategori.index'),
+                    'href'=>route('admin.kategori.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-circle',
 
                 ],
                 [
                     'text'=>('DATA'),
-                    'href'=>route('admin.data.index'),
+                    'href'=>route('admin.data.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
                 ],
                 [
                     'text'=>('VERIFIKASI DAN VALIDASI DATA'),
-                    'href'=>route('admin.validasi.index'),
+                    'href'=>route('admin.validasi.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-check',
                 ],
@@ -128,5 +128,14 @@ class MENUPROVIDER extends ServiceProvider
             'side_right'=>[]
         ];
         return $menu;
+    }
+
+    public static function login(){
+        return [
+            'top'=>[],
+            'side_left'=>[],
+            'side_right'=>[]
+
+        ];
     }
 }

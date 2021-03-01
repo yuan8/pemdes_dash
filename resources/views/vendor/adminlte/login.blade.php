@@ -1,7 +1,7 @@
 @extends('vendor.adminlte.master')
 @php
 $CONF_THEM='pusatlte';
-$CONF_MENU=MENUS::dashboard();
+$CONF_MENU=MENUS::login();
 @endphp
 @section('adminlte_css')
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">

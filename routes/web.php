@@ -14,15 +14,17 @@
 Auth::routes();
 
 Route::get('/',function(){
-	return redirect()->route('index');
+	return redirect()->route('index',['tahun'=>env('TAHUN')]);
 })->name('home');
 
 Route::get('/home',function(){
 	return redirect()->route('index');
 })->name('home.index');
 
+
+
 	
-Route::prefix('admin')->middleware('auth:web')->group(function(){
+Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(function(){
 	Route::get('/','ADMIN\AdminCtrl@index')->name('admin.index');
 	Route::get('/ketagori','ADMIN\KategoriCtrl@index')->name('admin.kategori.index');
 	Route::get('/ketagori/form/create','ADMIN\KategoriCtrl@create')->name('admin.kategori.create');
@@ -37,6 +39,10 @@ Route::prefix('admin')->middleware('auth:web')->group(function(){
 	Route::prefix('validasi')->group(function(){
 		Route::get('/','ADMIN\ValidasiCtrl@index')->name('admin.validasi.index');
 		Route::get('/data','ADMIN\ValidasiCtrl@data')->name('admin.validasi.data');
+		Route::post('/validated/{table}/{id}','ADMIN\ValidasiCtrl@validated')->name('admin.validasi.try');
+		Route::put('/validated/{table}/{id}','ADMIN\ValidasiCtrl@update')->name('admin.validasi.update');
+
+
 
 	});
 
@@ -56,8 +62,14 @@ Route::prefix('admin')->middleware('auth:web')->group(function(){
 
 
 
-Route::prefix('v')->group(function(){
+Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
+	Route::get('/tb', 'TestCtrl@tb')->name('tb');
+
+
+	Route::get('/visulisasi-p-table/{table}','TestCtrl@index')->name('visual.data.table');
+	Route::get('/get-data-v-table/{id}/{slug?}','TestCtrl@view')->name('get.data.table');
+
 	Route::get('/category/{id}/{slug?}', 'KategoriCtrl@index')->name('kategori.index');
 
 	Route::get('/category-data/{id}/{slug?}', 'KategoriCtrl@data')->name('kategori.data');

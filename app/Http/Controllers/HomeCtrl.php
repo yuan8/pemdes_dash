@@ -8,9 +8,8 @@ class HomeCtrl extends Controller
 {
     //
 
-    public function index(){
+    public function index($tahun){
 
-    
 
 
     	$tema=DB::table('category')->whereIn('type',['TEMA_PRIMER'])->where('id_parent','=',null)->get();

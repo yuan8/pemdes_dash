@@ -26,19 +26,19 @@ Highcharts.mapChart('{{$id_dom}}', {
             text:''
         },
         colorAxis: {
-           
+            maxColor:'{{isset($color_def)?$color_def:'#063a69'}}',
             labels: {
                 format: '{value}'
             }
         },
+
         series:{
           map:{
             events:{
             click:function(e){
                 if(e.point.route!=undefined){
-                console.log('{{$child_f_prefix}}');
                 @if(isset($child_f_prefix))
-                {{$child_f_prefix}}e.point.route{{$child_f_surfix}}
+                    {{$child_f_prefix}}e.point.route{{$child_f_surfix}}
                 @endif
               }
             }

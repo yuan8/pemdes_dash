@@ -7,10 +7,38 @@ use App\Http\Controllers\Controller;
 use DB;
 use Storage;
 use HPV;
+use Carbon\Carbon;
+use Auth;
 class ValidasiCtrl extends Controller
-{
+{	
 
-	public function index(Request $request){
+	public function validated($tahun,$table,$id,Request $request){
+		$data=DB::table('validasi_confirm as cfm')->where(
+			[
+				['tahun','=',$tahun],
+				['table','=',$table],
+				['kode_desa','=',$id]
+			]
+		)->first();
+
+		if(!$data){
+			$data=DB::table('validasi_confirm')->insert([
+				'tahun'=>$tahun,
+				'table'=>$table,
+				'kode_desa'=>$id,
+				'tanggal_validasi'=>Carbon::parse($request->updated_at),
+				'keterangan'=>$request->keterangan,
+				'id_user'=>Auth::User()->id
+			]);
+
+			return back();
+		}
+
+		return back();
+
+	}
+
+	public function index($tahun,Request $request){
 		$table=HPV::table_data();
 		$data_index=0;
 		if($request->data){
@@ -56,7 +84,7 @@ class ValidasiCtrl extends Controller
 			'provinsi'=>$provinsi,'kodedaerah'=>$kodedaerah,'data_index'=>$data_index,'table'=>$table]);
 	}
 
-	public function data(Request $request){
+	public function data($tahun,Request $request){
 		$table=HPV::table_data();
 		$data_index=0;
 		$daerah=NULL;
@@ -97,7 +125,6 @@ class ValidasiCtrl extends Controller
 
 		if($request->kddesa){
 			$where[]=[DB::raw("(d.kode_desa)"),'=',$request->kddesa];
-
 			$daerah=DB::table('master_desa')
 			->where('kode_bps',$request->kddesa)->selectRaw("'".$daerah->parent." ".$daerah->jenis." ".$daerah->name." -> ' as parent,
 				kode_bps as id, 'DESA' as jenis,desa as name")
@@ -105,20 +132,31 @@ class ValidasiCtrl extends Controller
 
 		}
 
-
-
-		
-
-
 		$data=DB::table($table[$data_index]['table'].' as d')
 		->join('master_desa as md','md.kode_bps','=','d.kode_desa')
 		->leftJoin('kecamatan as mkc',DB::raw("left(d.kode_desa,7)"),DB::raw('='),DB::raw('mkc.kdkecamatan'))
-		->selectRaw(" 'Belum Terverifikasi' as Status_Verifikasi_Data,md.desa as Nama_Desa, mkc.nmkecamatan as Nama_Kecamatan,d.*");
+		->leftJoin('validasi_confirm as cfm',[
+			[DB::raw("(d.kode_desa)"),'=',DB::raw('cfm.kode_desa')],
+			['cfm.table','=',DB::RAW("'".$table[$data_index]['table']."'") ],
+			['cfm.tahun','=',DB::RAW($tahun)]
+		])
+		->selectRaw(" (case when (cfm.id) then 'Valid' else 'Belum Divalidasi' end)  as Status_Verifikasi_Data, md.desa as Nama_Desa, mkc.nmkecamatan as Nama_Kecamatan,d.*");
 		if(count($where)>0){
 			$data=$data->where($where);
 		}
 
+
+
 		$data=$data->paginate(10);
+
+		$verifikasi=[
+			'sudah'=>(int)DB::table($table[$data_index]['table'].' as d')
+			->join('master_desa as md','md.kode_bps','=','d.kode_desa')
+			->join('validasi_confirm as cfm',[[DB::raw("(d.kode_desa)"),'=',DB::raw('cfm.kode_desa')],['cfm.table','=',DB::RAW("'".$table[$data_index]['table']."'")],['cfm.tahun','=',DB::raw($tahun)]])
+			->count(),
+			
+		];
+		$verifikasi['belum']=$data->total()-$verifikasi['sudah'];
 
 		$data=$data->appends([
 			'kddesa'=>$request->kddesa,
@@ -136,11 +174,11 @@ class ValidasiCtrl extends Controller
 		];
 
 		return view('admin.validasi.data')
-		->with(['daerah'=>$daerah,'data'=>$data,'req'=>$req,'data_index'=>$data_index,'table'=>$table]);
+		->with(['daerah'=>$daerah,'data'=>$data,'req'=>$req,'data_index'=>$data_index,'table'=>$table,'rekap'=>$verifikasi]);
 	}
 
 
-	public function getData($table,$kodedesa){
+	public function getData($tahun,$table,$kodedesa){
 		$data=DB::table($table[0]['table'])->get();
 
 	}

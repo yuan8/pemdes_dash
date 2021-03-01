@@ -9,7 +9,7 @@ class DataCtrl extends Controller
 {
     //
 
-    public function delivery_type($type,Request $request){
+    public function delivery_type($tahun,$type,Request $request){
         $type=strtoupper($type);
         $req='';
         if($request->q){
@@ -57,7 +57,7 @@ class DataCtrl extends Controller
         }
     }
 
-    public function instansi(Request $request){
+    public function instansi($tahun,Request $request){
         $req='';
         if($request->q){
             $req=$request->q;
@@ -82,7 +82,7 @@ class DataCtrl extends Controller
         
     }
 
-    public function tema(Request $request){
+    public function tema($tahun,Request $request){
         $req='';
         if($request->q){
             $req=$request->q;
@@ -107,7 +107,7 @@ class DataCtrl extends Controller
         
     }
 
-    public function instansi_data($type,$slug,Request $request){
+    public function instansi_data($tahun,$type,$slug,Request $request){
         $type=strtoupper($type);
         $req='';
         if($request->q){
@@ -152,7 +152,7 @@ class DataCtrl extends Controller
         }
     }
 
-    public function index(Request $request){
+    public function index($tahun,Request $request){
     	$req='';
     	if($request->q){
     		$req=$request->q;
@@ -181,7 +181,7 @@ class DataCtrl extends Controller
     }
 
 
-    public function categorical($instansi,$slug=null,Request $request){
+    public function categorical($tahun,$instansi,$slug=null,Request $request){
     	$req='';
     	if($request->q){
     		$req=$request->q;
@@ -246,14 +246,13 @@ class DataCtrl extends Controller
 
     	}
 
-
     	return view('data.query')->with(['data'=>$data,'request'=>$request,'instansi'=>$instansi_data]);
 
 
     }
 
 
-    public function detail($id,$slug=null){
+    public function detail($tahun,$id,$slug=null){
         $instansi=null;
         $data=DB::table('data as d')
         ->where('id',$id)->first();

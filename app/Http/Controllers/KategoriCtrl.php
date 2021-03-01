@@ -8,7 +8,7 @@ class KategoriCtrl extends Controller
 {
     //
 
-    public function index($id){
+    public function index($tahun,$id){
     	$data=DB::table('category')->where('id',$id)->first();
     	foreach (DB::table('category')->where('id_parent',$id)->get() as $key => $c) {
     		$data->sub[]=$c;
@@ -18,7 +18,7 @@ class KategoriCtrl extends Controller
     }
 
 
-    public function data($id,$slug,Request $request){
+    public function data($tahun,$id,$slug,Request $request){
     	$cat=DB::table('category')->where('id',$id)->first();
 
     	if($cat){

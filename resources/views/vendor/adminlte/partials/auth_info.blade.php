@@ -3,10 +3,13 @@
 
 @if(Auth::check())
 @if(config($CONF_THEM.'.right_sidebar') and (in_array(Auth::User()->role,[1,3])))
-    <li>
-      <a href="#" data-toggle="control-sidebar" ><i class="fa fa-link"></i> URUSAN</a>
-    </li>
+  <li>
+    <a href="#" data-toggle="control-sidebar" ><i class="fa fa-link"></i> URUSAN</a>
+  </li>
 @endif
+<li>
+    <a href="#"  ><i class="fa fa-calendar"></i> PINDAH TAHUN</a>
+  </li>
  <li class="dropdown user user-menu ">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
       <img src="{{asset('asset/user.png')}}" class="user-image" alt="User Image">
@@ -29,7 +32,7 @@
       <li class="user-body">
         <ul class="control-sidebar-menu">
           <li style="border-bottom: 1px solid #ddd">
-            <a href="{{route('index',[])}}">
+            <a href="{{route('index',['tahun'=>$GLOBALS['tahun_access']])}}">
               <i class="menu-icon ion ion-speedometer bg-primary"></i>
               <div class="menu-info" style="padding-top: 5px;">
                 <h4 class="control-sidebar-subheading">DASHBOARD</h4>
@@ -38,7 +41,7 @@
             </a>
           </li>
            <li style="border-bottom: 1px solid #ddd">
-            <a href="{{route('admin.index',[])}}">
+            <a href="{{route('admin.index',['tahun'=>$GLOBALS['tahun_access']])}}">
               <i class="menu-icon ion ion-speedometer bg-primary"></i>
               <div class="menu-info" style="padding-top: 5px;">
                 <h4 class="control-sidebar-subheading">ADMIN</h4>

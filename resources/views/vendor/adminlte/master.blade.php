@@ -19,8 +19,7 @@
     <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
-    
-
+  
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/AdminLTE.min.css') }}">
 
@@ -30,8 +29,14 @@
     <script src="{{asset('bower_components/datatables/media/js/dataTables.bootstrap.js')}}" charset="utf-8"></script>
 
 
+
     <!-- <link rel="stylesheet" href="{{asset('bower_components/datatables/media/css/jquery.dataTables.css')}}"> -->
     <link rel="stylesheet" href="{{asset('bower_components/datatables/media/css/dataTables.bootstrap.css')}}">
+
+     <script type="text/javascript" src="{{asset('bower_components/jquery-export/libs/js-xlsx/xlsx.core.min.js')}}"></script>
+      <script type="text/javascript" src="{{asset('bower_components/jquery-export/libs/FileSaver/FileSaver.min.js')}}"></script>
+
+     <script type="text/javascript" src="{{asset('bower_components/jquery-export/tableExport.min.js')}}"></script>
 
 
     @yield('adminlte_css')
@@ -156,7 +161,12 @@
         }, 2000);
       }
 
-
+      function LinShowForm(dom,size='lg'){
+        $('#modal_'+size+' .modal-content').html(dom);
+          setTimeout(function(){
+              $('#modal_'+size).modal();
+          },800);
+      }
 
 
 </script>

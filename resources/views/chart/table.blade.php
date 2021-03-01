@@ -2,14 +2,31 @@
   $id_dom=rand(0,1000).date('is');
  ?>
 <div class="box box-solid">
-  <div class="box-header with-border">
+  <div class="box-header with-border ">
     <h5 class="text-center" ><b>{{isset($title)?$title:''}}</b></h5>
+    <hr>
+    <div class="btn-group">
+          
+      <button type="button" onclick="exportExcelTable('#table-{{$id_dom}}');" class="btn btn-success">Download</button>
+    </div>
+    <script type="text/javascript">
+     function exportExcelTable(dom){
+       $(dom).tableExport({
+        type:'xlsx',
+        headings: true,                    
+        fileName: "{{isset($title)?$title:'export'}}",  // (id, String), filename for the downloaded file
+        bootstrap: true,  
+        ignoreCSS:'.ignore-export',
+        trimWhitespace:true                 // (Boolean), style buttons using bootstrap
+    });
+     }
+    </script>
   </div>
   <div class="box-body table-responsive">
     <table class="table table-bordered" id="table-{{$id_dom}}">
       <thead>
         <tr>
-          <th rowspan="2">ACTION</th>
+          <th class="ignore-export" rowspan="2">ACTION</th>
           <th rowspan="2">KODE DAERAH</th>
           <th rowspan="2" >NAMA DAERAH</th>
 
@@ -25,7 +42,7 @@
           <?php endforeach; ?>
           
         </tr>
-        <tr>
+        <tr class="ignore-export">
           <th>1</th>
           <th>2</th>
           <th>3</th>
@@ -41,13 +58,13 @@
           <?php foreach ($series[0]['data'] as $key => $d): ?>
             <tr>
 
-            <td>
+            <td class="ignore-export">
               @if(isset($series[0]['data'][$key]['route']))
 
               @if(isset($child_f_prefix))
              
                 <button class="btn btn-primary btn-xs" onclick="{{isset($child_f_prefix)?($child_f_prefix."'".$series[0]['data'][$key]['route']."'".$child_f_surfix):'javascript:void(0)'}}">Detail</button>
-                @else
+              @else
                 -
                 @endif
               @endif
@@ -83,5 +100,6 @@
     'pageLength':100000,
     'paging':false,
     "info": false
+    "dom":'<div class="table-responsive">t'
   });
 </script>

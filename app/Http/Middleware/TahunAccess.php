@@ -16,22 +16,29 @@ class TahunAccess
     public function handle($request, Closure $next)
     {
 
-        $tahun=$request->route('tahun')??env('TAHUN');
+        $tahun=$request->route('tahun')??date('Y');
+
 
         if(!isset($GLOBALS['list_tahun_access'])){
-            $GLOBALS['list_tahun_access']=(DB::table('tahun_access')->select('tahun')->get()->pluck('tahun'));
+            $GLOBALS['list_tahun_access']=(DB::table('tahun_access')->select('tahun')->orderBy('tahun','desc')->limit(5)->get()->pluck('tahun'));
+        }
+
+        if((int)$tahun<2018){
+            return redirect()->route('index',['tahun'=>$GLOBALS['list_tahun_access'][0]]);
+
         }
 
 
-        if($tahun!=2020){
-             if(!in_array($tahun,$GLOBALS['list_tahun_access']->toArray())){
-                return redirect()->route('index',['tahun'=>2020]);
 
-            }
+
+         if(!in_array($tahun,$GLOBALS['list_tahun_access']->toArray())){
+            return redirect()->route('index',['tahun'=>$GLOBALS['list_tahun_access'][0]]);
+
         }
 
         if((empty($tahun)) OR (!is_numeric($tahun))){
-            return redirect()->route('index',['tahun'=>2020]);
+
+            return redirect()->route('index',['tahun'=>date('Y')]);
         }else{
             $GLOBALS['tahun_access']=$tahun;
             return $next($request);

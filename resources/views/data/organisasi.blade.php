@@ -45,7 +45,7 @@
             <div class="box-body">
             	<img class="text-center img-responsive" src="{{asset($d->image_path)}}">
               <span class="info-box-text">
-              	<a href="{{route('query.data.categorycal',['id'=>$d->id,HPV::slugify($d->name)])}}">{{$d->name}}</a>
+              	<a href="{{route('query.data.categorycal',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,HPV::slugify($d->name)])}}">{{$d->name}}</a>
               </span>
              
              
