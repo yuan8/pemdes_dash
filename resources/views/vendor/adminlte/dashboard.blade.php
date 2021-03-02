@@ -80,11 +80,7 @@ if(isset($bind_side_left)){
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-                        <ul class="nav navbar-nav">
-                            @each('vendor.adminlte.partials.menu-item-top-nav', $CONF_MENU['top'], 'item')
-                        </ul>
-                    </div>
+                   
                     <!-- /.navbar-collapse -->
             @else
             <!-- Logo -->
@@ -101,7 +97,7 @@ if(isset($bind_side_left)){
                 <a href="#" class="sidebar-toggle fa5" data-toggle="push-menu" role="button">
                     <span class="sr-only">{{ trans('vendor.adminlte.adminlte.toggle_navigation') }}</span>
                 </a>
-            @endif
+             @endif
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
 
@@ -112,7 +108,7 @@ if(isset($bind_side_left)){
 
                     </ul>
                 </div>
-                @if(config($CONF_THEM.'.layout') == 'top-nav')
+                     @if(config($CONF_THEM.'.layout') == 'top-nav')
                 </div>
                 @endif
             </nav>
@@ -143,7 +139,7 @@ if(isset($bind_side_left)){
             @endif
 
             <!-- Content Header (Page header) -->
-            <section class="content-header background-primary">
+            <section class="content-header background-img-box">
                 @yield('content_header')
             </section>
 

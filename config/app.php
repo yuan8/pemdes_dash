@@ -228,6 +228,8 @@ return [
         'MENUS' => App\Providers\MENUPROVIDER::class,
         'YDB' => App\Providers\YDBPROVIDER::class,
         'HPV' => App\Providers\HELPERPROVIDER::class,
+        'MyHash' => App\Providers\PassProvider::class,
+
 
 
 

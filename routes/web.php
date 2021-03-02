@@ -23,6 +23,12 @@ Route::get('/home',function(){
 
 
 
+Route::get('/t',function(){
+	
+});
+
+
+
 	
 Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(function(){
 	Route::get('/','ADMIN\AdminCtrl@index')->name('admin.index');

@@ -1,25 +1,7 @@
 @extends('vendor.adminlte.dashboard')
 
 @section('content_header')
-<div class="banner-content text-center p-10 p-b-50" style="position: relative; min-height: 100px; margin-bottom: 50px; background: transparent;">
-
-	<p class="text-white"><b>SELAMAT DATANG DI DASHBOARD</b></p>
-	<h3 class="text-white"><b>BINA PEMERINTAHAN DESA</b></h3>
-	<p class="text-white text-uppercase">Kementerian Dalam Negeri</p>
-
-	<div  style="left:0; right: 0; margin:auto; height: 55px; width: 90%; position: absolute; bottom:-30px; ">
-		<form action="{{route('query.data',[])}}" method="get">
-			<div class="input-group" style="border: 2px solid #6db3ee;border-radius: 30px; overflow: hidden; ">
-      <input type="text" class="form-control" name="q" placeholder="Cari Data,Tema,Instansi" style="height: 55px;">
-      <span class="input-group-btn">
-        <button class="btn btn-primary background-blue" type="submit" style="height: 55px; min-width: 100px;"><i class="fa fa-search"></i></button>
-      </span>
-    </div>
-		</form>
-
-	</div>
-
-	</div>
+	@include('partials.banner_head')
 @stop
 
 @section('content')
@@ -74,7 +56,7 @@
 	</div>
 </div>
 
-<div class="row background-primary">
+<div class="row background-img-box">
 	<div class="col-md-12">
 		<h4 class="text-center text-white"><b>STATISTIK DATA</b></h4>
 

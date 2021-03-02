@@ -17,6 +17,18 @@
 	padding-bottom: 50px;
 }
 
+.p-b-10{
+	padding-bottom: 10px;
+}
+
+.background-img-box .navbar-nav>li>a{
+	color: #fff;
+}
+
+.navbar-nav>li>a{
+
+}
+
 .main-header{
 	/*border-bottom: 1px solid #fff*/
 }t
@@ -107,7 +119,7 @@
 }
 
 .main-header .navbar a{
-	font-size:20px;
+	font-size:14px;
 }
 
 .owl-carousel .next-slide {
@@ -123,9 +135,16 @@
 }
 
 .background-primary{
+
 	background: #063a69!important;
 	    /*background-image: linear-gradient(to bottom, #003f80, #00599d, #0074b9, #0091d4, #00aeef)!important;*/
 }
+
+.background-img-box{
+	background-image: url("./../bg.png")!important;
+	background-size: 60px 60px!important;
+}
+
 
 .content-header {
 	padding-top: 20px;

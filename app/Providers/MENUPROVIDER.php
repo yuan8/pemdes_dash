@@ -86,7 +86,7 @@ class MENUPROVIDER extends ServiceProvider
             ],
             'side_right'=>[]
         ];
-
+        $GLOBALS['MENU_TOP']=$menu['top'];
         return $menu;
     }
 
