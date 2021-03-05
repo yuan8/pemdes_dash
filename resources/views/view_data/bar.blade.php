@@ -1,13 +1,14 @@
 <?php
 $id_dom='c_bar_'.rand(0,100).'_'.date('is');
  ?>
+   
  
 <div id="{{$id_dom}}" style="width:100%"></div>
 
 
 <script type="text/javascript">
 	
-var xx=Highcharts.chart('{{$id_dom}}', {
+var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
     chart: {
         type: 'bar',
         height:500,
@@ -18,8 +19,9 @@ var xx=Highcharts.chart('{{$id_dom}}', {
     title: {
         text: '{{$title}}'
     },
-    subtitle: {
-    },
+   subtitle:{
+            text:'{{$subtitle}}'
+        },
     xAxis: {
       type: "category",
       margin:0.1,
@@ -73,4 +75,10 @@ var xx=Highcharts.chart('{{$id_dom}}', {
     },
     series: <?=json_encode($data_type['series']) ?>
 });
+
+
+function fls_bar_{{$id_dom}}(){
+        bar_chart_{{$id_dom}}.fullscreen.toggle()
+}
+
 </script>

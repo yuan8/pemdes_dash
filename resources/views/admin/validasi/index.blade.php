@@ -16,7 +16,7 @@
 
 				<select class="form-control" name="data" id="data" required="">
 					@foreach($table as $key=>$t)
-						<option value="{{$key}}">{{$t['name']}}</option>
+						<option value="{{$t->id}}">{{$t->name}}</option>
 					@endforeach
 				</select>
 			</div>

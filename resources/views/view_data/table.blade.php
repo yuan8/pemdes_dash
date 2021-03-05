@@ -2,16 +2,17 @@
   $id_dom='table_'.rand(0,1000).date('is');
  ?>
 
-<div class="box">
+<div class="box box-primary">
 	 <div class="box-header with-border">
     <h5 class="text-center" ><b>{{isset($title)?$title:''}}</b></h5>
-    <div class="btn-group">
-          
-      <button type="button" onclick="exportExcelTable('#table-{{$id_dom}}','{{isset($title)?$title:'export'}}');" class="btn btn-success">Download</button>
-    </div>
+    
     
   </div>
 	<div class="box-body table-responsive">
+		<div class="btn-group" style="margin-bottom: 5px;">
+          
+      <button type="button" onclick="exportExcelTable('#table-{{$id_dom}}','{{isset($title)?$title:'export'}}');" class="btn btn-success btn-sm">Download Excel</button>
+    </div>
 		<table class="table table-bordered" id="table-{{$id_dom}}">
 			<thead>
 				<tr>
@@ -25,15 +26,15 @@
 					<th rowspan="2">JUMLAH DESA</th>
 					<th rowspan="2">JUMLAH DESA TERDATA</th>
 					@endif
-					@foreach($table_meta['entity'] as $d)
+					@foreach($table_meta['columns'] as $d)
 
-					<th colspan="2">{{strtoupper(HPV::translate_operator($d['aggregate'])[0].' '.$d['name'])}}</th>
+					<th colspan="2">{{strtoupper(HPV::translate_operator($d['aggregate_type'])[0].' '.$d['name'])}}</th>
 					@endforeach
 					
 
 				</tr>
 				<tr>
-					@foreach($table_meta['entity'] as $d)
+					@foreach($table_meta['columns'] as $d)
 
 					<th>NILAI</th>
 					<th>SATUAN</th>
@@ -60,7 +61,7 @@
 						<td>{{HPV::nformat($d['jumlah_data_desa'])}}</td>
 
 					@endif
-					@foreach($table_meta['entity'] as $key=> $x)
+					@foreach(array_values($table_meta['columns']) as $key=> $x)
 
 					<td>{{HPV::nformat($d['data_'.$key]??0)}}</td>
 					<td>{{$d['data_'.$key.'_satuan']}}</td>

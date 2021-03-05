@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 class KategoriCtrl extends Controller
 {
     //
@@ -23,9 +24,18 @@ class KategoriCtrl extends Controller
 
     	if($cat){
     		$where="dg.id_category =".$id;
-    		if($request->q){
-    		$where=" AND (name like '%".$request->q."%' OR tags like '%".$request->q."%' OR keywords like '%".$request->q."%')";
-	    	}
+    		  dd(Auth::check());
+            if(Auth::check()){
+                if($request->q){
+                $where=" AND (name like '%".$request->q."%' OR tags like '%".$request->q."%' OR keywords like '%".$request->q."%')";
+                }
+            }else{
+                dd('c');
+                 if($request->q){
+                $where=" AND (name like '%".$request->q."%' OR tags like '%".$request->q."%' OR keywords like '%".$request->q."%') AND auth is false";
+                }
+            }
+
 	    	$data=DB::table('data as d')
 	    	->join('data_group as dg','dg.id_data','=','d.id')
 	    	->where('dg.id_category',$id)

@@ -139,7 +139,7 @@ if(isset($bind_side_left)){
             @endif
 
             <!-- Content Header (Page header) -->
-            <section class="content-header background-img-box">
+            <section class="content-header background-img-box" style="border-bottom:6px solid #3c8dbc">
                 @yield('content_header')
             </section>
 

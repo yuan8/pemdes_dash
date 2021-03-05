@@ -7,23 +7,33 @@ $id_dom='c_map_'.rand(0,100).'_'.date('is');
 @else
   <script type="text/javascript" src="{{asset('bower_components/L_MAP/idn_'.$kdparent.'.js')}}"></script>
 @endif
-<div id="{{$id_dom}}" style="width:100%"></div>
+   
+<div style="width: 100%; height: 500;">
+<div id="{{$id_dom}}" style="width:100%; max-height:100%"></div>
+    
+</div>
+
 <script type="text/javascript">
-Highcharts.mapChart('{{$id_dom}}', {
+var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
         chart: {
             backgroundColor: '#fff',
-            height:500,
+            exporting:{
+            accessibility:{
+             enabled:true
+            }
+            }
 
         },
+      
         title: {
-            text: 'Keterisian {{$title}}',
+            text: 'KETERISIAN DATA {{$title}}',
             style:{
                 color:'#222'
             },
             enabled:false
         },
         subtitle:{
-            text:''
+            text:'{{$subtitle}}'
         },
         colorAxis: {
             maxColor:'{{isset($color_def)?$color_def:'#063a69'}}',
@@ -38,6 +48,8 @@ Highcharts.mapChart('{{$id_dom}}', {
             click:function(e){
                  if(e.point.route!=undefined){
                     get_data('#dom_l_'+e.point.next_dom,e.point.route);
+                    map_chart_{{$id_dom}}.fullscreen.close();
+                    console.log('try close');
                 }
               }
             }
@@ -45,11 +57,50 @@ Highcharts.mapChart('{{$id_dom}}', {
           
         },
         legend: {
+            width:'100%',
             enabled: true,
             title:{
-                text:'Persentase Tingkat Keterisian {{$title}}'
+                text:'PERSENTASE KETERISIAN'
             }
         },
+        exporting: {
+            menuItemDefinitions: {
+                viewFullscreen: {
+                    text:'Fullscreen Mode',
+                   
+                },
+                offline_mode:{
+                    text:'Offline Mode',
+                    onclick:function(){
+                         var data=<?= json_encode(['type'=>'map','level'=>$level,'title'=>$title,'data_type'=>$data_type]) ?>;
+                        var title=data.title;
+                        data=btoa(JSON.stringify(data))
+
+                        $.post('{{route('chart.offline',['tahun'=>$GLOBALS['tahun_access']])}}',{'data':data},function(res){
+                               blob= new Blob([res+''], {type : 'text/html'});
+                                // blob=res.blob();
+                                console.log(blob);
+
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.style.display = 'none';
+                                a.href = url;
+                                a.download = title+'.html';
+                                document.body.appendChild(a);
+                                a.click();
+                                window.URL.revokeObjectURL(url);
+                        });
+      
+                    }
+                }
+            },
+            buttons: {
+                contextButton: {
+                     menuItems: ['viewFullscreen','offline_mode','downloadJPEG']
+                }
+            }
+        },
+                    
         // credits: {
         //     enabled: false
         // },
@@ -84,6 +135,8 @@ Highcharts.mapChart('{{$id_dom}}', {
                 click:function(e){
                     if(e.point.route!=null){
                         get_data('#dom_l_'+e.point.next_dom,e.point.route);
+                    map_chart_{{$id_dom}}.fullscreen.close();
+                    console.log('try close');
                     }
                 }
                 },
@@ -113,6 +166,8 @@ Highcharts.mapChart('{{$id_dom}}', {
 
             });
 
-
-
+   
 </script>
+<div id="xx_{{$id_dom}}">
+    
+</div>

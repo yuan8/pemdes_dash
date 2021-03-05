@@ -11,9 +11,9 @@
 				<input type="hidden" name="{{$keyr}}" value="{{$r}}">
 			@endforeach
 			<select class="form-control" name="data"  id="data" onchange="$(this).parent().parent().parent().submit()">
-		@foreach($table as $key=>$t)
-			<option value="{{$key}}" {{$data_index==$key?'selected':''}} >{{$t['name']}}</option>
-		@endforeach
+				@foreach($table as $key=>$t)
+					<option value="{{$t->id}}" {{$data_index==$t->id?'selected':''}}>{{$t->name}}</option>
+				@endforeach
 		</select>
 			</div>
 		</div>
@@ -56,6 +56,14 @@
 		</div>
 	</div>
 	</div>
+	<div class="col-md-12">
+		<h5>BULK VALIDASI</h5>
+		<div class="btn-group">
+			
+				<a href="{{url()->full().'&export_format=true'}}" download="" class="btn btn-primary"> Download Excel Format</button>
+				<a href="" class="btn btn-success ">Upload Data</a>
+		</div>
+	</div>
 </div>
 
 
@@ -66,35 +74,34 @@
 
 <div class="box box-primary">
 	<div class="box-header with-border">
-		<h4><b>{{$table[$data_index]['name']}}</b></h4>
+		<h4><b>{{$table_map['name']}}</b></h4>
 	</div>
 	<div class="box-body table-responsive">
 		@if(count($data)>0)
 			<table class="table-bordered table">
 			<thead>
 				<tr>
-					<th>AKSI</th>
-					@foreach($data[0] as $key=>$x)
-						@if(HPV::vdata($key))
-							<th>{{str_replace('_',' ',$key)}}</th>
-						@endif
+					<th style="width:80px;">AKSI</th>
+					@foreach(HPV::maping_row($data,$table_map)[0] as $key=>$x)
+						@php
+						@endphp
+						<th>{{strtoupper($x['name']).' '.($x['aggregate_type']!='NONE'?'('.$x['aggregate_type'].')':'')}}</th>
 					@endforeach
 				</tr>
 			</thead>
 			<tbody>
-				@foreach($data as $d)
-					<tr class="{{$d->Status_Verifikasi_Data=='Belum Divalidasi'?'bg-warning':'bg-success'}}">
+				@foreach(HPV::maping_row($data,$table_map) as $d)
+				
+					<tr class="{{$d['status_validasi']=='BELUM'?'bg-warning':'bg-success'}}">
 						<td>
 							<div class="btn-group">
-								<button class="btn btn-xs btn-primary" onclick="get_form('{{route('api.data.validate.form',['tahun'=>$GLOBALS['tahun_access'],'table'=>$table[$data_index]['table'],'id'=>$d->kode_desa])}}')"><i class="fa fa-check"></i></button>
+								<button class="btn btn-xs btn-primary" onclick="get_form('{{route('api.data.validate.form',['tahun'=>$GLOBALS['tahun_access'],'table'=>$table_map['key_view'],'id'=>$d['id_desa']['value']])}}')"><i class="fa fa-check"></i></button>
 
 								<button class="btn btn-xs btn-warning"><i class="fa fa-pen"></i></button>
 							</div>
 						</td>
 						@foreach($d as $kk=> $x)
-							@if(HPV::vdata($kk))
-								<td>{{HPV::nformat($x,$kk)}}</td>
-							@endif
+							<td>{{HPV::nformat($x['value'],$kk)}}</td>
 						@endforeach
 					</tr>
 				@endforeach

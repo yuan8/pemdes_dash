@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Http\Request;
+use MyHash;
+use App\User;
+use Auth;
 class LoginController extends Controller
 {
     /*
@@ -35,5 +38,34 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function login(Request $request){
+
+        $this->validateLogin($request);
+
+      
+        if (method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        $agent=User::where('email',$request->email)->first();
+
+        if($agent){
+            if(MyHash::pass_match($request->password,$agent->password)){
+                Auth::login($agent);
+            }
+            return $this->sendLoginResponse($request);
+
+        }
+
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
+
+        
     }
 }

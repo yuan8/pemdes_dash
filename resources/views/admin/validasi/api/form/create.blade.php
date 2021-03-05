@@ -1,7 +1,7 @@
 <form action="{{route('admin.validasi.try',['tahun'=>$GLOBALS['tahun_access'],'table'=>$table,'id'=>$data->kode_desa_data])}}" method="post">
 	@csrf
 	<div class="modal-content">
-		<div class="modal-header">
+		<div class="modal-header text-uppercase">
 			Validasi Data Desa {{$data->name}} 
 		</div>
 

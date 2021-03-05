@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Category extends Migration
+class DbTableMap extends Migration
 {
     /**
      * Run the migrations.
@@ -14,21 +14,18 @@ class Category extends Migration
     public function up()
     {
         //
-        Schema::create('category', function (Blueprint $table) {
+         Schema::create('master_table_map', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('type');
             $table->string('name');
-            $table->bigInteger('id_parent')->unsigned()->nullable();
-            $table->string('slug');
-            $table->string('image_path')->nullable();
-            $table->string('route')->nullable();
-            
-            $table->mediumText('description')->nullable();
-
+            $table->string('key_view')->unique();
+            $table->string('table');
+            $table->boolean('edit_daerah')->default(true);            
+            $table->bigInteger('id_user')->unsigned();
             $table->timestamps();
-            $table->foreign('id_parent')
-                  ->references('id')->on('category')
+            $table->foreign('id_user')
+                  ->references('id')->on('users')
                   ->onDelete('cascade')->onUpdate('cascade');
+
 
         });
 
@@ -42,7 +39,7 @@ class Category extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('category');
+        Schema::dropIfExists('master_table_map');
 
     }
 }

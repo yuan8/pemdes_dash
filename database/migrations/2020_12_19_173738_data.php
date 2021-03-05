@@ -19,9 +19,10 @@ class Data extends Migration
             $table->bigIncrements('id');
             $table->string('type');
             $table->string('delivery_type');
-            $table->string('route')->nullable();
+            $table->string('table_view')->nullable();
             $table->string('image_path')->nullable();
             $table->string('name');
+            $table->boolean('auth')->default(false);
             $table->string('extension')->nullable();
             $table->float('size')->default(0);
             $table->string('document_path')->nullable();

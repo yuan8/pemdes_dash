@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-
 class TahunAccess extends Migration
 {
     /**
@@ -20,6 +19,17 @@ class TahunAccess extends Migration
             $table->integer('tahun')->unique();
            
         });
+
+         DB::table('tahun_access')->insert([
+            [
+                'tahun'=>2020,
+            ],
+            [
+                'tahun'=>2021
+            ]
+         ]);
+
+
     }
 
     /**

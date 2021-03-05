@@ -5,9 +5,161 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Storage;
-
+use DB;
 class HELPERPROVIDER extends ServiceProvider
 {
+	static function gen_map($e){
+
+		$table=(array)DB::table('master_table_map')->where('key_view',$e)->first();
+		if($table){
+			$tb=$table;
+			$row=DB::table('master_column_map')->where('id_ms_table',$table['id'])->get();
+			$tb['columns']=[];
+			$tb['view_']=[];
+			foreach ($row as $key => $d) {
+				$tb['columns'][$d->name_column]=(array)$d;
+			}
+
+			foreach ([2,4,7,10] as $key => $l) {
+				$tb['view_'][$l][0]=[
+					DB::table('master_view_method')
+					->where('level',$l)
+					->where('row',0)
+					->where('id_ms_table',$table['id'])->get()->pluck('type')->toArray()
+				];
+				
+				$tb['view_'][$l][1]=[
+					DB::table('master_view_method')
+					->where('level',$l)
+					->where('row',1)
+					->where('id_ms_table',$table['id'])->get()->pluck('type')->toArray()
+				];
+				# code...
+			}
+					
+			
+
+		}
+
+
+
+		return $tb;
+	}
+
+	static function maping_row($data,$map,$ROW=8,$COLUMN=8){
+		
+		$DATA=[];
+		$POINTER_ROW=$ROW;
+
+		$keys=array_keys($map['columns']);
+		foreach ($data as $key => $row) {
+			$POINTER_ROW+=1;
+			$POINTER_COLUMN=$COLUMN;
+			foreach ($row as $keyc => $c) {
+					if($keyc=='id_desa'){
+						$DATA[$key][$keyc]=[
+							'name'=>'KODE DESA',
+							'satuan'=>'',
+							'type'=>'META',
+							'pointer_r'=>$POINTER_ROW,
+							'pointer_c'=>1,
+							'value'=>$c,
+							'aggregate_type'=>'NONE',
+							'name_column'=>$keyc
+						];
+					}
+					if($keyc=='name'){
+						$DATA[$key][$keyc]=[
+							'name'=>'NAMA DAERAH',
+							'satuan'=>'',
+							'type'=>'META',
+							'pointer_r'=>$POINTER_ROW,
+							'pointer_c'=>4,
+							'value'=>$c,
+							'aggregate_type'=>'NONE',
+							'name_column'=>$keyc
+						];
+					}
+					if($keyc=='jenis_daerah'){
+						$DATA[$key][$keyc]=[
+							'name'=>'STATUS DAERAH',
+							'satuan'=>'',
+							'type'=>'META',
+							'pointer_r'=>$POINTER_ROW,
+							'pointer_c'=>5,
+							'value'=>$c,
+							'aggregate_type'=>'NONE',
+							'name_column'=>$keyc
+						];
+					}
+					if($keyc=='name_kecamatan'){
+						$DATA[$key][$keyc]=[
+							'name'=>'NAMA KECAMATAN',
+							'satuan'=>'',
+							'type'=>'META',
+							'pointer_r'=>$POINTER_ROW,
+							'pointer_c'=>6,
+							'value'=>$c,
+							'aggregate_type'=>'NONE',
+							'name_column'=>$keyc
+						];
+					}
+					if($keyc=='name_kota'){
+						$DATA[$key][$keyc]=[
+							'name'=>'NAMA KOTA/KAB',
+							'satuan'=>'',
+							'value'=>$c,
+							'type'=>'META',
+							'pointer_r'=>$POINTER_ROW,
+							'pointer_c'=>7,
+							'aggregate_type'=>'NONE',
+							'name_column'=>$keyc
+						];
+					}
+					else if($keyc=='valid_date'){
+
+						$DATA[$key][$keyc]=[
+							'name'=>'VALID DATE',
+							'satuan'=>'',
+							'type'=>'META',
+							'pointer_r'=>$POINTER_ROW,
+							'pointer_c'=>3,
+							'value'=>$c,
+							'aggregate_type'=>'NONE',
+							'name_column'=>$keyc
+						];
+						
+					}
+					else if($keyc=='status_validasi'){
+						$DATA[$key][$keyc]=[
+							'name'=>'STATUS VALIDASI',
+							'satuan'=>'',
+							'type'=>'META',
+							'value'=>$c,
+							'pointer_r'=>$POINTER_ROW,
+							'pointer_c'=>2,
+							'aggregate_type'=>'NONE',
+							'name_column'=>$keyc
+						];
+
+					}else if(in_array($keyc, $keys)){
+						$DATA[$key][$keyc]=$map['columns'][$keyc];
+
+						$DATA[$key][$keyc]['value']=static::nformat($c);
+						$DATA[$key][$keyc]['type']='DATA';
+						$DATA[$key][$keyc]['pointer_r']=$POINTER_ROW;
+						$DATA[$key][$keyc]['pointer_c']=$POINTER_COLUMN;
+						$POINTER_COLUMN+=2;
+
+
+					}
+			}
+			# code...
+		}
+
+		return $DATA;
+
+	}
 
 	static function route_data($data){
 		switch ($data->delivery_type) {
@@ -1284,35 +1436,35 @@ class HELPERPROVIDER extends ServiceProvider
 	}
 
 	static function translate_operator($op){
-		switch ($op) {
-			case 'sum':
+		switch (strtoupper($op)) {
+			case 'SUM':
 				return ['Jumlah','sum(',')'];
 				# code...
 				break;
-			case 'average':
+			case 'AVERAGE':
 				return ['Rata Rata','average(',')'];
 				break;
 
-			case 'min':
+			case 'MIN':
 				return ['Nilai Tertendah','min(',')'];
 				# code...
 				break;
-			case 'count':
+			case 'COUNT':
 				return ['Jumlah','count(',')'];
 				# code...
 				break;
-			case 'count_distinct':
+			case 'COUNT_DISTINCT':
 				return ['Jumlah','count(distinct(','))'];
 				# code...
 				break;
-			case 'count_exist':
+			case 'COUNT_EXIST':
 				return ['Jumlah','count(CASE WHEN (','>0) THEN 1 ELSE NULL END)'];
 				# code...
 				break;
 			
 			default:
 				# code...
-				return '...';
+				return ['',''];
 
 				break;
 		}

@@ -58,7 +58,7 @@ class PassProvider extends ServiceProvider
         'E'=>'284^444',
         '1'=>'d|u|a',
         '0'=>'encxxiptZoo',
-        'r'=>'QrS*|&555',
+        'r'=>'QUS*|&555',
         '6'=>'pic&&&%**',
         '3'=>'88#@)',
         'MTI'=>'!@#$%'

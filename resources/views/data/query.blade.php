@@ -1,38 +1,21 @@
 @extends('vendor.adminlte.dashboard')
 
 @section('content_header')
+<div class="row">
+	<div class="col-md-12">
+	<ol class="breadcrumb text-left">
+	    <li><a href="{{url('')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+	    <li class="active text-capitalize">{{ strtolower((!empty($instansi)) ?str_replace('_',' ',str_replace('_', ' ', $instansi->type)).' - '.$instansi->name:(isset($title)?$title:'Cari Data'))}}</li>
+	  </ol>
+  </div>
 
+
+</div>
+	@include('partials.banner_head')
 @stop
 @section('content')
-<div class="banner-content text-center p-10 p-b-50 background-primary" style="position: relative;  min-height: 100px; margin-bottom: 50px;">
-	<ol class="breadcrumb text-left">
-    <li><a href="{{url('')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active text-capitalize">{{ strtolower((!empty($instansi)) ?str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type)).' - '.$instansi->name:(isset($title)?$title:'Cari Data'))}}</li>
-  </ol>
 
-
-	@if(isset($instansi))
-		<h3 class="text-white"><b>{{str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type))}} - {{$instansi->name}}</b></h3>
-	@endif
-
-	@if(isset($title))
-		<h3 class="text-white"><b>{{$title}}</b></h3>
-	@endif
-	
-	<div  style="left:0; right: 0; margin:auto; height: 55px; width: 90%; position: absolute; bottom:-30px; ">
-		<form action="{{url()->current()}}" method="get">
-			<div class="input-group" style="border: 2px solid #6db3ee;border-radius: 30px; overflow: hidden; ">
-      <input type="text" class="form-control" name="q" value="{{$request->q}}" placeholder="Cari Data" style="height: 55px;">
-      <span class="input-group-btn">
-        <button class="btn btn-primary" type="submit" style="height: 55px; min-width: 100px;"><i class="fa fa-search"></i></button>
-      </span>
-    </div>
-		</form>
-		
-	</div>
-
-	</div>
-<div class="row">
+<div class="row" style="margin-top: 25px;">
 
 	<div class="col-md-3">
 		<div class="box-solid box">

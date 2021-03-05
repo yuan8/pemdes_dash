@@ -81,6 +81,12 @@
 <script src="{{ asset('vendor/adminlte/vendor/bootstrap/dist/js/bootstrap.js') }}"></script>
 <script src="{{ asset('bower_components/highcharts/highstock.js') }}"></script>
 <script src="{{asset('bower_components/highcharts/modules/map.js')}}" charset="utf-8"></script>
+<script src="{{asset('bower_components/highcharts/modules/full-screen.js')}}" charset="utf-8"></script>
+<script src="{{asset('bower_components/highcharts/modules/exporting.js')}}" charset="utf-8"></script>
+<script src="{{asset('bower_components/highcharts/modules/offline-exporting.js')}}" charset="utf-8"></script>
+
+
+
 
 
 @yield('adminlte_js')

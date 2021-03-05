@@ -3,8 +3,8 @@
 	@method('PUT')
 	<div class="modal-content">
 
-	<div class="modal-header">
-	<H4>Edit Valisadi Desa {{$data->name}}</H4>
+	<div class="modal-header text-uppercase">
+	<H4>Edit Validasi Desa {{$data->name}}</H4>
 	</div>
 
 	<div class="modal-body">

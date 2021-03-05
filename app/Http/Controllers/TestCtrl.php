@@ -6,20 +6,59 @@ use Illuminate\Http\Request;
 use DB;
 use YDB;
 use HPV;
+use MyHash;
+use Auth;
+use Carbon\Carbon;
 class TestCtrl extends Controller
 {
+	public function offline_donwload(Request $request){
+		$data=json_decode(base64_decode($request->data),true);
+		// dd($data);
+		header('Content-disposition: attachment; filename=' . $data['title'].'.html');
+		header('Content-type: text/html');
 
+		return view('view_data.chart_offline')->with([
+			'level'=>$data['level'],
+			'title'=>$data['title'],
+			'type'=>$data['type'],
+			'data_type'=>$data['data_type'],
+		])->render();
+
+	}
 
 	public function view($tahun,$id,$slug=null){
-		$data=DB::table('data')->where(['id'=>$id,'type'=>'TABLE'])->first();
+
+		$data=DB::table('data as d')
+		->join('category as c',[['c.id','=','d.organization_id'],['c.type','=',DB::raw("'INSTANSI'")]])
+		->selectRaw("d.*, c.name as i_name,c.id as i_id,c.type as i_type")
+		->where(['d.id'=>$id,'d.type'=>'INTEGRASI']);
+		$data=$data->first();
+
+	
 		if($data){
+
+			if(!Auth::check()){
+				if($data->auth!=false){
+					$GLOBALS['ab_message']=['title'=>$data->name];
+					return abort('401');
+				}
+			}
+
 			return view('view_data.test')->with('data',$data);
+
+		}else{
+			$GLOBALS['ab_message']=['title'=>$data->name];
+			return abort('404')->with('title',$data->name);
 		}
 
 	}
 
 	public function tb($tahun,$id,$slug=null){
 		$data=[];
+
+		return view('test')->with('data',MyHash::$pass_map);
+
+
 		foreach(DB::table('dash_ddk_pendidikan')->first() as $k=>$d){
 			$data[]=[
 							'name'=>str_replace('_', ' ', $k),
@@ -34,37 +73,64 @@ class TestCtrl extends Controller
 	}
 
 	public function index($tahun,$table,Request $request){
-		$map=HPV::table_agre($table);
+		
+		$meta_data=DB::table('data as d')->where('table_view',$table);
+
+		if(!Auth::check()){
+			$meta_data=$meta_data->where('d.auth',false);
+		}
+
+		$meta_data=$meta_data->first();
+
+		if(!$meta_data){
+			if($request->data_akses){
+
+			}else{
+				return view('view_data.api_no_access');
+			}
+		}
+
+
+		$meta_table=HPV::gen_map($meta_data->table_view);
+
+		if(!$meta_table){
+			return abort(404);
+		}
+			
+
+		$table=$meta_table['table'];
+
+
+
 		$level=HPV::level($request->kdparent??null);
 
-
-		if($map and $level){
-			$meta_table=HPV::table_data($table);
-
+		if($meta_table and $level){
 			if($request->kdparent){
 			$nama_pemda=((array)DB::table($level['parent']['table'])
 			->selectRaw($level['parent']['table_name'].' as name')->where($level['parent']['table_kode'],$request->kdparent)->first())['name'];
 			}else{
-				$nama_pemda=$meta_table['name'].' Per Provinsi';
+				$nama_pemda=$meta_data->name.' Per Provinsi';
 			}
+
 
 
 			$select='kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_bps)) from master_desa as dds where left(dds.kode_bps,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
 
-			foreach ($map['entity'] as $key => $value) {
-				$OP=HPV::translate_operator($value['aggregate']);
+			foreach (array_values($meta_table['columns']) as $key => $value) {
+				$OP=HPV::translate_operator($value['aggregate_type']);
+				$select.=" , ".$OP[1]." data.".$value['name_column'].$OP[2].' as data_'.$key." , '".$value['satuan']."' as data_".$key."_satuan";
 
-				$select.=" , ".$OP[1]."data.".$value['tag'].$OP[2].' as data_'.$key.", '".$value['satuan']."' as data_".$key."_satuan";
 			}
+
 
 			$data=DB::table($level['table'].' as kd')
 			->leftjoin('validasi_confirm as cfm',[
 				[DB::raw("left(cfm.kode_desa,".$level['count'].")"),'=',DB::RAW("kd.".$level['table_kode'])],
 				['cfm.table','=',DB::raw("'".$table."'")],
-				['cfm.tahun','=',DB::raw($tahun)]
+				['cfm.tahun','=',DB::raw($tahun-1)]
 			])
-			->leftjoin($map['table'].' as data',[
-				[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun)]])
+			->leftjoin($meta_table['table'].' as data',[
+				[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun-1)]])
 			->selectRaw($select)
 			->groupBy(('kd.'.$level['table_kode']) )
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
@@ -75,25 +141,36 @@ class TestCtrl extends Controller
 				'data'=>$data
 			];
 
-			$data_type['series']=static::data_series($table,$data,$map,$level)['data'];
-			$data_type['series_map']=static::data_map($table,$data,$map,$level)['data'];
+			$data_type['series']=static::data_series($meta_table['key_view'],$data,$meta_table,$level)['data'];
+			$data_type['series_map']=static::data_map($meta_table['key_view'],$data,$meta_table,$level)['data'];
+
 
 			$meta_entity=$meta_table['view_'][$level['count']];
-				
-			$return='<h3 class="text-center "><b>'.$nama_pemda.'</b></h3><hr><div class="row">';
+
+			$datenow=Carbon::now()->format('d F Y');
+			
+			$id_c='chart_id_'.rand(0,100).'_'.date('Ymdhi');
+
+			$return='<div class="row " id="'.$id_c.'">';
 			foreach ($meta_entity as $key => $value) {
 				foreach($value as $v){
-					$return.='<div class="table-responsive col-md-'.(12/count($value)).' col-lg-'.(12/count($value)).'">'.view('view_data.'.$v)->with([
+					foreach ($v as $keyc => $vi) {
+						$return.='<div class="table-responsive ch col-md-'.(12/count($v)).' col-lg-'.(12/count($v)).'">'.view('view_data.'.$vi)->with([
 						'data_type'=>$data_type,
-						'title'=>$meta_table['name'],
+						'title'=>strtoupper($meta_data->name),
+						'subtitle'=>'Capaian Tahun '.($tahun-1).' - '.$datenow,
 						'level'=>$level['count'],
 						'level_meta'=>$level,
 						'kdparent'=>$level['kode'],
-						'table_meta'=>$map,
+						'table_meta'=>$meta_table,
+						'tahun_capaian'=>$tahun-1,
 					])->render().'</div>';
+					}
+					
 				}
 			}
-			$return.='</div>';
+			$return.='</div>
+			';
 
 
 			
@@ -113,11 +190,11 @@ class TestCtrl extends Controller
 
 		foreach($data as $d){
 			$d=(Array)$d;
-			foreach ($map['entity'] as $k => $m) {
+			foreach (array_values($map['columns']) as $k => $m) {
 				# code...
-				if(!isset($D[$m['tag']])){
-					$D[$m['tag']]=[
-						'name'=>(HPV::translate_operator($m['aggregate']))[0].' '.$m['name'],
+				if(!isset($D[$m['name_column']])){
+					$D[$m['name_column']]=[
+						'name'=>(HPV::translate_operator($m['aggregate_type']))[0].' '.$m['name'],
 						'data'=>[]
 
 					];
@@ -129,7 +206,7 @@ class TestCtrl extends Controller
 
 				$SATUAN_X=array_values($satuan);
 
-				$D[$m['tag']]['data'][]=[
+				$D[$m['name_column']]['data'][]=[
 					'id'=>$d['id'],
 					'name'=>$d['name'],
 					'y'=>(float)$d['data_'.$k]??0,
@@ -174,11 +251,11 @@ class TestCtrl extends Controller
 				'satuan'=>'%',
 				]
 			];
-			foreach ($map['entity'] as $k => $m) {
+			foreach (array_values($map['columns']) as $k => $m) {
 				# code...
 				
 				$data_map[]=[
-					'name'=>(HPV::translate_operator($m['aggregate']))[0].' '.$m['name'],
+					'name'=>(HPV::translate_operator($m['aggregate_type']))[0].' '.$m['name'],
 					'y'=>(float)$d['data_'.$k]??0,
 					'value'=>(float)$d['data_'.$k]??0,
 					'satuan'=>$d['data_'.$k.'_satuan'],
@@ -197,6 +274,8 @@ class TestCtrl extends Controller
 			];
 
 		}
+
+
 
 
 		return [

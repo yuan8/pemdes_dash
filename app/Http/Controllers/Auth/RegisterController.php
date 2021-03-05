@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-
+use MyHash;
 class RegisterController extends Controller
 {
     /*
@@ -66,7 +66,8 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'api_token'=>Hash::make($data['email'].'|'.date('d/m/Y h:i')),
+            'password' => MyHash::pass_encode($data['password']),
         ]);
     }
 }

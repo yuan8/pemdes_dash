@@ -17,6 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('chart-offline-d.html','TestCtrl@offline_donwload')->name('chart.offline');
 
 Route::prefix('/meta')->group(function () {
     Route::get('kota/{provinsi?}','API\KodeDaerahCtrl@kota')->name('api.meta.kota');

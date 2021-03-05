@@ -76,13 +76,13 @@ class MENUPROVIDER extends ServiceProvider
                     'icon'=>'fa fa-image',
 
                 ],
-                 [
-                    'text'=>('Tentang Kami'),
-                    'href'=>'#',
-                    'top_nav_class'=>'',
-                    'icon'=>'fa fa-question',
+                //  [
+                //     'text'=>('Tentang Kami'),
+                //     'href'=>'#',
+                //     'top_nav_class'=>'',
+                //     'icon'=>'fa fa-question',
 
-                ],
+                // ],
             ],
             'side_right'=>[]
         ];
