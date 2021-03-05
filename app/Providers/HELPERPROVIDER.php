@@ -6,16 +6,32 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Storage;
 use DB;
+use Auth;
 class HELPERPROVIDER extends ServiceProvider
 {
-	static function gen_map($e){
+	static function gen_map($e,$context=1){
 
 		$table=(array)DB::table('master_table_map')->where('key_view',$e)->first();
 		if($table){
 			$tb=$table;
-			$row=DB::table('master_column_map')->where('id_ms_table',$table['id'])->get();
+			$row=DB::table('master_column_map')->where('id_ms_table',$table['id']);
+			if(!Auth::check()){
+				$row=$row->where('auth',false);
+			}
+
+			if($context==1){
+				$row=$row->where('dashboard',true);
+			}
+
+			if($context==0){
+				$row=$row->where('validate',true);
+			}
+
+			$row=$row->get();
+
 			$tb['columns']=[];
 			$tb['view_']=[];
+
 			foreach ($row as $key => $d) {
 				$tb['columns'][$d->name_column]=(array)$d;
 			}
@@ -47,7 +63,7 @@ class HELPERPROVIDER extends ServiceProvider
 	}
 
 	static function maping_row($data,$map,$ROW=8,$COLUMN=8){
-		
+
 		$DATA=[];
 		$POINTER_ROW=$ROW;
 

@@ -74,8 +74,8 @@ if(isset($bind_side_left)){
                         <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="navbar-brand background-primary " style="padding: 5px 10px 5px 10px; "  >
                              <img src="{{url('logo.png')}}"  style="height:100%;" >
                         </a>
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-                            <i class="fa fa-bars"></i>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="control-sidebar" >
+                            <i class="fa fa-bars"></i> 
                         </button>
                     </div>
 
@@ -99,7 +99,7 @@ if(isset($bind_side_left)){
                 </a>
              @endif
                 <!-- Navbar Right Menu -->
-                <div class="navbar-custom-menu">
+                <div class="navbar-custom-menu hidden-sm hidden-xs">
 
 
 
@@ -163,14 +163,12 @@ if(isset($bind_side_left)){
         </footer>
         @endif
 
-        @if(config($CONF_THEM.'.right_sidebar') and (config($CONF_THEM.'.layout') != 'top-nav'))
             <aside class="control-sidebar control-sidebar-{{config($CONF_THEM.'.right_sidebar_theme')}}">
                 @yield('right-sidebar')
             </aside>
             <!-- /.control-sidebar -->
             <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
             <div class="control-sidebar-bg"></div>
-        @endif
 
     </div>
     <!-- ./wrapper -->

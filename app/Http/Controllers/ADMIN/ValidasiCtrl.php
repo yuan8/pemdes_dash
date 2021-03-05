@@ -103,7 +103,7 @@ class ValidasiCtrl extends Controller
 
 			return abort(404);
 		}else{
-			$table_map=HPV::gen_map($table_map['key_view']);
+			$table_map=HPV::gen_map($table_map['key_view'],0);
 			foreach ($table_map['columns'] as $key => $value) {
 				$raw[]='d.'.$value['name_column'];
 			}

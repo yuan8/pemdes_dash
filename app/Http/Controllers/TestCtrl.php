@@ -91,7 +91,7 @@ class TestCtrl extends Controller
 		}
 
 
-		$meta_table=HPV::gen_map($meta_data->table_view);
+		$meta_table=HPV::gen_map($meta_data->table_view,1);
 
 		if(!$meta_table){
 			return abort(404);
