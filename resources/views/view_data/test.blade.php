@@ -40,38 +40,50 @@
 @section('js')
 
 <script type="text/javascript">
-	var push_xml=[];
+	var id_hrs=[];
+
 	function get_data(dom,route,method='GET',data={}){
     	scrollToDOM(dom);
-    	var xml_k=push_xml.length+1;
+
+    	if(id_hrs[dom]!=undefined){
+    		id_hrs[dom].abort();
+
+    		id_hrs[dom]=[];
+
+    		id_hrs=id_hrs.splice(dom, 1);
+    		
+
+    	}
 
 		$(dom).html('<div class="text-center"><h1 class="text-center" style="positon:absolute; top:0; bottom:0; margin:auto;"><b>Loading...</b></h1><p class="ppp_progres">... Send Request ...<p></div>');
-		push_xml.push({});
 
-		push_xml[xml_k] = new XMLHttpRequest();
+		var xhrReq = new XMLHttpRequest();
 		
-		push_xml[xml_k].addEventListener("progress", function(p){
+		xhrReq.addEventListener("progress", function(p){
 			$(dom).find('.ppp_progres').html(`Downloaded ${p.loaded} of ${p.total} bytes`);
 
 		});
-		push_xml[xml_k].addEventListener("load", function(l){
-			if(push_xml[xml_k].status==200){
-				$(dom).html(push_xml[xml_k].response);
+		xhrReq.addEventListener("load", function(l){
+			if(xhrReq.status==200){
+				$(dom).html(xhrReq.response);
 
 			}
 		});
-		push_xml[xml_k].addEventListener("error", function(e){
+		xhrReq.addEventListener("error", function(e){
 			console.log('error',e);
 		});
-		push_xml[xml_k].addEventListener("abort", function(ab){
+		xhrReq.addEventListener("abort", function(ab){
 			console.log('abort',ab);
 		});
 
-		push_xml[xml_k].open(method,route);
-		push_xml[xml_k].setRequestHeader('Authorization', 'Bearer {{Auth::check()?Auth::User()->api_token:'x'}}');
-		push_xml[xml_k].send();
+		xhrReq.open(method,route);
+		xhrReq.setRequestHeader('Authorization', 'Bearer {{Auth::check()?Auth::User()->api_token:'x'}}');
+		xhrReq.send();
 
-		return {key:xml_k,xml:push_xml[xml_k]};
+		id_hrs[dom]=xhrReq;
+
+
+
 
 	}
 

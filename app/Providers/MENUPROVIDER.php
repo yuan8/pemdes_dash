@@ -103,17 +103,31 @@ class MENUPROVIDER extends ServiceProvider
                     'icon'=>'fa fa-circle',
 
                 ],
+                 [
+                    'text'=>('TABLE MAP'),
+                    'href'=>route('admin.validasi.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'class'=>'',
+                    'icon'=>'fa fa-code',
+                ],
+
                 [
-                    'text'=>('DATA'),
+                    'text'=>('DATASET'),
                     'href'=>route('admin.data.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
                 ],
                 [
-                    'text'=>('VERIFIKASI DAN VALIDASI DATA'),
+                    'text'=>('VALIDASI DATA'),
                     'href'=>route('admin.validasi.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-check',
+                ],
+               
+                [
+                    'text'=>('DATA VIEW'),
+                    'href'=>route('admin.dataview.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
                 ],
                  
                  [

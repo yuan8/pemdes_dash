@@ -55,9 +55,7 @@ class TestCtrl extends Controller
 
 	
 	public function index($tahun,$id,$table,Request $request){
-		
 		$meta_data=DB::table('data as d')->where('id',$id);
-
 		if(!Auth::check()){
 			$meta_data=$meta_data->where('d.auth',false);
 		}
@@ -65,11 +63,8 @@ class TestCtrl extends Controller
 		$meta_data=$meta_data->first();
 
 		if(!$meta_data){
-			if($request->data_akses){
 
-			}else{
 				return view('view_data.api_no_access');
-			}
 		}
 
 
@@ -96,7 +91,8 @@ class TestCtrl extends Controller
 
 
 
-			$select='kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_bps)) from master_desa as dds where left(dds.kode_bps,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
+
+			$select= "'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_bps)) from master_desa as dds where left(dds.kode_bps,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
 
 			foreach (array_values($meta_table['columns']) as $key => $value) {
 				$OP=HPV::translate_operator($value['aggregate_type']);
@@ -119,6 +115,8 @@ class TestCtrl extends Controller
 			->get();
 
 
+
+
 			$data_type=[
 				'data'=>$data
 			];
@@ -127,16 +125,17 @@ class TestCtrl extends Controller
 			$data_type['series_map']=static::data_map($meta_table['key_view'],$data,$meta_table,$level,$id);
 
 
-			$meta_entity=$meta_table['view_'][$level['count']];
-
+			$meta_entity=isset($meta_table['view_'][$level['count']])?$meta_table['view_'][$level['count']]:[];
 			$datenow=Carbon::now()->format('d F Y');
 			
 			$id_c='chart_id_'.rand(0,100).'_'.date('Ymdhi');
 			$return='<div class="row " id="'.$id_c.'">';
+			if(count($meta_entity)==0){
+				$return.='<div class="col-md-12"><h4 class="text-center">DATA TIDAK TERSEDIA</h4></div>';
+			}
 			foreach ($meta_entity as $key => $value) {
 				foreach($value as $v){
-					foreach ($v as $keyc => $vi) {
-						$return.='<div class="table-responsive ch col-md-'.(12/count($v)).' col-lg-'.(12/count($v)).'">'.view('view_data.'.$vi)->with([
+						$return.='<div class="table-responsive ch col-md-'.(12/count($value)).' col-lg-'.(12/count($value)).'">'.view('view_data.'.$v)->with([
 						'data_type'=>$data_type,
 						'title'=>strtoupper($meta_data->name),
 						'subtitle'=>'Capaian Tahun '.($tahun-1).' - '.$datenow,
@@ -146,7 +145,6 @@ class TestCtrl extends Controller
 						'table_meta'=>$meta_table,
 						'tahun_capaian'=>$tahun-1,
 					])->render().'</div>';
-					}
 					
 				}
 			}

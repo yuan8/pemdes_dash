@@ -52,6 +52,17 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 
 	});
 
+	Route::prefix('data-view')->group(function(){
+		Route::get('/','ADMIN\DataViewCtrl@index')->name('admin.dataview.index');
+		Route::get('form-edit/{id}','ADMIN\DataViewCtrl@edit')->name('admin.dataview.edit');
+		Route::put('form-edit/{id}','ADMIN\DataViewCtrl@update')->name('admin.dataview.update');
+
+
+		
+
+
+	});
+
 	Route::prefix('data')->group(function(){
 		Route::get('/','ADMIN\DataCtrl@index')->name('admin.data.index');
 		Route::get('/data','ADMIN\DataCtrl@data')->name('admin.data.detail');
@@ -73,7 +84,6 @@ Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/tb/{h}', 'ADMIN\ValidasiCtrl@number_to_alphabet')->name('tb');
 
 
-	Route::get('/visulisasi-p-table/{id}/{table}','TestCtrl@index')->name('visual.data.table');
 	Route::get('/get-data-v-table/{id}/{slug?}','TestCtrl@view')->name('get.data.table');
 
 

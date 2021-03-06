@@ -50,7 +50,7 @@
 					<tr>
 						@if($level!=10)
 							<td>
-								<button onclick="get_data('#dom_l_{{$level_meta['count']}}','{{route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'table'=>$table_meta['table'],'kdparent'=>$d['id']])}}')" type="button" class="btn btn-primary btn-xs background-blue"><i class="fa fa-eye"></i> Detail</button>
+								<button onclick="get_data('#dom_l_{{$level_meta['count']}}','{{route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d['id_data'],'table'=>$table_meta['key_view'],'kdparent'=>$d['id']])}}')" type="button" class="btn btn-primary btn-xs background-blue"><i class="fa fa-eye"></i> Detail</button>
 							</td>
 						@endif
 

@@ -42,7 +42,7 @@
           </li>
            <li style="border-bottom: 1px solid #ddd">
             <a href="{{route('admin.index',['tahun'=>$GLOBALS['tahun_access']])}}">
-              <i class="menu-icon ion ion-speedometer bg-primary"></i>
+              <i class="menu-icon fa fa-lock bg-red"></i>
               <div class="menu-info" style="padding-top: 5px;">
                 <h4 class="control-sidebar-subheading">ADMIN</h4>
 

@@ -37,7 +37,7 @@ $CONF_MENU=MENUS::admin();
     <div class="wrapper">
 
         <!-- Main Header -->
-        <header class="main-header">
+        <header class="main-header ">
             @if(config($CONF_THEM.'.layout') == 'top-nav')
             <nav class="navbar navbar-static-top" data-spy="affix" data-offset-top="100" style="min-width: 100vw;">
                 <div class="container-fluid">

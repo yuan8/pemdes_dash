@@ -37,19 +37,19 @@ class HELPERPROVIDER extends ServiceProvider
 			}
 
 			foreach ([2,4,7,10] as $key => $l) {
-				$tb['view_'][$l][0]=[
-					DB::table('master_view_method')
+				foreach ([0,1,2,3] as $d => $ro) {
+					$e=DB::table('master_view_method')
 					->where('level',$l)
-					->where('row',0)
-					->where('id_ms_table',$table['id'])->get()->pluck('type')->toArray()
-				];
+					->where('row',$ro)
+					->where('id_ms_table',$table['id'])->get()->pluck('type')->toArray();
+					if($e){
+					$tb['view_'][$l][$ro]=$e;
+
+					}
+				}
+					
 				
-				$tb['view_'][$l][1]=[
-					DB::table('master_view_method')
-					->where('level',$l)
-					->where('row',1)
-					->where('id_ms_table',$table['id'])->get()->pluck('type')->toArray()
-				];
+				
 				# code...
 			}
 					
