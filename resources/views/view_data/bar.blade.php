@@ -36,9 +36,7 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
         padding:0
       }
     },
-    yAxis:{
-      
-    },
+    yAxis:<?= count($data_type['series']['yAxis'])>0?json_encode($data_type['series']['yAxis']):'{}' ?>,
     scrollbar:{
          enabled:true
     },
@@ -73,7 +71,7 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
         }
 
     },
-    series: <?=json_encode($data_type['series']) ?>
+    series: <?=json_encode($data_type['series']['data']) ?>
 });
 
 

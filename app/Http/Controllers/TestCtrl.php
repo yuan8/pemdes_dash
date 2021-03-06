@@ -53,28 +53,10 @@ class TestCtrl extends Controller
 
 	}
 
-	public function tb($tahun,$id,$slug=null){
-		$data=[];
-
-		return view('test')->with('data',MyHash::$pass_map);
-
-
-		foreach(DB::table('dash_ddk_pendidikan')->first() as $k=>$d){
-			$data[]=[
-							'name'=>str_replace('_', ' ', $k),
-							'tag'=>$k,
-							'aggregate'=>'sum',
-							'satuan'=>'Jiwa'
-			];
-		}
-
-		return '<pre> '.str_replace('}',']',(str_replace('{','[',str_replace(':', '=>', json_encode($data,JSON_PRETTY_PRINT))))).'</pre>';
-
-	}
-
-	public function index($tahun,$table,Request $request){
+	
+	public function index($tahun,$id,$table,Request $request){
 		
-		$meta_data=DB::table('data as d')->where('table_view',$table);
+		$meta_data=DB::table('data as d')->where('id',$id);
 
 		if(!Auth::check()){
 			$meta_data=$meta_data->where('d.auth',false);
@@ -141,8 +123,8 @@ class TestCtrl extends Controller
 				'data'=>$data
 			];
 
-			$data_type['series']=static::data_series($meta_table['key_view'],$data,$meta_table,$level)['data'];
-			$data_type['series_map']=static::data_map($meta_table['key_view'],$data,$meta_table,$level)['data'];
+			$data_type['series']=static::data_series($meta_table['key_view'],$data,$meta_table,$level,$id);
+			$data_type['series_map']=static::data_map($meta_table['key_view'],$data,$meta_table,$level,$id);
 
 
 			$meta_entity=$meta_table['view_'][$level['count']];
@@ -150,7 +132,6 @@ class TestCtrl extends Controller
 			$datenow=Carbon::now()->format('d F Y');
 			
 			$id_c='chart_id_'.rand(0,100).'_'.date('Ymdhi');
-
 			$return='<div class="row " id="'.$id_c.'">';
 			foreach ($meta_entity as $key => $value) {
 				foreach($value as $v){
@@ -182,7 +163,7 @@ class TestCtrl extends Controller
 
 
 	
-	public static function data_series($table,$data,$map,$level){
+	public static function data_series($table,$data,$map,$level,$md){
 
 		$D=[];
 
@@ -191,20 +172,24 @@ class TestCtrl extends Controller
 		foreach($data as $d){
 			$d=(Array)$d;
 			foreach (array_values($map['columns']) as $k => $m) {
+				if(!isset($satuan[$m['satuan']])){
+					$satuan[$m['satuan']]=$m['satuan'];
+				}
+
+				$SATUAN_X=array_values($satuan);
+
 				# code...
 				if(!isset($D[$m['name_column']])){
 					$D[$m['name_column']]=[
 						'name'=>(HPV::translate_operator($m['aggregate_type']))[0].' '.$m['name'],
+						'yAxis'=>array_search($m['satuan'], $SATUAN_X),
 						'data'=>[]
 
 					];
 				}
 
-				if(!isset($satuan[$d['data_'.$k.'_satuan']])){
-					$satuan[$d['data_'.$k.'_satuan']]=$d['data_'.$k.'_satuan'];
-				}
 
-				$SATUAN_X=array_values($satuan);
+				
 
 				$D[$m['name_column']]['data'][]=[
 					'id'=>$d['id'],
@@ -212,30 +197,40 @@ class TestCtrl extends Controller
 					'y'=>(float)$d['data_'.$k]??0,
 					'value'=>(float)$d['data_'.$k]??0,
 					'satuan'=>$d['data_'.$k.'_satuan'],
-					'route'=>($level['count'])?route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'table'=>$table,'kdparent'=>$d['id']]):null,
+					'route'=>($level['count'])?route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'table'=>$table,'kdparent'=>$d['id']]):null,
 					'next_dom'=>$level['count'],
-					'yAxis'=>array_search($d['data_'.$k.'_satuan'], $SATUAN_X)
 
 				];
 
 			}
 		}
 
+		$yAxis=[];
 
+		foreach ($SATUAN_X as $key => $y) {
+			$yAxis[]=[
+				'gridLineDashStyle'=>((($key+1)%2)==0)?'longdash':'solid',
+				'label'=>[
+					'format'=>'{value} '.$y
+				],
+				'title'=>[
+					'text'=>$y
+				],
+				'opposite'=>((($key+1)%2)==0)?1:0,
+			];
+		}
 
 		return [
-			'yAxis'=>[
-
-
-			],
+			'yAxis'=>$yAxis,
 			'data'=>
 			array_values($D)
 		];
 
+
 	}
 
 
-	public static function data_map($table,$data,$map,$level){
+	public static function data_map($table,$data,$map,$level,$md){
 
 		$D=[];
 
@@ -268,7 +263,7 @@ class TestCtrl extends Controller
 				'id'=>$d['id'],
 				'value'=>((float)$d['jumlah_data_desa']!=0)?((float)((float)$d['jumlah_data_desa']/(float)$d['jumlah_desa'])*100??0):0,
 				'y'=>((float)$d['jumlah_data_desa']!=0)?((float)((float)$d['jumlah_data_desa']/(float)$d['jumlah_desa'])*100??0):0,
-				'route'=>($level['count'])?route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'table'=>$table,'kdparent'=>$d['id']]):null,
+				'route'=>($level['count'])?route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'table'=>$table,'kdparent'=>$d['id']]):null,
 				'next_dom'=>$level['count'],
 				'data_map'=>$data_map
 			];

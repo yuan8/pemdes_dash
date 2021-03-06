@@ -11,8 +11,8 @@
 			<div class="form-group">
 				<label>JENIS</label>
 				<select class="form-control" name="jenis" required="">
-						<option value="TEMA_PRIMER" {{$data->type=='TEMA_PRIMER'?'selected':''}}>KATEGORI PRIMER</option>
-						<option value="TEMA_SEKUNDER" {{$data->type=='TEMA_SEKUNDER'?'selected':''}}>KATEGORI PENDUKUNG</option>
+						<option value="TEMA_DATA_UTAMA" {{$data->type=='TEMA_DATA_UTAMA'?'selected':''}}>KATEGORI UTAMA</option>
+						<option value="TEMA_DATA_PENDUKUNG" {{$data->type=='TEMA_DATA_PENDUKUNG'?'selected':''}}>KATEGORI PENDUKUNG</option>
 					</select>
 				</select>
 

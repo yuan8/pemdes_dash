@@ -85,7 +85,7 @@
 					@foreach(HPV::maping_row($data,$table_map)[0] as $key=>$x)
 						@php
 						@endphp
-						<th>{{strtoupper($x['name']).' '.($x['aggregate_type']!='NONE'?'('.$x['aggregate_type'].')':'')}}</th>
+						<th>{{strtoupper($x['name']).' '.($x['aggregate_type']!='NONE'?'('.$x['aggregate_type'].')':'')}} {{$x['satuan']?' - '.$x['satuan']:""}}</th>
 					@endforeach
 				</tr>
 			</thead>

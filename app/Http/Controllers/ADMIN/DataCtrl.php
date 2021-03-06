@@ -18,6 +18,12 @@ class DataCtrl extends Controller
 
 		}
 
+		if($request->tema){
+			$where[]=['c.type','=',$request->tema];
+			$Orwhere[]=['c.type','=',$request->tema];
+
+		}
+
 		if($request->q){
 			$where[]=['d.name','ilike','%'.$request->q.'%'];
 			$Orwhere[]=['d.description','ilike','%'.$request->q.'%'];
@@ -55,6 +61,7 @@ class DataCtrl extends Controller
 			'kategori'=>$request->kategori,
 			'q'=>$request->q,
 			'jenis'=>$request->jenis,
+			'tema'=>$request->tema
 		]);
 
 		return view('admin.data.index')->with(['pilih_kategori'=>isset($pilih_kategori)?$pilih_kategori['text']:null,'data'=>$data,'request'=>$request]);

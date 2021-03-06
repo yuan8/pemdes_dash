@@ -12,10 +12,10 @@
 
 <div class="box box-solid">
 	<div class="box-header">
-		<form action="{{route('admin.kategori.index')}}" method="get">
+		<form action="{{route('admin.kategori.index',['tahun'=>$GLOBALS['tahun_access']])}}" method="get">
 		<select class="form-control" name="jenis" onchange="$(this).parent().submit()">
-			<option value="TEMA_PRIMER" {{$req->jenis=='TEMA_PRIMER'?'selected':''}}>TEMA DATA UTAMA</option>
-			<option value="TEMA_SEKUNDER" {{$req->jenis=='TEMA_SEKUNDER'?'selected':''}}>DATA DATA PENDUKUNG</option>
+			<option value="TEMA_DATA_UTAMA" {{$req->jenis=='TEMA_DATA_UTAMA'?'selected':''}}>TEMA DATA UTAMA</option>
+			<option value="TEMA_DATA_PENDUKUNG" {{$req->jenis=='TEMA_DATA_PENDUKUNG'?'selected':''}}>DATA DATA PENDUKUNG</option>
 		</select>
 			
 		</form>
@@ -38,7 +38,7 @@
 				@foreach($data as $key=>$d)
 					<tr>
 						<td>
-							<a href="{{route('admin.kategori.edit',['id'=>$d->id])}}" class="btn btn-warning btn-xs"><i class="fa fa-pen"></i> Edit</a>
+							<a href="{{route('admin.kategori.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-warning btn-xs"><i class="fa fa-pen"></i> Edit</a>
 							
 						</td>
 						<td>{{$key+1}}</td>

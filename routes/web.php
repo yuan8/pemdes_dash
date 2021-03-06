@@ -73,7 +73,7 @@ Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/tb/{h}', 'ADMIN\ValidasiCtrl@number_to_alphabet')->name('tb');
 
 
-	Route::get('/visulisasi-p-table/{table}','TestCtrl@index')->name('visual.data.table');
+	Route::get('/visulisasi-p-table/{id}/{table}','TestCtrl@index')->name('visual.data.table');
 	Route::get('/get-data-v-table/{id}/{slug?}','TestCtrl@view')->name('get.data.table');
 
 

@@ -17,11 +17,9 @@ $id_dom='c_map_'.rand(0,100).'_'.date('is');
 var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
         chart: {
             backgroundColor: '#fff',
-            exporting:{
-            accessibility:{
-             enabled:true
-            }
-            }
+             height:500,
+            marginBottom:100,
+          
 
         },
       
@@ -130,7 +128,7 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
         series:[
 
             {
-                data:  <?=json_encode($data_type['series_map']) ?>,
+                data:  <?=json_encode($data_type['series_map']['data']) ?>,
                 events:{
                 click:function(e){
                     if(e.point.route!=null){

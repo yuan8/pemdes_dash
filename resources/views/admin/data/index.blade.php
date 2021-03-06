@@ -15,8 +15,8 @@
 			<label>TEMA</label>
 			<select class="form-control" id="tema" name="tema">
 				<option value="">SEMUA</option>
-				<option value="TEMA_PRIMER" {{$request->tema=='TEMA_PRIMER'?'selected':''}}>TEMA UTAMA</option>
-				<option value="TEMA_SEKUNDER" {{$request->tema=='TEMA_SEKUNDER'?'selected':''}}>TEMA PENDUKUNG</option>
+				<option value="TEMA_DATA_UTAMA" {{$request->tema=='TEMA_DATA_UTAMA'?'selected':''}}>TEMA UTAMA</option>
+				<option value="TEMA_DATA_PENDUKUNG" {{$request->tema=='TEMA_DATA_PENDUKUNG'?'selected':''}}>TEMA PENDUKUNG</option>
 			</select>
 		</div>
 

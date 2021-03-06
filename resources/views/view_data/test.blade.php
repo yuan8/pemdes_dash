@@ -79,7 +79,7 @@
 
 
 	setTimeout(function(){
-		get_data('#def','{{route('visual.data.table',['tahun'=>2020,'table'=>$data->table_view])}}');	
+		get_data('#def','{{route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'table'=>$data->table_view])}}');	
 	},1000);
 
 	 function exportExcelTable(dom,title){

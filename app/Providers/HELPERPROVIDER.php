@@ -1458,7 +1458,7 @@ class HELPERPROVIDER extends ServiceProvider
 				# code...
 				break;
 			case 'AVERAGE':
-				return ['Rata Rata','average(',')'];
+				return ['Rata Rata','avg(',')'];
 				break;
 
 			case 'MIN':
