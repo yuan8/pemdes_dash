@@ -57,29 +57,30 @@
 
 		$(dom).html('<div class="text-center"><h1 class="text-center" style="positon:absolute; top:0; bottom:0; margin:auto;"><b>Loading...</b></h1><p class="ppp_progres">... Send Request ...<p></div>');
 
-		var xhrReq = new XMLHttpRequest();
-		
-		xhrReq.addEventListener("progress", function(p){
-			$(dom).find('.ppp_progres').html(`Downloaded ${p.loaded} of ${p.total} bytes`);
+		// var xhrReq = new XMLHttpRequest();
+
+		xhrReq=$.ajax({
+			'url':route,
+			 type: method,
+			  beforeSend: function(request) {
+			    request.setRequestHeader("Authorization", 'Bearer {{(Auth::check()?Auth::User()->token:'xx')}}');
+			  },
+			'contentType': "application/json; charset=utf-8",
+			'statusCode':{
+				401:function(){
+					$(dom).html('<h5 class="text-center"><b>DATA TIDAK DAPAT DIAKSES</b></h5>'+
+					'<p class="text-center text-capitalize">Data Membutuhkan Authentifikasi, Silahkan <a href="{{route('login')}}">Login</a> terlebih dahulu</p>');
+				},
+				
+			},
+			success:function(res){
+				$(dom).html(res);
+			},
+			error: function (textStatus, errorThrown) {
+        	}
 
 		});
-		xhrReq.addEventListener("load", function(l){
-			if(xhrReq.status==200){
-				$(dom).html(xhrReq.response);
-
-			}
-		});
-		xhrReq.addEventListener("error", function(e){
-			console.log('error',e);
-		});
-		xhrReq.addEventListener("abort", function(ab){
-			console.log('abort',ab);
-		});
-
-		xhrReq.open(method,route);
-		xhrReq.setRequestHeader('Authorization', 'Bearer {{Auth::check()?Auth::User()->api_token:'x'}}');
-		xhrReq.send();
-
+	
 		id_hrs[dom]=xhrReq;
 
 

@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('chart-offline-d.html','TestCtrl@offline_donwload')->name('chart.offline');
+Route::post('/{tahun?}/chart-offline-d','TestCtrl@offline_donwload')->name('chart.offline');
 
 Route::prefix('/meta')->group(function () {
     Route::get('kota/{provinsi?}','API\KodeDaerahCtrl@kota')->name('api.meta.kota');
@@ -37,7 +37,7 @@ Route::prefix('data/admin/{tahun}')->middleware(['auth:api','bindTahun'])->group
 	Route::get('validation-form/{table}/{id}','API\ValidateCtrl@form')->name('api.data.validate.form');
 });
 
-Route::prefix('d/{tahun}')->middleware(['auth:api','bindTahun'])->group(function(){
+Route::prefix('d/{tahun}')->middleware(['bindTahun'])->group(function(){
 
 	Route::get('/visulisasi-p-table/{id}/{table}','TestCtrl@index')->name('visual.data.table');
 });

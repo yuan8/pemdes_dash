@@ -1451,6 +1451,10 @@ class HELPERPROVIDER extends ServiceProvider
 		}
 	}
 
+	static function operator(){
+		return ['SUM','AVERAGE','MIN','MAX','COUNT','COUNT_DISTINCT','COUNT_EXIST'];
+	}
+
 	static function translate_operator($op){
 		switch (strtoupper($op)) {
 			case 'SUM':

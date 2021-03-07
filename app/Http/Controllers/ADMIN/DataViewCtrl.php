@@ -102,10 +102,7 @@ class DataViewCtrl extends Controller
 
 
     	$data=DB::table('data as d')
-		->leftJoin('data_group as gc','gc.id_data','=','d.id')
-		->leftJoin('category as c','c.id','=','gc.id_category')
-		->selectRaw("group_concat(DISTINCT(concat(c.id,'|||',replace(c.type,'_',' '),'|||',c.name)) SEPARATOR '------') as category, d.*")
-		->groupBy('d.id')
+		
 		->where([
 			['d.id','=',$id],
 			['d.type','=','INTEGRASI']
@@ -124,7 +121,8 @@ class DataViewCtrl extends Controller
     			'auth'=>$request->auth,
     			'updated_at'=>Carbon::now(),
     			'keywords'=>json_encode($request->keywords),
-    			'organization_id'=>$request->id_instansi
+    			'organization_id'=>$request->id_instansi,
+
     		]);
 
     		if($data_up){
@@ -146,5 +144,79 @@ class DataViewCtrl extends Controller
     	}else{
     		return abort('404');
     	}
+    }
+
+
+    public function create($tahun){
+    		$tablemap=DB::table('master_table_map')->get();
+
+    	return view('admin.dataview.create')->with('tablemap',$tablemap);
+    }
+
+
+    public function form_delete($tahun,$id){
+
+    	$data=DB::table('data as d')
+		
+		->where([
+			['d.id','=',$id],
+			['d.type','=','INTEGRASI']
+		])->first();
+
+		if($data){
+			return view('admin.dataview.delete')->with('data',$data);
+		}
+
+    }
+
+    public function store($tahun,Request $request){
+
+
+    	$data=DB::table('data')->insertGetId([
+    		'name'=>$request->name,
+    			'description'=>$request->description,
+    			'table_view'=>$request->table_view,
+    			'auth'=>$request->auth,
+    			'updated_at'=>Carbon::now(),
+    			'created_at'=>Carbon::now(),
+    			'type'=>'INTEGRASI',
+    			'delivery_type'=>'AUTOMATION',
+    			'keywords'=>json_encode($request->keywords),
+    			'organization_id'=>$request->id_instansi
+
+    	]);
+
+    	if($data){
+    		foreach ($request->category as $key => $k) {
+    				# code...
+    				DB::table('data_group')->insertOrIgnore([
+    					'id_data'=>$data,
+    					'id_category'=>$k
+    				]);
+
+    			}
+    			DB::table('data_group')->where('id_data',$data)
+    			->whereNotIn('id_category',$request->category)->delete();
+
+    	}
+
+    	return redirect()->route('admin.dataview.index',['tahun'=>$GLOBALS['tahun_access']]);
+    }
+
+
+    public function delete($tahun,$id){
+
+    	$data=DB::table('data')
+		->where([
+			['id','=',$id],
+			['type','=','INTEGRASI']
+		])->delete();
+
+		if($data){
+			
+		}
+
+		return back();
+
     }
 }

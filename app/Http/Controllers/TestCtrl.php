@@ -9,22 +9,38 @@ use HPV;
 use MyHash;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Pagination\Paginator;
 class TestCtrl extends Controller
 {
-	public function offline_donwload(Request $request){
+	public function offline_donwload($tahun,Request $request){
 		$data=json_decode(base64_decode($request->data),true);
-		// dd($data);
 		header('Content-disposition: attachment; filename=' . $data['title'].'.html');
 		header('Content-type: text/html');
-
+		$datenow=Carbon::now()->format('d F Y');
+		$GLOBALS['tahun_access']=$tahun;
 		return view('view_data.chart_offline')->with([
 			'level'=>$data['level'],
 			'title'=>$data['title'],
 			'type'=>$data['type'],
 			'data_type'=>$data['data_type'],
-		])->render();
+			'lavel_meta'=>$data['level_meta'],
+			'table_meta'=>$data['table_meta'],
+			'subtitle'=>'Capaian Tahun '.($tahun-1).' - '.$datenow,
+		])->render().view('view_data.table')->with([
+			'level'=>$data['level'],
+			'title'=>$data['title'],
+			'type'=>$data['type'],
+			'data_type'=>$data['data_type'],
+			'level_meta'=>$data['level_meta'],
+			'table_meta'=>$data['table_meta'],
+			'only1level'=>true,
+			'subtitle'=>'Capaian Tahun '.($tahun-1).' - '.$datenow])
+		->render();
+
 
 	}
+
+
 
 	public function view($tahun,$id,$slug=null){
 
@@ -92,7 +108,7 @@ class TestCtrl extends Controller
 
 
 
-			$select= "'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_bps)) from master_desa as dds where left(dds.kode_bps,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
+			$select= "cfm.id as id_cmf, "."'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_bps)) from master_desa as dds where left(dds.kode_bps,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
 
 			foreach (array_values($meta_table['columns']) as $key => $value) {
 				$OP=HPV::translate_operator($value['aggregate_type']);
@@ -101,20 +117,57 @@ class TestCtrl extends Controller
 			}
 
 
-			$data=DB::table($level['table'].' as kd')
+			$data=[];
+
+			$paginate=50;
+		    Paginator::currentPageResolver(function ()  {
+		        return 1;
+		    });
+			$x=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
+
 			->leftjoin('validasi_confirm as cfm',[
-				[DB::raw("left(cfm.kode_desa,".$level['count'].")"),'=',DB::RAW("kd.".$level['table_kode'])],
+				['cfm.kode_desa','=',$level['table_kode']],
 				['cfm.table','=',DB::raw("'".$table."'")],
 				['cfm.tahun','=',DB::raw($tahun-1)]
 			])
-			->leftjoin($meta_table['table'].' as data',[
+			->leftjoin(DB::raw("(select * from ".$meta_table['table']." as dxdx where dxdx.kode_desa like '".($level['kode']?$level['kode'].'%':"%")."') as data"),
+				[
 				[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun-1)]])
 			->selectRaw($select)
 			->groupBy(('kd.'.$level['table_kode']) )
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
-			->get();
+			->orderBy('kd.'.$level['table_kode'], 'asc')
+			->paginate($paginate)->toArray();
 
+			$data=$x['data'];
 
+			if($paginate<$x['total']){
+
+				for ($p=2;$p<=$x['last_page'];$p++) {
+					$_REQUEST['page']=$p;
+					 Paginator::currentPageResolver(function () use ($p)  {
+				        return $p;
+				    });
+
+					$y=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
+
+					->leftjoin('validasi_confirm as cfm',[
+						['cfm.kode_desa','=',$level['table_kode']],
+						['cfm.table','=',DB::raw("'".$table."'")],
+						['cfm.tahun','=',DB::raw($tahun-1)]
+					])
+					->leftjoin(DB::raw("(select * from ".$meta_table['table']." as dxdx where dxdx.kode_desa like '".($level['kode']?$level['kode'].'%':"%")."') as data"),
+						[
+						[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun-1)]])
+					->selectRaw($select)
+					->groupBy(('kd.'.$level['table_kode']) )
+					->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
+					->orderBy('kd.'.$level['table_kode'], 'asc')
+					->paginate($paginate)->toArray();
+					$data=array_merge($data,$y['data']);
+				}
+			}
+			
 
 
 			$data_type=[
@@ -236,6 +289,12 @@ class TestCtrl extends Controller
 
 		foreach($data as $d){
 			$d=(Array)$d;
+			if(!isset($d['jumlah_desa'])){
+				$d['jumlah_desa']=1;
+			}
+			if(!isset($d['jumlah_data_desa'])){
+				$d['jumlah_data_desa']=$d['id_cmf']?1:0;
+			}
 
 			$data_map=[[
 				'name'=>'Keterisian Data',

@@ -46,7 +46,7 @@
             </span>
             <div class="info-box-content">
               <span class="info-box-text">
-              	<a href="{{HPV::route_data($d)}}">{{$d->name}}</a>
+              	<a href="{{HPV::route_data($d)}}">{{$d->name}} - <b>{{$d->temas}}</b></a>
               </span>
              
               <span class="progress-description text-muted">

@@ -55,11 +55,36 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 	Route::prefix('data-view')->group(function(){
 		Route::get('/','ADMIN\DataViewCtrl@index')->name('admin.dataview.index');
 		Route::get('form-edit/{id}','ADMIN\DataViewCtrl@edit')->name('admin.dataview.edit');
+		Route::get('form-delete/{id}','ADMIN\DataViewCtrl@form_delete')->name('admin.dataview.form_delete');
+		Route::delete('form-delete/{id}','ADMIN\DataViewCtrl@delete')->name('admin.dataview.delete');
+		Route::get('form-new/','ADMIN\DataViewCtrl@create')->name('admin.dataview.create');
+		Route::post('form-new/','ADMIN\DataViewCtrl@store')->name('admin.dataview.store');
 		Route::put('form-edit/{id}','ADMIN\DataViewCtrl@update')->name('admin.dataview.update');
 
+	});
 
-		
+	Route::prefix('table-map')->group(function(){
+		Route::get('/','ADMIN\TableMapCtrl@index')->name('admin.tablemap.index');
+		Route::get('form-edit/{id}','ADMIN\TableMapCtrl@edit')->name('admin.tablemap.edit');
+		Route::put('form-edit/{id}','ADMIN\TableMapCtrl@update')->name('admin.tablemap.update');
+		Route::get('form-add/','ADMIN\TableMapCtrl@create')->name('admin.tablemap.create');
+		Route::post('form-add/','ADMIN\TableMapCtrl@store')->name('admin.tablemap.store');
 
+
+
+
+		Route::get('form-edit-view/{id}','ADMIN\TableMapCtrl@editView')->name('admin.tablemap.edit.view');
+		Route::get('form-edit-columns/{id}','ADMIN\TableMapCtrl@editColumns')->name('admin.tablemap.edit.columns');
+
+		Route::put('form-edit-columns/{id}','ADMIN\TableMapCtrl@updateColumn')->name('admin.tablemap.update.columns');
+
+		Route::put('form-edit-view/{id}','ADMIN\TableMapCtrl@updateView')->name('admin.tablemap.update.view');
+
+		Route::get('form-delete/{id}','ADMIN\TableMapCtrl@form_delete')->name('admin.tablemap.form_delete');
+		Route::delete('form-delete/{id}','ADMIN\TableMapCtrl@delete')->name('admin.tablemap.delete');
+		Route::get('form-new/','ADMIN\TableMapCtrl@create')->name('admin.tablemap.create');
+		Route::post('form-new/','ADMIN\TableMapCtrl@store')->name('admin.tablemap.store');
+		Route::put('form-edit/{id}','ADMIN\TableMapCtrl@update')->name('admin.tablemap.update');
 
 	});
 

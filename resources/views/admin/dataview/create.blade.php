@@ -1,33 +1,30 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>EDIT DATA VIEW</h4>
+<h4>TAMBAH DATA VIEW</h4>
 @stop
 
 @section('content')
-	<form action="{{route('admin.dataview.update',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}" enctype='multipart/form-data' method="post">
+	<form action="{{route('admin.dataview.store',['tahun'=>$GLOBALS['tahun_access']])}}" enctype='multipart/form-data' method="post">
 		@csrf
-		@method('PUT')
 		<div class="row">
 		<div class="col-md-8">
 			<div class="box box-primary">
 		<div class="box-body">
 			<div class="form-group">
 				<label>Judul</label>
-				<input type="text" required="" value="{{$data->name}}" name="name" class="form-control">
+				<input type="text" required="" value="" name="name" class="form-control">
 			</div>
 			
 
 			<div class="form-group">
 				<label>Deksripsi</label>
-				<textarea class="form-control" name="description">{!!$data->description!!}</textarea>
+				<textarea class="form-control" name="description"></textarea>
 			</div>
 
 			<div class="form-group">
 				<label>Keywords</label>
 				<select class="form-control" id="keywords" name="keywords[]" multiple="">
-					@foreach(json_decode($data->keywords??'[]') as $k)
-						<option value="{{$k}}" selected="">{{$k}}</option>
-					@endforeach
+					
 				</select>
 				<script type="text/javascript">
 					$('#keywords').select2({
@@ -41,7 +38,7 @@
 				<select class="form-control" name="table_view" id="table_view" required="">
 					@foreach($tablemap as $k)
 					
-						<option value="{{$k->key_view}}" {{$data->table_view==$k->key_view?"selected":''}}>{{$k->key_view}} - {{$k->name}}</option>
+						<option value="{{$k->key_view}}" >{{$k->key_view}} - {{$k->name}}</option>
 					@endforeach
 				</select>
 				<script type="text/javascript">
@@ -57,37 +54,26 @@
 		<div class="col-md-4">
 			<div class="box box-primary">
 				<div class="box-header with-border">
-					<button type="submit" class="btn btn-primary background-blue">UPDATE</button>
+					<button type="submit" class="btn btn-primary background-blue">TAMBAH</button>
 				</div>
 				<div class="box-body">
 					<div class="form-group">
 						<label>Jenis Akses Data</label>
-						<p><input type="radio" name="auth" value="1" {{$data->auth==true?'checked':''}}> Dengan Login</p>
+						<p><input type="radio" name="auth" value="1" > Dengan Login</p>
 						
-						<p><input type="radio" name="auth" value="0"  {{$data->auth==false?'checked':''}}> Tanpa  Login</p>
+						<p><input type="radio" name="auth" value="0" checked=""> Tanpa  Login</p>
 
 					</div>
 					<div class="form-group">
 						<label>INSTANSI</label>
 						<select class="form-control" id="instansi"  name="id_instansi" required="">	
-							@php
-								$instansi=explode('|||',$data->instansi);
-							@endphp
-							<option value="{{$instansi[0]}}" selected="">INSTANSI {{$instansi[1]}}</option>
+							
 						</select>
 					</div>
 					<div class="form-group">
 						<label>Ketegori</label>
 						<select class="form-control" id="kategori"  name="category[]" multiple="">
-							@foreach(explode('------',$data->category ) as $c )
-								@if($c!='')
-								@php
-									
-									$c=explode('|||',$c);
-								@endphp
-								<option value="{{$c[0]}}" selected="">{{$c[1]}} - {{$c[2]}}</option>
-								@endif
-							@endforeach
+						
 						</select>
 						<script type="text/javascript">
 							$('#kategori').select2({

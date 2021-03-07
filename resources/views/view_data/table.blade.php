@@ -10,15 +10,20 @@
   </div>
 	<div class="box-body table-responsive">
 		<div class="btn-group" style="margin-bottom: 5px;">
-          
+					@if(!isset($only1level))
+     	     
       <button type="button" onclick="exportExcelTable('#table-{{$id_dom}}','{{isset($title)?$title:'export'}}');" class="btn btn-success btn-sm">Download Excel</button>
+      @endif
     </div>
 		<table class="table table-bordered" id="table-{{$id_dom}}">
 			<thead>
 				<tr>
 					@if($level!=10)
 
+					@if(!isset($only1level))
+
 					<th rowspan="2">AKSI</th>
+					@endif
 					@endif
 					<th rowspan="2">KODEDAERAH</th>
 					<th rowspan="2">NAMA {{strtoupper($level_meta['level'])}}</th>
@@ -49,10 +54,14 @@
 					@endphp
 					<tr>
 						@if($level!=10)
+					@if(!isset($only1level))
+
 							<td>
 								<button onclick="get_data('#dom_l_{{$level_meta['count']}}','{{route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d['id_data'],'table'=>$table_meta['key_view'],'kdparent'=>$d['id']])}}')" type="button" class="btn btn-primary btn-xs background-blue"><i class="fa fa-eye"></i> Detail</button>
 							</td>
 						@endif
+						@endif
+
 
 						<td>{{$d['id']}}</td>
 						<td>{{$d['name']}}</td>

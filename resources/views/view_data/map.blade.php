@@ -47,7 +47,6 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
                  if(e.point.route!=undefined){
                     get_data('#dom_l_'+e.point.next_dom,e.point.route);
                     map_chart_{{$id_dom}}.fullscreen.close();
-                    console.log('try close');
                 }
               }
             }
@@ -70,7 +69,7 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
                 offline_mode:{
                     text:'Offline Mode',
                     onclick:function(){
-                         var data=<?= json_encode(['type'=>'map','level'=>$level,'title'=>$title,'data_type'=>$data_type]) ?>;
+                            var data=<?= json_encode(['type'=>'map','level_meta'=>$level_meta,'table_meta'=>$table_meta,'level'=>$level,'title'=>$title,'data_type'=>$data_type]) ?>;
                         var title=data.title;
                         data=btoa(JSON.stringify(data))
 

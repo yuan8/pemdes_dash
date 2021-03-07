@@ -1,5 +1,5 @@
 <?php
-$id_dom='c_bar_'.rand(0,100).'_'.date('is');
+$id_dom='c_column_'.rand(0,100).'_'.date('is');
  ?>
    
  
@@ -8,13 +8,16 @@ $id_dom='c_bar_'.rand(0,100).'_'.date('is');
 
 <script type="text/javascript">
 	
-var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
+var column_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
     chart: {
-        type: 'bar',
+        type: 'column',
         height:500,
         marginLeft:100,
         marginBottom:100,
 
+    },
+    title: {
+        text: '{{$title}}'
     },
       exporting: {
             menuItemDefinitions: {
@@ -25,7 +28,7 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
                 offline_mode:{
                     text:'Offline Mode',
                     onclick:function(){
-                             var data=<?= json_encode(['type'=>'bar','level_meta'=>$level_meta,'table_meta'=>$table_meta,'level'=>$level,'title'=>$title,'data_type'=>$data_type]) ?>;
+                         var data=<?= json_encode(['type'=>'column','level_meta'=>$level_meta,'table_meta'=>$table_meta,'level'=>$level,'title'=>$title,'data_type'=>$data_type]) ?>;
                         var title=data.title;
                         data=btoa(JSON.stringify(data))
 
@@ -53,9 +56,6 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
                 }
             }
           },
-    title: {
-        text: '{{$title}}'
-    },
    subtitle:{
             text:'{{$subtitle}}'
         },
@@ -72,12 +72,14 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
         distance:1,
         padding:0
       },
-      scrollbar:{
-         enabled:true
-    },
+       scrollbar: {
+            enabled: true
+        },
     },
     yAxis:<?= count($data_type['series']['yAxis'])>0?json_encode($data_type['series']['yAxis']):'{}' ?>,
-    
+    scrollcolumn:{
+         enabled:true
+    },
     tooltip: {
         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
@@ -87,7 +89,7 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
         useHTML: true
     },
     plotOptions: {
-        bar: {
+        column: {
           groupPadding:0.1,
             dataLabels: {
                enabled: true,
@@ -113,8 +115,8 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
 });
 
 
-function fls_bar_{{$id_dom}}(){
-        bar_chart_{{$id_dom}}.fullscreen.toggle()
+function fls_column_{{$id_dom}}(){
+        column_chart_{{$id_dom}}.fullscreen.toggle()
 }
 
 </script>

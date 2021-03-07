@@ -1,36 +1,16 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>DATA VIEW</h4>
+<h4>TABLE MAP</h4>
 <div class="btn-group">
-<a href="{{route('admin.dataview.create',['tahun'=>$GLOBALS['tahun_access']])}}" class="btn btn-success">TAMBAH DATA VIEW</a>
-
+<a href="{{route('admin.tablemap.create',['tahun'=>$GLOBALS['tahun_access']])}}" class="btn btn-success">TAMBAH TABLE MAP</a>
 
 </div>
 <hr style="background: #fff; border-color: #fff;">
 <form method="get">
 	<div class="row">
-	<div class="col-md-4">
-		<div class="form-group">
-			<label>TEMA</label>
-			<select class="form-control" id="tema" name="tema">
-				<option value="">SEMUA</option>
-				<option value="TEMA_DATA_UTAMA" {{$request->tema=='TEMA_DATA_UTAMA'?'selected':''}}>TEMA UTAMA</option>
-				<option value="TEMA_DATA_PENDUKUNG" {{$request->tema=='TEMA_DATA_PENDUKUNG'?'selected':''}}>TEMA PENDUKUNG</option>
-			</select>
-		</div>
+	
 
-
-	</div>
-
-	<div class="col-md-4">
-		<div class="form-group">
-			<label>KATEGORI</label>
-			<select class="form-control" id="kategori" name="kategori">
-			</select>
-		</div>
-
-		
-	</div>
+	
 	<div class="col-md-12">
 		<input type="text" class="form-control" name="q" value="{{$request->q}}" placeholder="Search..">
 	</div>
@@ -54,35 +34,40 @@
 			<thead>
 				<tr>
 					<th>AKSI</th>
-					<th>JUDUL</th>
-					<th>TABLE MAP</th>
-					<th>TEMA</th>
-					<th>KETEGORI</th>
-					<th>INSTANSI</th>
+					<th>NAMA</th>
 
-					<th>DESKRIPSI</th>
+					<th>KEY MAP</th>
+					<th>TABLE</th>
+					<th>FORMAT VALIDASI</th>
+
+					<th>JUMLAH DATA MAP COLUMN</th>
+
+				
 
 				</tr>
 			</thead>
 			<tbody>
 				@foreach($data as $d)
+				@php
+				@endphp
 					<tr>
 						<td>
-							<a href="{{route('get.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>HPV::slugify($d->name)])}}" target="_blank" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
-							<a href="{{route('admin.dataview.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
-							<button onclick="showForm('{{route('admin.dataview.form_delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')"  class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </button>
+							
+							<a href="{{route('admin.tablemap.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
+							<a href="{{route('admin.tablemap.edit.view',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>HPV::slugify($d->name)])}}"  class="btn btn-xs btn-info"> <i class="fa fa-pen"></i> VIEW</a>
+							<a href="{{route('admin.tablemap.edit.columns',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>HPV::slugify($d->name)])}}"  class="btn btn-xs btn-info"> <i class="fa fa-pen"></i> COLUMNS</a>
+							<button onclick="showForm('{{route('admin.tablemap.form_delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')"  class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </button>
 
 						</td>
 						<td>{{$d->name}}</td>
-						<td>{{$d->table_view}}</td>
 
+						<td>{{$d->key_view}}</td>
+						<td>{{$d->table}}</td>
+						<td>{{$d->edit_daerah?'YA':'TIDAK'}}</td>
 
-						<td>{{str_replace('_',' ',$d->tema)}}</td>
+						<td>{{HPV::nformat($d->count_column)}}</td>
 
-						<td>{{$d->nama_category}}</td>
-						<td>{{$d->instansi}}</td>
-
-						<td>{{$d->description}}</td>
+						
 
 					</tr>
 				@endforeach

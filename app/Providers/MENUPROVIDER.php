@@ -105,7 +105,7 @@ class MENUPROVIDER extends ServiceProvider
                 ],
                  [
                     'text'=>('TABLE MAP'),
-                    'href'=>route('admin.validasi.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.tablemap.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-code',
                 ],

@@ -23,6 +23,12 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
+
+    protected function guard()
+    {
+        return Auth::guard('web');
+    }
+
     /**
      * Where to redirect users after login.
      *

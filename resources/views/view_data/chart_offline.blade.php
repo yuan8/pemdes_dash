@@ -38,32 +38,31 @@ echo include(public_path('bower_components/highcharts/highstock.js'));
 		
 </script>
 <body>
-	<h5 style="text-align: center">Updated Data At {{date('Y - m -d')}}</h5>
-	<div class="" id="chart" style="width:calc(100vh- 30px); height: calc(100vh - 50px);"></div>
-
+	<h4 style="text-align: center"><b>OFLINE MODE</b></h4>
+	<div class="" id="chart" style="width:calc(100vh- 30px); max-height: calc(100vh - 50px);"></div>
+    <hr>
 </body>
 
 <script type="text/javascript">
 		@if($type=='map')
-		var map_chart=Highcharts.mapChart('chart', {
+		var map_chart_=Highcharts.mapChart('chart', {
         chart: {
             backgroundColor: '#fff',
-            exporting:{
-            accessibility:{
-             enabled:true
-            }
-            }
+             height:500,
+            marginBottom:100,
+          
 
         },
+      
         title: {
-            text: 'Keterisian {{$title}}',
+            text: 'KETERISIAN DATA {{$title}}',
             style:{
                 color:'#222'
             },
             enabled:false
         },
         subtitle:{
-            text:''
+            text:'{{$subtitle}}'
         },
         colorAxis: {
             maxColor:'{{isset($color_def)?$color_def:'#063a69'}}',
@@ -78,8 +77,7 @@ echo include(public_path('bower_components/highcharts/highstock.js'));
             click:function(e){
                  if(e.point.route!=undefined){
                     get_data('#dom_l_'+e.point.next_dom,e.point.route);
-                    map_chart.fullscreen.close();
-                    console.log('try close');
+                    map_chart_.fullscreen.close();
                 }
               }
             }
@@ -87,11 +85,14 @@ echo include(public_path('bower_components/highcharts/highstock.js'));
           
         },
         legend: {
+            width:'100%',
             enabled: true,
             title:{
-                text:'Persentase Tingkat Keterisian {{$title}}'
+                text:'PERSENTASE KETERISIAN'
             }
         },
+      
+                    
         // credits: {
         //     enabled: false
         // },
@@ -121,10 +122,14 @@ echo include(public_path('bower_components/highcharts/highstock.js'));
         series:[
 
             {
-                data:  <?=json_encode($data_type['series_map']) ?>,
+                data:  <?=json_encode($data_type['series_map']['data']) ?>,
                 events:{
                 click:function(e){
-                    
+                    if(e.point.route!=null){
+                        get_data('#dom_l_'+e.point.next_dom,e.point.route);
+                    map_chart_.fullscreen.close();
+                    console.log('try close');
+                    }
                 }
                 },
                 name: '',
@@ -152,71 +157,75 @@ echo include(public_path('bower_components/highcharts/highstock.js'));
         ]
 
             });
+
 		@else
-		var chart=Highcharts.chart('chart', {
-		    chart: {
-		        type: '{{$type}}',
-		        height:'100vh',
-		        marginLeft:100,
-		        marginBottom:100,
+		var bar_chart_=Highcharts.chart('chart', {
+    chart: {
+        type: 'bar',
+        height:500,
+        marginLeft:100,
+        marginBottom:100,
 
-		    },
-		    title: {
-		        text: '{{$title}}'
-		    },
-		    subtitle: {
-		    },
-		    xAxis: {
-		      type: "category",
-		      margin:0.1,
-		      labels:{
-		        text:''
-		      },
-		      min:0,
-		      max:3,
-		      maxPadding:3,
-		      labels:{
-		        distance:1,
-		        padding:0
-		      }
-		    },
-		    yAxis:{
-		      
-		    },
-		    scrollbar:{
-		         enabled:true
-		    },
-		    tooltip: {
-		        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-		        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-		            '<td style="padding:0"><b>{point.y} {point.satuan}</b></td></tr>',
-		        footerFormat: '</table>',
-		        shared: true,
-		        useHTML: true
-		    },
-		    plotOptions: {
-		        {{$type}}: {
-		          groupPadding:0.1,
-		            dataLabels: {
-		               enabled: true,
-		               inside:true,
-		               align:"right",
-		               format:"{point.y:,.0f} {point.satuan}",
-		               crop:false,
-		               // overflow:"allow",
-		           },
-		        },
-		        series:{
-		          events:{
-		            click:function(e){
-		              
-		            }
-		          }
-		        }
+    },
+     
+    title: {
+        text: '{{$title}}'
+    },
+   subtitle:{
+            text:'{{$subtitle}}'
+        },
+    xAxis: {
+      type: "category",
+      margin:0.1,
+      labels:{
+        text:''
+      },
+      min:0,
+      max:3,
+      maxPadding:3,
+      labels:{
+        distance:1,
+        padding:0
+      },
+      scrollbar:{
+         enabled:true
+    },
+    },
+    yAxis:<?= count($data_type['series']['yAxis'])>0?json_encode($data_type['series']['yAxis']):'{}' ?>,
+    
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y} {point.satuan}</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        bar: {
+          groupPadding:0.1,
+            dataLabels: {
+               enabled: true,
+               inside:true,
+               align:"right",
+               format:"{point.y:,.0f} {point.satuan}",
+               crop:false,
+               // overflow:"allow",
+           },
+        },
+        series:{
+          events:{
+            click:function(e){
+              if(e.point.route!=undefined){
+                get_data('#dom_l_'+e.point.next_dom,e.point.route);
+              }
+            }
+          }
+        }
 
-		    },
-		    series: <?=json_encode($data_type['series']) ?>
-		});
+    },
+    series: <?=json_encode($data_type['series']['data']) ?>
+});
 
 	@endif
 </script>
