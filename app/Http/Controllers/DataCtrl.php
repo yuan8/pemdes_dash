@@ -16,6 +16,10 @@ class DataCtrl extends Controller
         if($request->q){
             $req=$request->q;
         }
+          $tema_accept=[
+            'TEMA_DATA_UTAMA',
+            'TEMA_DATA_PENDUKUNG',
+        ];
 
         
 
@@ -133,7 +137,10 @@ class DataCtrl extends Controller
         }
 
         $instansi_data=DB::table('category')->where('id',$type)->first();
-
+          $tema_accept=[
+            'TEMA_DATA_UTAMA',
+            'TEMA_DATA_PENDUKUNG',
+        ];
     
         if(in_array($type,['VISUALISASI','INFOGRAFIS','DATASET'])){
             $data=DB::table('data as d')
