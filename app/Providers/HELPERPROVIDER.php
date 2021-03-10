@@ -179,7 +179,7 @@ class HELPERPROVIDER extends ServiceProvider
 
 	static function route_data($data){
 		switch ($data->type) {
-			case 'TABLE':
+			case 'INTEGRASI':
 				return route('get.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>static::slugify($data->name)]);
 				# code...
 				break;
