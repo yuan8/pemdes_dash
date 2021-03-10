@@ -113,6 +113,8 @@ class ValidasiCtrl extends Controller
 
 		$where=[];
 		if($request->kdprovinsi){
+			$kddd=$request->kdprovinsi;
+
 			$where[]=[DB::raw("left(md.kode_bps,2)"),'=',$request->kdprovinsi];
 			$daerah=DB::table('provinsi')
 
@@ -125,6 +127,8 @@ class ValidasiCtrl extends Controller
 
 
 		if($request->kdkota){
+			$kddd=$request->kdkota;
+
 			$where[]=[DB::raw("left(md.kode_bps,4)"),'=',$request->kdkota];
 			$daerah=DB::table('kabkota')
 			->where('kdkabkota',$request->kdkota)
@@ -135,6 +139,8 @@ class ValidasiCtrl extends Controller
 
 
 		if($request->kdkecamatan){
+			$kddd=$request->kdkecamatan;
+
 			$where[]=[DB::raw("left(md.kode_bps,7)"),'=',$request->kdkecamatan];
 			$daerah=DB::table('kecamatan')
 			->where('kdkecamatan',$request->kdkecamatan)->selectRaw("'".$daerah->parent." ".$daerah->name." -> ' as parent,
@@ -144,6 +150,7 @@ class ValidasiCtrl extends Controller
 
 
 		if($request->kddesa){
+			$kddd=$request->kddesa;
 			$where[]=[DB::raw("(md.kode_bps)"),'=',$request->kddesa];
 			$daerah=DB::table('master_desa')
 			->where('kode_bps',$request->kddesa)->selectRaw("'".$daerah->parent." ".$daerah->jenis." ".$daerah->name." -> ' as parent,
@@ -171,7 +178,7 @@ class ValidasiCtrl extends Controller
 		if($request->export_format){
 
 			$data=$data->orderBy('md.kode_bps','asc')->get();
-			return static::export_format($tahun,$data,$table_map['name'].' '.$daerah->parent.' '.$daerah->name,$table_map);
+			return static::export_format($tahun,$data,$table_map['name'].' '.$daerah->parent.' '.$daerah->name,$table_map,$kddd);
 		}else{
 
 			$data=$data->orderBy('md.kode_bps','asc')->paginate(10);
@@ -202,11 +209,197 @@ class ValidasiCtrl extends Controller
 			'kdprovinsi'=>$request->kdprovinsi,
 			'kdkota'=>$request->kdkota,
 			'kdkecamatan'=>$request->kdkecamatan,
+			'data'=>$request->data
 		];
 
 
 		return view('admin.validasi.data')
 		->with(['daerah'=>$daerah,'table_map'=>$table_map,'data'=>$data,'req'=>$req,'data_index'=>$data_index,'table'=>$table,'rekap'=>$verifikasi]);
+	}
+
+	public function form_upload($tahun,Request $request){
+		if($request->kdprovinsi){
+			$kdd=$request->kdprovinsi;
+			$where[]=[DB::raw("left(md.kode_bps,2)"),'=',$request->kdprovinsi];
+			$daerah=DB::table('provinsi')
+
+			->where('kdprovinsi',$request->kdprovinsi)
+			->selectRaw("
+				'' as parent,
+				kdprovinsi as id,'PROVINSI' as jenis,nmprovinsi as name")
+			->first();
+		}
+
+
+		if($request->kdkota){
+			$kdd=$request->kdkota;
+
+			$where[]=[DB::raw("left(md.kode_bps,4)"),'=',$request->kdkota];
+			$daerah=DB::table('kabkota')
+			->where('kdkabkota',$request->kdkota)
+			->selectRaw("'".$daerah->jenis.' '.$daerah->name." -> ' as parent,kdkabkota as id,'KAB/KOTA' as jenis,nmkabkota as name")
+			->first();
+		}
+
+
+
+		if($request->kdkecamatan){
+			$kdd=$request->kdkecamatan;
+
+			$where[]=[DB::raw("left(md.kode_bps,7)"),'=',$request->kdkecamatan];
+			$daerah=DB::table('kecamatan')
+			->where('kdkecamatan',$request->kdkecamatan)->selectRaw("'".$daerah->parent." ".$daerah->name." -> ' as parent,
+				kdkecamatan as id,'KECAMATAN' as jenis,nmkecamatan as name")
+			->first();
+		}
+
+
+		if($request->kddesa){
+			$kdd=$request->kddesa;
+			$where[]=[DB::raw("(md.kode_bps)"),'=',$request->kddesa];
+			$daerah=DB::table('master_desa')
+			->where('kode_bps',$request->kddesa)->selectRaw("'".$daerah->parent." ".$daerah->jenis." ".$daerah->name." -> ' as parent,
+				kode_bps as id, 'DESA' as jenis,desa as name")
+			->first();
+
+		}
+
+		$level=HPV::level($kdd);
+		$table=DB::table('master_table_map')->where('id',$request->data)->first();
+
+		if($table){
+		return view('admin.validasi.upload')->with(['table'=>$table,'kd'=>$kdd,'level'=>$level,'daerah'=>$daerah]);
+
+		}
+
+
+
+
+
+
+
+
+	}
+
+
+	public function validate_bulk($tahun,$idtable,Request $request){
+
+
+		
+
+		$kdd=$request->kd;
+		$level=HPV::level($request->kd);
+		$table=DB::table('master_table_map')->find($idtable);
+
+
+		$spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('dist-web/format-validasi3.xlsx'));
+		$sheet=$spreadsheet->setActiveSheetIndex(0);
+		$pointer_head=8;
+		$sheet=$spreadsheet->getActiveSheet();
+		$index_head=8;
+		$max_column=2;
+		$spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load($request->file);
+		$sheet=$spreadsheet->setActiveSheetIndex(0);
+		$sheet=$spreadsheet->getActiveSheet();
+		$date_def=$sheet->getCell(static::nta(1).'2')->getCalculatedValue();
+		if($kdd==str_replace('VALIDATE-', '', $sheet->getCell(static::nta(1).'1')->getCalculatedValue())){
+			$app=true;
+		}else{
+			$app=false;
+			dd('DOKUMEN TIDAK SESUAI UNTUK VALIDASI DATA PADA DAERAH INI');
+		}
+    	$index_data=9;
+
+    	$data_change=[];
+    	$data_head=[
+
+    	];
+
+
+		if($app and $table){
+			
+			foreach ($sheet->toArray() as $key => $d) {
+				if($key==4){
+					for($index=7;$index<count($d);$index+=2){
+						$data_head[$index]=$d[$index];
+					}
+				}
+				if($key>=8){
+
+					if($d[1]=='VALID'){
+						$dddd=[
+							'tahun'=>$tahun,
+							'kode_desa'=>$d[0]
+						];
+						foreach ($d as $keyr => $x) {
+							
+							for($index=7;$index<count($d);$index+=2){
+								$dddd[$data_head[$index]]=$d[$index];
+							}
+						}
+						$data_change[]=[
+							'kode_desa'=>$d[0],
+							'tahun'=>$tahun,
+							'table'=>$table->table,
+							'tanggal_validasi'=>$d[2]?Carbon::parse($d[2]):$date_def,
+							'data_xx'=>$dddd
+
+						];
+						
+					}
+				}
+				# code...
+			}
+
+		}
+
+		$data_update=0;
+
+		foreach ($data_change as $key => $d) {
+			$va=false;
+			$f=DB::table('validasi_confirm')->where([
+				'table'=>$d['table'],
+				'tahun'=>$d['tahun'],
+				'kode_desa'=>$d['kode_desa']
+			])->first();
+
+			if(!$f){
+				$va=DB::table('validasi_confirm')->insert([
+					'table'=>$d['table'],
+					'tahun'=>$d['tahun'],
+					'kode_desa'=>$d['kode_desa'],
+					'tanggal_validasi'=>$d['tanggal_validasi'],
+					'id_user'=>Auth::User()->id
+				]);
+
+			}
+
+			if($va){
+				$data_update+=1;
+				
+				DB::table($d['table'])->where([
+
+					['kode_desa','=',$d['kode_desa']],
+					['tahun','=',$d['tahun']]
+				])->updateOrInsert($d['data_xx']);
+
+			}
+
+
+		}
+
+		return back();
+
+		// return 'data validasi '.$data_update.' Data';
+
+
+
+
+
+
+
+
+
 	}
 
 
@@ -216,7 +409,7 @@ class ValidasiCtrl extends Controller
 	}
 
 
-	public function export_format($tahun,$data,$title,$map=[]){
+	public function export_format($tahun,$data,$title,$map=[],$kddd){
 		$data=(HPV::maping_row($data,$map));
 		$spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('dist-web/format-validasi3.xlsx'));
 		$sheet=$spreadsheet->setActiveSheetIndex(0);
@@ -225,8 +418,13 @@ class ValidasiCtrl extends Controller
 		$index_head=8;
 		$max_column=2;
 
-		$sheet->getCell(static::nta(1).'2')
+		$sheet->getCell(static::nta(1).'1')
+    					->setValue('VALIDATE-'.$kddd);
+
+    	$sheet->getCell(static::nta(1).'2')
     					->setValue(Carbon::now());
+
+
 		$sheet->getCell(static::nta(1).'3')
     					->setValue($title);
     	$sheet->getCell(static::nta(1).'4')

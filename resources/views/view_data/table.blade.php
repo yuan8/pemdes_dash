@@ -4,29 +4,37 @@
 
 <div class="box box-primary">
 	 <div class="box-header with-border">
-    <h5 class="text-center" ><b>{{isset($title)?$title:''}}</b></h5>
-    
-    
-  </div>
-	<div class="box-body table-responsive">
-		<div class="btn-group" style="margin-bottom: 5px;">
+    <div class="btn-group" style="margin-bottom: 5px;">
 					@if(!isset($only1level))
      	     
-      <button type="button" onclick="exportExcelTable('#table-{{$id_dom}}','{{isset($title)?$title:'export'}}');" class="btn btn-success btn-sm">Download Excel</button>
-      @endif
+	      <button type="button" onclick="exportExcelTable('#table-{{$id_dom}}','{{isset($title)?$title:'export'}}');" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Excel</button>
+	      @endif
     </div>
-		<table class="table table-bordered" id="table-{{$id_dom}}">
+    
+  </div>
+	<div class="box-body table-responsive"   >
+		<table class="table table-bordered sticky-table" id="table-{{$id_dom}}" >
 			<thead>
 				<tr>
 					@if($level!=10)
-
-					@if(!isset($only1level))
-
-					<th rowspan="2">AKSI</th>
+						@if(!isset($only1level))
+							<th></th>
+						@endif
 					@endif
+
+					<th colspan="{{ (($level!=10)?4:2) +(count($table_meta['columns'])*2) }}">
+						<p class="text-uppercase">{{isset($title)?$title:''}} {{$pemda}}</p>
+					</th>
+
+				</tr>
+				<tr>
+					@if($level!=10)
+						@if(!isset($only1level))
+							<th rowspan="2">AKSI</th>
+						@endif
 					@endif
-					<th rowspan="2">KODEDAERAH</th>
-					<th rowspan="2">NAMA {{strtoupper($level_meta['level'])}}</th>
+						<th rowspan="2">KODEDAERAH</th>
+						<th rowspan="2">NAMA {{strtoupper($level_meta['level'])}}</th>
 					@if($level!=10)
 					<th rowspan="2">JUMLAH DESA</th>
 					<th rowspan="2">JUMLAH DESA TERDATA</th>
@@ -47,7 +55,7 @@
 					@endforeach
 				</tr>
 			</thead>
-			<tbody>
+			<tbody style="">
 				@foreach($data_type['data'] as $d)
 					@php
 						$d=(array)$d;
@@ -56,15 +64,20 @@
 						@if($level!=10)
 					@if(!isset($only1level))
 
-							<td>
+							<td scope="row">
+								@if(isset($dataset))
+								<button onclick="get_data('#dom_l_{{$level_meta['count']}}','{{route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$id_dataset,'kdparent'=>$d['id']])}}')" type="button" class="btn btn-primary btn-xs background-blue"><i class="fa fa-eye"></i> Detail</button>
+								@else
 								<button onclick="get_data('#dom_l_{{$level_meta['count']}}','{{route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d['id_data'],'table'=>$table_meta['key_view'],'kdparent'=>$d['id']])}}')" type="button" class="btn btn-primary btn-xs background-blue"><i class="fa fa-eye"></i> Detail</button>
+
+								@endif
 							</td>
 						@endif
 						@endif
 
 
-						<td>{{$d['id']}}</td>
-						<td>{{$d['name']}}</td>
+						<td scope="row" >{{$d['id']}}</td>
+						<td scope="row" >{{$d['name']}}</td>
 							@if($level!=10)
 						<td>{{HPV::nformat($d['jumlah_desa'])}}</td>
 						<td>{{HPV::nformat($d['jumlah_data_desa'])}}</td>
@@ -83,5 +96,11 @@
 				@endforeach
 			</tbody>
 		</table>
+		<script type="text/javascript">
+			// $('#table-{{$id_dom}}').floatThead({
+			// 	'position':'absolute'
+			// });
+			console.log('float run');
+		</script>
 	</div>
 </div>

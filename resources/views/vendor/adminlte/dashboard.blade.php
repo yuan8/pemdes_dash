@@ -70,6 +70,7 @@ if(isset($bind_side_left)){
                             </style>
 
                         @endif
+                      
 
                         <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="navbar-brand background-primary " style="padding: 5px 10px 5px 10px; "  >
                              <img src="{{url('logo.png')}}"  style="height:100%;" >
@@ -164,7 +165,7 @@ if(isset($bind_side_left)){
         @endif
 
             <aside class="control-sidebar control-sidebar-{{config($CONF_THEM.'.right_sidebar_theme')}}">
-                @yield('right-sidebar')
+                @include('vendor.adminlte.partials.right-side-bar',['menu'=>$CONF_MENU['top']])
             </aside>
             <!-- /.control-sidebar -->
             <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->

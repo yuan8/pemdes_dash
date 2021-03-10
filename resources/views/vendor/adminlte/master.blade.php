@@ -37,11 +37,12 @@
       <script type="text/javascript" src="{{asset('bower_components/jquery-export/libs/FileSaver/FileSaver.min.js')}}"></script>
 
      <script type="text/javascript" src="{{asset('bower_components/jquery-export/tableExport.min.js')}}"></script>
+     <script type="text/javascript" src="{{asset('bower_components/jquery.floatThead/dist/jquery.floatThead.min.js')}}"></script>
 
 
     @yield('adminlte_css')
 
-    <!--[if lt IE 9]>
+    <!--[if lt IE 9]>jquery.floatThead.min.js
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->

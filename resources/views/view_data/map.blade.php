@@ -24,7 +24,7 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
         },
       
         title: {
-            text: 'KETERISIAN DATA {{$title}}',
+            text: 'KETERISIAN DATA {{$title}} {{strtoupper($pemda)}}',
             style:{
                 color:'#222'
             },
@@ -54,7 +54,6 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
           
         },
         legend: {
-            width:'100%',
             enabled: true,
             title:{
                 text:'PERSENTASE KETERISIAN'

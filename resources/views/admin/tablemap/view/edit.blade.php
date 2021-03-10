@@ -67,6 +67,9 @@
 													<option value="column" {{$d->type=="column"?'selected':''}}>COLUMN CHART</option>
 													<option value="line" {{$d->type=="line"?'selected':''}}>LINE CHART</option>
 													<option value="table" {{$d->type=="table"?'selected':''}}>TABLE</option>
+													<option value="max"  {{$d->type=="max"?'selected':''}}>(4) DATA NILAI TERTINGGI</option>
+													<option value="pie"  {{$d->type=="pie"?'selected':''}}>PIE (4) DATA NILAI TERTINGGI </option>
+
 											</td>
 										@endforeach
 									</tr>
@@ -98,6 +101,10 @@
 				<option value="column">COLUMN CHART</option>
 				<option value="line">LINE CHART</option>
 				<option value="table">TABLE</option>
+				<option value="max">(4) DATA NILAI TERTINGGI</option>
+					<option value="pie"  >PIE (4) DATA NILAI TERTINGGI </option>
+
+
 			</select>
 			</div>
 		</div>

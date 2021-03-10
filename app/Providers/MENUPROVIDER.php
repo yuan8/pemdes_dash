@@ -37,6 +37,7 @@ class MENUPROVIDER extends ServiceProvider
                     'text'=>('Data'),
                     'href'=>route('query.data',['tahun'=>$GLOBALS['tahun_access']]),
                     'top_nav_class'=>'',
+                    'class'=>'',
                     'icon'=>'fa fa-file',
 
                 ],
@@ -44,7 +45,9 @@ class MENUPROVIDER extends ServiceProvider
                  [
                     'text'=>('Index Desa'),
                     'href'=>route('organisasi',['tahun'=>$GLOBALS['tahun_access']]),
+                    'class'=>'',
                     'top_nav_class'=>'',
+
                     'icon'=>'fa fa-tag',
 
                 ],
@@ -52,6 +55,8 @@ class MENUPROVIDER extends ServiceProvider
                     'text'=>('Instansi'),
                     'href'=>route('organisasi',['tahun'=>$GLOBALS['tahun_access']]),
                     'top_nav_class'=>'',
+                    'class'=>'',
+
                     'icon'=>'fa fa-users',
 
                 ],
@@ -59,6 +64,8 @@ class MENUPROVIDER extends ServiceProvider
                     'text'=>('Tema'),
                     'href'=>route('tema',['tahun'=>$GLOBALS['tahun_access']]),
                     'top_nav_class'=>'',
+                    'class'=>'',
+
                     'icon'=>'fa fa-hashtag',
 
                 ],
@@ -66,6 +73,8 @@ class MENUPROVIDER extends ServiceProvider
                     'text'=>('Publikasi'),
                     'href'=>route('query.data.delivery',['tahun'=>$GLOBALS['tahun_access'],'type'=>'publikasi']),
                     'top_nav_class'=>'',
+                    'class'=>'',
+
                     'icon'=>'fa fa-eye',
 
                 ],
@@ -73,6 +82,8 @@ class MENUPROVIDER extends ServiceProvider
                     'text'=>('Infografis'),
                     'href'=>route('query.data.delivery',['tahun'=>$GLOBALS['tahun_access'],'type'=>'infografis']),
                     'top_nav_class'=>'',
+                    'class'=>'',
+                    
                     'icon'=>'fa fa-image',
 
                 ],

@@ -40,5 +40,7 @@ Route::prefix('data/admin/{tahun}')->middleware(['auth:api','bindTahun'])->group
 Route::prefix('d/{tahun}')->middleware(['bindTahun'])->group(function(){
 
 	Route::get('/visulisasi-p-table/{id}/{table}','TestCtrl@index')->name('visual.data.table');
+    Route::get('/visulisasi-d-dataset/{id}','DataVisualCtrl@index')->name('visual.dataset');
+
 });
 

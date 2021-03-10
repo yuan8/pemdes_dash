@@ -10,8 +10,119 @@ use MyHash;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
+use Nahid\JsonQ\Jsonq;
 class TestCtrl extends Controller
 {
+	public function tt(){
+		$x=DB::table('dash_ddk_pekerjaan')->first();
+
+		foreach($x as $k=>$v){
+			if(!in_array($k,['kode_desa','tahun'])){
+				DB::table('master_column_map')->insertOrIgnore([
+				'name_column'=>$k,
+				'aggregate_type'=>'SUM',
+				'name'=>strtoupper(str_replace('_', ' ', $k)),
+				'satuan'=>'Jiwa',
+				'auth'=>0,
+				'dashboard'=>1,
+				'validate'=>1,
+				'id_user'=>1,
+				'id_ms_table'=>3
+				
+			]);
+			}
+		}
+
+		dd('s');
+	}
+
+	static function sort_data($data,$sort='DESC'){
+		if(count($data)){
+			if($sort=='DESC'){
+			uasort($data,function($a,$b){
+				if ($a['value']==$b['value']){
+					return 0;
+				}else{
+					return ($a['value']<$b['value'])?1:-1;
+
+				} 
+			});
+		}else{
+			uasort($data,function($a,$b){
+				if ($a['value']==$b['value']){
+					return 0;
+				}else{
+					return ($a['value']<$b['value'])?-1:1;
+
+				} 
+			});
+		}
+		$data= array_values($data);
+
+		}
+
+		return $data;
+	}
+
+	static function rekap_data($data,$map,$get=4){
+		$data='{"data":'.json_encode($data).'}';
+		$jsonq = new Jsonq($data);
+		$data=$jsonq->from('data');
+		$columns=$map['columns'];
+		$columns=array_values($columns);
+
+		$sum=[];
+
+		foreach ($columns as $key => $value) {
+				if(in_array($value['aggregate_type'],['SUM','COUNT','COUNT_DISTINCT'])){
+					$x=$value;
+					$x['value']=$jsonq->sum('data_'.$key);
+					$x['y']=$x['value'];
+
+					$sum[$key]=$x;
+				}
+
+		}
+
+		$sum=static::sort_data($sum,'DESC');
+		
+		$else=[];
+		foreach ($sum as $key => $value) {
+			if($key>$get){
+				if(in_array($value['aggregate_type'],['SUM','COUNT','COUNT_DISTINCT'])){
+					if(!isset($else[$value['satuan']])){
+						$else[$value['satuan']]=[
+							'name'=>$map['name'].' Lainya ('.$value['satuan'].')',
+							'value'=>(float)$value['value'],
+							'y'=>(float)$value['y'],
+							'key'=>'...',
+							'satuan'=>$value['satuan'],
+							'name_column'=>'',
+							'auth'=>0,
+							'dashboard'=>1,
+							'validate'=>1,
+							'aggregate_type'=>$value['aggregate_type']
+						];
+					}else{
+						$else[$value['satuan']]['value']+=(float)$value['value'];
+						$else[$value['satuan']]['y']+=(float)$value['y'];
+
+					}
+				}
+			}
+		}	
+
+		$else=array_values($else);
+
+
+		return [
+			'else_max'=>$else,
+			'max'=>array_slice($sum,0, $get),
+			'min'=>array_slice(static::sort_data($sum,'ASC'),$get)
+		] ;
+
+	}
+
 	public function offline_donwload($tahun,Request $request){
 		$data=json_decode(base64_decode($request->data),true);
 		header('Content-disposition: attachment; filename=' . $data['title'].'.html');
@@ -102,7 +213,7 @@ class TestCtrl extends Controller
 			$nama_pemda=((array)DB::table($level['parent']['table'])
 			->selectRaw($level['parent']['table_name'].' as name')->where($level['parent']['table_kode'],$request->kdparent)->first())['name'];
 			}else{
-				$nama_pemda=$meta_data->name.' Per Provinsi';
+				$nama_pemda='Per Provinsi';
 			}
 
 
@@ -117,6 +228,7 @@ class TestCtrl extends Controller
 			}
 
 
+
 			$data=[];
 
 			$paginate=50;
@@ -126,7 +238,7 @@ class TestCtrl extends Controller
 			$x=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
 
 			->leftjoin('validasi_confirm as cfm',[
-				['cfm.kode_desa','=',$level['table_kode']],
+				[DB::RAW("LEFT(cfm.kode_desa,".$level['count'].")"),'=',$level['table_kode']],
 				['cfm.table','=',DB::raw("'".$table."'")],
 				['cfm.tahun','=',DB::raw($tahun-1)]
 			])
@@ -138,6 +250,7 @@ class TestCtrl extends Controller
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
 			->orderBy('kd.'.$level['table_kode'], 'asc')
 			->paginate($paginate)->toArray();
+
 
 			$data=$x['data'];
 
@@ -152,7 +265,7 @@ class TestCtrl extends Controller
 					$y=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
 
 					->leftjoin('validasi_confirm as cfm',[
-						['cfm.kode_desa','=',$level['table_kode']],
+						[DB::RAW("LEFT(cfm.kode_desa,".$level['count'].")"),'=',$level['table_kode']],
 						['cfm.table','=',DB::raw("'".$table."'")],
 						['cfm.tahun','=',DB::raw($tahun-1)]
 					])
@@ -168,14 +281,19 @@ class TestCtrl extends Controller
 				}
 			}
 			
-
+			// return ($data);
 
 			$data_type=[
 				'data'=>$data
 			];
 
+
 			$data_type['series']=static::data_series($meta_table['key_view'],$data,$meta_table,$level,$id);
 			$data_type['series_map']=static::data_map($meta_table['key_view'],$data,$meta_table,$level,$id);
+
+			$data_type['data_sort']=static::rekap_data($data,$meta_table,4);
+
+
 
 
 			$meta_entity=isset($meta_table['view_'][$level['count']])?$meta_table['view_'][$level['count']]:[];
@@ -195,6 +313,7 @@ class TestCtrl extends Controller
 						'level'=>$level['count'],
 						'level_meta'=>$level,
 						'kdparent'=>$level['kode'],
+						'pemda'=>$nama_pemda,
 						'table_meta'=>$meta_table,
 						'tahun_capaian'=>$tahun-1,
 					])->render().'</div>';
@@ -214,7 +333,7 @@ class TestCtrl extends Controller
 
 
 	
-	public static function data_series($table,$data,$map,$level,$md){
+	public static function data_series($table,$data,$map,$level,$md,$jenis='INT'){
 
 		$D=[];
 
@@ -239,7 +358,11 @@ class TestCtrl extends Controller
 					];
 				}
 
-
+				if($jenis=='INT'){
+					$ROUTE_NEXT=($level['count'])?route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'table'=>$table,'kdparent'=>$d['id']]):null;
+				}else{
+					$ROUTE_NEXT=($level['count'])?route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'kdparent'=>$d['id']]):null;
+				}
 				
 
 				$D[$m['name_column']]['data'][]=[
@@ -248,7 +371,7 @@ class TestCtrl extends Controller
 					'y'=>(float)$d['data_'.$k]??0,
 					'value'=>(float)$d['data_'.$k]??0,
 					'satuan'=>$d['data_'.$k.'_satuan'],
-					'route'=>($level['count'])?route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'table'=>$table,'kdparent'=>$d['id']]):null,
+					'route'=>$ROUTE_NEXT,
 					'next_dom'=>$level['count'],
 
 				];
@@ -271,6 +394,7 @@ class TestCtrl extends Controller
 			];
 		}
 
+
 		return [
 			'yAxis'=>$yAxis,
 			'data'=>
@@ -281,7 +405,7 @@ class TestCtrl extends Controller
 	}
 
 
-	public static function data_map($table,$data,$map,$level,$md){
+	public static function data_map($table,$data,$map,$level,$md,$jenis='INT'){
 
 		$D=[];
 
@@ -314,13 +438,19 @@ class TestCtrl extends Controller
 				];
 
 			}
+
+			if($jenis=='INT'){
+				$ROUTE_NEXT=($level['count'])?route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'table'=>$table,'kdparent'=>$d['id']]):null;
+			}else{
+				$ROUTE_NEXT=($level['count'])?route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'kdparent'=>$d['id']]):null;
+			}
 			$D[]=[
 
 				'name'=>$d['name'],
 				'id'=>$d['id'],
 				'value'=>((float)$d['jumlah_data_desa']!=0)?((float)((float)$d['jumlah_data_desa']/(float)$d['jumlah_desa'])*100??0):0,
 				'y'=>((float)$d['jumlah_data_desa']!=0)?((float)((float)$d['jumlah_data_desa']/(float)$d['jumlah_desa'])*100??0):0,
-				'route'=>($level['count'])?route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'table'=>$table,'kdparent'=>$d['id']]):null,
+				'route'=>$ROUTE_NEXT,
 				'next_dom'=>$level['count'],
 				'data_map'=>$data_map
 			];

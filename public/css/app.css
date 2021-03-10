@@ -170,3 +170,32 @@
 	
 
 }
+.floatThead-wrapper{
+	max-height: 400px;
+	overflow: scroll;
+}
+
+thead tr th {
+  background: #fff!important;
+}
+
+table.sticky-table td[scope=row] {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  vertical-align: top;
+  color: inherit;
+  background: #d2d6de;
+  color:#222;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+
+
+table.sticky-table:nth-of-type(2) td:not([scope=row]):first-child {
+  left: 0;
+  vertical-align: middle;
+  z-index: 3;
+}

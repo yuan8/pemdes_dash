@@ -96,6 +96,7 @@
 	},1000);
 
 	 function exportExcelTable(dom,title){
+	 	$(dom).floatThead('destroy');
        $(dom).tableExport({
         type:'xlsx',
         headings: true,                    
@@ -104,6 +105,12 @@
         ignoreCSS:'.ignore-export',
         trimWhitespace:true                 // (Boolean), style buttons using bootstrap
     });
+
+	 $(dom).floatThead({
+				'position':'fixed',
+				'top':50
+			});
+
      }
 </script>
 @stop

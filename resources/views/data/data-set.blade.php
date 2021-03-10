@@ -23,59 +23,104 @@
 				<h5><b>Deskripsi</b></h5>
 				<p>{!!nl2br($data->description)!!}</p>
 				<hr>
-				{{-- <h5><b>Meta Data</b></h5>
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<th>JENIS</th>
-							<th>EXTENSION</th>
-							<th>SIZE (Mb)</th>
-							<th>KEYWORDS</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>{{$data->type}}</td>
-							<td>{{$data->extension}}</td>
-							<td>{{$data->size}}</td>
-							<td>
-								@php
-									$keywords=json_decode($data->keywords??'[]',true)??[];
-								@endphp
-								@foreach($keywords as $k=>$keyw)
-									<b>{{$keyw}}</b>
-									@if(isset($keywords[$k+1]))
-									,
-									@endif
-								@endforeach
-
-							</td>
-
-						</tr>
-					</tbody>
-				</table>
-				<hr>
-				<h5><b>Data</b></h5> --}}
+				
 				<div class="btn-group" style="">
 					
 				</div>
-				@if(in_array(strtolower($data->extension), ['xlsx','xls','csv']))
+				@if(in_array(strtolower($data->delivery_type), ['VISUALISASI']))
 				<div class="">
-					@include('partials.show-table-data')
-					
+						<div id="def"></div>
+						<div id="dom_l_2"></div>
+						<div id="dom_l_4"></div>
+						<div id="dom_l_7"></div>
+						<div id="dom_l_10"></div>
 				</div>
 				@elseif(in_array(strtolower($data->extension), ['pdf','png','jpg','jpeg']))
 				<div class="">
-					<iframe src="{{url($data->dokument_path)}}" style="width:100%; min-height:400px"></iframe>
+					<iframe src="{{url($data->document_path)}}" style="width:100%; min-height:400px"></iframe>
 				</div>
 				@endif
-
-
-				
 
 
 			</div>
 		</div>
 	</div>
 
+@stop
+
+@section('js')
+
+<script type="text/javascript">
+	var id_hrs=[];
+
+	function get_data(dom,route,method='GET',data={}){
+    	scrollToDOM(dom);
+
+    	if(id_hrs[dom]!=undefined){
+    		id_hrs[dom].abort();
+
+    		id_hrs[dom]=[];
+
+    		id_hrs=id_hrs.splice(dom, 1);
+    		
+
+    	}
+
+		$(dom).html('<div class="text-center"><h1 class="text-center" style="positon:absolute; top:0; bottom:0; margin:auto;"><b>Loading...</b></h1><p class="ppp_progres">... Send Request ...<p></div>');
+
+		// var xhrReq = new XMLHttpRequest();
+
+		xhrReq=$.ajax({
+			'url':route,
+			 type: method,
+			  beforeSend: function(request) {
+			    request.setRequestHeader("Authorization", 'Bearer {{(Auth::check()?Auth::User()->token:'xx')}}');
+			  },
+			'contentType': "application/json; charset=utf-8",
+			'statusCode':{
+				401:function(){
+					$(dom).html('<h5 class="text-center"><b>DATA TIDAK DAPAT DIAKSES</b></h5>'+
+					'<p class="text-center text-capitalize">Data Membutuhkan Authentifikasi, Silahkan <a href="{{route('login')}}">Login</a> terlebih dahulu</p>');
+				},
+				
+			},
+			success:function(res){
+				$(dom).html(res);
+			},
+			error: function (textStatus, errorThrown) {
+        	}
+
+		});
+	
+		id_hrs[dom]=xhrReq;
+
+
+
+
+	}
+
+		
+
+
+	setTimeout(function(){
+		get_data('#def','{{route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}');	
+	},1000);
+
+	 function exportExcelTable(dom,title){
+	 	$(dom).floatThead('destroy');
+       $(dom).tableExport({
+        type:'xlsx',
+        headings: true,                    
+        fileName: title,  // (id, String), filename for the downloaded file
+        bootstrap: true,  
+        ignoreCSS:'.ignore-export',
+        trimWhitespace:true                 // (Boolean), style buttons using bootstrap
+    });
+
+	 $(dom).floatThead({
+				'position':'absolute',
+			});
+
+     }
+</script>
 @stop

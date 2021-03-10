@@ -27,28 +27,43 @@ class DataCtrl extends Controller
             ->where([
                 ['d.name','like',DB::raw("'%".$req."%'")],
                 ['d.delivery_type','=',$type],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
 
             ])
             ->orWhere([
                 ['d.keywords','like',DB::raw("'%".$req."%'")],
                 ['d.delivery_type','=',$type],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
 
             ])
             ->orWhere([
                 ['d.tags','like',DB::raw("'%".$req."%'")],
                 ['d.delivery_type','=',$type],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])
             ->orWhere([
                 ['d.description','like',DB::raw("'%".$req."%'")],
                 ['d.delivery_type','=',$type],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])
             ->orWhere([
                 ['i.name','like',DB::raw("'%".$req."%'")],
                 ['d.delivery_type','=',$type],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])->orderBy('d.updated_at','desc')->paginate(10);
 
@@ -70,10 +85,12 @@ class DataCtrl extends Controller
                 ['d.name','like',DB::raw("'%".$req."%'")],
                 ['d.type','=','INSTANSI'],
 
+
             ])
              ->orWhere([
                 ['d.description','like',DB::raw("'%".$req."%'")],
                 ['d.type','=','INSTANSI'],
+
 
 
             ])
@@ -127,22 +144,34 @@ class DataCtrl extends Controller
             ->where([
                 ['d.name','like',DB::raw("'%".$req."%'")],
                 ['i.id','=',$type],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])
             ->orWhere([
                 ['d.tags','like',DB::raw("'%".$req."%'")],
                 ['i.id','=',$type],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
 
             ])
              ->orWhere([
                 ['d.description','like',DB::raw("'%".$req."%'")],
                 ['i.id','=',$type],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])
             ->orWhere([
                 ['d.keywords','like',DB::raw("'%".$req."%'")],
                 ['i.id','=',$type],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
 
             ])->orderBy('d.updated_at','desc')->paginate(10);
@@ -170,52 +199,88 @@ class DataCtrl extends Controller
     	if(Auth::check()){
            $data=$data ->where([
                 ['d.name','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
             ])
             ->orWhere([
                 ['d.keywords','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
             ])
             ->orWhere([
                 ['d.tags','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
             ])
             ->orWhere([
                 ['d.description','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
             ])
              ->orWhere([
                 ['tema.names','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
             ])
             ->orWhere([
                 ['i.name','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])->orderBy('d.updated_at','desc')->paginate(10);
         }else{
 
             $data=$data ->where([
                 ['d.name','like',DB::raw("'%".$req."%'")],
-                ['d.auth','=',false]
+                ['d.auth','=',false],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
             ])
             ->orWhere([
                 ['d.keywords','like',DB::raw("'%".$req."%'")],
-                ['d.auth','=',false]
+                ['d.auth','=',false],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])
             ->orWhere([
                 ['d.tags','like',DB::raw("'%".$req."%'")],
-                ['d.auth','=',false]
+                ['d.auth','=',false],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])
             ->orWhere([
                 ['d.description','like',DB::raw("'%".$req."%'")],
-                ['d.auth','=',false]
+                ['d.auth','=',false],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])
              ->orWhere([
                 ['tema.names','like',DB::raw("'%".$req."%'")],
-                ['d.auth','=',false]
+                ['d.auth','=',false],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])
             ->orWhere([
                 ['i.name','like',DB::raw("'%".$req."%'")],
-                ['d.auth','=',false]
+                ['d.auth','=',false],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
             ])->orderBy('d.updated_at','desc')->paginate(10);
 
         }
@@ -255,18 +320,30 @@ class DataCtrl extends Controller
                 $data=$data
                 ->orWhere([
                     ['d.keywords','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])
                 ->orWhere([
                     ['d.tags','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])
                 ->orWhere([
                     ['d.description','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])
                 ->orWhere([
                     ['i.name','like',DB::raw("'%".$req."%'")],
+                ['d.dashboard','=',true],
+                 [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])->orderBy('d.updated_at','desc')->paginate(10);
             }else {
@@ -274,22 +351,36 @@ class DataCtrl extends Controller
                 $data=$data
                 ->orWhere([
                     ['d.keywords','like',DB::raw("'%".$req."%'")],
-                    ['d.auth','=',false]
+                    ['d.auth','=',false],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
+                    
+
 
                 ])
                 ->orWhere([
                     ['d.tags','like',DB::raw("'%".$req."%'")],
-                    ['d.auth','=',false]
+                    ['d.auth','=',false],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])
                 ->orWhere([
                     ['d.description','like',DB::raw("'%".$req."%'")],
-                    ['d.auth','=',false]
+                    ['d.auth','=',false],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])
                 ->orWhere([
                     ['i.name','like',DB::raw("'%".$req."%'")],
-                    ['d.auth','=',false]
+                    ['d.auth','=',false],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])->orderBy('d.updated_at','desc')->paginate(10);
             }
@@ -302,25 +393,41 @@ class DataCtrl extends Controller
                 ->where([
                     ['d.name','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
+
                 ])
                
                 ->orWhere([
                     ['d.keywords','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
                 ])
                  ->orWhere([
                     ['d.description','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])
                 ->orWhere([
                     ['d.tags','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])
                 ->orWhere([
                     ['i.name','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
                 ])->orderBy('d.updated_at','desc')->paginate(10);
 
             }else{
@@ -328,34 +435,43 @@ class DataCtrl extends Controller
                 ->where([
                     ['d.name','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
-                    ['d.auth','=',false]
+                    ['d.auth','=',false],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])
               
                 ->orWhere([
                     ['d.keywords','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
-                    ['d.auth','=',false]
-
-
+                    ['d.auth','=',false],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
                 ])
                  ->orWhere([
                     ['d.description','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
-                    ['d.auth','=',false]
+                    ['d.auth','=',false],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])
                 ->orWhere([
                     ['d.tags','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
-                    ['d.auth','=',false]
-
-
+                    ['d.auth','=',false],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
                 ])
                 ->orWhere([
                     ['i.name','like',DB::raw("'%".$req."%'")],
                     ['i.id','=',DB::raw($instansi)],
-                    ['d.auth','=',false]
+                    ['d.auth','=',false],
+                    ['d.dashboard','=',true],
+                     [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
                 ])->orderBy('d.updated_at','desc')->paginate(10);
             }
@@ -374,21 +490,25 @@ class DataCtrl extends Controller
     public function detail($tahun,$id,$slug=null){
         $instansi=null;
         $data=DB::table('data as d')
+        ->where('year',($tahun))
         ->where('id',$id)->first();
 
-        // dd($data);
-
         if($data){
-            $instansi=$instansi_data=DB::table('category')->where('id',$data->organization_id)->first();
-            switch ($data->delivery_type) {
-                case 'DATASET':
-                    return view('data.data-set')->with(['data'=>$data,'instansi'=>$instansi]);
-                    break;
+            if($data->type=='FILE'){
+                 $instansi=$instansi_data=DB::table('category')->where('id',$data->organization_id)->first();
+                return view('data.data-set')->with(['data'=>$data,'instansi'=>$instansi]);
 
-                default:
-                    # code...
-                    break;
+                switch ($data->delivery_type) {
+                    case 'VISUALISASI':
+                        return view('data.data-set')->with(['data'=>$data,'instansi'=>$instansi]);
+                        break;
+
+                    default:
+                        # code...
+                        break;
+                }  
             }
+            
         }else{
             return abort(404);
         }

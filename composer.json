@@ -12,7 +12,9 @@
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
-        "phpoffice/phpspreadsheet": "^1.16"
+        "nahid/jsonq": "^6.0",
+        "phpoffice/phpspreadsheet": "^1.16",
+        "realrashid/sweet-alert": "^3.2"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

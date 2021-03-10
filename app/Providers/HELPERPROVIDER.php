@@ -178,16 +178,16 @@ class HELPERPROVIDER extends ServiceProvider
 	}
 
 	static function route_data($data){
-		switch ($data->delivery_type) {
-			case 'AUTOMATION':
+		switch ($data->type) {
+			case 'TABLE':
 				return route('get.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>static::slugify($data->name)]);
 				# code...
 				break;
-			case 'DATASET':
-				return route($data->table_view??'index',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>static::slugify($data->name)]);
+			case 'FILE':
+				return route('query.data.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>static::slugify($data->name)]);
 				# code...
 				break;
-			case 'VISUALISASI':
+			case 'NEWS':
 				return route($data->table_view??'index',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>static::slugify($data->name)]);
 				# code...
 				break;

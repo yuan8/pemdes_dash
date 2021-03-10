@@ -16,6 +16,9 @@ Route::get('/',function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);
 })->name('home');
 
+Route::get('/y','TestCtrl@tt');
+
+
 Route::get('/home',function(){
 	return redirect()->route('index');
 })->name('home.index');
@@ -45,6 +48,10 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 	Route::prefix('validasi')->group(function(){
 		Route::get('/','ADMIN\ValidasiCtrl@index')->name('admin.validasi.index');
 		Route::get('/data','ADMIN\ValidasiCtrl@data')->name('admin.validasi.data');
+		Route::get('/data/upload','ADMIN\ValidasiCtrl@form_upload')->name('admin.validasi.upload');
+		Route::post('/data/upload/{id}','ADMIN\ValidasiCtrl@validate_bulk')->name('admin.validasi.update.bulk');
+
+
 		Route::post('/validated/{table}/{id}','ADMIN\ValidasiCtrl@validated')->name('admin.validasi.try');
 		Route::put('/validated/{table}/{id}','ADMIN\ValidasiCtrl@update')->name('admin.validasi.update');
 
@@ -70,13 +77,11 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 		Route::get('form-add/','ADMIN\TableMapCtrl@create')->name('admin.tablemap.create');
 		Route::post('form-add/','ADMIN\TableMapCtrl@store')->name('admin.tablemap.store');
 
-
-
-
 		Route::get('form-edit-view/{id}','ADMIN\TableMapCtrl@editView')->name('admin.tablemap.edit.view');
 		Route::get('form-edit-columns/{id}','ADMIN\TableMapCtrl@editColumns')->name('admin.tablemap.edit.columns');
 
 		Route::put('form-edit-columns/{id}','ADMIN\TableMapCtrl@updateColumn')->name('admin.tablemap.update.columns');
+
 
 		Route::put('form-edit-view/{id}','ADMIN\TableMapCtrl@updateView')->name('admin.tablemap.update.view');
 

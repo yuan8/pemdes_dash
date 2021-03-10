@@ -54,7 +54,7 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
             }
           },
     title: {
-        text: '{{$title}}'
+        text: '{{$title}} {{strtoupper($pemda)}}'
     },
    subtitle:{
             text:'{{$subtitle}}'

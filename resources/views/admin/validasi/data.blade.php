@@ -39,7 +39,7 @@
 	<div class="col-md-4">
 		<div class="box-solid box bg-green">
 			<div class="box-header with-border">
-				<h4><b>Sudah Terverifikasi Data</b></h4>
+				<h4><b>Data Sudah Valid </b></h4>
 			</div>
 		<div class="box-body">
 			<p>{{HPV::nformat($rekap['sudah'])}} DESA</p>
@@ -49,7 +49,7 @@
 	<div class="col-md-4">
 		<div class="box-solid box bg-maroon">
 			<div class="box-header with-border">
-				<h4><b>Belum Terverifikasi Data</b></h4>
+				<h4><b>Data Belum Valid</b></h4>
 			</div>
 		<div class="box-body">
 			<p>{{HPV::nformat($rekap['belum'])}} DESA</p>
@@ -59,9 +59,9 @@
 	<div class="col-md-12">
 		<h5>BULK VALIDASI</h5>
 		<div class="btn-group">
-			
-				<a href="{{url()->full().'&export_format=true'}}" download="" class="btn btn-primary"> Download Excel Format</button>
-				<a href="" class="btn btn-success ">Upload Data</a>
+		
+			<a href="{{url()->full().'&export_format=true'}}" download="" class="btn btn-primary"> Download Excel Format</button>
+			<a href="{{route('admin.validasi.upload',['tahun'=>$GLOBALS['tahun_access'],'kdprovinsi'=>$req['kdprovinsi'],'kdkota'=>$req['kdkota'],'kdkecamatan'=>$req['kdkecamatan'],'kddesa'=>$req['kddesa'],'data'=>$req['data']])}}" class="btn btn-success ">Upload Data</a>
 		</div>
 	</div>
 </div>
@@ -92,7 +92,7 @@
 			<tbody>
 				@foreach(HPV::maping_row($data,$table_map) as $d)
 				
-					<tr class="{{$d['status_validasi']=='BELUM'?'bg-warning':'bg-success'}}">
+					<tr class="{{$d['status_validasi']['value']=='VALID'?'bg-success':'bg-waning'}}">
 						<td>
 							<div class="btn-group">
 								<button class="btn btn-xs btn-primary" onclick="get_form('{{route('api.data.validate.form',['tahun'=>$GLOBALS['tahun_access'],'table'=>$table_map['key_view'],'id'=>$d['id_desa']['value']])}}')"><i class="fa fa-check"></i></button>
