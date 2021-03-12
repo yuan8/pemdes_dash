@@ -36,7 +36,7 @@
 						<div id="dom_l_10"></div>
 				</div>
 				@elseif(in_array(strtolower($data->extension), ['pdf','png','jpg','jpeg']))
-				<div class="">
+				<div class="">	
 					<iframe src="{{url($data->document_path)}}" style="width:100%; min-height:400px"></iframe>
 				</div>
 				@endif
@@ -93,8 +93,6 @@
 		});
 	
 		id_hrs[dom]=xhrReq;
-
-
 
 
 	}
