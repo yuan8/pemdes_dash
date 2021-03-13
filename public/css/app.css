@@ -26,6 +26,7 @@ a{
 
 .background-danger-y .navbar-nav>li>a{
 	color: #fff;
+	font-weight: 800;
 }
 .background-danger-y .navbar-nav>li>a:hover{
 	color: #fff;
