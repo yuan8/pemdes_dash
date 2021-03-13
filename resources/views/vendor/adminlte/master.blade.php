@@ -23,7 +23,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/AdminLTE.min.css') }}">
 
-    <link rel="stylesheet" type="text/css" href="{{asset('/css/app.css?v='.date('i'))}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('/css/app.css?v='.date('dmYhi'))}}">
+
 
     <script src="{{asset('bower_components/datatables/media/js/jquery.dataTables.js')}}" charset="utf-8"></script>
     <script src="{{asset('bower_components/datatables/media/js/dataTables.bootstrap.js')}}" charset="utf-8"></script>
@@ -33,6 +34,7 @@
     <!-- <link rel="stylesheet" href="{{asset('bower_components/datatables/media/css/jquery.dataTables.css')}}"> -->
     <link rel="stylesheet" href="{{asset('bower_components/datatables/media/css/dataTables.bootstrap.css')}}">
 
+ <link rel="stylesheet" type="text/css" href="{{asset('/bower_components/components-font-awesome/css/all.min.css')}}">
      <script type="text/javascript" src="{{asset('bower_components/jquery-export/libs/js-xlsx/xlsx.core.min.js')}}"></script>
       <script type="text/javascript" src="{{asset('bower_components/jquery-export/libs/FileSaver/FileSaver.min.js')}}"></script>
 

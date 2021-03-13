@@ -72,8 +72,8 @@ if(isset($bind_side_left)){
                         @endif
                       
 
-                        <a href="{{ url(config($CONF_THEM.'.dashboard_url', 'home')) }}" class="navbar-brand background-primary " style="padding: 5px 10px 5px 10px; "  >
-                             <img src="{{url('logo.png')}}"  style="height:100%;" >
+                        <a href="{{ route('index',['tahun'=>$GLOBALS['tahun_access']]) }}" class="navbar-brand background-primary " style="padding: 5px 10px 5px 10px; "  >
+                             <img src="{{url('dist-web/logo.png')}}"  style="height:100%;" >
                         </a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="control-sidebar" >
                             <i class="fa fa-bars"></i> 
@@ -100,7 +100,7 @@ if(isset($bind_side_left)){
                 </a>
              @endif
                 <!-- Navbar Right Menu -->
-                <div class="navbar-custom-menu hidden-sm hidden-xs">
+                <div class="navbar-custom-menu hidden-sm hidden-xs" style="padding-right: 10px;">
 
 
 
@@ -140,7 +140,7 @@ if(isset($bind_side_left)){
             @endif
 
             <!-- Content Header (Page header) -->
-            <section class="content-header background-img-box" style="border-bottom:6px solid #3c8dbc">
+            <section class="content-header background-danger-y" style="margin-bottom:40px; ">
                 @yield('content_header')
             </section>
 
@@ -164,7 +164,7 @@ if(isset($bind_side_left)){
         </footer>
         @endif
 
-            <aside class="control-sidebar control-sidebar-{{config($CONF_THEM.'.right_sidebar_theme')}}">
+            <aside style="position: fixed; height: 100vh; padding:5px; padding-top: 60px;" class="control-sidebar control-sidebar-{{config($CONF_THEM.'.right_sidebar_theme')}}">
                 @include('vendor.adminlte.partials.right-side-bar',['menu'=>$CONF_MENU['top']])
             </aside>
             <!-- /.control-sidebar -->

@@ -7,9 +7,86 @@
 @section('content')
 
 <div class="container" style="">
-	<h3 class="text-center text-primary"><b>DATA UTAMA </b></h3>
-	<div class="col-md-8 col-md-offset-2">
-		<div class="owl-carousel owl-theme">
+	<div class="col-md-6">
+		<h1>Sumber <b>Data</b></h1>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="box box-solid btn-ov box-shadows-blue">
+					<div class="box-body">
+						<h1>67,78%</h1>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="box box-solid btn-ov box-shadows-blue">
+					<div class="box-body">
+						<h1>67,78%</h1>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	<h1>Klasifikasi <b>Desa</b></h1>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="box box-danger btn-ov">
+					<div class="box-body">
+						<h1>67,78%</h1>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="box box-warning btn-ov">
+					<div class="box-body">
+						<h1>67,78%</h1>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="box box-success btn-ov">
+					<div class="box-body">
+						<h1>67,78%</h1>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p class="text-primary">* Sumber Data <a href="http://http://prodeskel.binapemdes.kemendagri.go.id/" class="text-primary"><b>prodeskel.binapemdes.kemendagri.go.id</b></a></p>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="box box-danger btn-ov">
+					<div class="box-body">
+						<h1>67,78%</h1>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="box box-warning btn-ov">
+					<div class="box-body">
+						<h1>67,78%</h1>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="box box-success btn-ov">
+					<div class="box-body">
+						<h1>67,78%</h1>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p class="text-primary">* Sumber Data <a href="http://http://epdeskel.binapemdes.kemendagri.go.id/" class="text-primary"><b>epdeskel.binapemdes.kemendagri.go.id</b></a></p>
+
+	</div>
+	<div class="col-md-6" style="padding-left:27px;">
+	<h3 class="text-center "><b>DATA UTAMA </b></h3>
+		<div class="owl-carousel owl-theme btn-ov">
 	  	@foreach($tema as $t)
 	  	<div class="item text-center" >
 				<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
@@ -28,12 +105,8 @@
 	  	@endforeach
 
 		</div>
-	</div>
-</div>
-
-<div class="container" style="">
-	<h3 class="text-center text-primary"><b>DATA PENDUKUNG</b></h3>
-	<div class="col-md-8 col-md-offset-2">
+	<h3 class="text-center "><b>DATA PENDUKUNG</b></h3>
+		
 		<div class="owl-carousel owl-theme">
 	  	@foreach($tema2 as $t)
 	  	<div class="item text-center" >
@@ -56,7 +129,13 @@
 	</div>
 </div>
 
-<div class="row background-img-box">
+<div class="container" style="">
+	<div class="col-md-8 col-md-offset-2">
+		
+	</div>
+</div>
+
+{{-- <div class="row background-img-box">
 	<div class="col-md-12">
 		<h4 class="text-center text-white"><b>STATISTIK DATA</b></h4>
 
@@ -100,7 +179,7 @@
 	</div>
 	</div>
 	
-</div>
+</div> --}}
 @stop
 
 @section('js')

@@ -1,5 +1,14 @@
 <ul class="nav navbar-nav">
-                      
+     
+    <li>
+  <a href="{{route('index',['tahun'=>$GLOBALS['tahun_access']])}}" >
+   
+      <i class="fa fa-home"></i>  Halaman Depan
+  </a> 
+</li> 
+<li>
+  <a href=""> Tentang </a>
+</li>                
 <li>
     <a href="#"  ><i class="fa fa-calendar"></i> Pindah Tahun</a>
   </li>
@@ -71,8 +80,9 @@
   
 @else
 <li>
-  <a href="{{url('login')}}" class="btn btn-warning" style="padding: 5px; margin-top: 10px;">
-      <i class="fa fa-user-circle"></i> Login
+  <a href="{{url('login')}}" class="btn btn-warning btn-ov btn-sm" style="padding: 5px 20px 5px 20px; margin-top: 10px;">
+    Masuk
+      <i class="fa fa-sign-in-alt"></i> 
   </a> 
 </li>
 
