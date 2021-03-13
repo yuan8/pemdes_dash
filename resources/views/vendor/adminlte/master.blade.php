@@ -165,9 +165,11 @@
       }
 
       function scrollToDOM(dom){
-        $('html, body').animate({
-            scrollTop: $(dom).offset().top
+       setTimeout(function(){
+         $('html,body').animate({
+            scrollTop: $(dom).offset().top!=undefined?$(dom).offset().top:0
         }, 2000);
+       },100);
       }
 
       function LinShowForm(dom,size='lg'){

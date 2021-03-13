@@ -24,28 +24,25 @@
 		<h5>{{$data->name}}</h5>
 	</div>
 
-	</div>
+</div>
 
 	<div class="">
 		<div class="box box-solid">
-			<div class="box-body">
+			<div class="box-body" style="min-height: 100vh;">
 				<h5><b>Deskripsi</b></h5>
 				<p>{!!nl2br($data->description)!!}</p>
 				<hr>
 				
-				<div class="btn-group" style="">
-					
-				</div>
-				@if(in_array(strtolower($data->delivery_type), ['VISUALISASI']))
+				@if(in_array(strtoupper($data->delivery_type), ['VISUALISASI']))
 				<div class="">
-						<div id="def"></div>
+						<div id="def-data"></div>
 						<div id="dom_l_2"></div>
 						<div id="dom_l_4"></div>
 						<div id="dom_l_7"></div>
 						<div id="dom_l_10"></div>
 				</div>
 				@elseif(in_array(strtolower($data->extension), ['pdf','png','jpg','jpeg']))
-				<div class="">	
+				<div class="" id="def-data">	
 					<iframe src="{{url($data->document_path)}}" style="width:100%; min-height:400px"></iframe>
 				</div>
 				@endif
@@ -110,7 +107,7 @@
 
 
 	setTimeout(function(){
-		get_data('#def','{{route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}');	
+		get_data('#def-data','{{route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}');	
 	},1000);
 
 	 function exportExcelTable(dom,title){

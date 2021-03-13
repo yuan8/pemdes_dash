@@ -50,7 +50,6 @@ class DataVisualCtrl extends Controller
 
     public function index($tahun,$id,Request $request){
     	$file_exist=file_exists(storage_path('/app/public/publication/DATASET_JSON/'.$tahun.'/'.$id.'.json'));
-
     	if($file_exist){
     		$file_json=file_get_contents(storage_path('/app/public/publication/DATASET_JSON/'.$tahun.'/'.$id.'.json'));
     		$meta_table=json_decode($file_json,true)['meta_table'];

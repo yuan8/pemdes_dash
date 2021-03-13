@@ -552,14 +552,13 @@ class DataCtrl extends Controller
         $data=DB::table('data as d')
         ->where('year',($tahun))
         ->where('id',$id)->first();
-
         if($data){
             if($data->type=='FILE'){
                  $instansi=$instansi_data=DB::table('category')->where('id',$data->organization_id)->first();
-                return view('data.data-set')->with(['data'=>$data,'instansi'=>$instansi]);
-
+                return view('data.data-set')->with(['data'=>$data,'instansi'=>$instansi,'hm'=>true]);
                 switch ($data->delivery_type) {
                     case 'VISUALISASI':
+
                         return view('data.data-set')->with(['data'=>$data,'instansi'=>$instansi,'hm'=>true]);
                         break;
 
