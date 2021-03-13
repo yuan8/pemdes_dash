@@ -8,12 +8,12 @@
 
 <div class="container" style="">
 	<div class="col-md-6">
-		<h1>Sumber <b>Data</b></h1>
+		<h1 style="line-height:26px; margin-top:7px;">Sumber <b>Data</b></h1>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="box box-solid btn-ov box-shadows-blue">
 					<div class="box-body">
-						<h1>67,78%</h1>
+						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
 						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
 					</div>
 				</div>
@@ -21,18 +21,18 @@
 			<div class="col-md-6">
 				<div class="box box-solid btn-ov box-shadows-blue">
 					<div class="box-body">
-						<h1>67,78%</h1>
+						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
 						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
 					</div>
 				</div>
 			</div>
 		</div>
-	<h1>Klasifikasi <b>Desa</b></h1>
+	<h1 style="line-height:26px; margin-top:7px;">Klasifikasi <b>Desa</b></h1>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="box box-danger btn-ov">
 					<div class="box-body">
-						<h1>67,78%</h1>
+						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
 						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
 					</div>
 				</div>
@@ -40,7 +40,7 @@
 			<div class="col-md-4">
 				<div class="box box-warning btn-ov">
 					<div class="box-body">
-						<h1>67,78%</h1>
+						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
 						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
 					</div>
 				</div>
@@ -48,7 +48,7 @@
 			<div class="col-md-4">
 				<div class="box box-success btn-ov">
 					<div class="box-body">
-						<h1>67,78%</h1>
+						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
 						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
 					</div>
 				</div>
@@ -59,7 +59,7 @@
 			<div class="col-md-4">
 				<div class="box box-danger btn-ov">
 					<div class="box-body">
-						<h1>67,78%</h1>
+						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
 						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
 					</div>
 				</div>
@@ -67,7 +67,7 @@
 			<div class="col-md-4">
 				<div class="box box-warning btn-ov">
 					<div class="box-body">
-						<h1>67,78%</h1>
+						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
 						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
 					</div>
 				</div>
@@ -75,7 +75,7 @@
 			<div class="col-md-4">
 				<div class="box box-success btn-ov">
 					<div class="box-body">
-						<h1>67,78%</h1>
+						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
 						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
 					</div>
 				</div>
