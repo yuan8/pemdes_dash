@@ -24,6 +24,18 @@ a{
 	padding-bottom: 10px;
 }
 
+.bg-slider-1{
+	background: #ddd!important;
+	border-radius: 30%;
+	padding: 10px 20px 10px 20px;
+}
+
+.bg-slider-2{
+	background: #83b7ea!important;
+	border-radius: 30%;
+	padding: 10px 20px 10px 20px;
+}
+
 .background-danger-y .navbar-nav>li>a{
 	color: #fff;
 	font-weight: 800;

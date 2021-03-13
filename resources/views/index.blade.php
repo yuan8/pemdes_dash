@@ -86,18 +86,12 @@
 	</div>
 	<div class="col-md-6" style="padding-left:27px;">
 	<h3 class="text-center "><b>DATA UTAMA </b></h3>
-		<div class="owl-carousel owl-theme btn-ov">
+		<div class="owl-carousel owl-theme btn-ov bg-slider-1">
 	  	@foreach($tema as $t)
 	  	<div class="item text-center" >
 				<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
-					<div class="box box-solid" >
-						<div class="box-body" style="min-height:180px;">
-							<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
+					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
 							<p><b>{{$t->name}}</b></p>
-
-						</div>
-
-					</div>
 				</a>
 
 	    </div>
@@ -107,18 +101,12 @@
 		</div>
 	<h3 class="text-center "><b>DATA PENDUKUNG</b></h3>
 		
-		<div class="owl-carousel owl-theme">
+		<div class="owl-carousel owl-theme bg-slider-2 btn-ov">
 	  	@foreach($tema2 as $t)
 	  	<div class="item text-center" >
 				<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
-					<div class="box box-solid" >
-						<div class="box-body" style="min-height:180px;">
-							<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
+					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
 							<p><b>{{$t->name}}</b></p>
-
-						</div>
-
-					</div>
 				</a>
 
 	    </div>
@@ -188,7 +176,9 @@
 <link rel="stylesheet" type="text/css" href="{{url('vendor/OwlCarousel/dist/assets/owl.carousel.min.css')}}">
 
 <style type="text/css">
-
+.owl-nav{
+	height: 0px;
+}
 
 
 </style>
@@ -199,12 +189,11 @@
 	$(document).ready(function(){
 			$(".owl-carousel").owlCarousel({
 		 		smartSpeed : 450,
-		 		nav : true,
 		 		navText:["<div class='nav-btn prev-slide'><i class='fa fa-chevron-left fa-3x text-primary opacity-50'></i></div>","<div class='nav-btn next-slide'><i class='fa fa-chevron-right fa-3x text-primary opacity-50'></i></div>"],
 		 		lazyload : true,
 		 		loop : true,
 		 		items : 3,
-		 		dots : true,
+		 		dots : false,
 		 		responsiveClass:true,
 			    responsive:{
 			        0:{
