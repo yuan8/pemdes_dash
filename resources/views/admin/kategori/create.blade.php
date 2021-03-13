@@ -5,7 +5,7 @@
 @stop
 @section('content')
 	<div class="box-solid box">
-		<form action="{{route('admin.kategori.store')}}" method="post" enctype='multipart/form-data'>
+		<form action="{{route('admin.kategori.store',['tahun'=>$GLOBALS['tahun_access']])}}" method="post" enctype='multipart/form-data'>
 			@csrf
 			<div class="box-body">
 			<div class="form-group">
