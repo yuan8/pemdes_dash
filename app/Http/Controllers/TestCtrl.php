@@ -14,10 +14,10 @@ use Nahid\JsonQ\Jsonq;
 class TestCtrl extends Controller
 {
 	public function tt(){
-		$x=DB::table('dash_ddk_pekerjaan')->first();
+		$x=DB::table('dash_potensi_sarpras_kesehatan')->first();
 
 		foreach($x as $k=>$v){
-			if(!in_array($k,['kode_desa','tahun'])){
+			if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
 				DB::table('master_column_map')->insertOrIgnore([
 				'name_column'=>$k,
 				'aggregate_type'=>'SUM',
@@ -27,7 +27,7 @@ class TestCtrl extends Controller
 				'dashboard'=>1,
 				'validate'=>1,
 				'id_user'=>1,
-				'id_ms_table'=>3
+				'id_ms_table'=>6
 				
 			]);
 			}
@@ -171,7 +171,7 @@ class TestCtrl extends Controller
 				}
 			}
 
-			return view('view_data.test')->with('data',$data);
+			return view('view_data.test')->with(['data'=>$data,'hm'=>true]);
 
 		}else{
 			$GLOBALS['ab_message']=['title'=>$data->name];

@@ -1,57 +1,44 @@
 @extends('vendor.adminlte.dashboard')
 
 @section('content_header')
+<div class="row">
+	<div class="col-md-12">
+	<ol class="breadcrumb text-left">
+	    <li><a href="{{url('')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+	    <li class="active text-capitalize">{{ strtolower((!empty($instansi)) ?str_replace('_',' ',str_replace('_', ' ', $instansi->type)).' - '.$instansi->name:(isset($title)?$title:'Cari Data'))}}</li>
+	  </ol>
+  </div>
 
+
+</div>
+	@include('partials.banner_head',['route_search'=>url()->full(),'placeholder_search'=>ucfirst(strtolower((isset($instansi)?($instansi->type):$title)))])
 @stop
 @section('content')
-<div class="banner-content text-center p-10 p-b-50 background-blue" style="position: relative; min-height: 100px; margin-bottom: 50px;">
-	<ol class="breadcrumb text-left">
-    <li><a href="{{url('')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active text-capitalize">{{ strtolower((!empty($instansi)) ?str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type)).' - '.$instansi->name:(isset($title)?$title:'Cari Data'))}}</li>
-  </ol>
-
 
 	@if(isset($instansi))
-		<h3 class="text-white"><b>{{str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type))}} - {{$instansi->name}}</b></h3>
+		<h3 class="text-center"><b>{{str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type))}} - {{$instansi->name}}</b></h3>
 	@endif
 
 	@if(isset($title))
-		<h3 class="text-white"><b>{{$title}}</b></h3>
+		<h3 class="text-center"><b>{{$title}}</b></h3>
 	@endif
-	
-	<div  style="left:0; right: 0; margin:auto; height: 55px; width: 90%; position: absolute; bottom:-30px; ">
-		<form action="{{url()->current()}}" method="get">
-			<div class="input-group" style="border: 2px solid #6db3ee;border-radius: 30px; overflow: hidden; ">
-      <input type="text" class="form-control" name="q" value="{{$request->q}}" placeholder="Cari {{isset($title)?strtolower($title):'Data'}}" style="height: 55px;">
-      <span class="input-group-btn">
-        <button class="btn btn-primary background-blue" type="submit" style="height: 55px; min-width: 100px;"><i class="fa fa-search"></i></button>
-      </span>
-    </div>
-		</form>
-		
-	</div>
-
-	</div>
 
 <div class="container">
 	<div class="row">
 
 	
 		@foreach($data as $d)
-	<div class="col-md-4">
+	<div class="col-md-3 text-center " style="min-height: 230px; border-bottom: 3px solid  #222; margin-top: 20px;">
+			<a class="organisasi-hover" href="{{route('query.data.categorycal',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,HPV::slugify($d->name)])}}">
+			<div class=" box-shadows-gray xx background-danger-y border-gray" style="width:200px; height: 200px;  overflow: hidden; position: absolute;  margin:auto; left:0; right:0; ">
+				<div class="box-header  text-center" style="height: 200px; overflow: hidden; vertical-align: middle;">
+					<img class="point-hover" src="{{asset($d->image_path)}}" style="max-height: 70px; width:auto; position: absolute; margin: auto; top:0;left:0;bottom: 0; right: 0;">
+				</div>
 
-			<div class="box ">
-            
-            <div class="box-body">
-            	<img class="text-center img-responsive" src="{{asset($d->image_path)}}">
-              <span class="info-box-text">
-              	<a href="{{route('query.data.categorycal',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,HPV::slugify($d->name)])}}">{{$d->name}}</a>
-              </span>
-             
-             
-            </div>
-            <!-- /.info-box-content -->
           </div>
+              <h5 class="text-center one-line" style="padding-top: 210px;"><b >{{strtoupper($d->name)}}</b></h5>
+
+          </a>
 			</div>
 		@endforeach
 

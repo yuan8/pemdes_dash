@@ -11,13 +11,13 @@
 
 
 </div>
-	@include('partials.banner_head')
+	@include('partials.banner_head',['placeholder_search'=>'Cari Data '.(isset($instansi)?ucfirst(strtolower($instansi->type)).' '.ucfirst(strtolower($instansi->name)):', Instansi, Tema'),'route_search'=>url()->full()])
 @stop
 @section('content')
 
 <div class="row" style="margin-top: 25px;">
 
-	<div class="col-md-3">
+	<div class="col-md-3 ">
 		<div class="box-solid box">
 			<div class="box-body">
 				<p><b>Total Data Dalam Pencarian</b></p>
@@ -31,7 +31,7 @@
 				<img style="max-height: 200px;" src="{{url($instansi->image_path)}}" class="img-thumbnail img-responsive">
 			</div>
 			<div class="box-body">
-				<h3><b>{{str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type))}} - {{$instansi->name}}</b></h3>
+				<h3><b>{{str_replace('_',' ',str_replace('_', ' ', $instansi->type))}} - {{$instansi->name}}</b></h3>
 				<p>{{$instansi->description}}</p>
 			</div>
 		</div>
@@ -41,7 +41,7 @@
 				<img style="max-height: 200px;" src="{{url($instansi->image_path)}}" class="img-thumbnail img-responsive">
 			</div>
 			<div class="box-body">
-				<h3><b>{{str_replace('_PRIMER','',str_replace('_SEKUNDER', '', $instansi->type))}} - {{$instansi->name}}</b></h3>
+				<h3><b>{{str_replace('_',' ',str_replace('_', ' ', $instansi->type))}} - {{$instansi->name}}</b></h3>
 				<p>{{$instansi->description}}</p>
 			</div>
 		</div>
@@ -49,9 +49,10 @@
 	@endif
 	</div>
 	<div class="col-md-9">
-		@foreach($data as $d)
-			<div class="info-box ">
-            <span class="info-box-icon background-danger-y text-white">
+		<div class="col-md-12">
+				@foreach($data as $d)
+			<div class="info-box btn-ov hover-scale" style="overflow: hidden;">
+            <span class="info-box-icon background-danger-y text-white hover-point">
             	@include('partials.icon-data',['type'=>$d->delivery_type])
             </span>
             <div class="info-box-content">
@@ -75,7 +76,7 @@
                   		</div>
 
                   	@endif
-                   - {{Carbon\Carbon::parse($d->updated_at)->format('d F Y h:i')}}
+                   - {{Carbon\Carbon::parse($d->updated_at)->format('d F Y h:i')}} - <span class="badge bg-yellow"><b><a class="text-white" href="{{route('query.data.categorycal',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->organization_id,HPV::slugify($d->oranization_name)])}}">{{'@'.$d->oranization_name}}</a></b></span>
                   	
             </div>
             <!-- /.info-box-content -->
@@ -87,6 +88,9 @@
 			<h5 class="text-center"><b>BELUM TERDAPAT DATA</b></h5>
 		@endif
 		{{$data->links()}}
+
+		</div>
+
 	</div>
 
 </div>

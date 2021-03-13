@@ -89,10 +89,10 @@
 		<div class="owl-carousel owl-theme btn-ov bg-slider-1">
 	  	@foreach($tema as $t)
 	  	<div class="item text-center" >
-				<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
+				<a   href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
 							<p><b>{{$t->name}}</b></p>
 
-					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
+					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center point-hover" data-original-title="Pariwisata &amp; Kebudayaan">
 				</a>
 
 	    </div>
@@ -105,10 +105,10 @@
 		<div class="owl-carousel owl-theme bg-slider-2 btn-ov">
 	  	@foreach($tema2 as $t)
 	  	<div class="item text-center" >
-				<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
+				<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
 						<p><b>{{$t->name}}</b></p>
 
-					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
+					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center point-hover" data-original-title="Pariwisata &amp; Kebudayaan">
 				</a>
 
 	    </div>

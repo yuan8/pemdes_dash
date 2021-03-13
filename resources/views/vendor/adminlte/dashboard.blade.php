@@ -158,11 +158,10 @@ if(isset($bind_side_left)){
         </div>
         <!-- /.content-wrapper -->
 
-        @hasSection('footer')
-        <footer class="main-footer">
-            @yield('footer')
+        {{-- @hasSection('footer') --}}
+        <footer class="main-footer background-img-box">
         </footer>
-        @endif
+        {{-- @endif --}}
 
             <aside style="position: fixed; height: 100vh; padding:5px; padding-top: 60px;" class="control-sidebar control-sidebar-{{config($CONF_THEM.'.right_sidebar_theme')}}">
                 @include('vendor.adminlte.partials.right-side-bar',['menu'=>$CONF_MENU['top']])

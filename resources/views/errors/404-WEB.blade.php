@@ -1,3 +1,15 @@
+@php
+	if(!isset($GLOBALS['tahun_access'])){
+		$GLOBALS['tahun_access']=(int)date('Y');
+	}
+	if(!isset($GLOBALS['ab_message'])){
+		$GLOBALS['ab_message']=[
+			'title'=>'NOT FOUND'
+		];
+	}
+
+@endphp
+
 @extends('vendor.adminlte.dashboard')
 
 @section('content_header')

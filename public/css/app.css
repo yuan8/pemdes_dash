@@ -232,8 +232,20 @@ table.sticky-table td[scope=row] {
 }
 
 
+
 .box-shadows-blue{
 	box-shadow: 10px 10px 50px #004182;
+}
+
+.box-shadows-gray{
+	box-shadow: 10px 10px 20px #ddd;
+}
+
+.border-danger{
+	border: 1px solid rgba(250,9,10,1);
+}
+.border-gray{
+	border: 2px solid #004182
 }
 
 table.sticky-table:nth-of-type(2) td:not([scope=row]):first-child {
@@ -254,3 +266,27 @@ table.sticky-table:nth-of-type(2) td:not([scope=row]):first-child {
 	background: rgb(250,9,10);
 background: linear-gradient(183deg, rgba(250,9,10,1) 17%, rgba(252,153,153,1) 88%)!important;
 }
+
+.organisasi-hover .xx{
+	border-radius: 50%;
+
+}
+
+.hover-scale .point-hover,.organisasi-hover .point-hover{
+	-webkit-transition: transform 0.8s;    /*  re-ordered property, named      */
+  transition: transform 0.8s; 
+}
+
+.hover-scale:hover .point-hover,.organisasi-hover:hover .point-hover{
+	/*transition: transform 3s;
+	border-radius: 30px;*/
+	 -webkit-transform: scale(1.25);
+  transform: scale(1.25);
+}
+.one-line{
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.

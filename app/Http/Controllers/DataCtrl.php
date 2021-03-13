@@ -154,8 +154,9 @@ class DataCtrl extends Controller
 
             ])
             ->paginate(10);
+
            
-        return view('data.organisasi')->with(['data'=>$data,'request'=>$request,'title'=>'INSTANSI']);
+        return view('data.organisasi')->with(['data'=>$data,'request'=>$request,'title'=>'INSTANSI','hm'=>true]);
         
     }
 
@@ -164,23 +165,22 @@ class DataCtrl extends Controller
         if($request->q){
             $req=$request->q;
         }
+          $tema_accept=[
+            'TEMA_DATA_UTAMA',
+            'TEMA_DATA_PENDUKUNG',
+        ];
 
 
             $data=DB::table('category as d')
-             ->where([
-                ['d.name','like',DB::raw("'%".$req."%'")],
-                ['d.type','!=','INSTANSI'],
+           
+            ->whereRaw("d.type in ('TEMA_DATA_PENDUKUNG','TEMA_DATA_UTAMA') and d.name like '%".$req."%'")
+         
+            ->OrwhereRaw("d.type in ('TEMA_DATA_UTAMA','TEMA_DATA_PENDUKUNG') and d.description like '%".$req."%'")
 
-            ])
-             ->orWhere([
-                ['d.description','like',DB::raw("'%".$req."%'")],
-                ['d.type','!=','INSTANSI'],
-
-
-            ])
+             ->selectRaw("concat(d.name,' - ',replace(d.type,'_',' ')) as name,d.id,d.type,d.route,d.image_path")
             ->paginate(10);
            
-        return view('data.organisasi')->with(['data'=>$data,'request'=>$request,'title'=>'TEMA']);
+        return view('data.organisasi')->with(['data'=>$data,'request'=>$request,'title'=>'TEMA','hm'=>true]);
         
     }
 
@@ -201,7 +201,7 @@ class DataCtrl extends Controller
             $data=DB::table('data as d')
             ->leftJoin('category as i',[['i.id','=','d.organization_id'],['i.type','=',DB::raw("'INSTANSI'")]])
            ->leftJoin(DB::raw("(select cc.name as names,g.id_data from category as cc join data_group as g on ( cc.id=g.id_category and cc.type in ('".implode("','",$tema_accept)."')) ) as tema"),'tema.id_data','=','d.id')->groupBy('d.id')
-            ->selectRaw('d.*,i.name as oranization_name,i.image_path as organization_image_path,distinct(tema.names) as temas,i.name as orgas')
+            ->selectRaw('d.*, i.name as oranization_name,i.image_path as organization_image_path,distinct(tema.names) as temas,i.name as orgas')
             ->groupBy('c.id')
             ->where([
                 ['d.name','like',DB::raw("'%".$req."%'")],
@@ -238,7 +238,7 @@ class DataCtrl extends Controller
 
             ])->orderBy('d.updated_at','desc')->paginate(10);
 
-        return view('data.query')->with(['instansi'=>$instansi_data,'data'=>$data,'request'=>$request,'title'=>$type]);
+        return view('data.query')->with(['instansi'=>$instansi_data,'data'=>$data,'request'=>$request,'title'=>$type,'hm'=>true]);
         }else{
             return abort(404);
         }
@@ -417,8 +417,6 @@ class DataCtrl extends Controller
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
 
-                    
-
 
                 ])
                 ->orWhere([
@@ -543,7 +541,7 @@ class DataCtrl extends Controller
         }
 
 
-    	return view('data.query')->with(['data'=>$data,'request'=>$request,'instansi'=>$instansi_data]);
+    	return view('data.query')->with(['data'=>$data,'request'=>$request,'instansi'=>$instansi_data,'hm'=>true]);
 
 
     }
@@ -562,7 +560,7 @@ class DataCtrl extends Controller
 
                 switch ($data->delivery_type) {
                     case 'VISUALISASI':
-                        return view('data.data-set')->with(['data'=>$data,'instansi'=>$instansi]);
+                        return view('data.data-set')->with(['data'=>$data,'instansi'=>$instansi,'hm'=>true]);
                         break;
 
                     default:
