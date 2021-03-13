@@ -90,8 +90,9 @@
 	  	@foreach($tema as $t)
 	  	<div class="item text-center" >
 				<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
-					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
 							<p><b>{{$t->name}}</b></p>
+
+					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
 				</a>
 
 	    </div>
@@ -105,8 +106,9 @@
 	  	@foreach($tema2 as $t)
 	  	<div class="item text-center" >
 				<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center"  style="position:relative; width:100%; float:left;" >
+						<p><b>{{$t->name}}</b></p>
+
 					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center" data-original-title="Pariwisata &amp; Kebudayaan">
-							<p><b>{{$t->name}}</b></p>
 				</a>
 
 	    </div>
