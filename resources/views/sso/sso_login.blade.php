@@ -31,26 +31,43 @@
 			
 	});
 
+	// function attemp(){
+	// 	count_attemp+=1;
+	// 	$.post('{{$broker['direct_login']}}',{'_sso_access':'{{$sso_token}}'},function(res){
+	// 		res=JSON.parse(res);
+	// 		console.log(res);
+	// 		if(res.status==200){
+	// 			window.location.href='{{$broker['home']}}';
+
+	// 		}else{
+	// 			if(count_attemp<4){
+	// 				setTimeout(function(){
+	// 				attemp();
+
+	// 				},1000);				
+	// 			}else{
+	// 				window.close();
+
+	// 			}
+	// 		}
+	// 	});
+	// }
+
 	function attemp(){
 		count_attemp+=1;
-		$.post('{{$broker['direct_login']}}',{'_sso_access':'{{$sso_token}}'},function(res){
-			res=JSON.parse(res);
-			console.log(res);
-			if(res.status==200){
+
+		$.post('{{$broker['login']}}',{'{{$broker['u']}}':'{{$data->email}}','{{$broker['p']}}':'{{$data->pass}}'},function(res){
+			setTimeout(function(){
+		
 				window.location.href='{{$broker['home']}}';
 
-			}else{
-				if(count_attemp<4){
-					setTimeout(function(){
-					attemp();
 
-					},1000);				
-				}else{
-					window.close();
+					},1000);
 
-				}
-			}
+				console.log(res);
 		});
+	
+
 	}
 
 	var cc=30;

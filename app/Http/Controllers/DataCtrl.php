@@ -208,6 +208,7 @@ class DataCtrl extends Controller
                 ['i.id','=',$type],
                 ['d.dashboard','=',true],
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                 $II
 
 
             ])
@@ -216,6 +217,7 @@ class DataCtrl extends Controller
                 ['i.id','=',$type],
                 ['d.dashboard','=',true],
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                 $II
 
 
 
@@ -225,6 +227,7 @@ class DataCtrl extends Controller
                 ['i.id','=',$type],
                 ['d.dashboard','=',true],
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                 $II
 
 
             ])
@@ -233,6 +236,7 @@ class DataCtrl extends Controller
                 ['i.id','=',$type],
                 ['d.dashboard','=',true],
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                 $II
 
 
 
@@ -263,6 +267,7 @@ class DataCtrl extends Controller
                 ['d.name','like',DB::raw("'%".$req."%'")],
                 ['d.dashboard','=',true],
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+
 
             ])
             ->orWhere([
@@ -370,11 +375,17 @@ class DataCtrl extends Controller
             'TEMA_DATA_UTAMA',
             'TEMA_DATA_PENDUKUNG',
         ];
+        if($instansi_data->type!='INSTANSI'){
+                    $II=['tema.id_tema','=',$instansi_data->id];
+        }else{
+                    $II=['d.organization_id','=',$instansi_data->id];
+
+        }
 
 
     	$data=DB::table('data as d')
     	->leftJoin('category as i',[['i.id','=','d.organization_id'],['i.type','=',DB::raw("'INSTANSI'")]])
-    	 ->leftJoin(DB::raw("(select cc.name as names,g.id_data from category as cc join data_group as g on ( cc.id=g.id_category and cc.type in ('".implode("','",$tema_accept)."')) ) as tema"),'tema.id_data','=','d.id')->groupBy('d.id')
+    	 ->leftJoin(DB::raw("(select cc.name as names,g.id_data, cc.id as id_tema from category as cc join data_group as g on ( cc.id=g.id_category and cc.type in ('".implode("','",$tema_accept)."')) ) as tema"),'tema.id_data','=','d.id')->groupBy('d.id')
     	->selectRaw('d.*, i.name as oranization_name,i.image_path as organization_image_path,GROUP_CONCAT(distinct(tema.names)) as temas,i.name as orgas');
 
     	if(in_array($instansi_data->type,$tema_accept)){
@@ -384,6 +395,7 @@ class DataCtrl extends Controller
                     ['d.keywords','like',DB::raw("'%".$req."%'")],
                 ['d.dashboard','=',true],
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                 $II
 
 
                 ])
@@ -391,6 +403,7 @@ class DataCtrl extends Controller
                     ['d.tags','like',DB::raw("'%".$req."%'")],
                 ['d.dashboard','=',true],
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                 $II
 
 
                 ])
@@ -398,13 +411,15 @@ class DataCtrl extends Controller
                     ['d.description','like',DB::raw("'%".$req."%'")],
                 ['d.dashboard','=',true],
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                 $II
 
 
                 ])
                 ->orWhere([
                     ['i.name','like',DB::raw("'%".$req."%'")],
-                ['d.dashboard','=',true],
+                    ['d.dashboard','=',true],
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                 $II
 
 
                 ])->orderBy('d.updated_at','desc')->paginate(10);
@@ -416,6 +431,7 @@ class DataCtrl extends Controller
                     ['d.auth','=',false],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])
@@ -424,6 +440,7 @@ class DataCtrl extends Controller
                     ['d.auth','=',false],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])
@@ -432,6 +449,7 @@ class DataCtrl extends Controller
                     ['d.auth','=',false],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])
@@ -440,6 +458,7 @@ class DataCtrl extends Controller
                     ['d.auth','=',false],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])->orderBy('d.updated_at','desc')->paginate(10);
@@ -455,6 +474,7 @@ class DataCtrl extends Controller
                     ['i.id','=',DB::raw($instansi)],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])
@@ -464,6 +484,7 @@ class DataCtrl extends Controller
                     ['i.id','=',DB::raw($instansi)],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
                 ])
                  ->orWhere([
@@ -471,6 +492,7 @@ class DataCtrl extends Controller
                     ['i.id','=',DB::raw($instansi)],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])
@@ -479,6 +501,7 @@ class DataCtrl extends Controller
                     ['i.id','=',DB::raw($instansi)],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])
@@ -487,6 +510,7 @@ class DataCtrl extends Controller
                     ['i.id','=',DB::raw($instansi)],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
                 ])->orderBy('d.updated_at','desc')->paginate(10);
 
@@ -498,6 +522,7 @@ class DataCtrl extends Controller
                     ['d.auth','=',false],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])
@@ -508,6 +533,7 @@ class DataCtrl extends Controller
                     ['d.auth','=',false],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
                 ])
                  ->orWhere([
                     ['d.description','like',DB::raw("'%".$req."%'")],
@@ -515,6 +541,7 @@ class DataCtrl extends Controller
                     ['d.auth','=',false],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])
@@ -524,6 +551,7 @@ class DataCtrl extends Controller
                     ['d.auth','=',false],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
                 ])
                 ->orWhere([
                     ['i.name','like',DB::raw("'%".$req."%'")],
@@ -531,6 +559,7 @@ class DataCtrl extends Controller
                     ['d.auth','=',false],
                     ['d.dashboard','=',true],
                      [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
+                     $II
 
 
                 ])->orderBy('d.updated_at','desc')->paginate(10);

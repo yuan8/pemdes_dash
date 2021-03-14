@@ -33,7 +33,7 @@ class TestCtrl extends Controller
 		// 	}
 		// }
 
-		$x=DB::table('dash_potensi_jumlah_penduduk')->get();
+		$x=DB::table('dash_potensi_luas_wilayah')->get();
 
 		foreach($x as $k=>$v){
 			// if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
@@ -52,9 +52,10 @@ class TestCtrl extends Controller
 			// }
 
 			DB::table('validasi_confirm')->insertOrIgnore([
-				'table'=>'dash_potensi_jumlah_penduduk',
+				'table'=>'dash_potensi_luas_wilayah',
 				'kode_desa'=>$v->kode_desa,
 				'id_user'=>1,
+				'tahun'=>2021,
 				'tanggal_validasi'=>Carbon::now(),
 			
 			]);
@@ -163,7 +164,7 @@ class TestCtrl extends Controller
 			'data_type'=>$data['data_type'],
 			'lavel_meta'=>$data['level_meta'],
 			'table_meta'=>$data['table_meta'],
-			'subtitle'=>'Capaian Tahun '.($tahun-1).' - '.$datenow,
+			'subtitle'=>'Capaian Tahun '.($tahun).' - '.$datenow,
 		])->render().view('view_data.table')->with([
 			'level'=>$data['level'],
 			'title'=>$data['title'],
@@ -172,7 +173,7 @@ class TestCtrl extends Controller
 			'level_meta'=>$data['level_meta'],
 			'table_meta'=>$data['table_meta'],
 			'only1level'=>true,
-			'subtitle'=>'Capaian Tahun '.($tahun-1).' - '.$datenow])
+			'subtitle'=>'Capaian Tahun '.($tahun).' - '.$datenow])
 		->render();
 
 
@@ -267,11 +268,11 @@ class TestCtrl extends Controller
 			->leftjoin('validasi_confirm as cfm',[
 				[DB::RAW("LEFT(cfm.kode_desa,".$level['count'].")"),'=',$level['table_kode']],
 				['cfm.table','=',DB::raw("'".$table."'")],
-				['cfm.tahun','=',DB::raw($tahun-1)]
+				['cfm.tahun','=',DB::raw($tahun)]
 			])
 			->leftjoin(DB::raw("(select * from ".$meta_table['table']." as dxdx where dxdx.kode_desa like '".($level['kode']?$level['kode'].'%':"%")."') as data"),
 				[
-				[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun-1)]])
+				[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun)]])
 			->selectRaw($select)
 			->groupBy(('kd.'.$level['table_kode']) )
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
@@ -294,11 +295,11 @@ class TestCtrl extends Controller
 					->leftjoin('validasi_confirm as cfm',[
 						[DB::RAW("LEFT(cfm.kode_desa,".$level['count'].")"),'=',$level['table_kode']],
 						['cfm.table','=',DB::raw("'".$table."'")],
-						['cfm.tahun','=',DB::raw($tahun-1)]
+						['cfm.tahun','=',DB::raw($tahun)]
 					])
 					->leftjoin(DB::raw("(select * from ".$meta_table['table']." as dxdx where dxdx.kode_desa like '".($level['kode']?$level['kode'].'%':"%")."') as data"),
 						[
-						[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun-1)]])
+						[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun)]])
 					->selectRaw($select)
 					->groupBy(('kd.'.$level['table_kode']) )
 					->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
@@ -336,13 +337,13 @@ class TestCtrl extends Controller
 						$return.='<div class="table-responsive ch col-md-'.(12/count($value)).' col-lg-'.(12/count($value)).'">'.view('view_data.'.$v)->with([
 						'data_type'=>$data_type,
 						'title'=>strtoupper($meta_data->name),
-						'subtitle'=>'Capaian Tahun '.($tahun-1).' - '.$datenow,
+						'subtitle'=>'Capaian Tahun '.($tahun).' - '.$datenow,
 						'level'=>$level['count'],
 						'level_meta'=>$level,
 						'kdparent'=>$level['kode'],
 						'pemda'=>$nama_pemda,
 						'table_meta'=>$meta_table,
-						'tahun_capaian'=>$tahun-1,
+						'tahun_capaian'=>$tahun,
 					])->render().'</div>';
 					
 				}

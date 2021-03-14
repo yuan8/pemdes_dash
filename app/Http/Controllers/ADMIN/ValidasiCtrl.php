@@ -9,6 +9,7 @@ use Storage;
 use HPV;
 use Carbon\Carbon;
 use Auth;
+use Alert;
 class ValidasiCtrl extends Controller
 {	
 
@@ -384,19 +385,23 @@ class ValidasiCtrl extends Controller
 				$data_update+=1;
 				
 				DB::table($d['table'])->where([
-
 					['kode_desa','=',$d['kode_desa']],
 					['tahun','=',$d['tahun']]
-				])->updateOrInsert($d['data_xx']);
+				])->updateOrInsert(
+					['kode_desa'=>$d['kode_desa'],'tahun'=>$d['tahun']],
+					$d['data_xx']
+				);
 
 			}
 
 
 		}
 
+            Alert::success('Berhasil', 'Data Berhasil Divalidasi '.HPV::nformat($data_update).' Data');
+
+
 		return back();
 
-		// return 'data validasi '.$data_update.' Data';
 
 
 

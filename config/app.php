@@ -174,6 +174,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
 
     ],
 
@@ -229,6 +230,7 @@ return [
         'YDB' => App\Providers\YDBPROVIDER::class,
         'HPV' => App\Providers\HELPERPROVIDER::class,
         'MyHash' => App\Providers\PassProvider::class,
+        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
 
 
 

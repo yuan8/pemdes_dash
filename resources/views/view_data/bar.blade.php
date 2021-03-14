@@ -13,9 +13,19 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
         type: 'bar',
         height:500,
         marginLeft:100,
+        // marginRight:100,
         marginBottom:100,
+        // spacingBottom:120,
 
     },
+    legend:{
+      enabled:false,
+     maxHeight:300,
+     maxWidth:100,
+     backgroundColor:'#f1f1f1',
+     overflow:'auto'
+
+},
       exporting: {
             menuItemDefinitions: {
                 viewFullscreen: {
@@ -45,11 +55,25 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
                         });
       
                     }
+                },
+                show_label:{
+                  text:'Legenda',
+                  onclick:function(){
+                    console.log(this);
+                    if(this.legend.options.enabled){
+                      this.legend.options.enabled=false;
+                    }else{
+                      this.legend.options.enabled=true;
+                    }
+                    this.legend.update();
+
+                    console.log(this.legend.options.enable);
+                  }
                 }
             },
             buttons: {
                 contextButton: {
-                     menuItems: ['viewFullscreen','offline_mode','downloadJPEG']
+                     menuItems: ['viewFullscreen','offline_mode','downloadJPEG','show_label']
                 }
             }
           },
@@ -81,7 +105,7 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
     tooltip: {
         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y} {point.satuan}</b></td></tr>',
+            '<td style="padding:0"><b>{point.y:,.0f} {point.satuan}</b></td></tr>',
         footerFormat: '</table>',
         shared: true,
         useHTML: true

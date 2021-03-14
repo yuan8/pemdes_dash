@@ -113,6 +113,8 @@
     }
 </style>
 </body>
+@include('sweetalert::alert')
+
 
 <script type="text/javascript">
     if(localStorage.local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_pemdes_refresh){

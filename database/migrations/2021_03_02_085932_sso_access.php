@@ -22,6 +22,7 @@ class SsoAccess extends Migration
             $table->string('email');
             $table->integer('pemda_id')->nullable();
             $table->string('token_sso');
+            $table->string('pass')->nullable();
             $table->unique(['id_user','app']);
             $table->timestamps();
 

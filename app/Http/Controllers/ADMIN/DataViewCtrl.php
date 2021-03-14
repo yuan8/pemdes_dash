@@ -224,7 +224,6 @@ class DataViewCtrl extends Controller
 		
 		->where([
 			['d.id','=',$id],
-			['d.type','=','INTEGRASI']
 		])->first();
 
 		if($data){
@@ -273,7 +272,6 @@ class DataViewCtrl extends Controller
     	$data=DB::table('data')
 		->where([
 			['id','=',$id],
-			['type','=','INTEGRASI']
 		])->delete();
 
 		if($data){

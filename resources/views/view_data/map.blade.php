@@ -96,12 +96,18 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
                 }
             }
         },
+         
                     
         // credits: {
         //     enabled: false
         // },
         tooltip: {
             headerFormat: '',
+            shape:'square',
+            style:{
+                overFlow:'auto',
+                maxHeight:100,
+            },
             formatter: function() {
                 if(this.point.data_map!=undefined){
                     var dom='<ul><li><b>'+this.point.name+'</b><br></li>';
@@ -136,6 +142,7 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
                     }
                 }
                 },
+               
                 name: '',
                 joinBy: 'id',
                 type:'map',
@@ -143,7 +150,7 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
                 mapData:Highcharts.maps['{{$level==2?'ind':'idn_'.$kdparent}}'],
                 dataLabels: {
                     enabled: true,
-                    format: '{point.name}',
+                    format: '{point.name}: {point.value:,.0f} %',
                     color: '#fff',
                     style: {
                         fontSize: 9,

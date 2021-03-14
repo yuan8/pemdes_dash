@@ -290,4 +290,9 @@ background: linear-gradient(183deg, rgba(250,9,10,1) 17%, rgba(252,153,153,1) 88
 	overflow: hidden;
 }
 
+.highcharts-tooltip{
+	max-height: 300px;
+	overflow: scroll;
+}
+
 .

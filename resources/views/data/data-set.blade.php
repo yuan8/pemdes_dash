@@ -106,10 +106,12 @@
 		
 
 
+	@if(in_array(strtoupper($data->delivery_type), ['VISUALISASI']))
 	setTimeout(function(){
 		get_data('#def-data','{{route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}');	
 	},1000);
 
+	@endif
 	 function exportExcelTable(dom,title){
 	 	$(dom).floatThead('destroy');
        $(dom).tableExport({

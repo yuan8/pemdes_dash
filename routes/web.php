@@ -24,12 +24,12 @@ Route::get('/home',function(){
 })->name('home.index');
 
 Route::prefix('test')->group(function(){
-	Route::post('sso-attemp','SSOCtrl@test_at');
+	Route::get('cron','CronJob@handle');
 });
 
 
 
-Route::middleware('guest:web')->get('/login','Auth\LoginController@showLoginForm')->name('login');
+Route::middleware(['guest:web'])->get('/login','Auth\LoginController@showLoginForm')->name('login');
 Route::middleware('guest:web')->post('/login','Auth\LoginController@login');
 Route::middleware('auth:web')->post('/logout','Auth\LoginController@logout')->name('logout');
 
@@ -122,6 +122,8 @@ Route::prefix('sso')->group(function(){
 
 
 	Route::get('/pindah-tahun', 'HomeCtrl@pindahTahun')->name('p.tahun');
+	Route::post('/pindah-tahun', 'HomeCtrl@pindahkanTahun')->name('p.tahun.change');
+
 
 	Route::get('/tb/{h}', 'ADMIN\ValidasiCtrl@number_to_alphabet')->name('tb');
 

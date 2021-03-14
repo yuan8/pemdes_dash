@@ -3,7 +3,7 @@
 <h4>DATA</h4>
 <div class="btn-group">
 <a href="{{route('admin.data.create',['tahun'=>$GLOBALS['tahun_access'],'type'=>'VISUALISASI'])}}" class="btn btn-success">TAMBAH DATA VISUALISASI</a>
-<a href="{{route('admin.data.create',['tahun'=>$GLOBALS['tahun_access'],'type'=>'TABLE'])}}" class="btn btn-success">TAMBAH DATA TABLE</a>
+
 <a href="{{route('admin.data.create',['tahun'=>$GLOBALS['tahun_access'],'type'=>'INFOGRAFIS'])}}" class="btn btn-success">TAMBAH DATA INFOGRAFIS</a>
 
 </div>
@@ -80,7 +80,7 @@
 						<td>
 							<a href="{{route('query.data.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>HPV::slugify($d->name)])}}" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
 							<a href="" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
-							<a href="" class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </a>
+							<button onclick="showForm('{{route('admin.dataview.form_delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')" class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </buttom>
 
 						</td>
 						<td>{{$d->delivery_type}}</td>
