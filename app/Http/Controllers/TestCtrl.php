@@ -14,23 +14,50 @@ use Nahid\JsonQ\Jsonq;
 class TestCtrl extends Controller
 {
 	public function tt(){
-		$x=DB::table('dash_potensi_sarpras_kesehatan')->first();
+		// $x=DB::table('dash_potensi_jumlah_penduduk')->first();
+
+		// foreach($x as $k=>$v){
+		// 	if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
+		// 		DB::table('master_column_map')->insertOrIgnore([
+		// 		'name_column'=>$k,
+		// 		'aggregate_type'=>'SUM',
+		// 		'name'=>strtoupper(str_replace('_', ' ', $k)),
+		// 		'satuan'=>'Jiwa',
+		// 		'auth'=>0,
+		// 		'dashboard'=>1,
+		// 		'validate'=>1,
+		// 		'id_user'=>1,
+		// 		'id_ms_table'=>7
+				
+		// 	]);
+		// 	}
+		// }
+
+		$x=DB::table('dash_potensi_jumlah_penduduk')->get();
 
 		foreach($x as $k=>$v){
-			if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
-				DB::table('master_column_map')->insertOrIgnore([
-				'name_column'=>$k,
-				'aggregate_type'=>'SUM',
-				'name'=>strtoupper(str_replace('_', ' ', $k)),
-				'satuan'=>'Jiwa',
-				'auth'=>0,
-				'dashboard'=>1,
-				'validate'=>1,
-				'id_user'=>1,
-				'id_ms_table'=>6
+			// if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
+			// 	DB::table('master_column_map')->insertOrIgnore([
+			// 	'name_column'=>$k,
+			// 	'aggregate_type'=>'SUM',
+			// 	'name'=>strtoupper(str_replace('_', ' ', $k)),
+			// 	'satuan'=>'Jiwa',
+			// 	'auth'=>0,
+			// 	'dashboard'=>1,
+			// 	'validate'=>1,
+			// 	'id_user'=>1,
+			// 	'id_ms_table'=>7
 				
+			// ]);
+			// }
+
+			DB::table('validasi_confirm')->insertOrIgnore([
+				'table'=>'dash_potensi_jumlah_penduduk',
+				'kode_desa'=>$v->kode_desa,
+				'id_user'=>1,
+				'tanggal_validasi'=>Carbon::now(),
+			
 			]);
-			}
 		}
 
 		dd('s');

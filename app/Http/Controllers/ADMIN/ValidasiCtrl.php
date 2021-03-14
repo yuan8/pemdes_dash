@@ -117,7 +117,6 @@ class ValidasiCtrl extends Controller
 
 			$where[]=[DB::raw("left(md.kode_bps,2)"),'=',$request->kdprovinsi];
 			$daerah=DB::table('provinsi')
-
 			->where('kdprovinsi',$request->kdprovinsi)
 			->selectRaw("
 				'' as parent,
@@ -159,7 +158,6 @@ class ValidasiCtrl extends Controller
 
 		}
 
-
 		$data=DB::table('master_desa as md')
 		->leftjoin($table_map['table'].' as d',[['md.kode_bps','=','d.kode_desa'],['d.tahun','=',DB::Raw($tahun)]])
 		->leftJoin('kecamatan as mkc',DB::raw("left(md.kode_bps,7)"),DB::raw('='),DB::raw('mkc.kdkecamatan'))
@@ -169,6 +167,8 @@ class ValidasiCtrl extends Controller
 			['cfm.tahun','=',DB::RAW($tahun)]
 		])
 		->selectRaw("md.kode_bps as id_desa,(case when (cfm.id) then 'VALID' else 'BELUM' end)  as status_validasi,cfm.tanggal_validasi as valid_date , md.desa as name, mkc.nmkecamatan as name_kecamatan".(count($raw)?','.implode(',', $raw):'' ));
+
+
 
 		if(count($where)>0){
 			$data=$data->where($where);
@@ -185,6 +185,11 @@ class ValidasiCtrl extends Controller
 
 		}	
 
+		
+
+
+
+
 
 
 		$verifikasi=[
@@ -194,6 +199,7 @@ class ValidasiCtrl extends Controller
 			->count(),
 			
 		];
+
 		$verifikasi['belum']=$data->total()-$verifikasi['sudah'];
 
 		$data=$data->appends([
