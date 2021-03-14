@@ -57,12 +57,13 @@
 		count_attemp+=1;
 
 		$.post('{{$broker['login']}}',{'{{$broker['u']}}':'{{$data->email}}','{{$broker['p']}}':'{{$data->pass}}'},function(res){
-			setTimeout(function(){
+			console.log(res);
+			// setTimeout(function(){
 		
-				window.location.href='{{$broker['home']}}';
+			// 	window.location.href='{{$broker['home']}}';
 
 
-					},1000);
+			// 		},1000);
 
 				console.log(res);
 		});
