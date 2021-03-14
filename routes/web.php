@@ -23,7 +23,9 @@ Route::get('/home',function(){
 	return redirect()->route('index');
 })->name('home.index');
 
-
+Route::prefix('test')->group(function(){
+	Route::post('sso-attemp','SSOCtrl@test_at');
+});
 
 
 
@@ -50,7 +52,6 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 		Route::get('/data','ADMIN\ValidasiCtrl@data')->name('admin.validasi.data');
 		Route::get('/data/upload','ADMIN\ValidasiCtrl@form_upload')->name('admin.validasi.upload');
 		Route::post('/data/upload/{id}','ADMIN\ValidasiCtrl@validate_bulk')->name('admin.validasi.update.bulk');
-
 
 		Route::post('/validated/{table}/{id}','ADMIN\ValidasiCtrl@validated')->name('admin.validasi.try');
 		Route::put('/validated/{table}/{id}','ADMIN\ValidasiCtrl@update')->name('admin.validasi.update');
@@ -111,6 +112,17 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 
 Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
+
+Route::prefix('sso')->group(function(){
+	Route::post('sso-try-attemp','SSOCtrl@attemp')->name('sso.attemp');
+	Route::get('sso-login/{id}','SSOCtrl@login')->name('sso.login');
+
+
+});
+
+
+	Route::get('/pindah-tahun', 'HomeCtrl@pindahTahun')->name('p.tahun');
+
 	Route::get('/tb/{h}', 'ADMIN\ValidasiCtrl@number_to_alphabet')->name('tb');
 
 

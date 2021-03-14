@@ -18,4 +18,9 @@ class HomeCtrl extends Controller
     	return view('index')->with(['tema'=>$tema,'tema2'=>$tema2]);
 
     }
+
+    public function pindahTahun($tahun){
+    	$tahuns=DB::table('tahun_access')->get();
+    	return view('pindah_tahun')->with(['tahuns'=>$tahuns]);
+    }
 }

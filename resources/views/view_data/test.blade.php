@@ -63,7 +63,7 @@
 			'url':route,
 			 type: method,
 			  beforeSend: function(request) {
-			    request.setRequestHeader("Authorization", 'Bearer {{(Auth::check()?Auth::User()->token:'xx')}}');
+			    request.setRequestHeader("Authorization", 'Bearer {{(Auth::check()?Auth::User()->api_token:'xx')}}');
 			  },
 			'contentType': "application/json; charset=utf-8",
 			'statusCode':{

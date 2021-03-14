@@ -57,6 +57,11 @@ class DataVisualCtrl extends Controller
 
 
     	}
+
+    	if(!isset($meta_table)){
+    		
+    	}
+
     	 $data=DB::table('data as d')
         ->where('year',($tahun))
         ->where('type','FILE')

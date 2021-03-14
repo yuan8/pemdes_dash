@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use DB;
 use Storage;
 use Carbon\Carbon;
+use App\Http\Controllers\Controller\ADMIN\DataViewCtrl;
 class DataCtrl extends Controller
 {
 
@@ -182,65 +183,10 @@ class DataCtrl extends Controller
 
 	}
 	static function store_visual($tahun,Request $request){
-		$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file);
-		$sheet=$spreadsheet->setActiveSheetIndex(0);
-		$meta_table=[
-			'name'=>'',
-			'id'=>0,
-			'columns'=>[],
-			'view_'=>[]
-		];
-		$version=$sheet->getCell('A1')->getCalculatedValue();
-
-		$meta_table['name']=$request->name;
-		$DATA=[];
-		$data=$sheet->toArray();
-
-		foreach ($request->view as $key => $v) {
-			$meta_table['view_'][$key]=array_values((array)$v);
-			# code...
-		}
-
-		foreach ($data as $key => $d) {
-			if($key==3){
-				for($index=1;$index<count($d);$index+=2){
-					if(!empty($d[$index])){
-						$meta_table['columns'][$index]=[
-						'name'=>$d[$index],
-						'satuan'=>$data[$key+1][$index+1],
-						'name_column'=>'c_'.$index,
-						'aggregate_type'=>$data[$key+1][$index],
-						];
-					}
-				}
-				
-
-			}
-
-			if($key>=6){
-				if(!empty($d[0])){
-					$DX=[
-						'kode_desa'=>$d[0]
-					];
-					$index=0;
-					foreach ($meta_table['columns'] as $key => $v) {
-						$DX['data_'.$index]=$d[$key];
-						$DX['data_'.$index.'_satuan']=$v['satuan'];
-						$index++;
-					}
-
-					$DATA[]=$DX;
-
-				}
-			}
-			# code...
-		}
-
-		$meta_table['columns']=array_values($meta_table['columns']);
-		$MAP_DATA=[
-			'meta_table'=>$meta_table,
-			'data'=>$DATA
-		];
+		
+		$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request_ex);
+        $sheet=$spreadsheet->setActiveSheetIndex(0);
+		$MAP_DATA=DataViewCtrl::buildJson($request->file);
 
 
 		$path=Storage::put('public/publication/DATASET/'.$tahun,$request->file);

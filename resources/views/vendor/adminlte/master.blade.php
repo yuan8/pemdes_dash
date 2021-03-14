@@ -69,6 +69,17 @@
       </div>
 </div>
 
+<div id="modal_md" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-md">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+        </div>
+
+      </div>
+</div>
+
 <div id="modal_lg" class="modal fade" role="dialog">
       <div class="modal-dialog modal-lg">
 
@@ -104,10 +115,10 @@
 </body>
 
 <script type="text/javascript">
-    if(localStorage.local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_dss_tab_info_refresh){
+    if(localStorage.local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_pemdes_refresh){
 
     }else{
-      localStorage.setItem("{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_dss_tab_info_refresh", "OO");
+      localStorage.setItem("{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_pemdes_refresh", "OO");
     }
 
      function buildNum(){
@@ -133,23 +144,23 @@
     buildNum();
 
     $('html').on('load',buildNum());
-    var localy_trigger_refresh=localStorage.getItem('local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_dss_tab_info_refresh');
+    var localy_trigger_refresh=localStorage.getItem('local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_pemdes_refresh');
 
     $(window).on("storage", function(e) {
     var event = e.originalEvent; // Get access to the storage-specifics
-    if (event.key == "local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_dss_tab_info_refresh") { // Or whatever
+    if (event.key == "local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_pemdes_refresh") { // Or whatever
         // Do something with event.newValue
-        if(localy_trigger_refresh!=localStorage.getItem('local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_dss_tab_info_refresh')){
+        if(localy_trigger_refresh!=localStorage.getItem('local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_pemdes_refresh')){
             window.location.reload();
         };
     }
     });
-    @if(null!==session('change_urusan'))
-        @if(session('change_urusan')!=0)
-            localStorage.setItem('local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_dss_tab_info_refresh',{{session('change_urusan')}});
+    @if(null!==session('change_tahun'))
+        @if(session('change_tahun')!=0)
+            localStorage.setItem('local_{{str_replace('.','_',$_SERVER['HTTP_HOST'])}}_pemdes_refresh',{{session('change_tahun')}});
         @endif
         @php
-            session(['change_urusan'=>0]);
+            session(['change_tahun'=>0]);
         @endphp
 
     @endif

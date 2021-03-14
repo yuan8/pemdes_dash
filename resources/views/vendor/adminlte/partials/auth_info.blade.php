@@ -8,9 +8,19 @@
 </li> 
 <li>
   <a href=""> Tentang </a>
-</li>                
+</li> 
+@if(Auth::check())
 <li>
-    <a href="#"  ><i class="fa fa-calendar"></i> Pindah Tahun</a>
+  <a href="javascript:void(0)" class="dropdown-toggle " data-toggle="dropdown" aria-expanded="true" id="sso_front_list" >SSO</a>
+  <ul class="dropdown-menu" id="sso_content_front_list">
+    <li>
+      <a href="">loading...</a>
+    </li>
+  </ul>
+</li>
+@endif               
+<li>
+    <a href="{{route('p.tahun',['tahun'=>$GLOBALS['tahun_access']])}}"  ><i class="fa fa-calendar"></i> Pindah Tahun</a>
   </li>
 @if(Auth::check())
 @if(config($CONF_THEM.'.right_sidebar') and (in_array(Auth::User()->role,[1,3])))
@@ -87,3 +97,90 @@
 </li>
 
 @endif
+
+<script type="text/javascript">
+  $('#sso_front_list').on('click',function(){
+
+    get_data_sso('POST');
+
+  });
+
+  var id_ajax_sso=null;
+
+  function get_data_sso(method='GET',data={}){
+
+      if(id_ajax_sso!=null){
+        id_ajax_sso.abort();
+
+        id_ajax_sso=null;
+      }
+
+    $('#sso_content_front_list').html('<li class="text-center" id="test-load"><b>Loading...</b></li>');
+    
+
+    var sso_ajax=$.ajax({
+      'url':'{{route('api.sso.list',['tahun'=>$GLOBALS['tahun_access']])}}',
+       type: method,
+        beforeSend: function(request) {
+          request.setRequestHeader("Authorization", 'Bearer {{(Auth::check()?Auth::User()->api_token:'xx')}}');
+        },
+      'contentType': "application/json; charset=utf-8",
+      'statusCode':{
+        401:function(){
+          // 
+        },
+        
+      },
+      success:function(res){
+        $('#sso_content_front_list').html(res.data);
+      },
+      error: function (textStatus, errorThrown) {
+          }
+
+    });
+  
+    id_ajax_sso=sso_ajax;
+
+  }
+
+  var accessFormApi_ajax=[];
+  function accessFormApi(route,size='lg',method='POST',data={}){
+
+      if(accessFormApi_ajax[route]!=undefined){
+        accessFormApi_ajax[route].abort();
+
+        accessFormApi_ajax[route]=null;
+        accessFormApi_ajax=accessFormApi_ajax.splice(route,1);
+
+      }
+
+    
+
+    var sso_ajax=$.ajax({
+      'url':route,
+       type: method,
+        beforeSend: function(request) {
+          request.setRequestHeader("Authorization", 'Bearer {{(Auth::check()?Auth::User()->api_token:'xx')}}');
+        },
+      'contentType': "application/json; charset=utf-8",
+      'statusCode':{
+        401:function(){
+          // 
+        },
+        
+      },
+      success:function(res){
+        $('#modal_'+size+' .modal-content').html(res.data);
+        $('#modal_'+size).modal();
+      },
+      error: function (textStatus, errorThrown) {
+          }
+
+    });
+  
+    accessFormApi_ajax[route]=sso_ajax;
+
+  }
+
+
+</script>

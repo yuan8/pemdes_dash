@@ -13,9 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 
 Route::post('/{tahun?}/chart-offline-d','TestCtrl@offline_donwload')->name('chart.offline');
 
@@ -35,6 +33,10 @@ Route::prefix('/meta')->group(function () {
 
 Route::prefix('data/admin/{tahun}')->middleware(['auth:api','bindTahun'])->group(function(){
 	Route::get('validation-form/{table}/{id}','API\ValidateCtrl@form')->name('api.data.validate.form');
+    Route::post('show-my-list-sso-access','SSOCtrl@List')->name('api.sso.list');
+    Route::post('add-my-list-sso-access','SSOCtrl@add')->name('api.sso.add');
+
+
 });
 
 Route::prefix('d/{tahun}')->middleware(['bindTahun'])->group(function(){
