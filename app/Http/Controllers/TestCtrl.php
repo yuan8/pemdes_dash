@@ -267,7 +267,7 @@ class TestCtrl extends Controller
 		    });
 
 
-
+		    DB::enableQueryLog();
 			$x=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
 
 			// ->leftjoin('validasi_confirm as cfm',[
@@ -283,6 +283,8 @@ class TestCtrl extends Controller
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
 			->orderBy('kd.'.$level['table_kode'], 'asc')
 			->paginate($paginate)->toArray();
+			// $dd=(array)(DB::getQueryLog());
+			// return ($dd[1]['query']);
 
 
 
