@@ -2,7 +2,6 @@
 @section('content_header')
 <h4>VIEW DATA TABLE [{{$data->table}}]</h4>
 <div class="btn-group">
-<a href="javascript:void(0)" onclick="add_column()" class="btn btn-success">TAMBAH COLUMN MAP</a>
 
 @stop
 

@@ -24,7 +24,7 @@ class DataCtrl extends Controller
         
 
         if(in_array($type,['VISUALISASI','INFOGRAFIS','DATASET'])){
-            $data=DB::table('data as d')
+            $data=DB::connection('real')->table('data as d')
         ->leftJoin('category as i',[['i.id','=','d.organization_id'],['i.type','=',DB::raw("'INSTANSI'")]])
         ->leftJoin(DB::raw("(select cc.name as names,g.id_data from category as cc join data_group as g on ( cc.id=g.id_category and cc.type in ('".implode("','",$tema_accept)."')) ) as tema"),'tema.id_data','=','d.id')->groupBy('d.id')
         ->selectRaw('d.*,i.name as oranization_name,i.image_path as organization_image_path,GROUP_CONCAT(distinct(tema.names)) as temas,i.name as orgas');
@@ -139,7 +139,7 @@ class DataCtrl extends Controller
         }
 
 
-            $data=DB::table('category as d')
+            $data=DB::connection('real')->table('category as d')
              ->where([
                 ['d.name','like',DB::raw("'%".$req."%'")],
                 ['d.type','=','INSTANSI'],
@@ -171,7 +171,7 @@ class DataCtrl extends Controller
         ];
 
 
-            $data=DB::table('category as d')
+            $data=DB::connection('real')->table('category as d')
            
             ->whereRaw("d.type in ('TEMA_DATA_PENDUKUNG','TEMA_DATA_UTAMA') and d.name like '%".$req."%'")
          
@@ -191,14 +191,14 @@ class DataCtrl extends Controller
             $req=$request->q;
         }
 
-        $instansi_data=DB::table('category')->where('id',$type)->first();
+        $instansi_data=DB::connection('real')->table('category')->where('id',$type)->first();
           $tema_accept=[
             'TEMA_DATA_UTAMA',
             'TEMA_DATA_PENDUKUNG',
         ];
     
         if(in_array($type,['VISUALISASI','INFOGRAFIS','DATASET'])){
-            $data=DB::table('data as d')
+            $data=DB::connection('real')->table('data as d')
             ->leftJoin('category as i',[['i.id','=','d.organization_id'],['i.type','=',DB::raw("'INSTANSI'")]])
            ->leftJoin(DB::raw("(select cc.name as names,g.id_data from category as cc join data_group as g on ( cc.id=g.id_category and cc.type in ('".implode("','",$tema_accept)."')) ) as tema"),'tema.id_data','=','d.id')->groupBy('d.id')
             ->selectRaw('d.*, i.name as oranization_name,i.image_path as organization_image_path,distinct(tema.names) as temas,i.name as orgas')
@@ -258,7 +258,7 @@ class DataCtrl extends Controller
             'TEMA_DATA_PENDUKUNG',
         ];
 
-    	$data=DB::table('data as d')
+    	$data=DB::connection('real')->table('data as d')
     	->leftJoin('category as i',[['i.id','=','d.organization_id'],['i.type','=',DB::raw("'INSTANSI'")]])
     	->leftJoin(DB::raw("(select cc.name as names,g.id_data from category as cc join data_group as g on ( cc.id=g.id_category and cc.type in ('".implode("','",$tema_accept)."')) ) as tema"),'tema.id_data','=','d.id')->groupBy('d.id')
     	->selectRaw('d.*,i.name as oranization_name,i.image_path as organization_image_path,GROUP_CONCAT(distinct(tema.names)) as temas,i.name as orgas');
@@ -366,7 +366,7 @@ class DataCtrl extends Controller
     		$req=$request->q;
     	}
 
-    	$instansi_data=DB::table('category')->where('id',$instansi)->first();
+    	$instansi_data=DB::connection('real')->table('category')->where('id',$instansi)->first();
 
     	if(!$instansi_data){
     		return abort('404');
@@ -383,7 +383,7 @@ class DataCtrl extends Controller
         }
 
 
-    	$data=DB::table('data as d')
+    	$data=DB::connection('real')->table('data as d')
     	->leftJoin('category as i',[['i.id','=','d.organization_id'],['i.type','=',DB::raw("'INSTANSI'")]])
     	 ->leftJoin(DB::raw("(select cc.name as names,g.id_data, cc.id as id_tema from category as cc join data_group as g on ( cc.id=g.id_category and cc.type in ('".implode("','",$tema_accept)."')) ) as tema"),'tema.id_data','=','d.id')->groupBy('d.id')
     	->selectRaw('d.*, i.name as oranization_name,i.image_path as organization_image_path,GROUP_CONCAT(distinct(tema.names)) as temas,i.name as orgas');
@@ -578,12 +578,12 @@ class DataCtrl extends Controller
 
     public function detail($tahun,$id,$slug=null){
         $instansi=null;
-        $data=DB::table('data as d')
+        $data=DB::connection('real')->table('data as d')
         ->where('year',($tahun))
         ->where('id',$id)->first();
         if($data){
             if($data->type=='FILE'){
-                 $instansi=$instansi_data=DB::table('category')->where('id',$data->organization_id)->first();
+                 $instansi=$instansi_data=DB::connection('real')->table('category')->where('id',$data->organization_id)->first();
                 return view('data.data-set')->with(['data'=>$data,'instansi'=>$instansi,'hm'=>true]);
                 switch ($data->delivery_type) {
                     case 'VISUALISASI':

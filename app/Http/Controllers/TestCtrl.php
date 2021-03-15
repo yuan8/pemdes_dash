@@ -14,52 +14,52 @@ use Nahid\JsonQ\Jsonq;
 class TestCtrl extends Controller
 {
 	public function tt(){
-		// $x=DB::table('dash_potensi_jumlah_penduduk')->first();
-
-		// foreach($x as $k=>$v){
-		// 	if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
-		// 		DB::table('master_column_map')->insertOrIgnore([
-		// 		'name_column'=>$k,
-		// 		'aggregate_type'=>'SUM',
-		// 		'name'=>strtoupper(str_replace('_', ' ', $k)),
-		// 		'satuan'=>'Jiwa',
-		// 		'auth'=>0,
-		// 		'dashboard'=>1,
-		// 		'validate'=>1,
-		// 		'id_user'=>1,
-		// 		'id_ms_table'=>7
-				
-		// 	]);
-		// 	}
-		// }
-
-		$x=DB::table('dash_potensi_luas_wilayah')->get();
+		$x=DB::connection('mysql')->table('dash_potensi_jenis_lahan')->first();
 
 		foreach($x as $k=>$v){
-			// if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
-			// 	DB::table('master_column_map')->insertOrIgnore([
-			// 	'name_column'=>$k,
-			// 	'aggregate_type'=>'SUM',
-			// 	'name'=>strtoupper(str_replace('_', ' ', $k)),
-			// 	'satuan'=>'Jiwa',
-			// 	'auth'=>0,
-			// 	'dashboard'=>1,
-			// 	'validate'=>1,
-			// 	'id_user'=>1,
-			// 	'id_ms_table'=>7
-				
-			// ]);
-			// }
-
-			DB::table('validasi_confirm')->insertOrIgnore([
-				'table'=>'dash_potensi_luas_wilayah',
-				'kode_desa'=>$v->kode_desa,
+			if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
+				DB::table('master_column_map')->insertOrIgnore([
+				'name_column'=>$k,
+				'aggregate_type'=>'SUM',
+				'name'=>strtoupper(str_replace('_', ' ', $k)),
+				'satuan'=>'Km2',
+				'auth'=>0,
+				'dashboard'=>1,
+				'validate'=>1,
 				'id_user'=>1,
-				'tahun'=>2021,
-				'tanggal_validasi'=>Carbon::now(),
-			
+				'id_ms_table'=>9
+				
 			]);
+			}
 		}
+
+		// $x=DB::table('dash_potensi_luas_wilayah')->get();
+
+		// foreach($x as $k=>$v){
+		// 	// if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
+		// 	// 	DB::table('master_column_map')->insertOrIgnore([
+		// 	// 	'name_column'=>$k,
+		// 	// 	'aggregate_type'=>'SUM',
+		// 	// 	'name'=>strtoupper(str_replace('_', ' ', $k)),
+		// 	// 	'satuan'=>'Jiwa',
+		// 	// 	'auth'=>0,
+		// 	// 	'dashboard'=>1,
+		// 	// 	'validate'=>1,
+		// 	// 	'id_user'=>1,
+		// 	// 	'id_ms_table'=>7
+				
+		// 	// ]);
+		// 	// }
+
+		// 	DB::table('dash_potensi_jenis_lahan')->insertOrIgnore([
+		// 		'table'=>'dash_potensi_jenis_lahan',
+		// 		'kode_desa'=>$v->kode_desa,
+		// 		'id_user'=>1,
+		// 		'tahun'=>2021,
+		// 		'tanggal_validasi'=>Carbon::now(),
+			
+		// 	]);
+		// }
 
 		dd('s');
 	}
@@ -450,18 +450,20 @@ class TestCtrl extends Controller
 				$d['jumlah_data_desa']=$d['id_cmf']?1:0;
 			}
 
+			$data_map=[];
 			$data_map[0]=[
 				'name'=>'Keterisian Data',
-				'y'=>((float)$d['jumlah_data_desa']!=0),
-				
+				'y'=>(((float)$d['jumlah_data_desa']!=0) AND ((float)$d['jumlah_desa']!=0) )?(
+					((float)$d['jumlah_data_desa'])/((float)$d['jumlah_desa'])*100
+				):0,
 				'satuan'=>'%',
 				
 			];
-			$data_map[0]['value']=$data_map[0]['y'];
+			$data_map[0]['value']=(float)$data_map[0]['y'];
 			foreach (array_values($map['columns']) as $k => $m) {
 				# code...
 				
-				$data_map[0]=[
+				$data_map[]=[
 					'name'=>(HPV::translate_operator($m['aggregate_type']))[0].' '.$m['name'],
 					'y'=>(float)$d['data_'.$k]??0,
 					'value'=>(float)$d['data_'.$k]??0,
@@ -479,8 +481,8 @@ class TestCtrl extends Controller
 
 				'name'=>$d['name'],
 				'id'=>$d['id'],
-				'value'=>$data_map[0]['value'],
-				'y'=>$data_map[0]['value'],
+				'value'=>$data_map[0]['y'],
+				'y'=>$data_map[0]['y'],
 
 				'route'=>$ROUTE_NEXT,
 				'next_dom'=>$level['count'],

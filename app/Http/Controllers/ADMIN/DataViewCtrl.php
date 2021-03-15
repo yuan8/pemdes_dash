@@ -236,7 +236,7 @@ class DataViewCtrl extends Controller
 
 
     	$data=DB::table('data')->insertGetId([
-    		'name'=>$request->name,
+    		      'name'=>$request->name,
     			'description'=>$request->description,
     			'table_view'=>$request->table_view,
     			'auth'=>$request->auth,
