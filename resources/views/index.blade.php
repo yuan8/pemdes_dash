@@ -15,6 +15,7 @@
 					<div class="box-body">
 						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
 						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+						
 					</div>
 				</div>
 			</div>
@@ -22,7 +23,7 @@
 				<div class="box box-solid btn-ov box-shadows-blue">
 					<div class="box-body">
 						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Epdeskel</p>
 					</div>
 				</div>
 			</div>
@@ -30,26 +31,35 @@
 	<h1 style="line-height:26px; margin-top:7px;">Klasifikasi <b>Desa</b></h1>
 		<div class="row">
 			<div class="col-md-4">
-				<div class="box box-danger btn-ov">
+				<div class="box box-solid bg-red btn-ov box-b-gray">
+					<div class="box-header bg-red">
+						<h5><b>Swadaya</b></h5>
+					</div>
 					<div class="box-body">
 						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+						
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="box box-warning btn-ov">
+				<div class="box box-solid bg-yellow btn-ov box-b-gray">
+					<div class="box-header bg-yellow">
+						<h5><b>Swakarya</b></h5>
+					</div>
 					<div class="box-body">
 						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+						
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="box box-success btn-ov">
+				<div class="box box-solid bg-green btn-ov box-b-gray">
+					<div class="box-header bg-green">
+						<h5><b>Swasembada</b></h5>
+					</div>
 					<div class="box-body">
 						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+						
 					</div>
 				</div>
 			</div>
@@ -57,26 +67,35 @@
 		<p class="text-primary">* Sumber Data <a href="http://http://prodeskel.binapemdes.kemendagri.go.id/" class="text-primary"><b>prodeskel.binapemdes.kemendagri.go.id</b></a></p>
 		<div class="row">
 			<div class="col-md-4">
-				<div class="box box-danger btn-ov">
+				<div class="box box-solid bg-red btn-ov box-b-gray">
+					<div class="box-header bg-red">
+						<h5><b>Swadaya</b></h5>
+					</div>
 					<div class="box-body">
 						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+						
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="box box-warning btn-ov">
+				<div class="box box-solid bg-yellow btn-ov box-b-gray">
+					<div class="box-header bg-yellow">
+						<h5><b>Swakarya</b></h5>
+					</div>
 					<div class="box-body">
 						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+						
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="box box-success btn-ov">
+				<div class="box box-solid bg-green btn-ov box-b-gray">
+					<div class="box-header bg-green">
+						<h5><b>Swasembada</b></h5>
+					</div>
 					<div class="box-body">
 						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
+						
 					</div>
 				</div>
 			</div>
@@ -86,36 +105,36 @@
 	</div>
 	<div class="col-md-6" style="padding-left:27px;">
 	<h3 class="text-center "><b>DATA UTAMA </b></h3>
-		<div class="owl-carousel owl-theme btn-ov bg-slider-1">
-	  	@foreach($tema as $t)
-	  	<div class="item text-center" >
-				<a   href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
-							<p><b>{{$t->name}}</b></p>
+		<div class="owl-carousel owl-theme  bg-slider-1">
+		  	@foreach($tema as $t)
+		  	<div class="item text-center" >
+					<a   href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
+								<p><b>{{$t->name}}</b></p>
 
-					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center point-hover" data-original-title="Pariwisata &amp; Kebudayaan">
-				</a>
+						<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center point-hover" data-original-title="Pariwisata &amp; Kebudayaan">
+					</a>
 
-	    </div>
+		    </div>
 
-	  	@endforeach
+		  	@endforeach
 
 		</div>
 	<h3 class="text-center "><b>DATA PENDUKUNG</b></h3>
 		
-		<div class="owl-carousel owl-theme bg-slider-2 btn-ov">
+		<div class="owl-carousel owl-theme bg-slider-2 ">
 	  	@foreach($tema2 as $t)
-	  	<div class="item text-center" >
-				<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
-						<p><b>{{$t->name}}</b></p>
+		  	<div class="item text-center" >
+					<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
+							<p><b>{{$t->name}}</b></p>
 
-					<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center point-hover" data-original-title="Pariwisata &amp; Kebudayaan">
-				</a>
+						<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center point-hover" data-original-title="Pariwisata &amp; Kebudayaan">
+					</a>
 
-	    </div>
+		    </div>
 
-	  	@endforeach
+		  	@endforeach
 
-		</div>
+			</div>
 	</div>
 </div>
 

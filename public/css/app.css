@@ -26,13 +26,13 @@ a{
 
 .bg-slider-1{
 	background: #ddd!important;
-	border-radius: 30%;
+	border-radius: 20px;
 	padding: 10px 20px 10px 20px;
 }
 
 .bg-slider-2{
 	background: #83b7ea!important;
-	border-radius: 30%;
+	border-radius: 20px;
 	padding: 10px 20px 10px 20px;
 }
 
@@ -255,6 +255,7 @@ table.sticky-table:nth-of-type(2) td:not([scope=row]):first-child {
 
 .btn-ov {
 	border-radius: 20px !important;
+	overflow: hidden;
 }
 
 .f-10{
@@ -290,9 +291,19 @@ background: linear-gradient(183deg, rgba(250,9,10,1) 17%, rgba(252,153,153,1) 88
 	overflow: hidden;
 }
 
-.highcharts-tooltip{
+.box-b-gray .box-body{
+	background: #ddd;
+	border-top:3px solid #ddd ;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px; 
+	color:#222;
+
+
+}
+
+/*.highcharts-tooltip{
 	max-height: 300px;
 	overflow: scroll;
-}
+}*/
 
 .

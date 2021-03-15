@@ -97,7 +97,7 @@
 							<div class="btn-group">
 								<button class="btn btn-xs btn-primary" onclick="get_form('{{route('api.data.validate.form',['tahun'=>$GLOBALS['tahun_access'],'table'=>$table_map['key_view'],'id'=>$d['id_desa']['value']])}}')"><i class="fa fa-check"></i></button>
 
-								<button class="btn btn-xs btn-warning"><i class="fa fa-pen"></i></button>
+								{{-- <button class="btn btn-xs btn-warning"><i class="fa fa-pen"></i></button> --}}
 							</div>
 						</td>
 						@foreach($d as $kk=> $x)

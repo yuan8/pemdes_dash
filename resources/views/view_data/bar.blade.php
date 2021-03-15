@@ -102,10 +102,10 @@ var bar_chart_{{$id_dom}}=Highcharts.chart('{{$id_dom}}', {
     },
     yAxis:<?= count($data_type['series']['yAxis'])>0?json_encode($data_type['series']['yAxis']):'{}' ?>,
     
-    tooltip: {
+  tooltip: {
         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:,.0f} {point.satuan}</b></td></tr>',
+            '<td style="padding:0"><b>{point.y} {point.satuan}</b></td></tr>',
         footerFormat: '</table>',
         shared: true,
         useHTML: true

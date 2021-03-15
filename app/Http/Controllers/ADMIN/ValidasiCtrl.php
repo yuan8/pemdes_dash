@@ -14,7 +14,7 @@ class ValidasiCtrl extends Controller
 {	
 
 	public function validated($tahun,$table,$id,Request $request){
-		$data=DB::table('validasi_confirm as cfm')->where(
+		$data=DB::connection('mysql')->table('validasi_confirm as cfm')->where(
 			[
 				['tahun','=',$tahun],
 				['table','=',$table],
@@ -23,7 +23,16 @@ class ValidasiCtrl extends Controller
 		)->first();
 
 		if(!$data){
-			$data=DB::table('validasi_confirm')->insert([
+			$data=DB::connection('mysql')->table('validasi_confirm')->insertOrIgnore([
+				'tahun'=>$tahun,
+				'table'=>$table,
+				'kode_desa'=>$id,
+				'tanggal_validasi'=>Carbon::parse($request->updated_at),
+				'keterangan'=>$request->keterangan,
+				'id_user'=>Auth::User()->id
+			]);
+
+			$data=DB::table('validasi_confirm')->insertOrIgnore([
 				'tahun'=>$tahun,
 				'table'=>$table,
 				'kode_desa'=>$id,
@@ -159,8 +168,8 @@ class ValidasiCtrl extends Controller
 
 		}
 
-		$data=DB::table('master_desa as md')
-		->leftjoin($table_map['table'].' as d',[['md.kode_bps','=','d.kode_desa'],['d.tahun','=',DB::Raw($tahun)]])
+		$data=DB::connection('mysql')->table('master_desa as md')
+		->join($table_map['table'].' as d',[['md.kode_bps','=','d.kode_desa'],['d.tahun','=',DB::Raw($tahun)]])
 		->leftJoin('kecamatan as mkc',DB::raw("left(md.kode_bps,7)"),DB::raw('='),DB::raw('mkc.kdkecamatan'))
 		->leftJoin('validasi_confirm as cfm',[
 			[DB::raw("(d.kode_desa)"),'=',DB::raw('cfm.kode_desa')],
@@ -364,14 +373,14 @@ class ValidasiCtrl extends Controller
 
 		foreach ($data_change as $key => $d) {
 			$va=false;
-			$f=DB::table('validasi_confirm')->where([
+			$f=DB::connection('mysql')->table('validasi_confirm')->where([
 				'table'=>$d['table'],
 				'tahun'=>$d['tahun'],
 				'kode_desa'=>$d['kode_desa']
 			])->first();
 
 			if(!$f){
-				$va=DB::table('validasi_confirm')->insert([
+				$va=DB::connection('mysql')->table('validasi_confirm')->insert([
 					'table'=>$d['table'],
 					'tahun'=>$d['tahun'],
 					'kode_desa'=>$d['kode_desa'],
@@ -383,6 +392,14 @@ class ValidasiCtrl extends Controller
 
 			if($va){
 				$data_update+=1;
+				
+				DB::connection('mysql')->table($d['table'])->where([
+					['kode_desa','=',$d['kode_desa']],
+					['tahun','=',$d['tahun']]
+				])->updateOrInsert(
+					['kode_desa'=>$d['kode_desa'],'tahun'=>$d['tahun']],
+					$d['data_xx']
+				);
 				
 				DB::table($d['table'])->where([
 					['kode_desa','=',$d['kode_desa']],
@@ -397,7 +414,7 @@ class ValidasiCtrl extends Controller
 
 		}
 
-            Alert::success('Berhasil', 'Data Berhasil Divalidasi '.HPV::nformat($data_update).' Data');
+         Alert::success('Berhasil', 'Data Berhasil Divalidasi '.HPV::nformat($data_update).' Data');
 
 
 		return back();
@@ -415,7 +432,7 @@ class ValidasiCtrl extends Controller
 
 
 	public function getData($tahun,$table,$kodedesa){
-		$data=DB::table($table[0]['table'])->get();
+		$data=DB::connection('mysql')->table($table[0]['table'])->get();
 
 	}
 

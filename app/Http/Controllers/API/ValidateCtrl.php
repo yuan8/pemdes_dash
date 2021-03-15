@@ -9,7 +9,13 @@ class ValidateCtrl extends Controller
 {
 
 	public function form($tahun,$table,$id){
-		$data=DB::table('master_desa as d')
+		$table=DB::table('master_table_map')->where('key_view',$table)->first();
+
+		if($table){
+			$table=$table->table;
+		}
+		
+		$data=DB::connection('mysql')->table('master_desa as d')
 		->join($table.' as data',[
 			['data.kode_desa','=','d.kode_bps'],
 			['data.tahun','=',DB::RAW($tahun)],

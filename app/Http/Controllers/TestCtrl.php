@@ -247,7 +247,9 @@ class TestCtrl extends Controller
 
 
 
-			$select= "cfm.id as id_cmf, "."'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_bps)) from master_desa as dds where left(dds.kode_bps,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
+			$select= 
+			// "cfm.id as id_cmf, ".
+			"'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_bps)) from master_desa as dds where left(dds.kode_bps,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
 
 			foreach (array_values($meta_table['columns']) as $key => $value) {
 				$OP=HPV::translate_operator($value['aggregate_type']);
@@ -265,14 +267,14 @@ class TestCtrl extends Controller
 		    });
 			$x=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
 
-			->leftjoin('validasi_confirm as cfm',[
-				[DB::RAW("LEFT(cfm.kode_desa,".$level['count'].")"),'=',$level['table_kode']],
-				['cfm.table','=',DB::raw("'".$table."'")],
-				['cfm.tahun','=',DB::raw($tahun)]
-			])
+			// ->leftjoin('validasi_confirm as cfm',[
+			// 	[DB::RAW("LEFT(cfm.kode_desa,".$level['count'].")"),'=',$level['table_kode']],
+			// 	['cfm.table','=',DB::raw("'".$table."'")],
+			// 	['cfm.tahun','=',DB::raw($tahun)]
+			// ])
 			->leftjoin(DB::raw("(select * from ".$meta_table['table']." as dxdx where dxdx.kode_desa like '".($level['kode']?$level['kode'].'%':"%")."') as data"),
 				[
-				[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun)]])
+				[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]])
 			->selectRaw($select)
 			->groupBy(('kd.'.$level['table_kode']) )
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
@@ -448,17 +450,18 @@ class TestCtrl extends Controller
 				$d['jumlah_data_desa']=$d['id_cmf']?1:0;
 			}
 
-			$data_map=[[
+			$data_map[0]=[
 				'name'=>'Keterisian Data',
-				'y'=>(float)$d['jumlah_data_desa']!=0?HPV::nformat((float)((float)$d['jumlah_data_desa']/(float)$d['jumlah_desa'])*100??0,null,3):0,
-				'value'=>(float)$d['jumlah_data_desa']!=0?HPV::nformat((float)((float)$d['jumlah_data_desa']/(float)$d['jumlah_desa'])*100??0,null,3):0,
+				'y'=>((float)$d['jumlah_data_desa']!=0),
+				
 				'satuan'=>'%',
-				]
+				
 			];
+			$data_map[0]['value']=$data_map[0]['y'];
 			foreach (array_values($map['columns']) as $k => $m) {
 				# code...
 				
-				$data_map[]=[
+				$data_map[0]=[
 					'name'=>(HPV::translate_operator($m['aggregate_type']))[0].' '.$m['name'],
 					'y'=>(float)$d['data_'.$k]??0,
 					'value'=>(float)$d['data_'.$k]??0,
@@ -476,8 +479,9 @@ class TestCtrl extends Controller
 
 				'name'=>$d['name'],
 				'id'=>$d['id'],
-				'value'=>((float)$d['jumlah_data_desa']!=0)?((float)((float)$d['jumlah_data_desa']/(float)$d['jumlah_desa'])*100??0):0,
-				'y'=>((float)$d['jumlah_data_desa']!=0)?((float)((float)$d['jumlah_data_desa']/(float)$d['jumlah_desa'])*100??0):0,
+				'value'=>$data_map[0]['value'],
+				'y'=>$data_map[0]['value'],
+
 				'route'=>$ROUTE_NEXT,
 				'next_dom'=>$level['count'],
 				'data_map'=>$data_map

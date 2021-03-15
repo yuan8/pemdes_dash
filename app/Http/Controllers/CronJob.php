@@ -24,8 +24,20 @@ class CronJob extends Controller
 			->orderBy('v.tanggal_validasi','asc')
 			->where('d.tahun','=',$tahun)
 			->where('v.tanggal_validasi','>=',Carbon::now()->addDays(-5))
-			->selectRaw('d.'.implode(',d.',$row))->chunk(100,function($res){
-
+			->selectRaw('d.'.implode(',d.',$row))->chunk(100,function($res) use ($value){
+				foreach ($res as $keyd => $d) {
+					$d=(array)$d;
+					DB::connection('real')->table($value->table.' as d')
+					->updateOrInsert(
+						[
+						'kode_desa'=>$d['kode_desa'],
+						'tahun'=>$d['tahun']
+						],
+						$d
+				);
+					# code...
+				}
+				dd($res);
 
 			});
 
