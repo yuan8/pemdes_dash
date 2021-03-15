@@ -20,7 +20,7 @@ class TestCtrl extends Controller
 
 	}
 
-	
+
 
 	public function tt(){
 		$x=DB::connection('mysql')->table('dash_potensi_iklim_tanah_erosi')->first();
@@ -482,7 +482,7 @@ class TestCtrl extends Controller
 				if(strtoupper($d['data_'.$k.'_satuan'])=='DESA'){
 					if($level['count']==10){
 						$d['data_'.$k.'_satuan']='-';
-						$d['data_'.$k]=($d['data_'.$k]?'Ada','Tidak');
+						$d['data_'.$k]=($d['data_'.$k]?'Ada':'Tidak');
 					}
 				}
 
