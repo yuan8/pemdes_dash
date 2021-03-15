@@ -43,6 +43,8 @@ Route::prefix('d/{tahun}')->middleware(['bindTahun'])->group(function(){
 
 	Route::get('/visulisasi-p-table/{id}/{table}','TestCtrl@index')->name('visual.data.table');
     Route::get('/visulisasi-d-dataset/{id}','DataVisualCtrl@index')->name('visual.dataset');
+    Route::get('/get-category-desa/','HomeCtrl@cat_desa')->name('re.cat.cat_desa');
+
 
 });
 

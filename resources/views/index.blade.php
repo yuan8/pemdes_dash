@@ -8,100 +8,12 @@
 
 <div class="container" style="">
 	<div class="col-md-6">
-		<h1 style="line-height:26px; margin-top:7px;">Sumber <b>Data</b></h1>
-		<div class="row">
-			<div class="col-md-6">
-				<div class="box box-solid btn-ov box-shadows-blue">
-					<div class="box-body">
-						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Prodeskel</p>
-						
-					</div>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="box box-solid btn-ov box-shadows-blue">
-					<div class="box-body">
-						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem Epdeskel</p>
-					</div>
-				</div>
-			</div>
+		<div id="klasifikasi_content">
+			
+			<h1 class="text-center"><b>Loading...</b></h1>
 		</div>
-	<h1 style="line-height:26px; margin-top:7px;">Klasifikasi <b>Desa</b></h1>
-		<div class="row">
-			<div class="col-md-4">
-				<div class="box box-solid bg-red btn-ov box-b-gray">
-					<div class="box-header bg-red">
-						<h5><b>Swadaya</b></h5>
-					</div>
-					<div class="box-body">
-						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="box box-solid bg-yellow btn-ov box-b-gray">
-					<div class="box-header bg-yellow">
-						<h5><b>Swakarya</b></h5>
-					</div>
-					<div class="box-body">
-						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="box box-solid bg-green btn-ov box-b-gray">
-					<div class="box-header bg-green">
-						<h5><b>Swasembada</b></h5>
-					</div>
-					<div class="box-body">
-						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						
-					</div>
-				</div>
-			</div>
-		</div>
-		<p class="text-primary">* Sumber Data <a href="http://http://prodeskel.binapemdes.kemendagri.go.id/" class="text-primary"><b>prodeskel.binapemdes.kemendagri.go.id</b></a></p>
-		<div class="row">
-			<div class="col-md-4">
-				<div class="box box-solid bg-red btn-ov box-b-gray">
-					<div class="box-header bg-red">
-						<h5><b>Swadaya</b></h5>
-					</div>
-					<div class="box-body">
-						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="box box-solid bg-yellow btn-ov box-b-gray">
-					<div class="box-header bg-yellow">
-						<h5><b>Swakarya</b></h5>
-					</div>
-					<div class="box-body">
-						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="box box-solid bg-green btn-ov box-b-gray">
-					<div class="box-header bg-green">
-						<h5><b>Swasembada</b></h5>
-					</div>
-					<div class="box-body">
-						<h1 style="line-height:26px; margin-top:7px;">67,78%</h1>
-						
-					</div>
-				</div>
-			</div>
-		</div>
-		<p class="text-primary">* Sumber Data <a href="http://http://epdeskel.binapemdes.kemendagri.go.id/" class="text-primary"><b>epdeskel.binapemdes.kemendagri.go.id</b></a></p>
-
+		
+		
 	</div>
 	<div class="col-md-6" style="padding-left:27px;">
 	<h3 class="text-center "><b>DATA UTAMA </b></h3>
@@ -204,7 +116,13 @@
 
 </style>
 <script type="text/javascript">
+	$.get('{{route('re.cat.cat_desa',['tahun'=>$GLOBALS['tahun_access']])}}',function(res){
+		// res=JSON.parse(res);
 
+		if(res.status==200){
+			$('#klasifikasi_content').html(res.data);
+		}
+	});
 
 
 	$(document).ready(function(){

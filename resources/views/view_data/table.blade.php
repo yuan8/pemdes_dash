@@ -23,7 +23,7 @@
 					@endif
 
 					<th colspan="{{ (($level!=10)?4:2) +(count($table_meta['columns'])*2) }}">
-						<p class="text-uppercase">{{isset($title)?$title:''}} {{$pemda}}</p>
+						<p class="text-uppercase">{{isset($title)?$title:''}} {{isset($pemda)?$pemda:''}}</p>
 					</th>
 
 				</tr>

@@ -470,6 +470,13 @@ class TestCtrl extends Controller
 			foreach (array_values($map['columns']) as $k => $m) {
 				# code...
 				
+				if(strtoupper($d['data_'.$k.'_satuan'])=='DESA'){
+					if($level['count']==10){
+						$d['data_'.$k.'_satuan']='-';
+						$d['data_'.$k]=($d['data_'.$k]?'Ada','Tidak');
+					}
+				}
+
 				$data_map[]=[
 					'name'=>(HPV::translate_operator($m['aggregate_type']))[0].' '.$m['name'],
 					'y'=>(float)$d['data_'.$k]??0,
