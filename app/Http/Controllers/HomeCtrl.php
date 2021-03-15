@@ -17,6 +17,8 @@ class HomeCtrl extends Controller
                 'data'=>(array)DB::connection('mysql')->table('dash_klasifikasi as d')
                         ->selectRaw("(select count(distinct(dd.kode_bps)) from master_desa as dd ) as jumlah_desa,count(distinct(d.kode_desa)) as count,d.klasifikasi")
                         ->groupBy('d.klasifikasi')
+                        ->where('d.tahun',$tahun)
+                        
                         ->get()->toArray()
                         ,'rekap'=>[]
 
@@ -27,6 +29,7 @@ class HomeCtrl extends Controller
                 'data'=>DB::connection('mysql')->table('dash_klasifikasi as d')
                         ->selectRaw("(select count(distinct(dd.kode_bps)) from master_desa as dd ) as jumlah_desa,count(distinct(d.kode_desa)) as count,d.klasifikasi")
                         ->groupBy('d.klasifikasi')
+                        ->where('d.tahun',$tahun)
                         ->get()->toArray(),
                         'rekap'=>[]
 
