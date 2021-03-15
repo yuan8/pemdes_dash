@@ -19,7 +19,7 @@
 
 
 @section('content')
-  <h2 class="text-center text-uppercase " style="padding-bottom: 10px;"><b>{{$data->name}} CAPAIAN TAHUN {{$GLOBALS['tahun_access']}}</b></h2>
+  <h2 class="text-center text-uppercase " style="padding-bottom: 10px;"><b>{{$data->name}}</b></h2>
 
 
 <div class="box-solid box">

@@ -28,15 +28,15 @@
 
 	
 		@foreach($data as $d)
-	<div class="col-md-3 text-center " style="min-height: 230px; border-bottom: 3px solid  #222; margin-top: 20px;">
+	<div class="col-md-2 text-center " style="min-height: 100px; border-bottom: 3px solid  #222; margin-top: 20px;">
 			<a class="organisasi-hover" href="{{route('query.data.categorycal',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,HPV::slugify($d->name)])}}">
-			<div class=" box-shadows-gray xx background-danger-y border-gray" style="width:200px; height: 200px;  overflow: hidden; position: absolute;  margin:auto; left:0; right:0; ">
-				<div class="box-header  text-center" style="height: 200px; overflow: hidden; vertical-align: middle;">
+			<div class=" box-shadows-gray xx background-blue-y border-gray" style="width:50px; height: 50px;  overflow: hidden; position: absolute;  margin:auto; left:0; right:0; ">
+				<div class="box-header  text-center" style="height: 50px; overflow: hidden; vertical-align: middle;">
 					<img class="point-hover" src="{{asset($d->image_path)}}" style="max-height: 70px; width:auto; position: absolute; margin: auto; top:0;left:0;bottom: 0; right: 0;">
 				</div>
 
           </div>
-              <h5 class="text-center one-line" style="padding-top: 210px;"><b >{{strtoupper($d->name)}}</b></h5>
+              <h5 class="text-center one-line" style="padding-top: 55px;"><b >{{strtoupper($d->name)}}</b></h5>
 
           </a>
 			</div>
