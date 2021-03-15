@@ -32,7 +32,7 @@
 			<a class="organisasi-hover" href="{{route('query.data.categorycal',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,HPV::slugify($d->name)])}}">
 			<div class=" box-shadows-gray xx background-blue-y border-gray" style="width:50px; height: 50px;  overflow: hidden; position: absolute;  margin:auto; left:0; right:0; ">
 				<div class="box-header  text-center" style="height: 50px; overflow: hidden; vertical-align: middle;">
-					<img class="point-hover" src="{{asset($d->image_path)}}" style="max-height: 70px; width:auto; position: absolute; margin: auto; top:0;left:0;bottom: 0; right: 0;">
+					<img class="point-hover" src="{{asset($d->image_path)}}" style="max-height: 50px; width:auto; position: absolute; margin: auto; top:0;left:0;bottom: 0; right: 0;">
 				</div>
 
           </div>
