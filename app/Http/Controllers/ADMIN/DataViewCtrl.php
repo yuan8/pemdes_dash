@@ -10,8 +10,8 @@ class DataViewCtrl extends Controller
 {
     //
 
-    static function  buildJson($file_ex){
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request_ex);
+    static function  buildJson($file_ex,$request){
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file_ex);
         $sheet=$spreadsheet->setActiveSheetIndex(0);
         $meta_table=[
             'name'=>'',

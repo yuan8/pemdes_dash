@@ -9,7 +9,7 @@ use HPV;
 use Nahid\JsonQ\Jsonq;
 use Carbon\Carbon;
 use App\Http\Controllers\TestCtrl as MAP;
-use App\Http\Controllers\Controller\ADMIN\DataViewCtrl::class;
+use App\Http\Controllers\Controller\ADMIN\DataViewCtrl;
 
 class DataVisualCtrl extends Controller
 {

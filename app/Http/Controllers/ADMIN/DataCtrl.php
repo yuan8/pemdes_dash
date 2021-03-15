@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use DB;
 use Storage;
 use Carbon\Carbon;
-use App\Http\Controllers\Controller\ADMIN\DataViewCtrl::class;
+use App\Http\Controllers\ADMIN\DataViewCtrl;
 class DataCtrl extends Controller
 {
 
@@ -24,7 +24,7 @@ class DataCtrl extends Controller
 			$where[]=['d.type','=','FILE'];
 			$Orwhere[]=['d.type','=','FILE'];
 
-f
+
 
 		}
 
@@ -184,9 +184,9 @@ f
 	}
 	static function store_visual($tahun,Request $request){
 		
-		$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request_ex);
+		$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file);
         $sheet=$spreadsheet->setActiveSheetIndex(0);
-		$MAP_DATA=DataViewCtrl::buildJson($request->file);
+		$MAP_DATA=DataViewCtrl::buildJson($request->file,$request);
 
 
 		$path=Storage::put('public/publication/DATASET/'.$tahun,$request->file);
