@@ -13,6 +13,15 @@ use Illuminate\Pagination\Paginator;
 use Nahid\JsonQ\Jsonq;
 class TestCtrl extends Controller
 {
+
+	public function req(Request $request){
+
+		dd($request);
+
+	}
+
+	
+
 	public function tt(){
 		$x=DB::connection('mysql')->table('dash_potensi_iklim_tanah_erosi')->first();
 

@@ -194,4 +194,12 @@
 
 
 </script>
+
+ <script src="{{url('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
+    <script src="{{url('/vendor/unisharp/laravel-ckeditor/adapters/jquery.js')}}"></script>
+    <script>
+       if($('.ck-editor-init').html()!=undefined){
+           $('.ck-editor-init').ckeditor();
+       }
+    </script>
 </html>

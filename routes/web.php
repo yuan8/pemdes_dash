@@ -25,6 +25,9 @@ Route::get('/home',function(){
 
 Route::prefix('test')->group(function(){
 	Route::get('cron','CronJob@handle');
+
+	Route::get('request','TestCtrl@req');
+
 });
 
 

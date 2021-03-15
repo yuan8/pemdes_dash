@@ -20,7 +20,7 @@
 
 			<div class="form-group">
 				<label>Deksripsi</label>
-				<textarea class="form-control" name="description"></textarea>
+				<textarea class="form-control ck-editor-init"  name="description"></textarea>
 			</div>
 
 			<div class="form-group">
