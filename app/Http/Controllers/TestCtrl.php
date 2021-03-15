@@ -16,7 +16,7 @@ class TestCtrl extends Controller
 
 	public function req(Request $request){
 
-		dd($request);
+		dd($request->all());
 
 	}
 
