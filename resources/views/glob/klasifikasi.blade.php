@@ -1,5 +1,5 @@
 @php
-	$conf_colors=['bg-red','bg-yellow','bg-green','bg-info'];
+	$conf_colors=['bg-red','bg-yellow','bg-green','bg-blue'];
 @endphp
 <h1 style="line-height:26px; margin-top:7px;">Sumber <b>Data</b></h1>
 <div class="row">

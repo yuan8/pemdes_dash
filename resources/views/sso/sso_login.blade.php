@@ -19,7 +19,7 @@
 	</div>
 		</div>
 	</div>
-	<div id="res" style="overflow: hidden; height: 1px;"></div>
+	<div id="res" style="overflow: hidden; height: 1px; width:1px; "></div>
 
 @stop
 
@@ -78,7 +78,6 @@
 
 
 
-				console.log(res);
 		});
 	
 

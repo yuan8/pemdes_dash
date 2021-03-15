@@ -26,7 +26,7 @@ class HomeCtrl extends Controller
              [
                 'name'=>'Epdeskel',
                 'link'=>'http://epdeskel.binapemdes.kemendagri.go.id',
-                'data'=>DB::connection('mysql')->table('dash_klasifikasi as d')
+                'data'=>DB::connection('mysql')->table('status_deskel as d')
                         ->selectRaw("(select count(distinct(dd.kode_bps)) from master_desa as dd ) as jumlah_desa,count(distinct(d.kode_desa)) as count,d.klasifikasi")
                         ->groupBy('d.klasifikasi')
                         ->where('d.tahun',$tahun)
