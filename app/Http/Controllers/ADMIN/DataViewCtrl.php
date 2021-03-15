@@ -244,7 +244,7 @@ class DataViewCtrl extends Controller
     			'created_at'=>Carbon::now(),
     			'type'=>'INTEGRASI',
     			'delivery_type'=>'AUTOMATION',
-                'dashborad'=>true,
+                'dashboard'=>true,
     			'keywords'=>json_encode($request->keywords),
     			'organization_id'=>$request->id_instansi
 

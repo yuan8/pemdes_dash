@@ -14,7 +14,7 @@ use Nahid\JsonQ\Jsonq;
 class TestCtrl extends Controller
 {
 	public function tt(){
-		$x=DB::connection('mysql')->table('dash_potensi_jenis_lahan')->first();
+		$x=DB::connection('mysql')->table('dash_potensi_iklim_tanah_erosi')->first();
 
 		foreach($x as $k=>$v){
 			if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
@@ -27,7 +27,7 @@ class TestCtrl extends Controller
 				'dashboard'=>1,
 				'validate'=>1,
 				'id_user'=>1,
-				'id_ms_table'=>9
+				'id_ms_table'=>10
 				
 			]);
 			}
