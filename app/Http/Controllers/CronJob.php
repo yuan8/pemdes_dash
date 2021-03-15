@@ -13,7 +13,7 @@ class CronJob extends Controller
 		$tahun=date('Y');
 		$D=DB::connection('real')->table('master_table_map')->where(
 			'edit_daerah','=',true
-		)->get();
+		)->orderBy('id','desc')->get();
 
 		foreach ($D as $key => $value) {
 			$row=DB::table('master_column_map')->where('id_ms_table',$value->id)->get()->pluck('name_column')->toArray();

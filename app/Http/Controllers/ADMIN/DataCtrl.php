@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use DB;
 use Storage;
 use Carbon\Carbon;
-use App\Http\Controllers\Controller\ADMIN\DataViewCtrl;
+use App\Http\Controllers\Controller\ADMIN\DataViewCtrl::class;
 class DataCtrl extends Controller
 {
 
@@ -24,7 +24,7 @@ class DataCtrl extends Controller
 			$where[]=['d.type','=','FILE'];
 			$Orwhere[]=['d.type','=','FILE'];
 
-
+f
 
 		}
 

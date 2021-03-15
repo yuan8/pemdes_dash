@@ -9,6 +9,7 @@ use HPV;
 use Nahid\JsonQ\Jsonq;
 use Carbon\Carbon;
 use App\Http\Controllers\TestCtrl as MAP;
+use App\Http\Controllers\Controller\ADMIN\DataViewCtrl::class;
 
 class DataVisualCtrl extends Controller
 {
@@ -48,7 +49,7 @@ class DataVisualCtrl extends Controller
     	
     }
 
-    public function index($tahun,$id,Request $request){
+    public static function index($tahun,$id,Request $request){
     	$file_exist=file_exists(storage_path('/app/public/publication/DATASET_JSON/'.$tahun.'/'.$id.'.json'));
     	if($file_exist){
     		$file_json=file_get_contents(storage_path('/app/public/publication/DATASET_JSON/'.$tahun.'/'.$id.'.json'));
@@ -58,9 +59,7 @@ class DataVisualCtrl extends Controller
 
     	}
 
-    	if(!isset($meta_table)){
-    		
-    	}
+    	
 
     	 $data=DB::table('data as d')
         ->where('year',($tahun))
@@ -74,6 +73,12 @@ class DataVisualCtrl extends Controller
         $DATA=[];
 
         if($data){
+        	if(!isset($meta_table)){
+				$MAP_DATA=DataViewCtrl::buildJson(public_path($data->document_path));
+	    		$JSON=Storage::put('public/publication/DATASET_JSON/'.$tahun.'/'.$id.'.json',json_encode($MAP_DATA));
+
+	    		return static::index($tahun,$id,$request);
+	    	}
         	
 
 			$daerah=DB::table($level['table'].' as da')->selectRaw( "da.".$level['table_kode']." as id, da.".$level['table_name']." as name, (select count(ds.kode_bps) from master_desa as ds where left(ds.kode_bps,".$level['count'].") = da.".$level['table_kode'].") as jumlah_desa 
