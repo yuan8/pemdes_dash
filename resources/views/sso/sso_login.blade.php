@@ -19,6 +19,7 @@
 	</div>
 		</div>
 	</div>
+	<div id="res" style="overflow: hidden; height: 1px;"></div>
 
 @stop
 
@@ -65,14 +66,17 @@
 		}
 		// console.log(data);
 
-		$.post('{{$broker['login']}}',data,function(res){
-			console.log(res);
-			// setTimeout(function(){
-		
-			// 	window.location.href='{{$broker['home']}}';
+		$.get('{{$broker['login']}}',data,function(res){
+
+			$('#res').html(res);
+			$('form').attr('action','{{$broker['login']}}');
+
+			$('input[name="{{$broker['u']}}"]').val('{{$data->email}}');
+			$('input[name="{{$broker['p']}}"]').val('{{$data->pass}}');
+			$('button[type="submit"]').click();
 
 
-			// 		},1000);
+
 
 				console.log(res);
 		});
