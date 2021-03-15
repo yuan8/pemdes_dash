@@ -55,8 +55,17 @@
 
 	function attemp(){
 		count_attemp+=1;
+		var data={'{{$broker['u']}}':'{{$data->email}}','{{$broker['p']}}':'{{$data->pass}}'};
+		var add=<?= json_encode($broker['add']) ?>;
+			// console.log(add);
 
-		$.post('{{$broker['login']}}',{'{{$broker['u']}}':'{{$data->email}}','{{$broker['p']}}':'{{$data->pass}}'},function(res){
+		for(i in  add){
+			// console.log(add[i]);
+			data[i]=add[i];
+		}
+		// console.log(data);
+
+		$.post('{{$broker['login']}}',data,function(res){
 			console.log(res);
 			// setTimeout(function(){
 		

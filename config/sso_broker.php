@@ -12,7 +12,21 @@ return [
 		'login'=>'http://prodeskel.binapemdes.kemendagri.go.id/app_Login/',
 		'u'=>'login',
 		'p'=>'pswd',
-		'add'=>[]
+		'add'=>[
+			  "nm_form_submit" => "1",
+			  "nmgp_idioma_novo" => null,
+			  "nmgp_schema_f" => null,
+			  "nmgp_url_saida" => null,
+			  "bok" => "OK",
+			  "nmgp_opcao" => "alterar",
+			  "nmgp_ancora" => null,
+			  "nmgp_num_form" => null,
+			  "nmgp_parms" => null,
+			  "script_case_init" => "9117",
+			  "script_case_session" => "mm8d0n3jp5tprqukenkblpd9kd",
+			  "NM_cancel_return_new" => null,
+			  "csrf_token" => "o(dtZP*ta:]e6N7005iW{:o@WtyH(qfsE6sc8@567-o;f7!c1ij8pD0S{Em1u9mv"
+		]
 	],
 	'epdeskel'=>[
 		'name'=>'Aplikasi Epdeskel',
@@ -25,7 +39,21 @@ return [
 		
 		'u'=>'login',
 		'p'=>'pswd',
-		'add'=>[]
+		'add'=>[
+			  "nm_form_submit" => "1",
+			  "nmgp_idioma_novo" => null,
+			  "nmgp_schema_f" => null,
+			  "nmgp_url_saida" => null,
+			  "bok" => "OK",
+			  "nmgp_opcao" => "alterar",
+			  "nmgp_ancora" => null,
+			  "nmgp_num_form" => null,
+			  "nmgp_parms" => null,
+			  "script_case_init" => "9117",
+			  "script_case_session" => "mm8d0n3jp5tprqukenkblpd9kd",
+			  "NM_cancel_return_new" => null,
+			  "csrf_token" => "o(dtZP*ta:]e6N7005iW{:o@WtyH(qfsE6sc8@567-o;f7!c1ij8pD0S{Em1u9mv"
+		]
 
 
 	],
