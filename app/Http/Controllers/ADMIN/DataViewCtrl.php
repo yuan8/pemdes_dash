@@ -21,7 +21,7 @@ class DataViewCtrl extends Controller
                 2=>[],
                 4=>[],
                 7=>[],
-                8=>[]
+                10=>[]
             ]
         ];
         $version=$sheet->getCell('A1')->getCalculatedValue();
@@ -170,7 +170,7 @@ class DataViewCtrl extends Controller
     	if($data){
     		$tablemap=DB::table('master_table_map')->get();
         // dd($tablemap);
-            
+
     		return view('admin.dataview.edit')->with(['data'=>$data,'tablemap'=>$tablemap]);
     	}else{
     		return abort('404');
@@ -205,7 +205,7 @@ class DataViewCtrl extends Controller
     		]);
 
     		if($data_up){
-    			foreach ($request->category as $key => $k) {
+    			foreach ($request->category??[] as $key => $k) {
     				# code...
     				DB::table('data_group')->insertOrIgnore([
     					'id_data'=>$id,
@@ -214,7 +214,7 @@ class DataViewCtrl extends Controller
 
     			}
     			DB::table('data_group')->where('id_data',$id)
-    			->whereNotIn('id_category',$request->category)->delete();
+    			->whereNotIn('id_category',$request->category??[])->delete();
     			
     		}
 

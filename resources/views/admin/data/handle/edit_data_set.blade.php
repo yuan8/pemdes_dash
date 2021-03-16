@@ -8,14 +8,17 @@
 @stop
 
 @section('content')
-	<form action="{{route('admin.data.store',['tahun'=>$GLOBALS['tahun_access'],'jenis'=>$jenis])}}" enctype='multipart/form-data' method="post">
+	<form action="{{route('admin.dataset.update',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}" enctype='multipart/form-data' method="post">
 		@csrf
+		@method('PUT')
 
 		<div class="row">
 		<div class="col-md-8">
 			<div class="box box-primary">
 		<div class="box-body">
-			<input type="hidden" name="delivery_type" value="{{$jenis}}" >
+			<input type="hidden" name="type" value="{{$jenis}}" >
+			<input type="hidden" name="delivery_type" value="{{$data->delivery_type}}" >
+
 			<div class="form-group">
 				<label>Judul</label>
 				<input type="text" required="" name="name" class="form-control" value="{{$data->name}}">
@@ -23,7 +26,7 @@
 
 			<div class="form-group">
 				<label>Deksripsi</label>
-				<textarea class="form-control ck-editor-init"  name="description">{!!$data->description!!}</textarea>
+				<textarea class="form-control "  name="description">{!!$data->description!!}</textarea>
 			</div>
 
 			<div class="form-group">
@@ -43,12 +46,12 @@
 			@if(in_array($jenis,['TABLE','VISUALISASI']))
 				<div class="form-group">
 					<label>Dokumen (.xlsx,.xls)</label>
-					<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" name="file" class="form-control" required="">
+					<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" name="file" class="form-control" >
 				</div>
 			@elseif(in_array($jenis,['INFOGRAFIS']))
 				<div class="form-group">
 					<label>Dokumen PDF / Gambar</label>
-					<input type="file" accept="image/*, application/pdf " name="file" class="form-control" required="">
+					<input type="file" accept="image/*, application/pdf " name="file" class="form-control" >
 				</div>
 
 			@endif
@@ -98,15 +101,19 @@
 												</button>
 											</td>
 										@foreach($r as $rdd=> $d)
+											@php
+											$d=(array)$d;
+											@endphp
+
 											<td colspan="{{4/count($r)}}">
 												<select class="form-control" required="" name="view[{{$k}}][{{$in}}][{{$rdd}}][type]">
-													<option value="map" {{$d->type=="map"?'selected':''}}>MAP</option>
-													<option value="bar" {{$d->type=="bar"?'selected':''}}>BAR CHART</option>
-													<option value="column" {{$d->type=="column"?'selected':''}}>COLUMN CHART</option>
-													<option value="line" {{$d->type=="line"?'selected':''}}>LINE CHART</option>
+													<option value="map" {{$d['type']=="map"?'selected':''}}>MAP</option>
+													<option value="bar" {{$d['type']=="bar"?'selected':''}}>BAR CHART</option>
+													<option value="column" {{$d['type']=="column"?'selected':''}}>COLUMN CHART</option>
+													<option value="line" {{$d['type']=="line"?'selected':''}}>LINE CHART</option>
 												
-													<option value="max"  {{$d->type=="max"?'selected':''}}>(4) DATA NILAI TERTINGGI</option>
-													<option value="pie"  {{$d->type=="pie"?'selected':''}}>PIE (4) DATA NILAI TERTINGGI </option>
+													<option value="max"  {{$d['type']=="max"?'selected':''}}>(4) DATA NILAI TERTINGGI</option>
+													<option value="pie"  {{$d['type']=="pie"?'selected':''}}>PIE (4) DATA NILAI TERTINGGI </option>
 
 											</td>
 										@endforeach
@@ -136,14 +143,14 @@
 					
 					<div class="form-group">
 						<label>Dapat Dilakukan Percarian</label>
-						<p><input type="radio" id="sc_true" checked="" class="c_sc" name="dashboard" value="1" > Tampil </p>
-						<p><input type="radio" name="dashboard" class="c_sc" value="0" > Tidak </p>
+						<p><input type="radio" id="sc_true" {{$data->dashboard?'checked':''}}  class="c_sc" name="dashboard" value="1" > Tampil </p>
+						<p><input type="radio" name="dashboard" {{$data->dashboard?'':'checked'}} class="c_sc" value="0" > Tidak </p>
 
 					</div>
 					<div class="form-group" id="auth_f">
 						<label>Perlu Login</label>
-						<p><input type="radio" name="auth" value="1" > Ya </p>
-						<p><input type="radio" name="auth" checked="" value="0" > Tidak </p>
+						<p><input type="radio" {{$data->auth?'checked':''}}  name="auth" value="1" > Ya </p>
+						<p><input type="radio" {{$data->auth?'':'checked'}}  name="auth" checked="" value="0" > Tidak </p>
 
 					</div>
 
@@ -160,13 +167,25 @@
 					</script>
 					<div class="form-group">
 						<label>Instansi</label>
-						<select class="form-control" id="instansi"   name="id_instansi" required="">	
+						<select class="form-control" id="instansi"   name="id_instansi" required="">
+						@php
+								$instansi=explode('|||',$data->instansi);
+							@endphp
+							<option value="{{$instansi[0]}}" selected="">INSTANSI {{$instansi[1]}}</option>	
 						</select>
 					</div>
 					<div class="form-group">
 						<label>Ketegori</label>
 						<select class="form-control" id="kategori"  name="category[]" multiple="">
-							
+							@foreach(explode('------',$data->category ) as $c )
+								@if($c!='')
+								@php
+									
+									$c=explode('|||',$c);
+								@endphp
+								<option value="{{$c[0]}}" selected="">{{$c[1]}} - {{$c[2]}}</option>
+								@endif
+							@endforeach
 						</select>
 						<script type="text/javascript">
 							$('#kategori').select2({
@@ -229,15 +248,16 @@
 				<option value="line">LINE CHART</option>
 				<option value="max">(4) DATA NILAI TERTINGGI</option>
 					<option value="pie"  >PIE (4) DATA NILAI TERTINGGI </option>
-
-
-			</select>
+				</select>
 			</div>
 		</div>
 
 
 
 	</div>
+	@php
+	// dd($view);
+	@endphp
 @stop
 
 

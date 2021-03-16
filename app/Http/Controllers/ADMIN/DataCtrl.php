@@ -303,16 +303,17 @@ class DataCtrl extends Controller
 
 	public static function edit($tahun,$id){
 			$U=Auth::User();
-	$data=DB::table('data as d')
+		$data=DB::table('data as d')
 		->leftJoin('data_group as gc','gc.id_data','=','d.id')
 		->leftJoin('category as c','c.id','=','gc.id_category')
 		->leftJoin('category as i','i.id','=','d.organization_id')
-
 		->selectRaw("group_concat(DISTINCT(concat(c.id,'|||',replace(c.type,'_',' '),'|||',c.name)) SEPARATOR '------') as category,concat(i.id,'|||',i.name) as instansi,  d.*")
-		->where(['c.type'=>'FILE',
+		->where(['d.type'=>'FILE',
 			'd.id_user'=>$U->id,
 			'd.year'=>$tahun,
-			'd.id'=>$id])->first();
+			'd.id'=>$id])
+		->first();
+		
 
 		if($data){
 			$map_view=[];
@@ -327,12 +328,153 @@ class DataCtrl extends Controller
 				}
 			}
 			if($map_view){
-				return view('admin.data.handle.edit_data_set')->with(['data'=>$data,'jenis'=>$data->delivery_type,'map_view'=>$map_view]);
+				$maping=[];
+				foreach ($map_view as $key => $value) {
+					# code...
+					foreach ($value as $i => $c) {
+						$maping[$key][]=$c;
+
+						# code...
+					}
+				}
+				 foreach([2=>'PROVINSI',4=>'KOTA/KAB',7=>'KECEMATAN',10=>"DESA/KELURAHAN"] as $kl=>$l){
+		                $view[$kl]=[
+		                    'head'=>$l,
+		                    'map'=>isset($map_view[$kl])?$map_view[$kl]:[]
+		                ];
+	              }
+
+
+				return view('admin.data.handle.edit_data_set')->with(['data'=>$data,'jenis'=>$data->delivery_type,'view'=>$view]);
 			}
 			
 
 		}else{
 			return abort(404);
+		}
+	}
+
+	public function update($tahun,$id,Request $request){
+		$U=Auth::User();
+		$data=DB::table('data as d')
+		->leftJoin('data_group as gc','gc.id_data','=','d.id')
+		->leftJoin('category as c','c.id','=','gc.id_category')
+		->leftJoin('category as i','i.id','=','d.organization_id')
+		->selectRaw("group_concat(DISTINCT(concat(c.id,'|||',replace(c.type,'_',' '),'|||',c.name)) SEPARATOR '------') as category,concat(i.id,'|||',i.name) as instansi,  d.*")
+		->where(['d.type'=>'FILE',
+			'd.id_user'=>$U->id,
+			'd.year'=>$tahun,
+			'd.id'=>$id])
+		->first();
+
+
+		$MAP_DATA=[
+			'level'=>0
+		];
+
+		if($data){
+			if($request->file){
+		        if($data->delivery_type=='VISUALISASI'){
+					$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file);
+		       	 $sheet=$spreadsheet->setActiveSheetIndex(0);
+
+
+					$MAP_DATA=DataViewCtrl::buildJson($request->file,$request);
+
+		        }
+
+				$path=Storage::put('public/publication/DATASET/'.$tahun,$request->file);
+				$path=Storage::url($path);
+				$ext = pathinfo($path, PATHINFO_EXTENSION);
+				$size=filesize($request->file)??0;
+				$size=$size / 1048576;
+				$data=null;
+
+			}else{
+				if($data->delivery_type=='VISUALISASI'){
+
+					$url_file=$data->document_path;
+					$url_file=str_replace('/storage/', '/',$url_file);
+					$url_file=storage_path('app/public'.$url_file);
+					$exist=file_exists($url_file);
+					if($exist){
+
+					}
+
+					$MAP_DATA=DataViewCtrl::buildJson($url_file,$request);
+				}
+				$path=$data->document_path;
+				$ext =$data->extension;
+				$size=$data->size;
+
+			}
+
+			if($MAP_DATA){
+
+				$data_new=DB::table('data')->where('id',$id)
+				->update([
+					'name'=>$request->name,
+						'delivery_type'=>$request->delivery_type,
+						'type'=>'FILE',
+						'extension'=>$ext,
+						'description'=>$request->description,
+						'organization_id'=>$request->id_instansi??15,
+						'size'=>$size,
+						'dashboard'=>(boolean)(($request->dashboard)),
+						'auth'=>(boolean)(($request->dashboard)?$request->auth:0),
+						'keywords'=>($request->keywords)?json_encode($request->keywords,true):'[]',
+						'document_path'=>$path,
+						'updated_at'=>Carbon::now(),
+						'publish_date'=>Carbon::now(),
+						'level_start'=>isset($MAP_DATA['level'])?$MAP_DATA['level']:0,
+						
+
+				]);
+			}
+
+			if($data_new){
+				Alert::success('Berhasil','Data Berhasil Diperbarui');
+
+				if($data->delivery_type=='VISUALISASI'){
+						$JSON=Storage::put('public/publication/DATASET_JSON/'.$tahun.'/'.$data->id.'.json',json_encode($MAP_DATA));
+
+				}
+			
+
+				foreach ($request->category??[] as $key => $k) {
+	    				# code...
+					if(!DB::table('data_group')->where([
+	    					'id_data'=>$id,
+	    					'id_category'=>$k
+	    				])->first()){
+
+	    				$dh=DB::table('data_group')->insertOrIgnore([
+	    					'id_data'=>$id,
+	    					'id_category'=>$k
+	    				]);
+	    			}
+
+	
+	    		}
+	    		if($request->category){
+	    			DB::table('data_group')->where('id_data',$id)
+    				->whereNotIn('id_category',$request->category??[])->delete();
+    			
+
+	    		}
+
+
+	    		
+	    		// ->delete();
+
+
+
+				return back();
+			}else{
+				return abort(500);
+			}
+
+
 		}
 	}
 

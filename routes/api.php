@@ -46,5 +46,6 @@ Route::prefix('d/{tahun}')->middleware(['bindTahun'])->group(function(){
     Route::get('/get-category-desa/','HomeCtrl@cat_desa')->name('re.cat.cat_desa');
 
 
+
 });
 

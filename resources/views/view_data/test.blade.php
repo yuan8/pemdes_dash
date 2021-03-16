@@ -14,13 +14,22 @@
 
 </div>
 	@include('partials.banner_head')
-
 @stop
 
 
 @section('content')
   <h2 class="text-center text-uppercase " style="padding-bottom: 10px;"><b>{{$data->name}}</b></h2>
-
+  <div class="container">
+  	<div class="row">
+  	<div class="col-md-12">
+	  	<div class="box-solid box btn-ov " style="border: 1px solid #fa090a">
+	  		<div class="box-body">
+	  			<p>{!!nl2br($data->description)!!}</p>
+	  		</div>
+	  	</div>
+	  </div>
+  </div>
+  </div>
 
 <div class="box-solid box">
 	<div class="box-body" style="min-height: 50vh;">

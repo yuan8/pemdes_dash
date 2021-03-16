@@ -104,6 +104,8 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 		Route::post('/data/create/{jenis}','ADMIN\DataCtrl@store')->name('admin.data.store');
 
 		Route::get('/data-set/edit/{id}','ADMIN\DataCtrl@edit')->name('admin.dataset.edit');
+		Route::put('/data-set/update/{id}','ADMIN\DataCtrl@update')->name('admin.dataset.update');
+
 
 
 		Route::get('/data/update/{id}','ADMIN\DataCtrl@edit')->name('admin.data.edit');
@@ -118,6 +120,8 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 
 Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
+    Route::get('/get-descrition-data/{id}','HomeCtrl@get_data_description')->name('api.data.desc');
+
 
 Route::prefix('sso')->group(function(){
 	Route::post('sso-try-attemp','SSOCtrl@attemp')->name('sso.attemp');

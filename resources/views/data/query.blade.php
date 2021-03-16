@@ -62,21 +62,23 @@
              
               <span class="progress-description text-muted">
                    {{$d->description}}
-                  </span>
+               </span>
+               @if(strlen($d->description)>120)
+               	<button class="btn btn-xs btn-info" onclick="showForm('{{route('api.data.desc',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')">More</button>
+               @endif
                    <div class="progress">
               	<div class="progress"></div>
               </div>
                   	@if($d->delivery_type=='AUTOMATION')
 
-                  	@elseif($d->type=='DATASET')
+                  	@elseif($d->type=='FILE')
                   		<div class="btn-group">
                   		<a href="{{url($d->document_path)}}" download="" class="btn btn-success btn-xs">Download</a>
-                  		<a href="{{route('query.data.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>'ddd'])}}" class="btn btn-info btn-xs">Lihat Data</a>
-
-                  		</div>
+                  	</div>
+                  		
 
                   	@endif
-                   - {{Carbon\Carbon::parse($d->updated_at)->format('d F Y h:i')}} - <span class="badge bg-yellow"><b><a class="text-white" href="{{route('query.data.categorycal',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->organization_id,HPV::slugify($d->oranization_name)])}}">{{'@'.$d->oranization_name}}</a></b></span>
+                   {{Carbon\Carbon::parse($d->updated_at)->format('d F Y h:i')}} - <span class="badge bg-yellow"><b><a class="text-white" href="{{route('query.data.categorycal',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->organization_id,HPV::slugify($d->oranization_name)])}}">{{'@'.$d->oranization_name}}</a></b></span>
                   	
             </div>
             <!-- /.info-box-content -->

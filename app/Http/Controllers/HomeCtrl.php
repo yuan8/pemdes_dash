@@ -9,6 +9,22 @@ class HomeCtrl extends Controller
 {
     //
 
+    public function get_data_description($tahun,$id){
+
+        $description='-';
+        $data=DB::table('data')->where([
+            'id'=>$id
+        ])->first();
+        if($data){
+            $description=$data->description;
+            return view('api.data.description')->with('data'=>$description);
+
+        }else{
+            '';
+        }
+
+    }
+
     public function cat_desa($tahun){
         $data=[
             [
