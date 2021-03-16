@@ -105,7 +105,7 @@
 	},1000);
 
 	 function exportExcelTable(dom,title){
-	 	$(dom).floatThead('destroy');
+	 	// $(dom).floatThead('destroy');
        $(dom).tableExport({
         type:'xlsx',
         headings: true,                    
@@ -115,9 +115,9 @@
         trimWhitespace:true                 // (Boolean), style buttons using bootstrap
    	 });
 
-		 $(dom).floatThead({
-					'position':'absolute',
-		});
+		//  $(dom).floatThead({
+		// 			'position':'absolute',
+		// });
 
      }
 </script>
