@@ -1,6 +1,7 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
 <h4>TAMBAH DATA VIEW</h4>
+
 @stop
 
 @section('content')

@@ -23,7 +23,7 @@ class KeuanganDesaCtrl extends Controller
 
 	}
 
-	static function getData($i){
+	static public function getData($tahun,$i){
 			$spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load(storage_path('OKOK.xlsx'));
         	$sheet= $spreadsheet->setActiveSheetIndex($i);
         	$data=[];
@@ -61,19 +61,18 @@ class KeuanganDesaCtrl extends Controller
 	}
 
 
-	public function index(){
+	public function index($tahun){
 		$title=static::getTitle();
 		return view('dash.keuangan_desa.index')->with('title',$title);
 	}
 
 
-	public function show($index){
+	public function show($tahun,$index=0){
 
 		$knop=['URAIAN','TAHUN','WILAYAH PEMERINTAHAN'];
-		$data=static::getData($index);
+		$data=static::getData($tahun,$index);
 
 		$series=[];
-
 		foreach($data['header'] as $ked=>$h){
 		if(!in_array($h,$knop)){
 			$series[$ked]=[
@@ -122,7 +121,7 @@ class KeuanganDesaCtrl extends Controller
 		return view('dash.keuangan_desa.data',[
 			'satuan'=>[
 				[
-            		'satuan'=>'-',
+            		'satuan'=>'',
             		'title'=>'-'
             	],
             	[

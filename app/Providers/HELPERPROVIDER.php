@@ -178,6 +178,11 @@ class HELPERPROVIDER extends ServiceProvider
 	}
 
 	static function route_data($data){
+
+		if($data->delivery_type=='CONTROLLER'){
+			return route($data->table_view,['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>static::slugify($data->name)]);
+		}
+
 		switch ($data->type) {
 			case 'INTEGRASI':
 				return route('get.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>static::slugify($data->name)]);

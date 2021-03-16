@@ -79,7 +79,7 @@
 					<tr>
 						<td>
 							<a href="{{route('query.data.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>HPV::slugify($d->name)])}}" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
-							<a href="" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
+							<a href="{{route('admin.dataset.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
 							<button onclick="showForm('{{route('admin.dataview.form_delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')" class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </buttom>
 
 						</td>

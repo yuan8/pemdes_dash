@@ -17,7 +17,12 @@ class DataViewCtrl extends Controller
             'name'=>'',
             'id'=>0,
             'columns'=>[],
-            'view_'=>[]
+            'view_'=>[
+                2=>[],
+                4=>[],
+                7=>[],
+                8=>[]
+            ]
         ];
         $version=$sheet->getCell('A1')->getCalculatedValue();
 
@@ -25,20 +30,22 @@ class DataViewCtrl extends Controller
         $DATA=[];
         $data=$sheet->toArray();
 
-        foreach ($request->view as $key => $v) {
+        foreach ($request->view??[] as $key => $v) {
             $meta_table['view_'][$key]=array_values((array)$v);
-            # code...
+            
         }
+
+
 
         foreach ($data as $key => $d) {
             if($key==3){
-                for($index=1;$index<count($d);$index+=2){
-                    if(!empty($d[$index])){
+                for($index=2;$index<count($d);$index+=1){
+                    if(!empty($data[$key+2][$index])){
                         $meta_table['columns'][$index]=[
-                        'name'=>$d[$index],
-                        'satuan'=>$data[$key+1][$index+1],
+                        'name'=>$data[$key+2][$index],
+                        'satuan'=>$data[$key+1][$index],
                         'name_column'=>'c_'.$index,
-                        'aggregate_type'=>$data[$key+1][$index],
+                        'aggregate_type'=>$data[$key][$index],
                         ];
                     }
                 }
@@ -46,12 +53,18 @@ class DataViewCtrl extends Controller
 
             }
 
-            if($key>=6){
+            if($key>=7){
                 if(!empty($d[0])){
                     $DX=[
                         'kode_desa'=>$d[0]
                     ];
+
+                    if(!isset($meta_table['level'])){
+                        $meta_table['level']=strlen($d[0]);
+                    }
+
                     $index=0;
+
                     foreach ($meta_table['columns'] as $key => $v) {
                         $DX['data_'.$index]=$d[$key];
                         $DX['data_'.$index.'_satuan']=$v['satuan'];
@@ -68,7 +81,8 @@ class DataViewCtrl extends Controller
         $meta_table['columns']=array_values($meta_table['columns']);
         $MAP_DATA=[
             'meta_table'=>$meta_table,
-            'data'=>$DATA
+            'data'=>$DATA,
+            'level'=>$meta_table['level']
         ];
 
         return $MAP_DATA;
@@ -153,9 +167,10 @@ class DataViewCtrl extends Controller
 			['d.type','=','INTEGRASI']
 		])->first();
 
-
     	if($data){
     		$tablemap=DB::table('master_table_map')->get();
+        // dd($tablemap);
+            
     		return view('admin.dataview.edit')->with(['data'=>$data,'tablemap'=>$tablemap]);
     	}else{
     		return abort('404');

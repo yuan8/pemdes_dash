@@ -1,6 +1,8 @@
 
 @if($type=='FILE')
 <i class="fa fa-file hover-point"></i>
+@elseif($type=='CONTROLLER')
+<i class="fa fa-file hover-point"></i>
 @elseif($type=='DATASET')
 <i class="fa fa-file hover-point"></i>
 @elseif($type=='INFOGRAFIS')

@@ -2,6 +2,9 @@
 @section('content_header')
 <h4>TAMBAH DATASET {{$jenis}}</h4>
 
+@if($jenis=='VISUALISASI')
+	<a href="{{url('dist-web/CONTOH_INPUT.xlsx')}}" download="" class="btn btn-success">Download Themplate Input</a>
+@endif
 @stop
 
 @section('content')

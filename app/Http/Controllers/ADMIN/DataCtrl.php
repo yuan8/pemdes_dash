@@ -8,15 +8,25 @@ use DB;
 use Storage;
 use Carbon\Carbon;
 use App\Http\Controllers\ADMIN\DataViewCtrl;
+use Alert;
+use Auth;
 class DataCtrl extends Controller
 {
 
 	public function index($tahun,Request $request){
 		$where=[
-			['d.type','=','FILE']
+			['d.type','=','FILE'],
+			['d.delivery_type','!=','CONTROLLER'],
+			['d.year','=',$tahun],
+
+
 		];
 		$Orwhere=[
-			['d.type','=','FILE']
+			['d.type','=','FILE'],
+			['d.delivery_type','!=','CONTROLLER'],
+			['d.year','=',$tahun],
+			
+
 		];
 		if($request->jenis){
 			$where[]=['d.delivery_type','=',$request->jenis];
@@ -165,10 +175,12 @@ class DataCtrl extends Controller
 			'created_at'=>Carbon::now(),
 			'updated_at'=>Carbon::now(),
 			'publish_date'=>Carbon::now(),
+			'id_user'=>Auth::User()->id
 
 		]);
 
 		if($data){
+			Alert::success('Berhasil','Data Berhasil Ditambahkan');
 			foreach ($request->category as $key => $k) {
     				# code...
     				DB::table('data_group')->insertOrIgnore([
@@ -188,35 +200,42 @@ class DataCtrl extends Controller
         $sheet=$spreadsheet->setActiveSheetIndex(0);
 		$MAP_DATA=DataViewCtrl::buildJson($request->file,$request);
 
-
 		$path=Storage::put('public/publication/DATASET/'.$tahun,$request->file);
 		$path=Storage::url($path);
 		$ext = pathinfo($path, PATHINFO_EXTENSION);
 		$size=filesize($request->file)??0;
 		$size=$size / 1048576;
+		$data=null;
+
+		if($MAP_DATA){
+
+			$data=DB::table('data')
+			->insertGetId([
+				'name'=>$request->name,
+				'delivery_type'=>'VISUALISASI',
+				'type'=>'FILE',
+				'extension'=>$ext,
+				'description'=>$request->description,
+				'organization_id'=>$request->id_instansi??15,
+				'year'=>$tahun,
+				'size'=>$size,
+				'dashboard'=>(boolean)(($request->dashboard)),
+				'auth'=>(boolean)(($request->dashboard)?$request->auth:0),
+				'keywords'=>($request->keywords)?json_encode($request->keywords,true):'[]',
+				'document_path'=>$path,
+				'created_at'=>Carbon::now(),
+				'updated_at'=>Carbon::now(),
+				'publish_date'=>Carbon::now(),
+				'level_start'=>$MAP_DATA['level'],
+				'id_user'=>Auth::User()->id
 
 
-		$data=DB::table('data')
-		->insertGetId([
-			'name'=>$request->name,
-			'delivery_type'=>'VISUALISASI',
-			'type'=>'FILE',
-			'extension'=>$ext,
-			'description'=>$request->description,
-			'organization_id'=>$request->id_instansi??15,
-			'year'=>$tahun,
-			'size'=>$size,
-			'dashboard'=>(boolean)(($request->dashboard)),
-			'auth'=>(boolean)(($request->dashboard)?$request->auth:0),
-			'keywords'=>($request->keywords)?json_encode($request->keywords,true):'[]',
-			'document_path'=>$path,
-			'created_at'=>Carbon::now(),
-			'updated_at'=>Carbon::now(),
-			'publish_date'=>Carbon::now(),
-
-		]);
+			]);
+		}
 
 		if($data){
+			Alert::success('Berhasil','Data Berhasil Ditambahkan');
+
 			$JSON=Storage::put('public/publication/DATASET_JSON/'.$tahun.'/'.$data.'.json',json_encode($MAP_DATA));
 
 			foreach ($request->category as $key => $k) {
@@ -280,6 +299,41 @@ class DataCtrl extends Controller
 		}
 
 
+	}
+
+	public static function edit($tahun,$id){
+			$U=Auth::User();
+	$data=DB::table('data as d')
+		->leftJoin('data_group as gc','gc.id_data','=','d.id')
+		->leftJoin('category as c','c.id','=','gc.id_category')
+		->leftJoin('category as i','i.id','=','d.organization_id')
+
+		->selectRaw("group_concat(DISTINCT(concat(c.id,'|||',replace(c.type,'_',' '),'|||',c.name)) SEPARATOR '------') as category,concat(i.id,'|||',i.name) as instansi,  d.*")
+		->where(['c.type'=>'FILE',
+			'd.id_user'=>$U->id,
+			'd.year'=>$tahun,
+			'd.id'=>$id])->first();
+
+		if($data){
+			$map_view=[];
+
+			if($data->delivery_type=='VISUALISASI'){
+				$file=file_get_contents(storage_path('app/public/publication/DATASET_JSON/'.$tahun.'/'.$data->id.'.json'));
+				if($file){
+					$file=json_decode($file,true);
+					$map_view=$file['meta_table']['view_'];
+				}else{
+					$map_view=null;
+				}
+			}
+			if($map_view){
+				return view('admin.data.handle.edit_data_set')->with(['data'=>$data,'jenis'=>$data->delivery_type,'map_view'=>$map_view]);
+			}
+			
+
+		}else{
+			return abort(404);
+		}
 	}
 
 	static function kdp($kode,$max){

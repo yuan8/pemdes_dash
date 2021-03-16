@@ -103,6 +103,9 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 		Route::get('/data/create/{jenis}','ADMIN\DataCtrl@create')->name('admin.data.create');
 		Route::post('/data/create/{jenis}','ADMIN\DataCtrl@store')->name('admin.data.store');
 
+		Route::get('/data-set/edit/{id}','ADMIN\DataCtrl@edit')->name('admin.dataset.edit');
+
+
 		Route::get('/data/update/{id}','ADMIN\DataCtrl@edit')->name('admin.data.edit');
 		Route::put('/data/update/{id}','ADMIN\DataCtrl@update')->name('admin.data.update');
 
@@ -122,6 +125,9 @@ Route::prefix('sso')->group(function(){
 
 
 });
+
+	Route::get('/keuangan-desa/', 'DASH\KeuanganDesaCtrl@index')->name('d.keuangan_desa.index');
+	Route::get('/keuangan-desa/data/{index?}', 'DASH\KeuanganDesaCtrl@show')->name('d.keuangan_desa.show');
 
 
 	Route::get('/pindah-tahun', 'HomeCtrl@pindahTahun')->name('p.tahun');
@@ -154,3 +160,5 @@ Route::prefix('sso')->group(function(){
 
 
 });
+
+
