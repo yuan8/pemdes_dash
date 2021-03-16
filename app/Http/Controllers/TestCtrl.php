@@ -399,6 +399,7 @@ class TestCtrl extends Controller
 					$D[$m['name_column']]=[
 						'name'=>(HPV::translate_operator($m['aggregate_type']))[0].' '.$m['name'],
 						'yAxis'=>array_search($m['satuan'], $SATUAN_X),
+						'visible'=>($k>2)?false:true,
 						'data'=>[]
 
 					];

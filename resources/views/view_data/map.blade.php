@@ -24,7 +24,7 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
         },
       
         title: {
-            text: 'KETERISIAN DATA {{$title}} {{strtoupper($pemda)}}',
+            text: '{{$title}} {{strtoupper($pemda)}}',
             style:{
                 color:'#222'
             },
