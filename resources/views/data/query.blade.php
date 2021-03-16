@@ -64,7 +64,7 @@
                    {{$d->description}}
                </span>
                @if(strlen($d->description)>120)
-               	<button class="btn btn-xs btn-info" onclick="showForm('{{route('api.data.desc',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')">More</button>
+               	<button class="btn btn-xs btn-info" style="font-size:8px;" onclick="showForm('{{route('api.data.desc',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')">Deskripsi Lengkap</button>
                @endif
                    <div class="progress">
               	<div class="progress"></div>

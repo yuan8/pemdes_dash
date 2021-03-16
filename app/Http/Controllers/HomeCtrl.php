@@ -17,7 +17,7 @@ class HomeCtrl extends Controller
         ])->first();
         if($data){
             $description=$data->description;
-            return view('api.data.description')->with('data'=>$description);
+            return view('api.data.description')->with(['data'=>$description]);
 
         }else{
             '';
