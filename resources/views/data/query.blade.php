@@ -71,7 +71,7 @@
               </div>
                   	@if($d->delivery_type=='AUTOMATION')
 
-                  	@elseif($d->type=='FILE')
+                  	@elseif($d->type=='FILE' and $d->delivery_type!='CONTROLLER')
                   		<div class="btn-group">
                   		<a href="{{url($d->document_path)}}" download="" class="btn btn-success btn-xs">Download</a>
                   	</div>
