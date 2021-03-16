@@ -113,12 +113,11 @@
         bootstrap: true,  
         ignoreCSS:'.ignore-export',
         trimWhitespace:true                 // (Boolean), style buttons using bootstrap
-    });
+   	 });
 
-	 $(dom).floatThead({
-				'position':'fixed',
-				'top':50
-			});
+		 $(dom).floatThead({
+					'position':'absolute',
+		});
 
      }
 </script>
