@@ -57,7 +57,7 @@
 						</td>
 						<td>
 							<small style="display: none;">{{$c->tipe_data}}</small>
-							<input type="text" required="" class="form-control" name="columns[ID_{{$c->id}}][satuan]" value="{{$c->tipe_data}}">
+							<input type="text" required="" class="form-control" name="columns[ID_{{$c->id}}][tipe_data]" value="{{$c->tipe_data}}">
 
 						</td>
 						<td>
