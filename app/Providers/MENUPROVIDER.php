@@ -143,7 +143,7 @@ class MENUPROVIDER extends ServiceProvider
                  
                  [
                     'text'=>('USERS'),
-                    'href'=>'#',
+                    'href'=>route('admin.users.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-users',
 

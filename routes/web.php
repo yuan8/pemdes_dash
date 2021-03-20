@@ -63,6 +63,11 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 
 	});
 
+	Route::prefix('users')->group(function(){
+		Route::get('/','ADMIN\UserCtrl@index')->name('admin.users.index');
+
+	});
+
 	Route::prefix('data-view')->group(function(){
 		Route::get('/','ADMIN\DataViewCtrl@index')->name('admin.dataview.index');
 		Route::get('form-edit/{id}','ADMIN\DataViewCtrl@edit')->name('admin.dataview.edit');

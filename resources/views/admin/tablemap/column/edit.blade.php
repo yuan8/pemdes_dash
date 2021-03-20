@@ -21,6 +21,9 @@
 					<th>NAMA </th>
 					<th>NAMA KOLOM</th>
 					<th>SATUAN</th>
+					<th>TIPE DATA</th>
+					<th>DEFINISI/KONSEP</th>
+					<th>INTERVAL NILAI</th>
 					<th>TIPE AGREGASI</th>
 					<th>VIEW DATA AUTH</th>
 					<th>VIEW DATA VALIDASI</th>
@@ -50,6 +53,20 @@
 						<td>
 							<small style="display: none;">{{$c->satuan}}</small>
 							<input type="text" required="" class="form-control" name="columns[ID_{{$c->id}}][satuan]" value="{{$c->satuan}}">
+
+						</td>
+						<td>
+							<small style="display: none;">{{$c->tipe_data}}</small>
+							<input type="text" required="" class="form-control" name="columns[ID_{{$c->id}}][satuan]" value="{{$c->tipe_data}}">
+
+						</td>
+						<td>
+							<small style="display: none;">{{$c->definisi}}</small>
+							<textarea type="text" required="" class="form-control" name="columns[ID_{{$c->id}}][definisi]" >{!!$c->definisi!!}</textarea>
+
+						</td>
+						<td>
+							<textarea type="text" required="" class="form-control" name="columns[ID_{{$c->id}}][interval_nilai]" >{!!$c->interval_nilai!!}</textarea>
 
 						</td>
 						<td>
@@ -123,6 +140,19 @@
 			<td>
 				<small style="display: none;"></small>
 				<input type="text" required="" class="form-control" name="columns[NEW_XXXX][satuan]" value="">
+
+			</td>
+			<td>
+				<small style="display: none;"></small>
+				<input type="text" required="" class="form-control" name="columns[NEW_XXXX][tipe_data]" value="">
+
+			</td>
+			<td>
+				<textarea type="text" required="" class="form-control" name="columns[NEW_XXXX]][definisi]" ></textarea>
+
+			</td>
+			<td>
+				<textarea type="text" required="" class="form-control" name="columns[NEW_XXXX]][interval_nilai]" ></textarea>
 
 			</td>
 			<td>
