@@ -41,17 +41,16 @@
 					@endif
 					@foreach($table_meta['columns'] as $d)
 
-					<th colspan="2">{{strtoupper(HPV::translate_operator($d['aggregate_type'])[0].' '.$d['name'])}}</th>
+					<th colspan="2"><p>  <span> <button  data-html="true" data-trigger="fokus" class="btn btn-xs btn-ov"  data-toggle="popover" title="Meta Data"  data-content="<b>Definisi Data</b><br> {{($d['definisi']??'-')}}<br><b>Tipe Data</b><br>{{($d['tipe_data']??'-')}}" ><i class="fa fa-info" ></i></button></span>  {{strtoupper(HPV::translate_operator($d['aggregate_type'])[0].' '.$d['name'])}}</p></th>
+
 					@endforeach
 					
 
 				</tr>
 				<tr>
 					@foreach($table_meta['columns'] as $d)
-
-					<th>NILAI</th>
-					<th>SATUAN</th>
-
+						<th>NILAI</th>
+						<th>SATUAN</th>
 					@endforeach
 				</tr>
 			</thead>
@@ -101,6 +100,7 @@
 			// 	'position':'absolute'
 			// });
 			console.log('float run');
+			 $('[data-toggle="popover"]').popover();
 		</script>
 	</div>
 </div>
