@@ -118,9 +118,9 @@
 	</style>
 
 	<script type="text/javascript">
-		var time_load=800;
+		var time_load=400;
 		$('.hh').each(function(i,d){
-			time_load+=300;
+			time_load+=200;
 			setTimeout(function(){
 				console.log(d);
 				$(d).addClass('animate__animated animate__backInRight');
