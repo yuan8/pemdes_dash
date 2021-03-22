@@ -12,7 +12,7 @@
      	 @if(!isset($hm))
       <p class="text-white" style="margin-bottom:5px; line-height: 14px;"><b>SELAMAT DATANG</b></p>
       @endif
-      <h2 class="text-white" style="margin: 0px; line-height: 20px;"><b>DASHBOARD - {{$GLOBALS['tahun_access']}}</b></h2>
+      <h2 class="text-white" style="margin: 0px; line-height: 20px;"><b>DASHBOARD </b></h2>
       <h3 class="text-white text-uppercase" style="margin: 5px 0px 5px 0px; line-height: 18px;">Bina Pemerintahan Desa</h3>
          @if(!isset($hm))
          <p class="text-white">Dashboard Bina Pemerintahan Desa Menyediakan Data Desa Yang Merupakan Himpunan data terkait potensi, tingkat perkembangan dan data dasar keluarga, dari pengumpulan data di sistem informasi yang berada di Direktorat Jendral Bina Pemerintahan Desa dan diverifikasi terlebih dahulu oleh Organisasi Peragkat Desa yang Berwenang. </p>
