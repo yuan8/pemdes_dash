@@ -294,16 +294,23 @@ background: linear-gradient(183deg, rgba(250,9,10,1) 17%, rgba(252,153,153,1) 88
 	overflow: hidden;
 }
 
+@font-face {
+  font-family: poppins-reguler;
+  src: url(../dist-web/fonts/Poppins/poppins-Regular.ttf);
+}
+
 .box-b-gray .box-body{
 	background: #ddd;
 	border-top:3px solid #ddd ;
 	border-top-right-radius: 10px;
 	border-top-left-radius: 10px; 
 	color:#222;
-
-
 }
 
+
+body{
+	font-family: 'poppins-reguler'!important;
+}
 /*.highcharts-tooltip{
 	max-height: 300px;
 	overflow: scroll;
