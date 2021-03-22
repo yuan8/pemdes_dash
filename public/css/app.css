@@ -296,7 +296,7 @@ background: linear-gradient(183deg, rgba(250,9,10,1) 17%, rgba(252,153,153,1) 88
 
 @font-face {
   font-family: poppins-reguler;
-  src: url(../dist-web/fonts/Poppins/poppins-Regular.ttf);
+  src: url(../dist-web/fonts/Poppins/Poppins-Regular.ttf);
 }
 
 .box-b-gray .box-body{
