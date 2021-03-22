@@ -19,7 +19,7 @@ Route::get('/',function(){
 Route::get('/y','TestCtrl@tt');
 
 Route::get('/test',function(){
-	return scandir(app_path('lomba_desa'));
+	return scandir(public_path('lomba_desa'));
 });
 
 
