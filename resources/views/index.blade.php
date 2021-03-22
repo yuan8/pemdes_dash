@@ -9,13 +9,12 @@
 <div class="container" style="">
 	<div class="col-md-6">
 		<div id="klasifikasi_content" class="animate__animated">
-			
 			<h1 class="text-center"><b>Loading...</b></h1>
 		</div>
 		
-		
 	</div>
-	<div class="col-md-6 animate__animated animate__zoomInRight" style="padding-left:27px;">
+	<div class="col-md-1"></div>
+	<div class="col-md-5 animate__animated animate__zoomInRight" style="padding-left:27px;">
 	<h3 class="text-center "><b>DATA UTAMA </b></h3>
 		<div class="owl-carousel owl-theme  bg-slider-1">
 		  	@foreach($tema as $t)
