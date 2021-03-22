@@ -28,6 +28,7 @@
 
     <script src="{{asset('bower_components/datatables/media/js/jquery.dataTables.js')}}" charset="utf-8"></script>
     <script src="{{asset('bower_components/datatables/media/js/dataTables.bootstrap.js')}}" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="{{asset('bower_components/animate-css/animate.min.css')}}">
 
 
 

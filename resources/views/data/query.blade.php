@@ -49,9 +49,9 @@
 	@endif
 	</div>
 	<div class="col-md-9">
-		<div class="col-md-12">
+		<div class="col-md-12 ">
 				@foreach($data as $d)
-			<div class="info-box btn-ov hover-scale" style="overflow: hidden;">
+			<div class="info-box btn-ov hover-scale hh" style="overflow: hidden;">
             <span class="info-box-icon background-danger-y text-white hover-point">
             	@include('partials.icon-data',['type'=>$d->delivery_type])
             </span>
@@ -111,10 +111,24 @@
 			z-index: 2;
 			top:55px;
 		}
+		.hh{
+			display: none;
+		}
+
 	</style>
 
 	<script type="text/javascript">
+		var time_load=800;
+		$('.hh').each(function(i,d){
+			time_load+=300;
+			setTimeout(function(){
+				console.log(d);
+				$(d).addClass('animate__animated animate__backInRight');
+				
+				$(d).removeClass('hh');
 
+			},time_load);
+		});
 		$(function(){
 			setTimeout(function(){
 			$('.affix, .affix-top').each(function(i,d){
