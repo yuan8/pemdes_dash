@@ -18,6 +18,11 @@ Route::get('/',function(){
 
 Route::get('/y','TestCtrl@tt');
 
+Route::get('/test',function(){
+	return scandir(app_path('lomba_desa'));
+});
+
+
 
 Route::get('/home',function(){
 	return redirect()->route('index');
