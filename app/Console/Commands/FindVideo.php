@@ -41,14 +41,14 @@ class FindVideo extends Command
     {
         //
         $tahun=$this->argument('tahun');
-        $path=public_path('file_lombadesa/'.$tahun.'');
+        $path=public_path('file_lombadesa/'.$tahun.'/');
 
         exec('find '.$path.' -type f \( -iname \*.avi -o -iname \*.mp4 \)', $output, $retval);
 
         $this->info('find '.$path.' -type f \( -iname \*.avi -o -iname \*.mp4 \)');
-        
+
         foreach ($output??[] as $key => $value) {
-            $path_link=str_replace($path, '/file_lombadesa/'.$tahun, $value);
+            $path_link=str_replace($path, '/file_lombadesa/'.$tahun.'/', $value);
 
             $kode_daerah=explode('/', $path_link);
             $kode_daerah=isset($kode_daerah[3])?$kode_daerah[3]:null;
