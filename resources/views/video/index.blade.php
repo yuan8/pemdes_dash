@@ -13,8 +13,8 @@
 	</style>
 	
 </div>
-	<div class="container-fluid" style="background: #222; padding-top: 10px;" >
-		<div style="width:100%; float: left; border-radius: 30px; margin-bottom: 10px; overflow: hidden; border: 1px solid #fa090a ">
+	<div class="container" style="background: #222; padding-top: 10px;" >
+		<div style="width:100%; float: left; border-radius: 30px; margin-bottom: 30px; overflow: hidden; border: 1px solid #fa090a ">
                 <div class="input-group" style="height:20px;">
                   <input type="text" class="form-control input-sm" name="q" placeholder="Cari Data,Tema,Instansi	" style="border: none; height:50px;" value="">
                   <span class="input-group-addon" style="background: #fff; border:none;">
