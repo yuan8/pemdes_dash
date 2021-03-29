@@ -45,6 +45,8 @@ class FindVideo extends Command
 
         exec('find '.$path.' -type f \( -iname \*.avi -o -iname \*.mp4 \)', $output, $retval);
 
+        $this->info('find '.$path.' -type f \( -iname \*.avi -o -iname \*.mp4 \)');
+        
         foreach ($output??[] as $key => $value) {
             $path_link=str_replace($path, '/file_lombadesa/'.$tahun, $value);
 
