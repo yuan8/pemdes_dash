@@ -21,7 +21,7 @@ Route::get('/y','TestCtrl@tt');
 Route::get('v/{tahun}/video/{id}/{slug?}',function($tahun,$id){
 	$data=DB::table('master_video')->find($id);	
 	if($data){
-		$else=DB::table('master_video')->where('id','!=',$id)->limit(4)->get();	
+		$else=DB::table('master_video')->where('id','!=',$id)->limit(4)->orderby(DB::raw("RAND()"))->get();	
 		return view('video.index')->with(['list'=>$else,'data'=>$data]);
 
 	}
