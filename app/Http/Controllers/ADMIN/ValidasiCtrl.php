@@ -55,7 +55,15 @@ class ValidasiCtrl extends Controller
 			$data_index=$request->data;
 		}
 
-		$provinsi=DB::table('provinsi')->where('kdprovinsi','!=','0')->where('kdprovinsi','!=','00')->get();
+		if(Auth::User()->role==2){
+			$provinsi=DB::table('provinsi')
+			->whereIn('kdprovinsi',session('_regional_access')->toArray())
+			->where('kdprovinsi','!=','0')->where('kdprovinsi','!=','00')->get();
+		}else{
+			$provinsi=DB::table('provinsi')
+			->where('kdprovinsi','!=','0')->where('kdprovinsi','!=','00')->get();
+		}
+
 
 		$kodedaerah=[
 			'kdprovinsi'=>null,
@@ -63,7 +71,6 @@ class ValidasiCtrl extends Controller
 			'kdkecamatan'=>null,
 			'kddesa'=>null,
 		];
-
 
 
 		if($request->kdprovinsi){
@@ -119,6 +126,12 @@ class ValidasiCtrl extends Controller
 			}
 		}
 
+
+		if(Auth::User()->role==2){
+			if(!in_array($request->kdprovinsi, session('_regional_access')->toArray())) {
+				return abort(404);
+			}
+		}
 
 
 		$where=[];
@@ -301,8 +314,6 @@ class ValidasiCtrl extends Controller
 	public function validate_bulk($tahun,$idtable,Request $request){
 
 
-		
-
 		$kdd=$request->kd;
 		$level=HPV::level($request->kd);
 		$table=DB::table('master_table_map')->find($idtable);
@@ -416,16 +427,7 @@ class ValidasiCtrl extends Controller
 
          Alert::success('Berhasil', 'Data Berhasil Divalidasi '.HPV::nformat($data_update).' Data');
 
-
 		return back();
-
-
-
-
-
-
-
-
 
 
 	}

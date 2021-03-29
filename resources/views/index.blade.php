@@ -30,7 +30,7 @@
 		  	@endforeach
 
 		</div>
-	<h3 class="text-center "><b>DATA PENDUKUNG</b></h3>
+		<h3 class="text-center "><b>DATA PENDUKUNG</b></h3>
 		
 		<div class="owl-carousel owl-theme bg-slider-2 ">
 	  	@foreach($tema2 as $t)
@@ -45,12 +45,28 @@
 
 		  	@endforeach
 
-			</div>
+		</div>
 	</div>
 </div>
 
-<div class="container" style="">
-	<div class="col-md-8 col-md-offset-2">
+<div class="row" style="background: #222">
+	<div class="col-md-12">
+		<h3 class="text-center text-white "><b>VIDEO PROFIL DESA</b></h3>
+	
+		<div class="owl-carousel owl-c-2 owl-theme">
+	  	@foreach($videos as $e)
+		  	<div class="item text-center" >
+					<a href="{{route('video.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$e->id])}}" class="organisasi-hover" style="width: 100%; max-height: 200px; overflow: hidden; float: left; margin-bottom: 10px; position: relative;">
+						<img class="point-hover" src="{{asset($e->thumbnail)}}" style="width: 100%; ">
+						<div style="position: absolute; bottom:0; left:0; width: 100%; background: linear-gradient(0deg, rgba(34,34,34,1) 68%, rgba(38,37,33,0.7399334733893557) 88%, rgba(45,43,32,0.13209033613445376) 100%); padding: 5px;">
+							<h5 class="text-white"><b>{{$e->judul}}</b></h5>
+						</div>
+					</a>
+		    </div>
+
+		  	@endforeach
+
+		</div>
 		
 	</div>
 </div>
@@ -126,13 +142,33 @@
 
 
 	$(document).ready(function(){
+		$(".owl-c-2").owlCarousel({
+		 		smartSpeed : 450,
+		 		navText:["<div class='nav-btn prev-slide'><i class='fa fa-chevron-left fa-3x text-primary opacity-50'></i></div>","<div class='nav-btn next-slide'><i class='fa fa-chevron-right fa-3x text-primary opacity-50'></i></div>"],
+		 		lazyload : true,
+		 		loop : true,
+		 		items : 4,
+		 		dots : true,
+		 		responsiveClass:true,
+			    responsive:{
+			        0:{
+			            items:1,
+			            nav:true
+			        },
+			        600:{
+			            items:4,
+			            nav:true
+			        },
+			       
+			    }
+			});
 			$(".owl-carousel").owlCarousel({
 		 		smartSpeed : 450,
 		 		navText:["<div class='nav-btn prev-slide'><i class='fa fa-chevron-left fa-3x text-primary opacity-50'></i></div>","<div class='nav-btn next-slide'><i class='fa fa-chevron-right fa-3x text-primary opacity-50'></i></div>"],
 		 		lazyload : true,
 		 		loop : true,
 		 		items : 3,
-		 		dots : false,
+		 		dots : true,
 		 		responsiveClass:true,
 			    responsive:{
 			        0:{
@@ -146,6 +182,8 @@
 			       
 			    }
 			});
+
+			
 
 	});
 </script>

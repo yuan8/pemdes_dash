@@ -33,7 +33,20 @@ class HELPERPROVIDER extends ServiceProvider
 				break;
 		}
 	}
-	static function gen_map($e,$context=1){
+	static function gen_map($e,$context=1,$kdparent=null){
+
+		if($kdparent==null and $context==1){
+			$kdparent='00';
+		}else if($kdparent==null and $context==2){
+			$kdparent='000000000000';
+
+		}
+
+		$level_need=strlen((string)$kdparent.'');
+
+		if($level_need<10){
+			strlen($level_need);
+		}
 
 		$table=(array)DB::table('master_table_map')->where('key_view',$e)->first();
 		if($table){
@@ -41,6 +54,10 @@ class HELPERPROVIDER extends ServiceProvider
 			$row=DB::table('master_column_map')->where('id_ms_table',$table['id']);
 			if(!Auth::check()){
 				$row=$row->where('auth',false);
+			}
+			if($level_need<6){
+				$row=$row->where('aggregate_type','!=','NONE');
+
 			}
 
 			if($context==1){
@@ -60,7 +77,7 @@ class HELPERPROVIDER extends ServiceProvider
 				$tb['columns'][$d->name_column]=(array)$d;
 			}
 
-			foreach ([2,4,7,10] as $key => $l) {
+			foreach ([2,4,6,10] as $key => $l) {
 				foreach ([0,1,2,3] as $d => $ro) {
 					$e=DB::table('master_view_method')
 					->where('level',$l)
@@ -225,6 +242,40 @@ class HELPERPROVIDER extends ServiceProvider
 				# code...
 				break;
 		}
+	}
+
+	public static function role_list(){
+		$data=[
+			1=>'SUPERADMIN',
+			2=>'ADMIN REGIONAL',
+			3=>'ADMIN DAERAH',
+
+
+		];
+		return $data;
+	}
+
+	public static function role_user($role=null){
+		$data=[];
+		switch ($role) {
+			case 1:
+			$data['text']='SUPERADMIN';
+
+				# code...
+				break;
+			case 2:
+			$data['text']='ADMIN REGIONAL';
+
+				# code...
+				break;
+			
+			default:
+				# code...
+				break;
+		}
+
+		return $data;
+
 	}
 
 	public static function slugify($text)
@@ -602,10 +653,24 @@ class HELPERPROVIDER extends ServiceProvider
 		return [];
 	}
 
-	static function level($kodepemda){
-		switch (strlen($kodepemda)) {
+	static function level($kodepemda,$levelbind=null){
+
+		if($levelbind){
+			$kodepemda='';
+			for($i=0;$i<$levelbind;$i++){
+				$kodepemda.='0';
+			}
+		}
+
+		$cc=strlen((string)$kodepemda);
+		if($cc==1){
+			$cc=0;
+		}
+
+
+		switch ($cc) {
 			case 0:
-				return [
+				$data= [
 					'table'=>'provinsi',
 					'table_name'=>'nmprovinsi',
 					'table_kode'=>'kdprovinsi',
@@ -623,7 +688,7 @@ class HELPERPROVIDER extends ServiceProvider
 				break;
 
 			case 2:
-				return [
+				$data=  [
 					'table'=>'kabkota',
 					'table_name'=>'nmkabkota',
 					'table_kode'=>'kdkabkota',
@@ -642,10 +707,10 @@ class HELPERPROVIDER extends ServiceProvider
 				# code...
 				break;
 			case 4:
-				return [
+				$data= [
 					'table'=>'kecamatan',
 					'table_name'=>'nmkecamatan',
-					'table_kode'=>'kdkecamatan_permen',
+					'table_kode'=>'kdkecamatan',
 					'level'=>'Kecamatan',
 					'count'=>6,
 					'kode'=>$kodepemda,
@@ -660,11 +725,11 @@ class HELPERPROVIDER extends ServiceProvider
 				];
 				# code...
 				break;
-			case 7:
-				return [
+			case 6:
+				$data=  [
 					'table'=>'master_desa',
 					'table_name'=>'desa',
-					'table_kode'=>'kode_bps',
+					'table_kode'=>'kode_dagri',
 					'level'=>'Desa',
 					'count'=>10,
 					'kode'=>$kodepemda,
@@ -685,6 +750,14 @@ class HELPERPROVIDER extends ServiceProvider
 				# code...
 				break;
 		}
+
+		if($data){
+			if($levelbind){
+				$data['kode']='';
+			}
+		}
+
+		return $data;
 	}
 	
 

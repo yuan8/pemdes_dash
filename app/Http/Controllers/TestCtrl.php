@@ -22,7 +22,11 @@ class TestCtrl extends Controller
 
 
 
-	public function tt(){
+	public function tt(Request $request){
+		(session(['_regional_access'=>[11,22]]));
+		// dd(session('_regional_access'));
+		dd($request->session()->key());
+
 		$x=DB::connection('mysql')->table('dash_potensi_iklim_tanah_erosi')->first();
 
 		foreach($x as $k=>$v){
@@ -232,7 +236,9 @@ class TestCtrl extends Controller
 		}
 
 
-		$meta_table=HPV::gen_map($meta_data->table_view,1);
+		$meta_table=HPV::gen_map($meta_data->table_view,1,$request->kdparent);
+
+		// dd($meta_table);
 
 		if(!$meta_table){
 			return abort(404);
@@ -241,9 +247,25 @@ class TestCtrl extends Controller
 
 		$table=$meta_table['table'];
 
+		$aggregate=true;
+
+		if($request->kdparent){
+			$level=HPV::level($request->kdparent??null);
+		}else{
+			if($meta_table['start_level']??0!=0){
+				$level=HPV::level($request->kdparent,$meta_table['start_level']);
+			}else{
+				$level=HPV::level($request->kdparent??0);
+			}			
+		}
 
 
-		$level=HPV::level($request->kdparent??null);
+		if($level['count']>=9){
+			$aggregate=false;
+			
+		}
+
+
 
 		if($meta_table and $level){
 			if($request->kdparent){
@@ -253,18 +275,25 @@ class TestCtrl extends Controller
 				$nama_pemda='Per Provinsi';
 			}
 
-
-
-
 			$select= 
 			// "cfm.id as id_cmf, ".
-			"'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_bps)) from master_desa as dds where left(dds.kode_bps,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
+			"'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_dagri)) from master_desa as dds where left(dds.kode_dagri,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
 
-			foreach (array_values($meta_table['columns']) as $key => $value) {
+			if($aggregate){
+					foreach (array_values($meta_table['columns']) as $key => $value) {
 				$OP=HPV::translate_operator($value['aggregate_type']);
 				$select.=" , ".$OP[1]." data.".$value['name_column'].$OP[2].' as data_'.$key." , '".$value['satuan']."' as data_".$key."_satuan";
 
+				}
+			}else{
+				foreach (array_values($meta_table['columns']) as $key => $value) {
+				$OP=HPV::translate_operator($value['aggregate_type']);
+				$select.=" , data.".$value['name_column'].' as data_'.$key." , '".$value['satuan']."' as data_".$key."_satuan";
+
+				}
 			}
+
+
 
 
 
@@ -275,30 +304,23 @@ class TestCtrl extends Controller
 		        return 1;
 		    });
 
-
-		    DB::enableQueryLog();
 			$x=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
 
-			// ->leftjoin('validasi_confirm as cfm',[
-			// 	[DB::RAW("LEFT(cfm.kode_desa,".$level['count'].")"),'=',$level['table_kode']],
-			// 	['cfm.table','=',DB::raw("'".$table."'")],
-			// 	['cfm.tahun','=',DB::raw($tahun)]
-			// ])
-			->leftjoin(DB::raw("(select * from ".$meta_table['table']." as dxdx where dxdx.kode_desa like '".($level['kode']?$level['kode'].'%':"%")."') as data"),
+		
+			->join(DB::raw("(select * from ".$meta_table['table']." as dxdx)  as data"),
 				[
 				[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]])
 			->selectRaw($select)
 			->groupBy(('kd.'.$level['table_kode']) )
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
 			->orderBy('kd.'.$level['table_kode'], 'asc')
+			// ->toSql();
+			// ->tosql();
+			// return $x;
 			->paginate($paginate)->toArray();
-			// $dd=(array)(DB::getQueryLog());
-			// return ($dd[1]['query']);
-
-
-
 
 			$data=$x['data'];
+
 
 			if($paginate<$x['total']){
 
@@ -309,29 +331,24 @@ class TestCtrl extends Controller
 				    });
 
 					$y=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
-
-					->leftjoin('validasi_confirm as cfm',[
-						[DB::RAW("LEFT(cfm.kode_desa,".$level['count'].")"),'=',$level['table_kode']],
-						['cfm.table','=',DB::raw("'".$table."'")],
-						['cfm.tahun','=',DB::raw($tahun)]
-					])
-					->leftjoin(DB::raw("(select * from ".$meta_table['table']." as dxdx where dxdx.kode_desa like '".($level['kode']?$level['kode'].'%':"%")."') as data"),
-						[
-						[DB::raw("(data.kode_desa)"),'=','cfm.kode_desa'],['data.tahun','=',DB::raw($tahun)]])
+		
+					->join(DB::raw("(select * from ".$meta_table['table']." as dxdx)  as data"),
+					[
+					[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]])
 					->selectRaw($select)
 					->groupBy(('kd.'.$level['table_kode']) )
 					->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
 					->orderBy('kd.'.$level['table_kode'], 'asc')
-					->paginate($paginate)->toArray();
+				
+				->paginate($paginate)->toArray();
 					$data=array_merge($data,$y['data']);
 				}
 			}
-			
-			// return ($data);
 
 			$data_type=[
 				'data'=>$data
 			];
+
 
 
 			$data_type['series']=static::data_series($meta_table['key_view'],$data,$meta_table,$level,$id);
@@ -339,10 +356,8 @@ class TestCtrl extends Controller
 
 			$data_type['data_sort']=static::rekap_data($data,$meta_table,4);
 
-
-
-
 			$meta_entity=isset($meta_table['view_'][$level['count']])?$meta_table['view_'][$level['count']]:[];
+
 			$datenow=Carbon::now()->format('d F Y');
 			
 			$id_c='chart_id_'.rand(0,100).'_'.date('Ymdhi');
@@ -384,7 +399,7 @@ class TestCtrl extends Controller
 		$D=[];
 
 		$satuan=[];
-
+		$SATUAN_X=[];
 		foreach($data as $d){
 			$d=(Array)$d;
 			foreach (array_values($map['columns']) as $k => $m) {
@@ -464,7 +479,7 @@ class TestCtrl extends Controller
 				$d['jumlah_desa']=1;
 			}
 			if(!isset($d['jumlah_data_desa'])){
-				$d['jumlah_data_desa']=$d['id_cmf']?1:0;
+				$d['jumlah_data_desa']=1;
 			}
 
 			$data_map=[];

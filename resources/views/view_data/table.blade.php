@@ -5,12 +5,10 @@
 <div class="box box-primary">
 	 <div class="box-header with-border">
     <div class="btn-group" style="margin-bottom: 5px;">
-					@if(!isset($only1level))
-     	     
+		@if(!isset($only1level))
 	      <button type="button" onclick="exportExcelTable('#table-{{$id_dom}}','{{isset($title)?$title:'export'}}');" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Excel</button>
 	      @endif
     </div>
-    
   </div>
 	<div class="box-body table-responsive"   >
 		<table class="table table-bordered sticky-table" id="table-{{$id_dom}}" >
@@ -18,7 +16,7 @@
 				<tr>
 					@if($level!=10)
 						@if(!isset($only1level))
-							<th></th>
+							<th class="no-export"></th>
 						@endif
 					@endif
 
@@ -30,7 +28,7 @@
 				<tr>
 					@if($level!=10)
 						@if(!isset($only1level))
-							<th rowspan="2">AKSI</th>
+							<th rowspan="2" class="no-export">AKSI</th>
 						@endif
 					@endif
 						<th rowspan="2">KODEDAERAH</th>
@@ -41,7 +39,7 @@
 					@endif
 					@foreach($table_meta['columns'] as $d)
 
-					<th colspan="2"><p>  <span> <button  data-html="true" data-trigger="fokus" class="btn btn-xs btn-ov"  data-toggle="popover" title="Meta Data"  data-content="<b>Definisi Data</b><br> {{($d['definisi']??'-')}}<br><b>Tipe Data</b><br>{{($d['tipe_data']??'-')}}" ><i class="fa fa-info" ></i></button></span>  {{strtoupper(HPV::translate_operator($d['aggregate_type'])[0].' '.$d['name'])}}</p></th>
+					<th colspan="2" ><p>  <span> <button  data-html="true" data-trigger="fokus" class="btn btn-xs btn-ov"  data-toggle="popover" title="Meta Data"  data-content="<b>Definisi Data</b><br> {{($d['definisi']??'-')}}<br><b>Tipe Data</b><br>{{($d['tipe_data']??'-')}}" ><i class="fa fa-info" ></i></button></span>  {{strtoupper(HPV::translate_operator($d['aggregate_type'])[0].' '.$d['name'])}}</p></th>
 
 					@endforeach
 					
@@ -63,7 +61,7 @@
 						@if($level!=10)
 					@if(!isset($only1level))
 
-							<td scope="row">
+							<td scope="row" class="no-export">
 								@if(isset($dataset))
 								<button onclick="get_data('#dom_l_{{$level_meta['count']}}','{{route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$id_dataset,'kdparent'=>$d['id']])}}')" type="button" class="btn btn-primary btn-xs background-blue"><i class="fa fa-eye"></i> Detail</button>
 								@else

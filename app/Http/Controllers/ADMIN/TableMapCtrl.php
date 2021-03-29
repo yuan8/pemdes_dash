@@ -40,7 +40,7 @@ class TableMapCtrl extends Controller
         ->first();
         if($data){
             $view=[];
-            foreach([2=>'PROVINSI',4=>'KOTA/KAB',7=>'KECEMATAN',10=>"DESA/KELURAHAN"] as $kl=>$l){
+            foreach([2=>'PROVINSI',4=>'KOTA/KAB',6=>'KECEMATAN',10=>"DESA/KELURAHAN"] as $kl=>$l){
                 $view[$kl]=[
                     'head'=>$l,
                     'map'=>[]
@@ -59,6 +59,7 @@ class TableMapCtrl extends Controller
 
                 }                
             }
+
 
 
             return view('admin.tablemap.view.edit')->with(['data'=>$data,'view'=>$view]);

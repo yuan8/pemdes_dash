@@ -36,7 +36,7 @@
 	<div id="def"></div>
 	<div id="dom_l_2"></div>
 	<div id="dom_l_4"></div>
-	<div id="dom_l_7"></div>
+	<div id="dom_l_6"></div>
 	<div id="dom_l_10"></div>
 
 
@@ -108,7 +108,8 @@
 	 	// $(dom).floatThead('destroy');
        $(dom).tableExport({
         type:'xlsx',
-        headings: true,                    
+        headings: true, 
+        exclude:".no-export",
         fileName: title,  // (id, String), filename for the downloaded file
         bootstrap: true,  
         ignoreCSS:'.ignore-export',

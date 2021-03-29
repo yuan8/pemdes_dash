@@ -90,8 +90,13 @@ class HomeCtrl extends Controller
     	$tema=DB::table('category')->whereIn('type',['TEMA_DATA_UTAMA'])->where('id_parent','=',null)->get();
     	
     	$tema2=DB::table('category')->whereIn('type',['TEMA_DATA_PENDUKUNG'])->where('id_parent','=',null)->get();
+
+        $video=DB::table('master_video')
+        ->where('tahun',$tahun)
+        ->limit(4)->orderBy('created_at','desc')->get();
+
     	
-    	return view('index')->with(['tema'=>$tema,'tema2'=>$tema2]);
+    	return view('index')->with(['tema'=>$tema,'tema2'=>$tema2,'videos'=>$video]);
 
     }
 

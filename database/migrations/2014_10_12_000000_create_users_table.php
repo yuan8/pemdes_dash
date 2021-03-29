@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('api_token')->nullable();
             $table->integer('kode_daerah')->nullable();
             $table->integer('role')->default(1);
+            $table->booelan('is_active')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

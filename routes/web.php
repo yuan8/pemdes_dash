@@ -18,8 +18,84 @@ Route::get('/',function(){
 
 Route::get('/y','TestCtrl@tt');
 
+Route::get('v/{tahun}/video/{id}/{slug?}',function($tahun,$id){
+	$data=DB::table('master_video')->find($id);	
+	if($data){
+		$else=DB::table('master_video')->where('id','!=',$id)->limit(4)->get();	
+		return view('video.index')->with(['list'=>$else,'data'=>$data]);
+
+	}
+})->middleware('bindTahun')->name('video.detail');
+
 Route::get('/test',function(){
-	return scandir(public_path('lomba_desa'));
+	dd(session()->all());
+	// $arr=["sipd_14",
+	// 	"sipd_15",
+	// 	"sipd_16",
+	// 	"sipd_18",
+	// 	"sipd_19",
+	// 	"sipd_20",
+	// 	"sipd_21",
+	// 		"sipd_22",
+	// 		"sipd_23",
+	// 		"sipd_24",
+	// 		"sipd_25",
+	// 		"sipd_26",
+	// 		"sipd_27",
+	// 		"sipd_28",
+	// 		"sipd_29",
+	// 		"sipd_71",
+	// 		"sipd_72",
+	// 		"sipd_73",
+	// 		"sipd_74",
+	// 		"sipd_75",
+	// 		"sipd_76",
+	// 		"sipd_77",
+	// 		"sipd_78",
+	// 		"sipd_79",
+	// 		"sipd_80",
+	// 		"sipd_81",
+	// 		"sipd_82",
+	// 		"sipd_83",
+	// 		"sipd_84",
+	// 		"sipd_85",
+	// 		"sipd_86",
+	// 		"sipd_87",
+	// 		"sipd_88",
+	// 		"sipd_89",
+	// 		"sipd_90"];
+
+	// 		$data=[];
+	// 	foreach ($arr as $key => $value) {
+	// 		$dr=DB::connection($value)->table('public.r_program as p')
+	// 		->leftJoin('public.r_daerah as d','d.id_daerah','=','p.id_daerah')
+	// 		->groupBy(['p.id_daerah','d.kode_ddn_2'])
+	// 		->selectRaw("p.id_daerah as id ,max(d.nama_daerah) as nama_daerah,max(d.kode_ddn) as kodedaerah,(kode_ddn_2) as kodedaerah2")->orderBy('d.kode_ddn_2','asc')->get();
+	// 		$data[$value]=$dr;
+	// 	}
+
+	// 	return view('aaa')->with('data',$data);
+
+	// 	return $data;
+	// dd('find -O3 -L '.public_path('file_lombadesa').'/ -name "*.doc"');
+	exec('find '.public_path('file_lombadesa').'/ -name "*.doc"',$output,$rev);
+	dd($output);
+
+	$data= scandir(public_path('file_lombadesa'));
+	foreach ($data as $key => $value) {
+		if(is_numeric($value)){
+			$folders= scandir(public_path('file_lombadesa/'.$value));
+			foreach ($folders as $keydesa=> $desa) {
+				# code...
+				if(is_numeric($desa)){
+					$kodedesa=scandir(public_path('file_lombadesa/'.$value.'/'.$desa));
+					dd($kodedesa);
+					
+				}
+			}
+			
+		}
+	}
 });
 
 
@@ -70,6 +146,12 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 
 	Route::prefix('users')->group(function(){
 		Route::get('/','ADMIN\UserCtrl@index')->name('admin.users.index');
+		Route::get('/detail/{id}','ADMIN\UserCtrl@show')->name('admin.users.detail');
+		Route::get('/add/','ADMIN\UserCtrl@add')->name('admin.users.add');
+		Route::post('/store/','ADMIN\UserCtrl@store')->name('admin.users.store');
+
+
+
 
 	});
 

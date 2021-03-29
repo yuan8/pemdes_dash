@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
          RealRashid\SweetAlert\SweetAlertServiceProvider::class,
          Unisharp\Ckeditor\ServiceProvider::class,
+         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
 
     ],
 
@@ -232,6 +233,7 @@ return [
         'HPV' => App\Providers\HELPERPROVIDER::class,
         'MyHash' => App\Providers\PassProvider::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
+        'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
 
 
 
