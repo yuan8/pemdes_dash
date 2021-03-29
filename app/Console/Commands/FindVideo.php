@@ -96,7 +96,9 @@ class FindVideo extends Command
             ],$data);
 
         }
-        // $this->info($output);
+        $this->info('success...');
+
+        dd($output);
 
 
 
