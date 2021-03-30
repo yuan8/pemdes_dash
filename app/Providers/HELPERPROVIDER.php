@@ -44,9 +44,7 @@ class HELPERPROVIDER extends ServiceProvider
 
 		$level_need=strlen((string)$kdparent.'');
 
-		if($level_need<10){
-			strlen($level_need);
-		}
+
 
 		$table=(array)DB::table('master_table_map')->where('key_view',$e)->first();
 		if($table){
@@ -55,7 +53,7 @@ class HELPERPROVIDER extends ServiceProvider
 			if(!Auth::check()){
 				$row=$row->where('auth',false);
 			}
-			if($level_need<6){
+			if(($table['start_level']<6 ) and ($level_need<6)){
 				$row=$row->where('aggregate_type','!=','NONE');
 
 			}
@@ -654,17 +652,15 @@ class HELPERPROVIDER extends ServiceProvider
 	}
 
 	static function level($kodepemda,$levelbind=null){
-
+		$cc=strlen($kodepemda);
 		if($levelbind){
-			$kodepemda='';
-			for($i=0;$i<$levelbind;$i++){
-				$kodepemda.='0';
-			}
+			$cc=strlen($levelbind);
 		}
 
-		$cc=strlen((string)$kodepemda);
-		if($cc==1){
+		if($cc<2){
 			$cc=0;
+		}else if($cc>6){
+			$cc=6;
 		}
 
 
@@ -729,7 +725,7 @@ class HELPERPROVIDER extends ServiceProvider
 				$data=  [
 					'table'=>'master_desa',
 					'table_name'=>'desa',
-					'table_kode'=>'kode_dagri',
+					'table_kode'=>'kode_bps',
 					'level'=>'Desa',
 					'count'=>10,
 					'kode'=>$kodepemda,
@@ -751,11 +747,7 @@ class HELPERPROVIDER extends ServiceProvider
 				break;
 		}
 
-		if($data){
-			if($levelbind){
-				$data['kode']='';
-			}
-		}
+		
 
 		return $data;
 	}

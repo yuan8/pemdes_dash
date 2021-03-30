@@ -25,66 +25,66 @@ class TestCtrl extends Controller
 	public function tt(Request $request){
 
 
-		$tt=DB::select("SELECT TABLE_NAME as name
-		FROM INFORMATION_SCHEMA.TABLES
-		WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA='dash_pemdes_real' and TABLE_NAME like 'dash_%'");
+		// $tt=DB::select("SELECT TABLE_NAME as name
+		// FROM INFORMATION_SCHEMA.TABLES
+		// WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA='dash_pemdes_real' and TABLE_NAME like 'dash_%'");
 
-				// $cols=DB::table('master_column_map')->
-				// where('id_ms_table')->groupby('id_ms_table')
-				// ->select('id_ms_table')->count();
+		// 		// $cols=DB::table('master_column_map')->
+		// 		// where('id_ms_table')->groupby('id_ms_table')
+		// 		// ->select('id_ms_table')->count();
 
 
-				foreach($tt as $t){
-					$g=DB::table('data')->where([
+		// 		foreach($tt as $t){
+		// 			$g=DB::table('data')->where([
 
-						['table_view','=',$t->name
-							],
-						['delivery_type','=','AUTOMATION']
-						]
-					)->first();
+		// 				['table_view','=',$t->name
+		// 					],
+		// 				['delivery_type','=','AUTOMATION']
+		// 				]
+		// 			)->first();
 					
 
 
-					if($g){
+		// 			if($g){
 						
-					}else{
+		// 			}else{
 
 
-						$g=DB::table('data')->insert([
-							'table_view'=>$t->name,
-							'name'=>strtoupper(str_replace('_', ' ', str_replace('dash_', 'Data ', $t->name))),
-							'type'=>'INTEGRASI',
-							'delivery_type'=>'AUTOMATION',
-							'organization_id'=>15,
-							'dashboard'=>1,
-							'id_user'=>1
-							]
-						);
+		// 				$g=DB::table('data')->insert([
+		// 					'table_view'=>$t->name,
+		// 					'name'=>strtoupper(str_replace('_', ' ', str_replace('dash_', 'Data ', $t->name))),
+		// 					'type'=>'INTEGRASI',
+		// 					'delivery_type'=>'AUTOMATION',
+		// 					'organization_id'=>15,
+		// 					'dashboard'=>1,
+		// 					'id_user'=>1
+		// 					]
+		// 				);
 							
-					}
-				}
+		// 			}
+		// 		}
 
-				dd('cc');
+		// 		dd('cc');
 
-		// (session(['_regional_access'=>[11,22]]));
-		// dd(session('_regional_access'));
-		// dd($request->session()->key());
+		// // (session(['_regional_access'=>[11,22]]));
+		// // dd(session('_regional_access'));
+		// // dd($request->session()->key());
 
 
-		$x=DB::connection('mysql')->table('dash_potensi_iklim_tanah_erosi')->first();
+		$x=DB::connection('mysql')->table('dash_perkembangan_lembaga_kemasyarakatan')->first();
 
 		foreach($x as $k=>$v){
 			if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
 				DB::table('master_column_map')->insertOrIgnore([
 				'name_column'=>$k,
-				'aggregate_type'=>'SUM',
+				'aggregate_type'=>'NONE',
 				'name'=>strtoupper(str_replace('_', ' ', $k)),
-				'satuan'=>'Km2',
+				'satuan'=>'Jiwa',
 				'auth'=>0,
 				'dashboard'=>1,
 				'validate'=>1,
 				'id_user'=>1,
-				'id_ms_table'=>10
+				'id_ms_table'=>94
 				
 			]);
 			}
@@ -248,15 +248,30 @@ class TestCtrl extends Controller
 
 	
 		if($data){
+			$table_view=DB::table('master_table_map')->where('key_view',$data->table_view)->first();
+			if($table_view){
 
-			if(!Auth::check()){
-				if($data->auth!=false){
-					$GLOBALS['ab_message']=['title'=>$data->name];
-					return abort('401');
+				if(!Auth::check()){
+					if($data->auth!=false){
+						$GLOBALS['ab_message']=['title'=>$data->name];
+						return abort('401');
+					}
 				}
+
+				$provinsi=DB::table('provinsi')->where('kdprovinsi','>',0)->get();
+
+				if($table_view->start_level>1000){
+					return view('view_data.desa')->with(['data'=>$data,'hm'=>true,'provinsi'=>$provinsi]);
+				}else{
+					return view('view_data.test')->with(['data'=>$data,'hm'=>true]);
+
+				}
+
+
+
 			}
 
-			return view('view_data.test')->with(['data'=>$data,'hm'=>true]);
+
 
 		}else{
 			$GLOBALS['ab_message']=['title'=>$data->name];
@@ -281,7 +296,6 @@ class TestCtrl extends Controller
 
 
 		$meta_table=HPV::gen_map($meta_data->table_view,1,$request->kdparent);
-
 		// dd($meta_table);
 
 		if(!$meta_table){
@@ -293,15 +307,15 @@ class TestCtrl extends Controller
 
 		$aggregate=true;
 
-		if($request->kdparent){
-			$level=HPV::level($request->kdparent??null);
+	
+		if($meta_table['start_level']>1000){
+			$level=HPV::level($request->kdparent,$meta_table['start_level']);
+			$level2=HPV::level($request->kdparent??0);
 		}else{
-			if($meta_table['start_level']??0!=0){
-				$level=HPV::level($request->kdparent,$meta_table['start_level']);
-			}else{
-				$level=HPV::level($request->kdparent??0);
-			}			
-		}
+			$level=HPV::level($request->kdparent??0);
+			$level2=$level;
+		}			
+
 
 
 		if($level['count']>=9){
@@ -311,10 +325,11 @@ class TestCtrl extends Controller
 
 
 
+
 		if($meta_table and $level){
 			if($request->kdparent){
-			$nama_pemda=((array)DB::table($level['parent']['table'])
-			->selectRaw($level['parent']['table_name'].' as name')->where($level['parent']['table_kode'],$request->kdparent)->first())['name'];
+			$nama_pemda=((array)DB::table($level2['parent']['table'])
+			->selectRaw($level2['parent']['table_name'].' as name')->where($level2['parent']['table_kode'],$request->kdparent)->first())['name'];
 			}else{
 				$nama_pemda='Per Provinsi';
 			}
@@ -343,10 +358,13 @@ class TestCtrl extends Controller
 
 			$data=[];
 
-			$paginate=200;
-		    Paginator::currentPageResolver(function ()  {
+			$paginate=$meta_table['start_level']>1000000000000?50:200;
+			if($meta_table['start_level']>1000000000000000){
+				Paginator::currentPageResolver(function ()  {
 		        return 1;
-		    });
+		   	 });
+			}
+		    
 
 			$x=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
 
@@ -359,39 +377,54 @@ class TestCtrl extends Controller
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
 			->orderBy('kd.'.$level['table_kode'], 'asc')
 			// ->toSql();
-			// ->tosql();
 			// return $x;
-			->paginate($paginate)->toArray();
+			// ->paginate($paginate)->toArray();
+
+			// dd($x);
 
 			$data=$x['data'];
+			if($meta_table['start_level']<1000000000000){
+				if($paginate<$x['total']){
 
+					for ($p=2;$p<=$x['last_page'];$p++) {
+						$_REQUEST['page']=$p;
+						 Paginator::currentPageResolver(function () use ($p)  {
+					        return $p;
+					    });
 
-			if($paginate<$x['total']){
-
-				for ($p=2;$p<=$x['last_page'];$p++) {
-					$_REQUEST['page']=$p;
-					 Paginator::currentPageResolver(function () use ($p)  {
-				        return $p;
-				    });
-
-					$y=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
-		
-					->join(DB::raw("(select * from ".$meta_table['table']." as dxdx)  as data"),
-					[
-					[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]])
-					->selectRaw($select)
-					->groupBy(('kd.'.$level['table_kode']) )
-					->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
-					->orderBy('kd.'.$level['table_kode'], 'asc')
-				
-				->paginate($paginate)->toArray();
-					$data=array_merge($data,$y['data']);
+						$y=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
+			
+						->join(DB::raw("(select * from ".$meta_table['table']." as dxdx)  as data"),
+						[
+						[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]])
+						->selectRaw($select)
+						->groupBy(('kd.'.$level['table_kode']) )
+						->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
+						->orderBy('kd.'.$level['table_kode'], 'asc')
+					
+					->paginate($paginate)->toArray();
+						$data=array_merge($data,$y['data']);
+					}
 				}
 			}
 
 			$data_type=[
 				'data'=>$data
 			];
+
+			if($meta_table['start_level']>1000){
+				return '<div class="table-responsive ch col-md-12">'.view('view_data.table')->with([
+						'data_type'=>$data_type,
+						'title'=>strtoupper($meta_data->name),
+						'subtitle'=>'Capaian Tahun '.($tahun).' - '.$datenow,
+						'level'=>$level['count'],
+						'level_meta'=>$level,
+						'kdparent'=>$level['kode'],
+						'pemda'=>$nama_pemda,
+						'table_meta'=>$meta_table,
+						'tahun_capaian'=>$tahun,
+					])->render().'</div>';
+			}
 
 
 
