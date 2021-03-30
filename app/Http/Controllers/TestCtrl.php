@@ -35,29 +35,32 @@ class TestCtrl extends Controller
 
 
 				foreach($tt as $t){
-					$g=DB::table('master_table_map')->where([
-						['name','=',strtoupper(str_replace('_', ' ', $t->name))
-							]	
+					$g=DB::table('data')->where([
+
+						['table_view','=',$t->name
+							],
+						['delivery_type','=','AUTOMATION']
 						]
 					)->first();
+					
+
 
 					if($g){
-						// $cols=DB::table('master_column_map')->
-						// where('id_ms_table',$g->id)->groupby('id_ms_table')
-						// ->select('id_ms_table')->count();
-
-						// if($cols==0){
-						// 	DB::table('master_table_map')->where('id',$g->id)->delete();
-						// }
-						// dd($t->name, 'dash',strpos($t->name, 'dash'));
+						
 					}else{
-							$g=DB::table('master_table_map')->insert(
-								['name'=>strtoupper(str_replace('_', ' ', $t->name)),
-								'table'=>$t->name,
-								'key_view'=>$t->name,
-								'id_user'=>1,
-								'edit_daerah'=>1,
-							]);
+
+
+						$g=DB::table('data')->insert([
+							'table_view'=>$t->name,
+							'name'=>strtoupper(str_replace('_', ' ', str_replace('dash_', 'Data ', $t->name))),
+							'type'=>'INTEGRASI',
+							'delivery_type'=>'AUTOMATION',
+							'organization_id'=>15,
+							'dashboard'=>1,
+							'id_user'=>1
+							]
+						);
+							
 					}
 				}
 

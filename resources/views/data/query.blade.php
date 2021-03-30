@@ -89,7 +89,9 @@
 		@if(count($data)<1)
 			<h5 class="text-center"><b>BELUM TERDAPAT DATA</b></h5>
 		@endif
+		<div class="hh">
 		{{$data->links()}}
+		</div>
 
 		</div>
 
@@ -118,9 +120,9 @@
 	</style>
 
 	<script type="text/javascript">
-		var time_load=400;
+		var time_load=300;
 		$('.hh').each(function(i,d){
-			time_load+=200;
+			time_load+=50;
 			setTimeout(function(){
 				console.log(d);
 				$(d).addClass('animate__animated animate__backInRight');
