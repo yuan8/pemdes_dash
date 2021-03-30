@@ -57,16 +57,16 @@
 						</td>
 						<td>
 							<small style="display: none;">{{$c->tipe_data}}</small>
-							<input type="text" required="" class="form-control" name="columns[ID_{{$c->id}}][tipe_data]" value="{{$c->tipe_data}}">
+							<input type="text"  class="form-control" name="columns[ID_{{$c->id}}][tipe_data]" value="{{$c->tipe_data}}">
 
 						</td>
 						<td>
 							<small style="display: none;">{{$c->definisi}}</small>
-							<textarea type="text" required="" class="form-control" name="columns[ID_{{$c->id}}][definisi]" >{!!$c->definisi!!}</textarea>
+							<textarea type="text" class="form-control" name="columns[ID_{{$c->id}}][definisi]" >{!!$c->definisi!!}</textarea>
 
 						</td>
 						<td>
-							<textarea style="display: none;" type="hidden" required="" class="form-control" name="columns[ID_{{$c->id}}][interval_nilai]" id="interval_{{$c->id}}_interval_nilai">{!!$c->interval_nilai!!}</textarea>
+							<textarea style="display: none;" type="hidden"  class="form-control" name="columns[ID_{{$c->id}}][interval_nilai]" id="interval_{{$c->id}}_interval_nilai">{!!$c->interval_nilai!!}</textarea>
 							<button type="button" class="btn btn-xs btn-warning" onclick="inteval_edit(this)"  target="interval_{{$c->id}}">Edit Interval</button>
 							<hr>
 								<input type="hidden" id="interval_{{$c->id}}_type" name="columns[ID_{{$c->id}}][type_interval]">
@@ -90,8 +90,8 @@
 
 
 						</td>
-						<td>
-							<textarea style="display: none;" type="hidden" required="" class="form-control" name="columns[ID_{{$c->id}}][interval_nilai]" id="interval_{{$c->id}}_interval_nilai">{!!$c->interval_nilai!!}</textarea>
+					{{-- 	<td>
+							<textarea style="display: none;" type="hidden" class="form-control" name="columns[ID_{{$c->id}}][interval_nilai]" id="interval_{{$c->id}}_interval_nilai">{!!$c->interval_nilai!!}</textarea>
 							<button type="button" class="btn btn-xs btn-warning" onclick="inteval_edit(this)"  target="interval_{{$c->id}}">Edit Interval</button>
 							<hr>
 								<input type="hidden" id="interval_{{$c->id}}_type" name="columns[ID_{{$c->id}}][type_interval]">
@@ -114,7 +114,7 @@
 							</div>
 
 
-						</td>
+						</td> --}}
 						<td>
 							<small style="display: none;">{{$c->aggregate_type}}</small>
 							<select class="form-control" required="" name="columns[ID_{{$c->id}}][aggregate_type]">
@@ -190,15 +190,15 @@
 			</td>
 			<td>
 				<small style="display: none;"></small>
-				<input type="text" required="" class="form-control" name="columns[NEW_XXXX][tipe_data]" value="">
+				<input type="text" class="form-control" name="columns[NEW_XXXX][tipe_data]" value="">
 
 			</td>
 			<td>
-				<textarea type="text" required="" class="form-control" name="columns[NEW_XXXX]][definisi]" ></textarea>
+				<textarea type="text"  class="form-control" name="columns[NEW_XXXX]][definisi]" ></textarea>
 
 			</td>
 			<td>
-				<textarea  style="display:none;" type="text" required="" class="form-control" name="columns[NEW_XXXX]][interval_nilai]" >{"type":"text","data":[{"val":"","text":""}]}</textarea>
+				<textarea  style="display:none;" type="text" class="form-control" name="columns[NEW_XXXX]][interval_nilai]" >{"type":"text","data":[{"val":"","text":""}]}</textarea>
 				<button type="button" class="btn btn-xs btn-warning" onclick="inteval_edit(this)"  target="interval_NEW_XXXX">Edit Interval</button>
 				<hr>
 				<input type="hidden" id="interval_NEW_XXXX_type" value="text">
@@ -282,183 +282,185 @@
 
 		var data_glob_interval={};
 
+		function add_column(){
+			var tm=$('#themp-tr').html();
+			tm=tm.replace(/XXXX/g,key_column+1);
+			key_column+=1;
+			$('#table-columns tbody').prepend(tm);
+		}
+
 		
 
-		function inteval_edit(dom,no_mo=false){
-			var target=$(dom).attr('target');
-			var dom_interval=$('#'+target).html();
-			var type=$('#'+target+'_type').val();
-			$('#modal_interval #cc_interval').html('');
+		// function inteval_edit(dom,no_mo=false){
+		// 	var target=$(dom).attr('target');
+		// 	var dom_interval=$('#'+target).html();
+		// 	var type=$('#'+target+'_type').val();
+		// 	$('#modal_interval #cc_interval').html('');
 			
-			if(no_mo==false){
+		// 	if(no_mo==false){
 
 
-				if(!type){
-					type='list_';
-				}
+		// 		if(!type){
+		// 			type='list_';
+		// 		}
 
-				$('#modal_interval').modal();
-				$('#modal_type_interval option').attr('target',dom);
+		// 		$('#modal_interval').modal();
+		// 		$('#modal_type_interval option').attr('target',dom);
 
 
-			}
+		// 	}
 
-			$('#button-modal-interval').attr('onclick','save_interval("'+target+'","'+type+'")');
+		// 	$('#button-modal-interval').attr('onclick','save_interval("'+target+'","'+type+'")');
 
-			$('#modal_interval #modal_type_interval option').removeAttr('selected');
-			$('#modal_interval #modal_type_interval option[value="'+type+'"]').attr('selected','true');
+		// 	$('#modal_interval #modal_type_interval option').removeAttr('selected');
+		// 	$('#modal_interval #modal_type_interval option[value="'+type+'"]').attr('selected','true');
 			
-			if(type=='list_'){
-				$('#modal_interval #cc_interval').html('<button style="margin-bottom:10px;" onclick="add_list()" class="btn btn-primary btnxs"><i class="fa fa-plus"></i> Tambah List</button>'+
-				'<table class="table table-bordered"><thead><tr><th>AKSI</th><th>NILAI</th><th>TEXT</th></tr></thead><tbody id="modal-interval-body"></tbody></table>');
+		// 	if(type=='list_'){
+		// 		$('#modal_interval #cc_interval').html('<button style="margin-bottom:10px;" onclick="add_list()" class="btn btn-primary btnxs"><i class="fa fa-plus"></i> Tambah List</button>'+
+		// 		'<table class="table table-bordered"><thead><tr><th>AKSI</th><th>NILAI</th><th>TEXT</th></tr></thead><tbody id="modal-interval-body"></tbody></table>');
 
-				var data_list=[];
-				$('#'+target+' .option_val').each(function(i,d){
-					if(data_list[i]==undefined){
-						data_list.push({
-							'val':$(d).val(),
-							'text':''
-						});
-					}
-				});
-				$('#'+target+' .option_text').each(function(i,d){
-						data_list[i].text=$(d).val();
-				});
+		// 		var data_list=[];
+		// 		$('#'+target+' .option_val').each(function(i,d){
+		// 			if(data_list[i]==undefined){
+		// 				data_list.push({
+		// 					'val':$(d).val(),
+		// 					'text':'',
+		// 				});
+		// 			}
+		// 		});
+		// 		$('#'+target+' .option_text').each(function(i,d){
+		// 				data_list[i].text=$(d).val();
+		// 		});
 
-				var data_interval=({
-					'type':type,
-					'data':data_list
-				});
+		// 		var data_interval=({
+		// 			'type':type,
+		// 			'data':data_list
+		// 		});
 
-				$('#modal-interval-body').html('');
+		// 		$('#modal-interval-body').html('');
 
-				for(var i = 0; i < data_list.length ; i++){
-					var ii='<tr>'+
-					'<td><button onclick="$(this).parent().parent().remove()" type="button" class="btn btn-xs btn-danger"><i class="fa fa-trash"></button></td>'+
-						'<td class="col-md-6 col-sm-6">'+
-						  '<input type="text" class="form-control option_val" placeholder="" aria-describedby="basic-addon2" value="'+data_list[i].val+'">'+
-						'</td>'+
-						'<td class="col-md-6 col-sm-6">'+
-						  '<input type="text" class="form-control option_text" placeholder="Text" aria-describedby="basic-addon2" value="'+data_list[i].text+'">'+
-						'</td>'+
-						'</tr>';
-						$('#modal-interval-body').append(ii);
+		// 		for(var i = 0; i < data_list.length ; i++){
+		// 			var ii='<tr>'+
+		// 			'<td><button onclick="$(this).parent().parent().remove()" type="button" class="btn btn-xs btn-danger"><i class="fa fa-trash"></button></td>'+
+		// 				'<td class="col-md-6 col-sm-6">'+
+		// 				  '<input type="text" class="form-control option_val" placeholder="" aria-describedby="basic-addon2" value="'+data_list[i].val+'">'+
+		// 				'</td>'+
+		// 				'<td class="col-md-6 col-sm-6">'+
+		// 				  '<input type="text" class="form-control option_text" placeholder="Text" aria-describedby="basic-addon2" value="'+data_list[i].text+'">'+
+		// 				'</td>'+
+		// 				'</tr>';
+		// 				$('#modal-interval-body').append(ii);
 
-				}
-
-
+		// 		}
 
 
 
 
-			}else {
-				var text=$(dom+'_interval_nilai').html()??'{"type":"text","data":[{"val":"..","text":"'+type+'"}]}';
-				var json=JSON.parse(text);
-				$('#cc_interval').html('<textarea id="modal-interval-body" class="form-control"><textarea>');
 
-				var data_interval={
-					'type':type,
-					'data':[{'val':'..','text':type}]
-				};
-				$('#cc_interval #modal-interval-body').html()
 
-			}
+		// 	}else {
+		// 		var text=$(dom+'_interval_nilai').html()??'{"type":"text","data":[{"val":"..","text":"'+type+'"}]}';
+		// 		var json=JSON.parse(text);
+		// 		$('#cc_interval').html('<textarea id="modal-interval-body" class="form-control"><textarea>');
 
-			$('#modal_type_interval').on('change',function(){
-					inteval_edit($(this).attr('target'),true);
-			});
+		// 		var data_interval={
+		// 			'type':type,
+		// 			'data':[{'val':'..','text':type}]
+		// 		};
+
+		// 		$('#cc_interval #modal-interval-body').html()
+
+		// 	}
+
+		// 	$('#modal_type_interval').on('change',function(){
+		// 			inteval_edit($(this).attr('target'),true);
+		// 	});
 
 			
 
 
-		}
+		// }
 
-		function add_list(){
-			var d='<tr><td><button onclick="$(this).parent().parent().remove()" type="button" class="btn btn-xs btn-danger"><i class="fa fa-trash"></button></td>'+
-						'<td class="col-md-6 col-sm-6">'+
-						  '<input type="text" class="form-control option_val" placeholder="" aria-describedby="basic-addon2" value="">'+
-						'</td>'+
-						'<td class="col-md-6 col-sm-6">'+
-						  '<input type="text" class="form-control option_text" placeholder="Text" aria-describedby="basic-addon2" value="">'+
-						'</td>'+
-						'</tr>';
+		// function add_list(){
+		// 	var d='<tr><td><button onclick="$(this).parent().parent().remove()" type="button" class="btn btn-xs btn-danger"><i class="fa fa-trash"></button></td>'+
+		// 				'<td class="col-md-6 col-sm-6">'+
+		// 				  '<input type="text" class="form-control option_val" placeholder="" aria-describedby="basic-addon2" value="">'+
+		// 				'</td>'+
+		// 				'<td class="col-md-6 col-sm-6">'+
+		// 				  '<input type="text" class="form-control option_text" placeholder="Text" aria-describedby="basic-addon2" value="">'+
+		// 				'</td>'+
+		// 				'</tr>';
 
-				$('#modal-interval-body').append(d);
-		}
+		// 		$('#modal-interval-body').append(d);
+		// }
 
 
-		function save_interval(target,type){
+		// function save_interval(target,type){
 	
-			var ii='';
+		// 	var ii='';
 
 			
 
 			
-			var moda_data='modal-interval-body';
+		// 	var moda_data='modal-interval-body';
 
-			if(type=='list_'){
-				var data_list=[];
-				$('#'+moda_data+' .option_val').each(function(i,d){
-					if(data_list[i]==undefined){
-						data_list.push({
-							'val':$(d).val(),
-							'text':''
-						});
-					}
-				});
-				$('#'+moda_data+' .option_text').each(function(i,d){
-						data_list[i].text=$(d).val();
-				});
-
-
-				for(var i = 0; i < data_list.length ; i++){
-					ii+='<tr>'+
-					''+
-						'<td class="col-md-6 col-sm-6">'+
-						  '<input type="text" class="form-control option_val" placeholder="" aria-describedby="basic-addon2" value="'+data_list[i].val+'">'+
-						'</td>'+
-						'<td class="col-md-6 col-sm-6">'+
-						  '<input type="text" class="form-control option_text" placeholder="Text" aria-describedby="basic-addon2" value="'+data_list[i].text+'">'+
-						'</td>'+
-						'</tr>';
-
-				}
-
-				var data_interval=({
-					'type':$('#modal_type_interval').val(),
-					'data':data_list
-				});
-			}else{
-				var data_interval=({
-					'type':$('#modal_type_interval').val(),
-					'data':['type':type,'data':[{'val':$('#modal-interval-body').val(),'text':type}]];
-				});
-
-				$('#'+target).html('<textarea class="form-control" id="'+target+'_interval_nilai_nya'+'"></textarea>');
-				$('#'+target+'_interval_nilai_nya').html('')
+		// 	if(type=='list_'){
+		// 		var data_list=[];
+		// 		$('#'+moda_data+' .option_val').each(function(i,d){
+		// 			if(data_list[i]==undefined){
+		// 				data_list.push({
+		// 					'val':$(d).val(),
+		// 					'text':''
+		// 				});
+		// 			}
+		// 		});
+		// 		$('#'+moda_data+' .option_text').each(function(i,d){
+		// 				data_list[i].text=$(d).val();
+		// 		});
 
 
-			}
+		// 		for(var i = 0; i < data_list.length ; i++){
+		// 			ii+='<tr>'+
+		// 			''+
+		// 				'<td class="col-md-6 col-sm-6">'+
+		// 				  '<input type="text" class="form-control option_val" placeholder="" aria-describedby="basic-addon2" value="'+data_list[i].val+'">'+
+		// 				'</td>'+
+		// 				'<td class="col-md-6 col-sm-6">'+
+		// 				  '<input type="text" class="form-control option_text" placeholder="Text" aria-describedby="basic-addon2" value="'+data_list[i].text+'">'+
+		// 				'</td>'+
+		// 				'</tr>';
+
+		// 		}
+
+		// 		var data_interval=({
+		// 			'type':$('#modal_type_interval').val(),
+		// 			'data':data_list
+		// 		});
+		// 	}else{
+		// 		var data_interval=({
+		// 			'type':$('#modal_type_interval').val(),
+		// 			'data':['type':type,'data':[{'val':$('#modal-interval-body').val(),'text':type}]];
+		// 		});
+
+		// 		$('#'+target).html('<textarea class="form-control" id="'+target+'_interval_nilai_nya'+'"></textarea>');
+		// 		$('#'+target+'_interval_nilai_nya').html('')
+
+
+		// 	}
 			
 
-			$('#'+target).html(ii);
-			$('#modal_interval').modal('toggle');
-			$('#'+target+'_interval_nilai').html(JSON.stringify(data_interval));
+		// 	$('#'+target).html(ii);
+		// 	$('#modal_interval').modal('toggle');
+		// 	$('#'+target+'_interval_nilai').html(JSON.stringify(data_interval));
 
 
 
-		}
+		// }
 
 		var key_column={{count($columns)}};
 		function add_remove(id){
 			$('#remove').append('<input type="hidden" name="remove[]" value="'+id+'">');
 		}
-		function add_column(){
-			var tm=$('#themp-tr').html();
-			console.log(tm);
-			tm=tm.replace(/XXXX/g,key_column+1);
-			key_column+=1;
-			$('#table-columns tbody').prepend(tm);
-		}
+		
 	</script>
 @stop

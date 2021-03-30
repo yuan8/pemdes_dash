@@ -23,9 +23,50 @@ class TestCtrl extends Controller
 
 
 	public function tt(Request $request){
-		(session(['_regional_access'=>[11,22]]));
+
+
+		$tt=DB::select("SELECT TABLE_NAME as name
+		FROM INFORMATION_SCHEMA.TABLES
+		WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA='dash_pemdes_real' and TABLE_NAME like 'dash_%'");
+
+				// $cols=DB::table('master_column_map')->
+				// where('id_ms_table')->groupby('id_ms_table')
+				// ->select('id_ms_table')->count();
+
+
+				foreach($tt as $t){
+					$g=DB::table('master_table_map')->where([
+						['name','=',strtoupper(str_replace('_', ' ', $t->name))
+							]	
+						]
+					)->first();
+
+					if($g){
+						// $cols=DB::table('master_column_map')->
+						// where('id_ms_table',$g->id)->groupby('id_ms_table')
+						// ->select('id_ms_table')->count();
+
+						// if($cols==0){
+						// 	DB::table('master_table_map')->where('id',$g->id)->delete();
+						// }
+						// dd($t->name, 'dash',strpos($t->name, 'dash'));
+					}else{
+							$g=DB::table('master_table_map')->insert(
+								['name'=>strtoupper(str_replace('_', ' ', $t->name)),
+								'table'=>$t->name,
+								'key_view'=>$t->name,
+								'id_user'=>1,
+								'edit_daerah'=>1,
+							]);
+					}
+				}
+
+				dd('cc');
+
+		// (session(['_regional_access'=>[11,22]]));
 		// dd(session('_regional_access'));
-		dd($request->session()->key());
+		// dd($request->session()->key());
+
 
 		$x=DB::connection('mysql')->table('dash_potensi_iklim_tanah_erosi')->first();
 
