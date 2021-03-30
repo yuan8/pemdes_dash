@@ -61,9 +61,9 @@
  --}}
 						</td>
 						<td>
-							{{-- <small style="display: none;">{{$c->definisi}}</small>
+							<small style="display: none;">{{$c->definisi}}</small>
 							<textarea type="text" class="form-control" name="columns[ID_{{$c->id}}][definisi]" >{!!$c->definisi!!}</textarea>
- --}}
+
 						</td>
 						<td>
 							{{-- <textarea style="display: none;" type="hidden"  class="form-control" name="columns[ID_{{$c->id}}][interval_nilai]" id="interval_{{$c->id}}_interval_nilai">{!!$c->interval_nilai!!}</textarea>
