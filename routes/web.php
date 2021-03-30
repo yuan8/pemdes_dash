@@ -28,6 +28,7 @@ Route::get('v/{tahun}/video/{id}/{slug?}',function($tahun,$id){
 })->middleware('bindTahun')->name('video.detail');
 
 Route::get('/test',function(){
+	dd(Auth::User()->can('is_active'),Auth::User());
 	dd(session()->all());
 	// $arr=["sipd_14",
 	// 	"sipd_15",
@@ -119,9 +120,11 @@ Route::middleware('auth:web')->post('/logout','Auth\LoginController@logout')->na
 
 
 	
-Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(function(){
+Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_active'])->group(function(){
 	Route::get('/','ADMIN\AdminCtrl@index')->name('admin.index');
+
 	Route::get('/ketagori','ADMIN\KategoriCtrl@index')->name('admin.kategori.index');
+
 	Route::get('/ketagori/form/create','ADMIN\KategoriCtrl@create')->name('admin.kategori.create');
 
 	Route::get('/ketagori/form/edit/{id}','ADMIN\KategoriCtrl@edit')->name('admin.kategori.edit');
@@ -145,10 +148,16 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun'])->group(fun
 	});
 
 	Route::prefix('users')->group(function(){
-		Route::get('/','ADMIN\UserCtrl@index')->name('admin.users.index');
+		Route::get('/','ADMIN\UserCtrl@index')->name('admin.users.index')->middleware(['can:is_super']);
 		Route::get('/detail/{id}','ADMIN\UserCtrl@show')->name('admin.users.detail');
-		Route::get('/add/','ADMIN\UserCtrl@add')->name('admin.users.add');
-		Route::post('/store/','ADMIN\UserCtrl@store')->name('admin.users.store');
+		Route::get('/add/','ADMIN\UserCtrl@add')->name('admin.users.add')->middleware(['can:is_super']);
+		Route::post('/store/','ADMIN\UserCtrl@store')->name('admin.users.store')->middleware(['can:is_super']);
+		Route::post('/update/password/{id}','ADMIN\UserCtrl@up_pass')->name('admin.users.up_pass');
+		Route::post('/update/profile/{id}','ADMIN\UserCtrl@up_profile')->name('admin.users.up_profile');
+		Route::post('/update/access/{id}','ADMIN\UserCtrl@up_access')->name('admin.users.up_access')->middleware(['can:is_super']);
+
+
+
 
 
 
@@ -215,12 +224,10 @@ Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
     Route::get('/get-descrition-data/{id}','HomeCtrl@get_data_description')->name('api.data.desc');
 
 
-Route::prefix('sso')->group(function(){
-	Route::post('sso-try-attemp','SSOCtrl@attemp')->name('sso.attemp');
-	Route::get('sso-login/{id}','SSOCtrl@login')->name('sso.login');
-
-
-});
+	Route::prefix('sso')->group(function(){
+		Route::post('sso-try-attemp','SSOCtrl@attemp')->name('sso.attemp');
+		Route::get('sso-login/{id}','SSOCtrl@login')->name('sso.login');
+	});
 
 	Route::get('/keuangan-desa/', 'DASH\KeuanganDesaCtrl@index')->name('d.keuangan_desa.index');
 	Route::get('/keuangan-desa/data/{index?}', 'DASH\KeuanganDesaCtrl@show')->name('d.keuangan_desa.show');

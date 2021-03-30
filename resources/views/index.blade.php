@@ -7,7 +7,8 @@
 @section('content')
 
 <div class="container" style="">
-	<div class="col-md-6">
+	<div class="row" style="min-height: 500px;">
+		<div class="col-md-6" >
 		<div id="klasifikasi_content" class="animate__animated">
 			<h1 class="text-center"><b>Loading...</b></h1>
 		</div>
@@ -46,6 +47,7 @@
 		  	@endforeach
 
 		</div>
+	</div>
 	</div>
 </div>
 

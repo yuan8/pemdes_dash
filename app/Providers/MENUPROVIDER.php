@@ -112,6 +112,8 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.kategori.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-circle',
+                    'can'=>['is_super']
+
 
                 ],
                  [
@@ -119,6 +121,8 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.tablemap.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-code',
+                    'can'=>['is_super']
+
                 ],
 
                 [
@@ -126,6 +130,8 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.data.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
+                    'can'=>['is_super']
+
                 ],
                 [
                     'text'=>('VALIDASI DATA'),
@@ -139,6 +145,8 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.dataview.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
+                    'can'=>['is_super']
+
                 ],
                  
                  [
@@ -146,6 +154,8 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.users.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-users',
+                    'can'=>['is_super']
+                    
 
                 ],
                  

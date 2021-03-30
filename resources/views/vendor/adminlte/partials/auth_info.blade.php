@@ -43,7 +43,7 @@
         </p>
       </li>
       <li>
-        <p style="font-size: 12px" class=" text-center text-uppercase"><b>environment</b></p>
+        <p style="font-size: 12px" class=" text-center text-uppercase"><b>Environment</b></p>
       </li>
       <!-- Menu Body -->
       <li class="user-body">
@@ -79,7 +79,7 @@
             {{ csrf_field() }}
         </form>
         <div class="pull-left">
-          <a href="#" class="btn btn-default btn-flat">Profile</a>
+          <a href="{{route('admin.users.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>Auth::User()->id])}}" class="btn btn-default btn-flat">Profile</a>
         </div>
         <div class="pull-right">
           <a href="javascript:void(0)"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-default btn-flat">Sign out</a>

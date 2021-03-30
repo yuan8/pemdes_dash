@@ -18,7 +18,24 @@
         </div>
       </form>
 @else
+    @php
+    $m_access=true;
+    if(isset($item['can'])){
+       if(Auth::check()){
+         if(is_array($item['can'])){
+            foreach ($item['can']??[] as $ac){
+                $m_access=($m_access and Auth::User()->can($ac));
+            }
+        }else{
+            if(!empty($item['can'])){
+                 $m_access=($m_access and Auth::User()->can($ac));
+            }
+        }
+       }
+    }
 
+    if($m_access){
+    @endphp
 
     <li class="{{ $item['class'] }}">
         <a href="{{ $item['href'] }}"
@@ -46,4 +63,7 @@
             </ul>
         @endif
     </li>
+    @php
+    }
+    @endphp
 @endif

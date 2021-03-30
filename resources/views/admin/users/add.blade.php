@@ -17,18 +17,18 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label>Nama</label>
-					<input type="text" name="name" class="form-control" value="" required="">
+					<input type="text" name="name" class="form-control" value="{{old('name')}}" required="">
 				</div>
 				<div class="form-group">
 					<label>Email</label>
-					<input type="email" name="email" class="form-control" value="" required="">
+					<input type="email" name="email" class="form-control" value="{{old('email')}}" required="">
 				</div>
 				<div class="form-group">
 					<label>Role</label>
-					<select class="form-control" name="role" required="">
-						<option value="1"> SUPPERADMIN </option>
-						<option value="1"> ADMIN REGIONAL </option>
-						<option value="1"> ADMIN DAERAH </option>
+					<select class="form-control" required="" name="role">
+							@foreach(HPV::role_list() as $key=>$r)
+								<option value="{{$r['val']}}" {{$r['val']==old('role')?'selected':''}}>{{$r['text']}}</option>
+							@endforeach
 					</select>
 				</div>
 			</div>
@@ -36,8 +36,8 @@
 				<div class="form-group">
 					<label>Status User</label>
 					<select class="form-control" name="is_active" required="">
-						<option value="1"> ACTIVE </option>
-						<option value="0"> UNACTIVE </option>
+						<option value="true"> ACTIVE </option>
+						<option value="false"> UNACTIVE </option>
 					</select>
 				</div>
 				<div class="form-group">

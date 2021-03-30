@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use DB;
 use Auth;
 use MyHash;
+use Alert;
+use Validator;
 
 class UserCtrl extends Controller
 {
@@ -26,11 +28,106 @@ class UserCtrl extends Controller
 
     }
 
+    public function up_profile($tahun,$id,Request $request){
+        $u=Auth::User();
+        if(($u->role==1)OR ($id=$u->id)){
+
+            $data=[
+                'name'=>$request->name,
+                'is_active'=>$request->is_active==true?true:false,
+            ];
+
+            if($u->can('is_super')){
+                $data['role']=$request->role;
+            }
+            DB::table('users')->where('id',$id)->update($data);
+
+            Alert::success('Berhasil','Update Profil User');
+
+            if($request->action_to=='UPDATE_AND_BACKTOFORM'){
+                return back();
+            }else{
+                return redirect()->route('admin.users.index',['tahun'=>$tahun]);
+            }
+        }
+    }
+
+    public function up_access($tahun,$id,Request $request){
+        $u=Auth::User();
+
+        if($u->can('is_super')){
+            foreach ($request->role_group??[] as $key => $value) {
+                DB::table('users_group')->insertOrIgnore([
+                    'id_user'=>$id,
+                    'id_regional'=>$value
+                ]);
+
+            }
+
+              DB::table('users_group')
+              ->where('id_user',$id)
+              ->whereNotIn('id_regional',$request->role_group??[])->delete();
+
+            Alert::success('Berhasil','Update Akses Berhasil');
+            if($request->action_to=='UPDATE_AND_BACKTOFORM'){
+                return back();
+            }else{
+                return redirect()->route('admin.users.index',['tahun'=>$tahun]);
+            }
+
+
+
+        }else{
+            Alert::error('Access Denied','');
+            return back();
+        }
+
+    }
+
+     public function up_pass($tahun,$id,Request $request){
+        $u=Auth::User();
+        if(($u->can('is_super'))OR ($id=$u->id)){
+            $data=[
+                'password'=>MyHash::pass_encode($request->password),
+            ];
+
+                $valid=Validator::make($request->all(),[
+                    'password'=>'required|min:8'
+                ]);
+
+                if($valid->fails()){                    
+                    Alert::error('Error',$valid->errors()->first());
+                    return back();
+                }
+
+            if(!$u->can('is_super')){
+                $valid=Validator::make($request->all(),[
+                    'password'=>'required|min:8|confirmed'
+                ]);
+
+                if($valid->fails()){                    
+                    Alert::error('Error',$valid->errors()->first());
+                    return back();
+
+                    
+                }
+            }
+
+             DB::table('users')->where('id',$id)->update($data);
+            Alert::success('Berhasil','Update Password Berhasil');
+            if($request->action_to=='UPDATE_AND_BACKTOFORM'){
+                return back();
+            }else{
+                return redirect()->route('admin.users.index',['tahun'=>$tahun]);
+            }
+        }
+    }
+
     public function show($tahun,$id){
     	$data=DB::table('users')->find($id);
 
     	if($data){
-            $data_regional=DB::table('users_group')->where('id_user',$data->id)->get();
+            $data_regional=DB::table('users_group')->where('id_user',$data->id)->get()->pluck('id_regional');
             $regional_list=DB::table('master_regional')->get();
     		return view('admin.users.detail')->with(['data'=>$data,'regional_list_acc'=>$data_regional,'regional_list'=>$regional_list]);
     	}
@@ -47,9 +144,9 @@ class UserCtrl extends Controller
      		'name'=>$request->name,
      		'email'=>$request->email,
      		'password'=>MyHash::pass_encode($request->password),
-     		'role'=>$request->role,
+     		'role'=>in_array($request->role, [1,2])?$request->role:2,
      		'api_token'=>MyHash::encode($request->email),
-     		'is_active'=>$request->is_active
+     		'is_active'=>$request->is_active==true?true:false
      	]);
 
      	if($data){

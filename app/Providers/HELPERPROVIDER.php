@@ -244,9 +244,14 @@ class HELPERPROVIDER extends ServiceProvider
 
 	public static function role_list(){
 		$data=[
-			1=>'SUPERADMIN',
-			2=>'ADMIN REGIONAL',
-			3=>'ADMIN DAERAH',
+			[
+				'val'=>1,
+				'text'=>'SUPERADMIN'
+			],
+			[
+				'val'=>2,
+				'text'=>'ADMIN REGIONAL / BADAN'
+			],
 
 
 		];

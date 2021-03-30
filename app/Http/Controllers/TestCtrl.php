@@ -378,7 +378,7 @@ class TestCtrl extends Controller
 			->orderBy('kd.'.$level['table_kode'], 'asc')
 			// ->toSql();
 			// return $x;
-			// ->paginate($paginate)->toArray();
+			->paginate($paginate)->toArray();
 
 			// dd($x);
 
