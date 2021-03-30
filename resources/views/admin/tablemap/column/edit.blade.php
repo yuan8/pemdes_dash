@@ -56,17 +56,17 @@
 
 						</td>
 						<td>
-							<small style="display: none;">{{$c->tipe_data}}</small>
+							{{-- <small style="display: none;">{{$c->tipe_data}}</small>
 							<input type="text"  class="form-control" name="columns[ID_{{$c->id}}][tipe_data]" value="{{$c->tipe_data}}">
-
+ --}}
 						</td>
 						<td>
-							<small style="display: none;">{{$c->definisi}}</small>
+							{{-- <small style="display: none;">{{$c->definisi}}</small>
 							<textarea type="text" class="form-control" name="columns[ID_{{$c->id}}][definisi]" >{!!$c->definisi!!}</textarea>
-
+ --}}
 						</td>
 						<td>
-							<textarea style="display: none;" type="hidden"  class="form-control" name="columns[ID_{{$c->id}}][interval_nilai]" id="interval_{{$c->id}}_interval_nilai">{!!$c->interval_nilai!!}</textarea>
+							{{-- <textarea style="display: none;" type="hidden"  class="form-control" name="columns[ID_{{$c->id}}][interval_nilai]" id="interval_{{$c->id}}_interval_nilai">{!!$c->interval_nilai!!}</textarea>
 							<button type="button" class="btn btn-xs btn-warning" onclick="inteval_edit(this)"  target="interval_{{$c->id}}">Edit Interval</button>
 							<hr>
 								<input type="hidden" id="interval_{{$c->id}}_type" name="columns[ID_{{$c->id}}][type_interval]">
@@ -86,7 +86,7 @@
 										
 									</div>
 
-							</div>
+							</div> --}}
 
 
 						</td>
@@ -189,22 +189,22 @@
 
 			</td>
 			<td>
-				<small style="display: none;"></small>
-				<input type="text" class="form-control" name="columns[NEW_XXXX][tipe_data]" value="">
+				{{-- <small style="display: none;"></small>
+				<input type="text" class="form-control" name="columns[NEW_XXXX][tipe_data]" value=""> --}}
 
 			</td>
 			<td>
-				<textarea type="text"  class="form-control" name="columns[NEW_XXXX]][definisi]" ></textarea>
+				{{-- <textarea type="text"  class="form-control" name="columns[NEW_XXXX]][definisi]" ></textarea> --}}
 
 			</td>
 			<td>
-				<textarea  style="display:none;" type="text" class="form-control" name="columns[NEW_XXXX]][interval_nilai]" >{"type":"text","data":[{"val":"","text":""}]}</textarea>
+				{{-- <textarea  style="display:none;" type="text" class="form-control" name="columns[NEW_XXXX]][interval_nilai]" >{"type":"text","data":[{"val":"","text":""}]}</textarea>
 				<button type="button" class="btn btn-xs btn-warning" onclick="inteval_edit(this)"  target="interval_NEW_XXXX">Edit Interval</button>
 				<hr>
 				<input type="hidden" id="interval_NEW_XXXX_type" value="text">
 				<div id="interval_NEW_XXXX">
 					<P></P>
-				</div>
+				</div> --}}
 
 
 			</td>
