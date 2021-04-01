@@ -24,6 +24,8 @@ class TestCtrl extends Controller
 
 	public function tt(Request $request){
 
+		dd($request->all());
+
 
 		// $tt=DB::select("SELECT TABLE_NAME as name
 		// FROM INFORMATION_SCHEMA.TABLES

@@ -73,8 +73,9 @@ class LoginController extends Controller
                         
                         }
                     }
-                }
                 return $this->sendLoginResponse($request);
+
+                }
 
             }
            

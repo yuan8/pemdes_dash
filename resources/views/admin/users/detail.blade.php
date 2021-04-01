@@ -40,9 +40,10 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Status User</label>
+							
 							<select class="form-control" required="" name="is_active">
-								<option value="true" {{$data->is_active?'selected':''}}> ACTIVE </option>
-								<option value="false" {{$data->is_active?'':'selected'}}> UNACTIVE </option>
+								<option value="true" {{$data->is_active==1?'selected':''}}> ACTIVE </option>
+								<option value="false" {{$data->is_active==0?'':'selected'}}> UNACTIVE </option>
 							</select>
 						</div>
 						

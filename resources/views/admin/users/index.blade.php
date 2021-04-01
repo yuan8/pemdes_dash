@@ -21,11 +21,13 @@
 				<th>NAME</th>
 				<th>EMAIL</th>
 				<th>ROLE</th>
+				<th>STATUS</th>
+
 			</tr>
 			</thead>
 			<tbody>
 				@foreach($data as $d)
-					<tr class="{{$d->is_active?'':'bg-warning'}}">
+					<tr class="{{$d->is_active==TRUE?'':'bg-warning'}}">
 						<td>
 							<div class="btn-group">
 								<a href="{{route('admin.users.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-warning btn-xs"><i class="fa fa-pen"></i> Edit</a>
@@ -37,6 +39,8 @@
 						<td>{{$d->name}}</td>
 						<td>{{$d->email}}</td>
 						<td>{{HPV::role_user($d->role)['text']}}</td>
+						<td>{{$d->is_active==TRUE?"ACTIVE":'UNACTIVE'}}</td>
+
 
 
 

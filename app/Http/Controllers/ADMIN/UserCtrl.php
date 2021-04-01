@@ -34,12 +34,12 @@ class UserCtrl extends Controller
 
             $data=[
                 'name'=>$request->name,
-                'is_active'=>$request->is_active==true?true:false,
             ];
-
             if($u->can('is_super')){
+                $data['is_active']=($request->is_active=='true')?true:false;
                 $data['role']=$request->role;
             }
+
             DB::table('users')->where('id',$id)->update($data);
 
             Alert::success('Berhasil','Update Profil User');
@@ -146,7 +146,7 @@ class UserCtrl extends Controller
      		'password'=>MyHash::pass_encode($request->password),
      		'role'=>in_array($request->role, [1,2])?$request->role:2,
      		'api_token'=>MyHash::encode($request->email),
-     		'is_active'=>$request->is_active==true?true:false
+     		'is_active'=>((boolean)$request->is_active)==true?true:false
      	]);
 
      	if($data){

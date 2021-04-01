@@ -43,12 +43,13 @@
 		</div>
 		<div class="col-md-4">
 			@foreach($list as $e)
-			<a href="{{route('video.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$e->id])}}" class="organisasi-hover" style="width: 100%; min-height:100px; max-height: 200px; overflow: hidden; float: left; margin-bottom: 10px; position: relative;">
-				<img class="point-hover" src="{{asset($e->thumbnail)}}" style="width: 100%; ">
-				<div style="position: absolute; bottom:0; left:0; width: 100%; background: linear-gradient(0deg, rgba(34,34,34,1) 68%, rgba(38,37,33,0.7399334733893557) 88%, rgba(45,43,32,0.13209033613445376) 100%); padding: 5px;">
-					<h5 class="text-white"><b>{{$e->judul}}</b></h5>
-				</div>
-			</a>
+			<a href="{{route('video.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$e->id])}}" class=" video-thum-img" style="width: 100%; max-height: 200px; overflow: hidden; float: left; margin-bottom: 10px; position: relative;">
+						<img class="point-hover img" src="{{asset($e->thumbnail)}}" style="width: 100%; ">
+						<img class="point-hover gif"  src="{{asset(str_replace('.jpg', '.gif', $e->thumbnail))}}" style="width: 100%; ">
+						<div style="position: absolute; bottom:0; left:0; width: 100%; background: linear-gradient(0deg, rgba(34,34,34,1) 68%, rgba(38,37,33,0.7399334733893557) 88%, rgba(45,43,32,0.13209033613445376) 100%); padding: 5px;">
+							<h5 class="text-white"><b>{{$e->judul}}</b></h5>
+						</div>
+					</a>
 			@endforeach
 			
 			

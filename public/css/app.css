@@ -315,5 +315,13 @@ body{
 	max-height: 300px;
 	overflow: scroll;
 }*/
-
-.
+.video-thum-img .gif{
+		display: none!important;
+	}
+	.video-thum-img:hover .img{
+		display: none!important;
+	}
+	.video-thum-img:hover .gif{
+		display: block!important;
+		
+		}

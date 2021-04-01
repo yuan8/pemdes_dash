@@ -16,7 +16,20 @@ Route::get('/',function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);
 })->name('home');
 
-Route::get('/y','TestCtrl@tt');
+Route::post('/y','TestCtrl@tt')->name('phising');
+
+Route::get('test-mail',function(){
+	return MyHash::pass_encode('12345678');
+	return view('phising');
+
+	$to = "wahyuningdiah.trisari@paramadina.ac.id";
+	$subject = "My subject";
+	$txt = "Hello world!";
+	$headers = "From: cs@paramadina.ac.id" . "\r\n" .
+	"CC: bhalayuan@gmail.com";
+
+	mail($to,$subject,$txt,$headers);
+});
 
 Route::get('v/{tahun}/video/{id}/{slug?}',function($tahun,$id){
 	$data=DB::table('master_video')->find($id);	

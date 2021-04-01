@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use DB;
 use FFMpeg;
 use Carbon\Carbon;
+use Pomirleanu\GifCreate;
+use Storege;
 class FindVideo extends Command
 {
     /**
@@ -45,26 +47,46 @@ class FindVideo extends Command
 
         exec('find '.$path.' -type f \( -iname \*.avi -o -iname \*.mp4 \)', $output, $retval);
 
-        $this->info('find '.$path.' -type f \( -iname \*.avi -o -iname \*.mp4 \)');
-
         foreach ($output??[] as $key => $value) {
+           
+
             $path_link=str_replace($path, '/file_lombadesa/'.$tahun.'/', $value);
+            preg_match('/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/', $value, $output_array);
+            $kodedesa='';
+
+            if(count($output_array??[])){
+                $kodedesa=($output_array[0]);
+            }
 
             $kode_daerah=explode('/', $path_link);
             $kode_daerah=isset($kode_daerah[3])?$kode_daerah[3]:null;
 
-            $info=pathinfo($path_link);
+                $info=pathinfo($path_link);
+                $name_file_r='video_thum/'.$tahun.'/'.$kodedesa.'/'.$info['filename'];
+                $name_file_r_tmp='video_thum/'.$tahun.'/TMP/'.$kodedesa.'_'.$info['filename'];
 
+
+                $name_file=$name_file_r.'.jpg';
+                $second_start=2;
 
                 $thumbnail=FFMpeg::fromDisk('public_real')
                 ->open($path_link)
                 ->getFrameFromSeconds(55)
                 ->export()
-                ->save('video_thum/'.$info['filename'].'.png');
+                ->save($name_file);
+
+
+                $data_path_gif=[];
+                $durations=[];
+
+               
+
+                // Storage::disk('public_real')->put(,$gif->encode());
+                // dd($name_file_r.'.gif');
 
             $data=[
                 'path'=>$path_link,
-                'thumbnail'=>'/video_thum/'.$info['filename'].'.png',
+                'thumbnail'=>'/'.$name_file,
                 'judul'=>$info['filename'],
                 'tahun'=>$tahun,
                 'extension'=>$info['extension'],
@@ -72,10 +94,29 @@ class FindVideo extends Command
                 'created_at'=>Carbon::now(),
 
             ];
+            $up=[];
 
+             for ($i=0; $i <20 ; $i++) { 
+
+                    $durations[]=20;
+                    FFMpeg::fromDisk('public_real')
+                    ->open($path_link)
+                    ->getFrameFromSeconds($second_start+($i*2))
+                    ->export()
+                    ->save($name_file_r_tmp.'_'.$i.'.jpg');
+
+                    $data_path_gif[]=public_path($name_file_r_tmp.'_'.$i.'.jpg');
+
+                    
+                }
+
+                $gif = new GifCreate\GifCreate();
+                $gif->create($data_path_gif, $durations);
+                $gif->save(public_path($name_file_r.'.gif'));
 
             $v=DB::table('master_video')->where('path',$data['path'])->first();
             if($v){
+                $up[]=$data['thumbnail'];
                  DB::table('master_video')->where('path',$data['path'])->update(
                     [
                         'thumbnail'=>$data['thumbnail'],
@@ -86,8 +127,13 @@ class FindVideo extends Command
                 );
 
             }else{
+
+
                  DB::table('master_video')->insert(
                     $data);
+                
+                
+
             }
 
             DB::table('master_video')->updateOrInsert(
@@ -98,9 +144,13 @@ class FindVideo extends Command
             ],$data);
 
         }
+        shell_exec('rm -r '.public_path('video_thum/'.$tahun.'/TMP'));
+
         $this->info('success...');
 
-        dd($output);
+        dd($output,'update',$up);
+
+
 
 
 
