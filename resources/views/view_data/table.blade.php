@@ -6,7 +6,9 @@
 	 <div class="box-header with-border">
     <div class="btn-group" style="margin-bottom: 5px;">
 		@if(!isset($only1level))
+			@if(Auth::Guard('api')->check() OR (Auth::check()))
 	      <button type="button" onclick="exportExcelTable('#table-{{$id_dom}}','{{isset($title)?$title:'export'}}');" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Excel</button>
+	      @endif
 	      @endif
     </div>
   </div>

@@ -109,10 +109,11 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
                 maxHeight:100,
             },
             formatter: function() {
+                console.log(this.point.data_map);
                 if(this.point.data_map!=undefined){
                     var dom='<ul><li><b>'+this.point.name+'</b><br></li>';
                     for (var i = 0; i < this.point.data_map.length; i++) {
-                        dom+='<li>'+this.point.data_map[i].name+' : '+this.point.data_map[i].y+' '+this.point.data_map[i].satuan+"<br></li>";
+                        dom+='<li>'+this.point.data_map[i].name+' : '+(this.point.data_map[i].y??0).toFixed(2)+' '+this.point.data_map[i].satuan+"<br></li>";
                     }
                     dom+="</ul>";
                     return dom;
@@ -150,7 +151,7 @@ var map_chart_{{$id_dom}}=Highcharts.mapChart('{{$id_dom}}', {
                 mapData:Highcharts.maps['{{$level==2?'ind':'idn_'.$kdparent}}'],
                 dataLabels: {
                     enabled: true,
-                    format: '{point.name}: {point.value:,.0f} %',
+                    format: '{point.name}',
                     color: '#fff',
                     style: {
                         fontSize: 9,

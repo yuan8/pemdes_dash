@@ -33,7 +33,7 @@
 		<table class="table-bordered table">
 			<thead>
 				<tr>
-					<th>AKSI</th>
+					<th style="width: 250px;">AKSI</th>
 					<th>NAMA</th>
 
 					<th>KEY MAP</th>
@@ -52,12 +52,16 @@
 				@endphp
 					<tr>
 						<td>
-							
+							<div class="btn-group">
+								
 							<a href="{{route('admin.tablemap.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
+							@if(($d->start_level??0)<=6)
 							<a href="{{route('admin.tablemap.edit.view',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>HPV::slugify($d->name)])}}"  class="btn btn-xs btn-info"> <i class="fa fa-pen"></i> VIEW</a>
+							@endif
 							<a href="{{route('admin.tablemap.edit.columns',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>HPV::slugify($d->name)])}}"  class="btn btn-xs btn-info"> <i class="fa fa-pen"></i> COLUMNS</a>
 							<button onclick="showForm('{{route('admin.tablemap.form_delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')"  class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </button>
 
+							</div>
 						</td>
 						<td>{{$d->name}}</td>
 

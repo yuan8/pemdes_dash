@@ -18,10 +18,18 @@
 
 
 @section('content')
-  <h2 class="text-center text-uppercase " style="padding-bottom: 10px;"><b>{{$data->name}}</b></h2>
+  <h2 class="text-center text-uppercase " style="padding-bottom: 10px;"><b>{{$data->name}}</b> 
+  	@if(Auth::check())
+  	<span>
+  	<button style="margin-top: -10px;" class=" btn-sm btn btn-primary background-primary btn-ov"><i class="fa fa-key" aria-hidden="true"></i> Api Access</button>
+
+  </span>
+  @endif
+</h2>
   <div class="container">
   	<div class="row">
   	<div class="col-md-12">
+  		<p class="text-center text-uppercase">{{strtolower(($data->delivery_type='AUTOMATION'?'Data Integrasi':'Dataset').' - '.$data->i_name)}}</p>
 	  	<div class="box-solid box btn-ov " style="border: 1px solid #fa090a">
 	  		<div class="box-body">
 	  			<p>{!!nl2br($data->description)!!}</p>

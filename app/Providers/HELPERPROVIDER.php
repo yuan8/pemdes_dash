@@ -43,16 +43,18 @@ class HELPERPROVIDER extends ServiceProvider
 		}
 
 		$level_need=strlen((string)$kdparent.'');
-
+		
 
 
 		$table=(array)DB::table('master_table_map')->where('key_view',$e)->first();
 		if($table){
 			$tb=$table;
 			$row=DB::table('master_column_map')->where('id_ms_table',$table['id']);
-			if(!Auth::check()){
+
+			if((!Auth::check() ) AND (!Auth::Guard('api')->check()) ){
 				$row=$row->where('auth',false);
 			}
+
 			if(($table['start_level']<6 ) and ($level_need<6)){
 				$row=$row->where('aggregate_type','!=','NONE');
 

@@ -366,7 +366,8 @@ class TestCtrl extends Controller
 		        return 1;
 		   	 });
 			}
-		    
+
+
 
 			$x=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
 
@@ -414,6 +415,8 @@ class TestCtrl extends Controller
 				'data'=>$data
 			];
 
+			$datenow=Carbon::now()->format('d F Y');
+
 			if($meta_table['start_level']>1000){
 				return '<div class="table-responsive ch col-md-12">'.view('view_data.table')->with([
 						'data_type'=>$data_type,
@@ -424,6 +427,7 @@ class TestCtrl extends Controller
 						'kdparent'=>$level['kode'],
 						'pemda'=>$nama_pemda,
 						'table_meta'=>$meta_table,
+						'data'=>$meta_data,
 						'tahun_capaian'=>$tahun,
 					])->render().'</div>';
 			}
@@ -437,7 +441,6 @@ class TestCtrl extends Controller
 
 			$meta_entity=isset($meta_table['view_'][$level['count']])?$meta_table['view_'][$level['count']]:[];
 
-			$datenow=Carbon::now()->format('d F Y');
 			
 			$id_c='chart_id_'.rand(0,100).'_'.date('Ymdhi');
 			$return='<div class="row " id="'.$id_c.'">';
@@ -455,6 +458,7 @@ class TestCtrl extends Controller
 						'kdparent'=>$level['kode'],
 						'pemda'=>$nama_pemda,
 						'table_meta'=>$meta_table,
+						'data'=>$meta_data,
 						'tahun_capaian'=>$tahun,
 					])->render().'</div>';
 					
@@ -571,24 +575,38 @@ class TestCtrl extends Controller
 				
 			];
 			$data_map[0]['value']=(float)$data_map[0]['y'];
-			foreach (array_values($map['columns']) as $k => $m) {
-				# code...
+
+			$data_map[1]=[
+				'name'=>'Jumlah Desa',
+				'y'=>(((float)$d['jumlah_desa'])),
+				'value'=>(((float)$d['jumlah_desa'])),
+				'satuan'=>'Desa',
+			];
+			$data_map[2]=[
+				'name'=>'Jumlah Desa Terdata',
+				'y'=>(((float)$d['jumlah_data_desa'])),
+				'value'=>(((float)$d['jumlah_data_desa'])),
+				'satuan'=>'Desa',
+			];
+
+			// foreach (array_values($map['columns']) as $k => $m) {
+			// 	# code...
 				
-				if(strtoupper($d['data_'.$k.'_satuan'])=='DESA'){
-					if($level['count']==10){
-						$d['data_'.$k.'_satuan']='-';
-						$d['data_'.$k]=($d['data_'.$k]?'Ada':'Tidak');
-					}
-				}
+			// 	if(strtoupper($d['data_'.$k.'_satuan'])=='DESA'){
+			// 		if($level['count']==10){
+			// 			$d['data_'.$k.'_satuan']='-';
+			// 			$d['data_'.$k]=($d['data_'.$k]?'Ada':'Tidak');
+			// 		}
+			// 	}
 
-				$data_map[]=[
-					'name'=>(HPV::translate_operator($m['aggregate_type']))[0].' '.$m['name'],
-					'y'=>(float)$d['data_'.$k]??0,
-					'value'=>(float)$d['data_'.$k]??0,
-					'satuan'=>$d['data_'.$k.'_satuan'],
-				];
+			// 	$data_map[]=[
+			// 		'name'=>(HPV::translate_operator($m['aggregate_type']))[0].' '.$m['name'],
+			// 		'y'=>(float)$d['data_'.$k]??0,
+			// 		'value'=>(float)$d['data_'.$k]??0,
+			// 		'satuan'=>$d['data_'.$k.'_satuan'],
+			// 	];
 
-			}
+			// }
 
 			if($jenis=='INT'){
 				$ROUTE_NEXT=($level['count'])?route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'table'=>$table,'kdparent'=>$d['id']]):null;
