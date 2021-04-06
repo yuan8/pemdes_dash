@@ -4,6 +4,7 @@
 /public/file_lombadesa/*
 /storage/*.key
 /storage/public
+/storage/api-data
 /vendor
 .env
 .env.backup
