@@ -234,6 +234,8 @@ return [
         'MyHash' => App\Providers\PassProvider::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
         'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
+        'THEM_ADMIN' => App\Providers\MENUAPI::class,
+
 
         
 

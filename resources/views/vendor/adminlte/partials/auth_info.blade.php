@@ -18,7 +18,19 @@
     </li>
   </ul>
 </li>
-@endif               
+@endif   
+
+@if(Auth::check())
+  
+    <li>
+  <a href="{{route('doc.api',['tahun'=>$GLOBALS['tahun_access']])}}" >
+   
+      <i class="fa fa-hash"></i>  API
+  </a> 
+</li> 
+@endif   
+
+
 <li>
     <a href="{{route('p.tahun',['tahun'=>$GLOBALS['tahun_access']])}}"  ><i class="fa fa-calendar"></i> Pindah Tahun</a>
   </li>

@@ -45,7 +45,7 @@ Route::prefix('d/{tahun}')->middleware(['bindTahun'])->group(function(){
     Route::get('/get-category-desa/','HomeCtrl@cat_desa')->name('re.cat.cat_desa');
 });
 
-Route::prefix('v/{tahun}')->middleware(['bindTahun'])->group(function(){
+Route::prefix('v/{tahun}')->middleware(['bindTahun','auth:api'])->group(function(){
     Route::post('get-data/{id}/{kodedaerah}','API\APIDATACtrl@getData')->name('api.public.getdata');
 });
 

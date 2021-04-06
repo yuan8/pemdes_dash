@@ -26,13 +26,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         Gate::define('is_active', function ($user) {
-        return $user->is_active;
-             });
+            return $user->is_active;
+        });
 
         Gate::define('is_super', function ($user) {
-        
-        return $user->role==1;
-
+            return $user->role==1;
         });
 
 

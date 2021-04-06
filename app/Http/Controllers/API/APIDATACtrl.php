@@ -9,9 +9,37 @@ use DB;
 use Auth;
 use HPV;
 use Storage;
+use Validator;
 class APIDATACtrl extends Controller
 {
     //
+
+    public function index($tahun){
+        // if(file_exists(storage_path('app/public/json_desa.json'))){
+        //     $desa=json_decode(file_get_contents(storage_path('app/public/json_desa.json')));
+        // }else{
+        //     $desa=DB::table('master_desa')->get();
+        //     Storage::put('public/json_desa.json',json_encode($desa));
+        // }
+
+        $desa=[];
+
+
+        $data=DB::table('data as d')->where('d.delivery_type','AUTOMATION')
+        ->join('master_table_map as m','m.key_view','=','d.table_view')
+        ->groupBy('m.id')
+        ->selectRaw("m.*,d.description")
+        ->where('dashboard',true)
+        ->orderBy('m.name','ASC')->get();
+
+        foreach ($data as $key => $d) {
+            $data[$key]->map_column=DB::table('master_column_map')->where('id_ms_table',$d->id)->get();
+            # code...
+        }
+
+        return view('api.index')->with(['data'=>$data,'desa'=>$desa]);
+
+    } 
 
     static function checkTime(){
     	$now=Carbon::now();
@@ -40,15 +68,15 @@ class APIDATACtrl extends Controller
     	if(($nowF->gte($start)) and ($nowF->lte($end)) ){
     		return array(
     			'grand_access'=>true,
-    			'start'=>$startF->addMinutes($miss),
-    			'end'=>$endF->addMinutes(($miss*-1)),
+    			'start'=>$startF->addMinutes($miss)->toDateTimeString(),
+    			'end'=>$endF->addMinutes(($miss*-1))->toDateTimeString(),
     		);
     	}
     	else if(($nowF->gte($start1)) and ($nowF->lte($end1)) ){
     		return array(
     			'grand_access'=>true,
-    			'start'=>$startF->addMinutes($miss),
-    			'end'=>$endF->addMinutes(($miss*-1)),
+    			'start'=>$startF->addMinutes($miss)->toDateTimeString(),
+    			'end'=>$endF->addMinutes(($miss*-1))->toDateTimeString(),
     		);
     	}else{
     		return array(
@@ -62,10 +90,39 @@ class APIDATACtrl extends Controller
     }
 
 
-    function getData($tahun,$id,$kodedaerah){
+    function getData($tahun,$id,$kodedaerah=null){
+
+        $USER=Auth::User()??Auth::guard('api')->User();
+        // dd($USER);
 
     	$accept=true;
-    	$checkTime=static::checkTime();
+
+        $valid=Validator::make(['kodedaerah'=>$kodedaerah,'tahun'=>$tahun],[
+            'kodedaerah'=>'min:2|required',
+            'tahun'=>'numeric|min:2020|max:'.date('Y')
+        ]);
+
+        $checkTime=static::checkTime();
+        $data=[];
+        $daerah=[];
+
+        if($valid->fails()){
+            return array(
+                    'status'=>500,
+                    'status_text'=>'Fail',
+                    'message'=>$valid->errors(),
+                    'filters'=>$daerah??[],
+                    'access_user_meta'=>$USER,
+                    'schedule'=>$checkTime,
+                    'meta'=>$data??[],
+                    'count_data'=>0,
+                    'data'=>[]
+
+
+            );
+
+        }
+
     	$data=(array)DB::table('data as d')->where([
     		'd.type'=>'INTEGRASI',
     		'd.id'=>$id
@@ -75,20 +132,22 @@ class APIDATACtrl extends Controller
     	->join('master_table_map as m','m.key_view','=','d.table_view')
     	->first();
 
+
+
     	$level=HPV::level($kodedaerah);
     	$daerah=DB::table($level['parent']['table'])
     	->selectRaw($level['parent']['table_name']." as nama_daerah, '".$level['parent']['level']."' as level,".$level['parent']['table_kode']." as id_daerah")
     	->where($level['parent']['table_kode'],$kodedaerah)->first();
 
-    	if(!(($level and $checkTime['grand_access']) and ($daerah))){
+    	if(!(($level and $checkTime['grand_access']) and ($daerah and $data)) ) {
     		$accept=false;
     	}
 
     	if($accept){
     		if(file_exists(storage_path('app/api-data/'.$tahun.'_'.$id.'_fill_'.$kodedaerah.'.json'))){
     			$data_get= json_decode(file_get_contents(storage_path('app/api-data/'.$tahun.'_'.$id.'_fill_'.$kodedaerah.'.json')));
-    			$check_sum='s';
-    			$data['check_sum']=$check_sum;
+    			$check_sum=filemtime(storage_path('app/api-data/'.$tahun.'_'.$id.'_fill_'.$kodedaerah.'.json'));
+    			$data['check_sum']=Carbon::parse($check_sum)->toDateTimeString();
 
 
     		}else{
@@ -107,10 +166,10 @@ class APIDATACtrl extends Controller
 	    			'status'=>200,
 	    			'status_text'=>'Success',
 	    			'message'=>[
-	    				'text'=>'schedule not accept'
+	    				'text'=>''
 	    			],
 	    			'filters'=>$daerah??[],
-	    			'access_user_meta'=>Auth::User(),
+	    			'access_user_meta'=>$USER,
 	    			'schedule'=>$checkTime,
 	    			'meta'=>$data??[],
 	    			'count_data'=>count($data_get),
@@ -134,22 +193,42 @@ class APIDATACtrl extends Controller
     		unset($data['key_id']);
 
     	}
-
-    	return array(
-	    			'status'=>500,
-	    			'status_text'=>'Fail',
-	    			'message'=>[
-	    				'text'=>'schedule not accept'
-	    			],
-	    			'filters'=>$daerah??[],
-	    			'access_user_meta'=>Auth::User(),
-	    			'schedule'=>$schedule,
-	    			'meta'=>$data??[],
-	    			'count_data'=>0,
-	    			'data'=>[]
+        $USER=Auth::User()??Auth::guard('api')->User();
 
 
-	    		);
+    	if($schedule['grand_access']){
+            return array(
+                    'status'=>500,
+                    'status_text'=>'Fail',
+                    'message'=>[
+                        'text'=>'Data Not Found'
+                    ],
+                    'filters'=>$daerah??[],
+                    'access_user_meta'=>$USER,
+                    'schedule'=>$schedule,
+                    'meta'=>$data??[],
+                    'count_data'=>0,
+                    'data'=>[]
+
+
+                );
+        }else{
+            return array(
+                    'status'=>500,
+                    'status_text'=>'Fail',
+                    'message'=>[
+                        'text'=>'Schedule Get Data Not Accept'
+                    ],
+                    'filters'=>$daerah??[],
+                    'access_user_meta'=>$USER,
+                    'schedule'=>$schedule,
+                    'meta'=>$data??[],
+                    'count_data'=>0,
+                    'data'=>[]
+
+
+                );
+        }
 
     }
 
@@ -159,7 +238,7 @@ class APIDATACtrl extends Controller
     	->where('id_ms_table',$data['key_id'])
     	->where('dashboard',true)
     	->selectRaw("name,name_column as key_c,satuan,definisi,tipe_data,interval_nilai")
-    	->get();
+    	->get()->toArray();
 
     	$column_view=[];
     	$selectRaw="desa.kode_dagri as kode_desa,desa as nama_desa";
@@ -173,7 +252,7 @@ class APIDATACtrl extends Controller
     	->where('desa.kode_dagri','like',$kodedaerah.'%')
     	->where('data.tahun',$tahun)
     	->selectRaw($selectRaw)
-    	->get();
+    	->get()->toArray();
 
     	$data_get=[];
 
@@ -194,13 +273,18 @@ class APIDATACtrl extends Controller
 
     	}
 
-    	Storage::put(('/api-data/'.$tahun.'_'.$data['id_data'].'_fill_'.$kodedaerah.'.json'),json_encode($data_get));
+    	Storage::put(('api-data/'.$tahun.'_'.$data['id_data'].'_fill_'.$kodedaerah.'.json'),json_encode($data_get));
 
-    	$check_sum=md5_file(file_get_contents(storage_path('app/api-data/'.$tahun.'_'.$data['id_data'].'_fill_'.$kodedaerah.'.json')));
+        if(file_exists(storage_path('app/api-data/'.$tahun.'_'.$data['id_data'].'_fill_'.$kodedaerah.'.json')) ){
 
+         $check_sum=filemtime(file_get_contents(storage_path('app/api-data/'.$tahun.'_'.$data['id_data'].'_fill_'.$kodedaerah.'.json')));
+
+        }else{
+            $check_sum=Carbon::now();
+        }
 
     	return [
-    		'check_sum'=>$check_sum,
+    		'check_sum'=>Carbon::parse($check_sum)->toDateTimeString(),
     		'data'=>$data_get
     	];
 

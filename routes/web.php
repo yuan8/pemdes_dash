@@ -275,6 +275,9 @@ Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/data-detail/{id}/{slug?}', 'DataCtrl@detail')->name('query.data.detail');
 
 
+	Route::prefix('api-dokumentasi')->middleware(['auth:web'])->group(function(){
+		Route::get('/','API\APIDATACtrl@index')->name('doc.api');
+	});
 });
 
 

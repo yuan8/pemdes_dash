@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Auth;
+use Illuminate\Auth\AuthenticationException;
+
 class Authenticate extends Middleware
 {
     /**
@@ -14,15 +16,18 @@ class Authenticate extends Middleware
      */
 
    
+    static function is_api($request){
+        if(strpos($request->url(), url('api').'/')!==false){
+            return true;
+        }
 
+        return false;
+
+    }
 
     protected function redirectTo($request)
     {
-
-      
-
-        if (! $request->expectsJson()) {
+     
             return route('login');
-        }
     }
 }

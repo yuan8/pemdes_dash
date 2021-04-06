@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use Auth;
 class MENUPROVIDER extends ServiceProvider
 {
     /**
@@ -97,7 +97,10 @@ class MENUPROVIDER extends ServiceProvider
             ],
             'side_right'=>[]
         ];
+       
         $GLOBALS['MENU_TOP']=$menu['top'];
+
+
         return $menu;
     }
 
@@ -162,6 +165,8 @@ class MENUPROVIDER extends ServiceProvider
             ],
             'side_right'=>[]
         ];
+
+
         return $menu;
     }
 
