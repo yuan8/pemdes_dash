@@ -16,7 +16,7 @@ Route::get('/',function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);
 })->name('home');
 
-Route::post('/y','TestCtrl@tt')->name('phising');
+Route::GET('/y','TestCtrl@tt')->name('phising');
 
 Route::get('test-mail',function(){
 	return MyHash::pass_encode('12345678');

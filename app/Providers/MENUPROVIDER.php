@@ -69,15 +69,15 @@ class MENUPROVIDER extends ServiceProvider
                     'icon'=>'fa fa-hashtag',
 
                 ],
-                 [
-                    'text'=>('Publikasi'),
-                    'href'=>route('query.data.delivery',['tahun'=>$GLOBALS['tahun_access'],'type'=>'publikasi']),
-                    'top_nav_class'=>'',
-                    'class'=>'',
+                //  [
+                //     'text'=>('Publikasi'),
+                //     'href'=>route('query.data.delivery',['tahun'=>$GLOBALS['tahun_access'],'type'=>'publikasi']),
+                //     'top_nav_class'=>'',
+                //     'class'=>'',
 
-                    'icon'=>'fa fa-eye',
+                //     'icon'=>'fa fa-eye',
 
-                ],
+                // ],
                  [
                     'text'=>('Infografis'),
                     'href'=>route('query.data.delivery',['tahun'=>$GLOBALS['tahun_access'],'type'=>'infografis']),

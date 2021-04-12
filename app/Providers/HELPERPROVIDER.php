@@ -761,13 +761,25 @@ class HELPERPROVIDER extends ServiceProvider
 	
 
 	static function operator(){
-		return ['SUM','AVERAGE','MIN','MAX','COUNT','COUNT_DISTINCT','COUNT_EXIST','NONE'];
+		return ['SUM','SUM_YA','SUM_ADA','SUM_TIDAK','AVERAGE','MIN','MAX','COUNT','COUNT_DISTINCT','COUNT_EXIST','NONE'];
 	}
 
 	static function translate_operator($op){
 		switch (strtoupper($op)) {
 			case 'SUM':
 				return ['Jumlah','sum(',')'];
+				# code...
+				break;
+			case 'SUM_ADA':
+				return ['Jumlah',"count(CASE WHEN 'ada'= ",' then 1 else null end)'];
+				# code...
+				break;
+			case 'SUM_YA':
+				return ['Jumlah',"count(CASE WHEN 'ya'= ",' then 1 else null end)'];
+				# code...
+				break;
+			case 'SUM_TIDAK':
+				return ['Jumlah',"count(CASE WHEN 'tidak'= ",' then 1 else null) end'];
 				# code...
 				break;
 			case 'AVERAGE':

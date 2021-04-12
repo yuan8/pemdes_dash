@@ -24,7 +24,6 @@ class TestCtrl extends Controller
 
 	public function tt(Request $request){
 
-		dd($request->all());
 
 
 		// $tt=DB::select("SELECT TABLE_NAME as name
@@ -73,20 +72,20 @@ class TestCtrl extends Controller
 		// // dd($request->session()->key());
 
 
-		$x=DB::connection('mysql')->table('dash_perkembangan_lembaga_kemasyarakatan')->first();
+		$x=DB::connection('mysql')->table('dash_potensi_lembaga_pemerintahan')->first();
 
 		foreach($x as $k=>$v){
 			if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
 				DB::table('master_column_map')->insertOrIgnore([
 				'name_column'=>$k,
 				'aggregate_type'=>'NONE',
-				'name'=>strtoupper(str_replace('_', ' ', $k)),
-				'satuan'=>'Jiwa',
+				'name'=>strtoupper(str_replace('_', ' ', str_replace('JUMLAH', '', strtoupper($k)))),
+				'satuan'=>'-',
 				'auth'=>0,
 				'dashboard'=>1,
 				'validate'=>1,
 				'id_user'=>1,
-				'id_ms_table'=>94
+				'id_ms_table'=>101
 				
 			]);
 			}

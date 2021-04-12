@@ -3,6 +3,7 @@
 <h4>TABLE COLUMNS [{{$data->table}}]</h4>
 <div class="btn-group">
 <a href="javascript:void(0)" onclick="add_column()" class="btn btn-success">TAMBAH COLUMN MAP</a>
+<a href="{{route('admin.tablemap.edit.view',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>HPV::slugify($data->name)])}}"  class="btn  btn-info"> <i class="fa fa-pen"></i> VIEW MAP</a>
 </div>
 @stop
 
@@ -18,16 +19,16 @@
 			<thead>
 				<tr>
 					<th>AKSI </th>
-					<th style="width:250px;">NAMA </th>
-					<th  style="width: 150px;">NAMA KOLOM</th>
-					<th  style="width: 150px;">SATUAN</th>
-					<th  style="width: 150px;">TIPE DATA</th>
-					<th style="width: 250px;">DEFINISI/KONSEP</th>
-					<th style="width: 350px;">INTERVAL NILAI</th>
-					<th style="width: 150px;">TIPE AGREGASI</th>
-					<th  style="width: 150px;">VIEW DATA AUTH</th>
-					<th  style="width: 150px;">VIEW DATA VALIDASI</th>
-					<th  style="width: 150px;">VIEW DATA DASHBOARD</th>
+					<th style="min-width:350px;">NAMA </th>
+					<th  style="min-width: 250px;">NAMA KOLOM</th>
+					<th  style="min-width: 150px;">SATUAN</th>
+					<th  style="min-width: 150px;">TIPE DATA</th>
+					<th style="min-width: 250px;">DEFINISI/KONSEP</th>
+					<th style="min-width: 350px;">INTERVAL NILAI</th>
+					<th style="min-width: 150px;">TIPE AGREGASI</th>
+					<th  style="min-width: 150px;">VIEW DATA AUTH</th>
+					<th  style="min-width: 150px;">VIEW DATA VALIDASI</th>
+					<th  style="min-width: 150px;">VIEW DATA DASHBOARD</th>
 
 
 				</tr>
