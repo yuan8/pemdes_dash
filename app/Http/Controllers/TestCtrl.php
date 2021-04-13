@@ -376,7 +376,6 @@ class TestCtrl extends Controller
 			$paginate=$meta_table['start_level']>1000000000000?50:200;
 			if($meta_table['start_level']>1000000000000000){
 				$desa_only=true;
-		   	 };
 			}
 
 
@@ -394,11 +393,11 @@ class TestCtrl extends Controller
 
 			$x=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
 			->join(DB::raw("(select * from ".$meta_table['table']." as dxdx)  as data"),
-				[[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]]);
+				[[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]])
 
-			if($desa_only){
-				$x=$x->
-			}
+			// if($desa_only){
+			// 	$x=$x->
+			// }
 			->selectRaw($select)
 			->groupBy(('kd.'.$level['table_kode']) )
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
