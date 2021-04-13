@@ -577,10 +577,14 @@ class DataCtrl extends Controller
 
 
     public function detail($tahun,$id,$slug=null){
+        dd('s');
         $instansi=null;
         $data=DB::connection('real')->table('data as d')
-        ->where('year',($tahun))
-        ->where('id',$id)->first();
+        ->where('d.year',($tahun))
+        ->where('d.id',$id)
+        ->leftJoin('master_table_map as m','m.key_view','=','d.table_view')
+        ->selectRaw("d.*,m.id as id_map_table")
+        ->first();
         if($data){
             if($data->type=='FILE'){
                  $instansi=$instansi_data=DB::connection('real')->table('category')->where('id',$data->organization_id)->first();

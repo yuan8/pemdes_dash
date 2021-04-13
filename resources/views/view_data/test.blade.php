@@ -14,6 +14,7 @@
 
 </div>
 	@include('partials.banner_head')
+
 @stop
 
 
@@ -21,7 +22,7 @@
   <h2 class="text-center text-uppercase " style="padding-bottom: 10px;"><b>{{$data->name}}</b> 
   	@if(Auth::check())
   	<span>
-  	<button style="margin-top: -10px;" class=" btn-sm btn btn-primary background-primary btn-ov"><i class="fa fa-key" aria-hidden="true"></i> Api Access</button>
+  	<a target="_blank" href="{{route('doc.api',['tahun'=>$GLOBALS['tahun_access']]).'#dokumentasi-'.$data->id_table_map}}" style="margin-top: -10px;" class=" btn-sm btn btn-primary background-primary btn-ov"><i class="fa fa-key" aria-hidden="true"></i> Api Access</a>
 
   </span>
   @endif

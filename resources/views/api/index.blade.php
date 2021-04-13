@@ -1,17 +1,22 @@
-@extends('layouts.dokumentasi.master')
+@extends('vendor.adminlte.dashboard')
 
 @section('menu')	
 	{{-- <ul>
 		<li>
 			<button>AUTHENTIFIKASI </button>
 		</li> --}}
-		@foreach($data as $d)
-	<a href="javascript:void(0)" onclick="scrollToDOM('#dokumentasi-{{$d->id}}')">{{$d->name }} ({{$d->id}})</a>
-	@endforeach
+		
 
 @stop
 
 @section('content')
+	<div id="mySidenav" class="sidenav" style="margin-top: 70px;">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  @foreach($data as $d)
+	<a href="javascript:void(0)" onclick="scrollToDOM('#dokumentasi-{{$d->id}}')">{{$d->name }} ({{$d->id}})</a>
+	@endforeach
+</div>
+
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
@@ -22,7 +27,8 @@
 	  </div>
 	</nav>
 
-	<div id="dokumentasi-desa">
+	<div class="container-fluid">
+		<div id="dokumentasi-desa">
 			<h5><b class="text-uppercase">TABLE DAERAH</b></h5>
 
 			<div class="table table-responsive">
@@ -52,24 +58,22 @@
 	<hr>
 
 	<div id="dokumentasi-authorization">
-			<h5><b class="text-uppercase">Authorization</b></h5>
-
+		<h5><b class="text-uppercase">Authorization</b></h5>
 		<div class="bg-success" style="padding:10px; border-radius: 5px; margin-top: 10px; margin-bottom: 10px;">
-			<p>
-				
-			</p>
-			
+				<p>
+					
+				</p>	
 		</div>
-<pre>{
-	"headers": {
-		"authorization": "Bearer <span>{API_TOKEN}</span>",
-		"content-type": "application/json",
-		"cache-control": "no-cache"
-	}
-}</pre>
-			
+		<pre>{
+		"headers": {
+			"authorization": "Bearer <span>{API_TOKEN}</span>",
+			"content-type": "application/json",
+			"cache-control": "no-cache"
+		}
+		}</pre>
+				
 	</div>
-	<hr>
+		<hr>
 
 	<div id="dokumentasi-schedule">
 			<h5><b class="text-uppercase">JADWAL PENGAMBILAN DATA</b></h5>
@@ -195,6 +199,7 @@
 		<hr>
 	@endforeach
 
+	</div>
 	<style type="text/css">
 		table th, td{
 			font-size: 10px!important;
@@ -219,6 +224,71 @@
        },100);
       }
 
+</script>
+
+<style type="text/css">
+	/* The side navigation menu */
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #111; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 10px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 10px;}
+}
+</style>
+
+<script type="text/javascript">
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+  document.getElementById("main").style.marginLeft = "250px";
+}
+
+/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("main").style.marginLeft = "0";
+}
 </script>
 @stop
 

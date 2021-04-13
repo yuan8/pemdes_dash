@@ -110,6 +110,7 @@ class MENUPROVIDER extends ServiceProvider
         $menu=[
             'top'=>[],
             'side_left'=>[
+                'Tahun Data '.$GLOBALS['tahun_access'],
                  [
                     'text'=>('KATEGORI'),
                     'href'=>route('admin.kategori.index',['tahun'=>$GLOBALS['tahun_access']]),

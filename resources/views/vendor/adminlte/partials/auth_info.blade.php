@@ -10,14 +10,14 @@
   <a href=""> Tentang </a>
 </li> 
 @if(Auth::check())
-<li>
+{{-- <li>
   <a href="javascript:void(0)" class="dropdown-toggle " data-toggle="dropdown" aria-expanded="true" id="sso_front_list" >SSO</a>
   <ul class="dropdown-menu" id="sso_content_front_list">
     <li>
       <a href="">loading...</a>
     </li>
   </ul>
-</li>
+</li> --}}
 @endif   
 
 @if(Auth::check())

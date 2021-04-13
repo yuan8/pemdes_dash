@@ -35,6 +35,8 @@
 					@endif
 						<th rowspan="2">KODEDAERAH</th>
 						<th rowspan="2">NAMA {{strtoupper($level_meta['level'])}}</th>
+						<th rowspan="2">STATUS PEMERITAHAN {{strtoupper($level_meta['level'])}}</th>
+
 					@if($level!=10)
 					<th rowspan="2">JUMLAH DESA</th>
 					<th rowspan="2">JUMLAH DESA TERDATA</th>
@@ -61,7 +63,7 @@
 					@endphp
 					<tr>
 						@if($level!=10)
-					@if(!isset($only1level))
+							@if(!isset($only1level))
 
 							<td scope="row" class="no-export">
 								@if(isset($dataset))
@@ -71,13 +73,16 @@
 
 								@endif
 							</td>
-						@endif
+							@endif
+
 						@endif
 
 
 						<td scope="row" >{{$d['id']}}</td>
 						<td scope="row" >{{$d['name']}}</td>
-							@if($level!=10)
+						<td  >{{$d['status_desa']}}</td>
+
+						@if($level!=10)
 						<td>{{HPV::nformat($d['jumlah_desa'])}}</td>
 						<td>{{HPV::nformat($d['jumlah_data_desa'])}}</td>
 

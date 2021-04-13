@@ -9,13 +9,20 @@
 @section('content')
 
 	<form action="{{route('admin.tablemap.update.view',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}" method="POST">
+		
 		@csrf
 		@method('PUT')
 		<div class="btn-group" style="margin-bottom: 10px;">
 			<button class="btn btn-primary" type="submit">SIMPAN</button>
 		</div>
+		<hr>
+		<p>
+			<input type="checkbox" id="t_hanya_desa" name="" value="10000000000" {{$data->start_level>0?'checked':''}}> <span>HANYA TAMPIL PADA TINGKAT DESA</span>
+		</p> 
 		@foreach($view as $k=>$level)
-	<div class="box box-primary">
+		@php
+		@endphp
+		<div class="box box-primary {{$k>=10?'t-no-des':'t-no-des'}}">
 		<div class="box-header with-border">
 			<h4><b>{{$level['head']}}</b></h4>
 
@@ -116,6 +123,16 @@
 
 @section('js')
 <script type="text/javascript">
+	$('#t_hanya_desa').on('change',function(){
+		if($(this).prop('checked')){
+			$('.t-no-des').css('display','none');
+		}else{
+			$('.t-no-des').css('display','block');
+		}
+	});
+
+	$('#t_hanya_desa').trigger('change');
+
 	function add_row(dom,c,level){
 		var c_l=$(dom+' .row-c').length;
 

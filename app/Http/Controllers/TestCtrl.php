@@ -24,7 +24,20 @@ class TestCtrl extends Controller
 
 	public function tt(Request $request){
 
+		$table=DB::table('master_table_map')->get();
 
+		foreach ($table as $key => $t) {
+			DB::table('data')->insertOrIgnore([
+				'type'=>'INTEGRASI',
+				'delivery_type'=>'AUTOMATION',
+				'table_view'=>$t->key_view,
+				'name'=>strtoupper(str_replace('_', ' ', str_replace('dash_', 'Data ', $t->name))),
+				'organization_id'=>15,
+				'dashboard'=>1,
+				'id_user'=>1,
+
+			]);
+		}
 
 		// $tt=DB::select("SELECT TABLE_NAME as name
 		// FROM INFORMATION_SCHEMA.TABLES
@@ -72,24 +85,24 @@ class TestCtrl extends Controller
 		// // dd($request->session()->key());
 
 
-		$x=DB::connection('mysql')->table('dash_potensi_lembaga_pemerintahan')->first();
+		// $x=DB::connection('mysql')->table('dash_potensi_lembaga_pemerintahan')->first();
 
-		foreach($x as $k=>$v){
-			if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
-				DB::table('master_column_map')->insertOrIgnore([
-				'name_column'=>$k,
-				'aggregate_type'=>'NONE',
-				'name'=>strtoupper(str_replace('_', ' ', str_replace('JUMLAH', '', strtoupper($k)))),
-				'satuan'=>'-',
-				'auth'=>0,
-				'dashboard'=>1,
-				'validate'=>1,
-				'id_user'=>1,
-				'id_ms_table'=>101
+		// foreach($x as $k=>$v){
+		// 	if(!in_array($k,['kode_desa','tahun','tanggal','bulan'])){
+		// 		DB::table('master_column_map')->insertOrIgnore([
+		// 		'name_column'=>$k,
+		// 		'aggregate_type'=>'NONE',
+		// 		'name'=>strtoupper(str_replace('_', ' ', str_replace('JUMLAH', '', strtoupper($k)))),
+		// 		'satuan'=>'-',
+		// 		'auth'=>0,
+		// 		'dashboard'=>1,
+		// 		'validate'=>1,
+		// 		'id_user'=>1,
+		// 		'id_ms_table'=>101
 				
-			]);
-			}
-		}
+		// 	]);
+		// 	}
+		// }
 
 		// $x=DB::table('dash_potensi_luas_wilayah')->get();
 
@@ -215,6 +228,7 @@ class TestCtrl extends Controller
 		header('Content-type: text/html');
 		$datenow=Carbon::now()->format('d F Y');
 		$GLOBALS['tahun_access']=$tahun;
+
 		return view('view_data.chart_offline')->with([
 			'level'=>$data['level'],
 			'title'=>$data['title'],
@@ -243,8 +257,10 @@ class TestCtrl extends Controller
 
 		$data=DB::table('data as d')
 		->join('category as c',[['c.id','=','d.organization_id'],['c.type','=',DB::raw("'INSTANSI'")]])
-		->selectRaw("d.*, c.name as i_name,c.id as i_id,c.type as i_type")
+		->leftjoin('master_table_map as m','m.key_view','=','d.table_view')
+		->selectRaw("d.*, c.name as i_name,c.id as i_id,c.type as i_type,m.id as id_table_map")
 		->where(['d.id'=>$id,'d.type'=>'INTEGRASI']);
+
 		$data=$data->first();
 
 	
@@ -330,14 +346,14 @@ class TestCtrl extends Controller
 		if($meta_table and $level){
 			if($request->kdparent){
 			$nama_pemda=((array)DB::table($level2['parent']['table'])
-			->selectRaw($level2['parent']['table_name'].' as name')->where($level2['parent']['table_kode'],$request->kdparent)->first())['name'];
+			->selectRaw('concat('.$level['parent']['level'].' '.','.$level2['parent']['table_name'].') as name')->where($level2['parent']['table_kode'],$request->kdparent)->first())['name'];
 			}else{
 				$nama_pemda='Per Provinsi';
 			}
 
 			$select= 
 			// "cfm.id as id_cmf, ".
-			"'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_dagri)) from master_desa as dds where left(dds.kode_dagri,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":'');
+			"'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_dagri)) from master_desa as dds where left(dds.kode_dagri,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":",(kd.stapem) as status_desa,kckc.nmkecamatan as nama_kecamatan ");
 
 			if($aggregate){
 					foreach (array_values($meta_table['columns']) as $key => $value) {
@@ -353,46 +369,62 @@ class TestCtrl extends Controller
 				}
 			}
 
-
-
-
-
 			$data=[];
+			$desa_only=false;
+
 
 			$paginate=$meta_table['start_level']>1000000000000?50:200;
 			if($meta_table['start_level']>1000000000000000){
-				Paginator::currentPageResolver(function ()  {
-		        return 1;
-		   	 });
+				$desa_only=true;
+		   	 };
 			}
 
 
+			$last_kode='';
+			$data_get=0;
+			$last_page=1;
+			$count_total=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
+			->join(DB::raw("(select * from ".$meta_table['table']." as dxdx)  as data"),
+				[[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]])
+			->selectRaw("count(distinct(".('kd.'.$level['table_kode']).")) as count")
+			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
+			->orderBy('kd.'.$level['table_kode'], 'asc')->pluck('count')
+			->first();
+
 
 			$x=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
-
-		
 			->join(DB::raw("(select * from ".$meta_table['table']." as dxdx)  as data"),
-				[
-				[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]])
+				[[DB::raw("left(data.kode_desa,".$level['count'].")"),'=','kd.'.$level['table_kode']],['data.tahun','=',DB::raw($tahun)]]);
+
+			if($desa_only){
+				$x=$x->
+			}
 			->selectRaw($select)
 			->groupBy(('kd.'.$level['table_kode']) )
 			->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
 			->orderBy('kd.'.$level['table_kode'], 'asc')
-			// ->toSql();
-			// return $x;
-			->paginate($paginate)->toArray();
+			->limit($paginate)
+			->get()->toArray();
 
-			// dd($x);
+			if(count($x)){
+				$data_get=count($x);
+				$last_page=((int)($count_total/$paginate));
+				if($last_page<=0){
+					$last_page=1;
+				}
+				$last_kode=((array)$x[$data_get-1])['id'];
+			}
 
-			$data=$x['data'];
+
+			$data=$x;
 			if($meta_table['start_level']<1000000000000){
-				if($paginate<$x['total']){
+				if($paginate<$count_total){
 
-					for ($p=2;$p<=$x['last_page'];$p++) {
-						$_REQUEST['page']=$p;
-						 Paginator::currentPageResolver(function () use ($p)  {
-					        return $p;
-					    });
+					for ($p=2;$p<=$last_page;$p++) {
+						// $_REQUEST['page']=$p;
+						//  Paginator::currentPageResolver(function () use ($p)  {
+					 //        return $p;
+					 //    });
 
 						$y=DB::table(DB::raw("(select *  from ".$level['table']." as ddd where ddd.".$level['table_kode']." like '".($level['kode']?$level['kode'].'%':"%")."') as kd"))
 			
@@ -403,9 +435,16 @@ class TestCtrl extends Controller
 						->groupBy(('kd.'.$level['table_kode']) )
 						->whereRaw('(kd.'.$level['table_kode']." <> '0' and kd.".$level['table_kode']." <> '00') ")
 						->orderBy('kd.'.$level['table_kode'], 'asc')
-					
-					->paginate($paginate)->toArray();
-						$data=array_merge($data,$y['data']);
+						->where('kd.'.$level['table_kode'],'>',$last_kode)
+						->limit($paginate)
+						->get()->toArray();
+
+						$data=array_merge($data,$y);
+
+						if(count($y)){
+							$data_get=count($y);
+							$last_kode=((array)$y[$data_get-1])['id'];
+						}
 					}
 				}
 			}
