@@ -33,9 +33,12 @@
 							<th rowspan="2" class="no-export">AKSI</th>
 						@endif
 					@endif
-						<th rowspan="2">KODEDAERAH</th>
-						<th rowspan="2">NAMA {{strtoupper($level_meta['level'])}}</th>
-						<th rowspan="2">STATUS PEMERITAHAN {{strtoupper($level_meta['level'])}}</th>
+
+					<th rowspan="2">KODEDAERAH</th>
+					<th rowspan="2">NAMA {{strtoupper($level_meta['level'])}}</th>
+					@if($level>=10)
+					<th rowspan="2">STATUS PEMERITAHAN {{strtoupper($level_meta['level'])}}</th>
+					@endif
 
 					@if($level!=10)
 					<th rowspan="2">JUMLAH DESA</th>
@@ -80,7 +83,9 @@
 
 						<td scope="row" >{{$d['id']}}</td>
 						<td scope="row" >{{$d['name']}}</td>
-						<td  >{{$d['status_desa']}}</td>
+						@if($level>=10)
+						<td >{{$d['status_desa']}}</td>
+						@endif
 
 						@if($level!=10)
 						<td>{{HPV::nformat($d['jumlah_desa'])}}</td>
