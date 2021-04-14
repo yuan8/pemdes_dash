@@ -32,7 +32,7 @@
 			<div class="form-group">
 				<label>Keywords</label>
 				<select class="form-control" id="keywords" name="keywords[]" multiple="">
-					@foreach(json_decode($data->keywords,true) as $k)
+					@foreach(json_decode($data->keywords??'[]',true)??[] as $k)
 					<option value="{{$k}}" selected="">{{$k}}</option>
 					@endforeach
 				</select>

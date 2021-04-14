@@ -21,11 +21,12 @@
 				<label>Deksripsi</label>
 				<textarea class="form-control" name="description">{!!$data->description!!}</textarea>
 			</div>
-
+			@php
+			@endphp
 			<div class="form-group">
 				<label>Keywords</label>
 				<select class="form-control" id="keywords" name="keywords[]" multiple="">
-					@foreach(json_decode($data->keywords??'[]') as $k)
+					@foreach(json_decode(trim($data->keywords)??'[]',true)??[] as $k)
 						<option value="{{$k}}" selected="">{{$k}}</option>
 					@endforeach
 				</select>

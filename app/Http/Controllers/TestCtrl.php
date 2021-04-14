@@ -346,14 +346,14 @@ class TestCtrl extends Controller
 		if($meta_table and $level){
 			if($request->kdparent){
 			$nama_pemda=((array)DB::table($level2['parent']['table'])
-			->selectRaw('concat('.$level['parent']['level'].' '.','.$level2['parent']['table_name'].') as name')->where($level2['parent']['table_kode'],$request->kdparent)->first())['name'];
+			->selectRaw("concat('".$level['parent']['level']." '".','.$level2['parent']['table_name'].') as name')->where($level2['parent']['table_kode'],$request->kdparent)->first())['name'];
 			}else{
 				$nama_pemda='Per Provinsi';
 			}
 
 			$select= 
 			// "cfm.id as id_cmf, ".
-			"'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_dagri)) from master_desa as dds where left(dds.kode_dagri,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":",(kd.stapem) as status_desa,kckc.nmkecamatan as nama_kecamatan ");
+			"'".$id."'".' as id_data,'.' kd.'.$level['table_kode']." as id, kd.".$level['table_name']." as name ".($level['count']!=10?", (select count(distinct(dds.kode_dagri)) from master_desa as dds where left(dds.kode_dagri,".$level['count'].") = kd.".$level['table_kode']." ) as jumlah_desa , count(distinct(data.kode_desa)) as jumlah_data_desa":",(kd.stapem) as status_desa");
 
 			if($aggregate){
 					foreach (array_values($meta_table['columns']) as $key => $value) {
