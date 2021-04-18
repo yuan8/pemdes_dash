@@ -16,20 +16,13 @@
 	<a href="javascript:void(0)" onclick="scrollToDOM('#dokumentasi-{{$d->id}}')">{{$d->name }} ({{$d->id}})</a>
 	@endforeach
 </div>
+	<button class="btn btn-primary background-primary" onclick="openNav()" style="position:fixed; bottom:10px; right:10px; height:100px; width: 100px; z-index: 99; border-radius: 50%">
+		MENU</button>
 
-	<nav class="navbar navbar-default">
-	  <div class="container-fluid">
-	    <div class="navbar-header">
-	      <a class="navbar-brand" href="javascript:void(0)" onclick="openNav()">
-	      	<i class="fa fa-hamburger"></i> Menu
-	      </a>
-	    </div>
-	  </div>
-	</nav>
-
+		<h4 class="text-center"><b>DOKUMENTASI API</b></h4>	
 	<div class="container-fluid">
 		<div id="dokumentasi-desa">
-			<h5><b class="text-uppercase">TABLE DAERAH</b></h5>
+			{{-- <h5><b class="text-uppercase">TABLE DAERAH</b></h5>
 
 			<div class="table table-responsive">
 				<table class="table-bordered table">
@@ -53,7 +46,7 @@
 						@endforeach
 					</tbody>
 				</table>
-			</div>
+			</div> --}}
 	</div>
 	<hr>
 
@@ -162,7 +155,7 @@
 			<p>{!!nl2br($d->description)!!}</p>
 			</div>
 
-			<div class="table-responsive" style="margin-bottom: 10px;">
+			<div class="table-responsive" style="margin-bottom: 10px; background: #fff">
 				<table class="table table-bordered">
 				<thead>
 					<tr>

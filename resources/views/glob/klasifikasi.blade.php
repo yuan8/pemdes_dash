@@ -29,7 +29,8 @@
 <div class="row">
 	@foreach($d['data'] as $key=>$k)
 		<div class="col-md-4">
-				<div class="box box-solid {{$conf_colors[$key]}} btn-ov box-b-gray hover-cat">
+				<a href="">
+					<div class="box box-solid {{$conf_colors[$key]}} btn-ov box-b-gray hover-cat">
 					<div class="box-header {{$conf_colors[$key]}} ">
 						<h5><b>{{$k['klasifikasi']}}</b></h5>
 					</div>
@@ -45,6 +46,7 @@
 	
 					</div>
 				</div>
+				</a>
 			</div>
 	@endforeach
 </div>
