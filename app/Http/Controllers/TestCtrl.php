@@ -24,20 +24,34 @@ class TestCtrl extends Controller
 
 	public function tt(Request $request){
 
-		$table=DB::table('master_table_map')->get();
+		// $table=DB::table('master_table_map')->get();
+
+		// foreach ($table as $key => $t) {
+		// 	DB::table('data')->insertOrIgnore([
+		// 		'type'=>'INTEGRASI',
+		// 		'delivery_type'=>'AUTOMATION',
+		// 		'table_view'=>$t->key_view,
+		// 		'name'=>strtoupper(str_replace('_', ' ', str_replace('dash_', 'Data ', $t->name))),
+		// 		'organization_id'=>15,
+		// 		'dashboard'=>1,
+		// 		'id_user'=>1,
+
+		// 	]);
+		// }
+
+		$table=DB::table('provinsi')->get();
 
 		foreach ($table as $key => $t) {
-			DB::table('data')->insertOrIgnore([
-				'type'=>'INTEGRASI',
-				'delivery_type'=>'AUTOMATION',
-				'table_view'=>$t->key_view,
-				'name'=>strtoupper(str_replace('_', ' ', str_replace('dash_', 'Data ', $t->name))),
-				'organization_id'=>15,
-				'dashboard'=>1,
-				'id_user'=>1,
+			DB::table('category')->where('name','PEMDA PROVINSI ' .strtoupper($t->nmprovinsi))->update([
+				'type'=>'INSTANSI',
+				'sub_type'=>'DAERAH',
+				'image_path'=>'/logo.png',
+				'name'=>'PEMDA PROVINSI ' .strtoupper($t->nmprovinsi),
 
 			]);
 		}
+
+		dd('ok');
 
 		// $tt=DB::select("SELECT TABLE_NAME as name
 		// FROM INFORMATION_SCHEMA.TABLES

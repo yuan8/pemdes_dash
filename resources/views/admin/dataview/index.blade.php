@@ -1,8 +1,8 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>DATA VIEW</h4>
+<h4>DATASET</h4>
 <div class="btn-group">
-<a href="{{route('admin.dataview.create',['tahun'=>$GLOBALS['tahun_access']])}}" class="btn btn-success">TAMBAH DATA VIEW</a>
+<a href="{{route('admin.dataview.create',['tahun'=>$GLOBALS['tahun_access']])}}" class="btn btn-success">TAMBAH DATASET</a>
 
 
 </div>

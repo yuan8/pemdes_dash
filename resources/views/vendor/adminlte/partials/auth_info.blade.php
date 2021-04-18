@@ -7,7 +7,7 @@
   </a> 
 </li> 
 <li>
-  <a href=""> Tentang </a>
+  <a href="{{route('public_tentang',['tahun'=>$GLOBALS['tahun_access']])}}"> Tentang </a>
 </li> 
 @if(Auth::check())
 {{-- <li>

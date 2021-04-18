@@ -22,7 +22,6 @@ class DataCtrl extends Controller
         ];
 
         
-
         if(in_array($type,['VISUALISASI','INFOGRAFIS','DATASET'])){
             $data=DB::connection('real')->table('data as d')
         ->leftJoin('category as i',[['i.id','=','d.organization_id'],['i.type','=',DB::raw("'INSTANSI'")]])
@@ -33,7 +32,6 @@ class DataCtrl extends Controller
                 ['d.name','like',DB::raw("'%".$req."%'")],
                 ['d.dashboard','=',true],
                 ['d.delivery_type','=',$type],
-
                  [DB::RAW("(case when d.type='FILE' then (d.year=".($tahun).") else true end)"),'=',true],
 
             ])
@@ -153,7 +151,7 @@ class DataCtrl extends Controller
 
 
             ])
-            ->paginate(10);
+            ->paginate(30);
 
            
         return view('data.organisasi')->with(['data'=>$data,'request'=>$request,'title'=>'INSTANSI','hm'=>true]);
@@ -577,7 +575,6 @@ class DataCtrl extends Controller
 
 
     public function detail($tahun,$id,$slug=null){
-        dd('s');
         $instansi=null;
         $data=DB::connection('real')->table('data as d')
         ->where('d.year',($tahun))

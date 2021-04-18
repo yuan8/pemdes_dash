@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Auth;
+use Validator;
+use Alert;
 class TableMapCtrl extends Controller
 {
 
@@ -80,8 +82,9 @@ class TableMapCtrl extends Controller
 
             }
 
-            $columns=DB::table('master_column_map')->where('id_ms_table',$id)->get();
-
+            $columns=DB::table('master_column_map as m')
+            ->selectraw("m.*,true as stored")
+            ->where('id_ms_table',$id)->get();
 
             return view('admin.tablemap.column.edit')->with(['data'=>$data,'columns'=>$columns,'master_c'=>$master_c]);
         }
@@ -131,9 +134,21 @@ class TableMapCtrl extends Controller
 
              foreach ($request->columns as $key => $c) {
                     $c=(array)$c;
+                    $valid=Validator::make($c,[
+                        'interval_nilai'=>'nullable|array',
+                        'interval_nilai.*'=>'nullable|'.($c['tipe_data']),
+
+                    ]);
+
+                    if($valid->fails()){
+                        Alert::error('Gagal',$c['name'].' '.$valid->errors()->first());
+                        return back();
+                    }
+
                     $c['auth']=(int)$c['auth'];
                     $c['dashboard']=(int)$c['dashboard'];
                     $c['validate']=(int)$c['validate'];
+                    $c['interval_nilai']=implode('|;|',$c['interval_nilai']??[]);
                     $c['id_user']=Auth::user()->id;
 
 

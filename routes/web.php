@@ -147,6 +147,47 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 	
 	Route::post('/ketagori/form/create','ADMIN\KategoriCtrl@store')->name('admin.kategori.store');
 
+	Route::prefix('/regional')->middleware('can:is_super')->group(function(){
+		Route::get('/','ADMIN\RegionalCtrl@index')->name('admin.region.index');
+		Route::get('/show/{id}','ADMIN\RegionalCtrl@show')->name('admin.region.show');
+		Route::get('/add/','ADMIN\RegionalCtrl@add')->name('admin.region.add');
+		Route::post('/store/','ADMIN\RegionalCtrl@store')->name('admin.region.store');
+		Route::post('/update/{id}','ADMIN\RegionalCtrl@update')->name('admin.region.update');
+		Route::post('/delete/{id}','ADMIN\RegionalCtrl@delete')->name('admin.region.delete');
+
+
+
+
+	});
+
+	Route::prefix('/setting')->middleware('can:is_super')->group(function(){
+		Route::get('/tentang-kami','ADMIN\SettingCtrl@index')->name('admin.set.index');
+		Route::post('/tentang-kami','ADMIN\SettingCtrl@update')->name('admin.set.update');
+
+
+	});
+
+
+	Route::prefix('/instansi')->middleware('can:is_super')->group(function(){
+		Route::get('/','ADMIN\InstansiCtrl@index')->name('admin.instansi.index');
+		Route::get('/add','ADMIN\InstansiCtrl@add')->name('admin.instansi.add');
+
+		Route::get('/show/{id}/{slug}','ADMIN\InstansiCtrl@show')->name('admin.instansi.show');
+		Route::post('/update/{id}','ADMIN\InstansiCtrl@update')->name('admin.instansi.update');
+		Route::post('/store/','ADMIN\InstansiCtrl@store')->name('admin.instansi.store');
+		Route::post('/delete/{id}','ADMIN\InstansiCtrl@delete')->name('admin.instansi.delete');
+
+
+
+
+	});
+
+	Route::prefix('/session')->middleware('can:is_super')->group(function(){
+		Route::get('/','ADMIN\SessionCtrl@index')->name('admin.session.index');
+		Route::post('/kill/{id}','ADMIN\SessionCtrl@kill')->name('admin.session.kill');
+
+	});
+
 	Route::prefix('validasi')->group(function(){
 		Route::get('/','ADMIN\ValidasiCtrl@index')->name('admin.validasi.index');
 		Route::get('/data','ADMIN\ValidasiCtrl@data')->name('admin.validasi.data');
@@ -234,6 +275,9 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 
 Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
+
+	Route::get('/tentang-kami', 'ADMIN\SettingCtrl@public_tentang')->name('public_tentang');
+
     Route::get('/get-descrition-data/{id}','HomeCtrl@get_data_description')->name('api.data.desc');
 
 
@@ -241,6 +285,8 @@ Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 		Route::post('sso-try-attemp','SSOCtrl@attemp')->name('sso.attemp');
 		Route::get('sso-login/{id}','SSOCtrl@login')->name('sso.login');
 	});
+
+
 
 	Route::get('/keuangan-desa/', 'DASH\KeuanganDesaCtrl@index')->name('d.keuangan_desa.index');
 	Route::get('/keuangan-desa/data/{index?}', 'DASH\KeuanganDesaCtrl@show')->name('d.keuangan_desa.show');
@@ -265,7 +311,9 @@ Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 
 	
 	Route::get('/query-data', 'DataCtrl@index')->name('query.data');
+
 	Route::get('/instansi', 'DataCtrl@instansi')->name('organisasi');
+
 	Route::get('/tema', 'DataCtrl@tema')->name('tema');
 
 	Route::get('/query-data-type/{type}', 'DataCtrl@delivery_type')->name('query.data.delivery');

@@ -94,6 +94,8 @@
 							<tbody id="content_view_{{$k}}">
 								@foreach($level['map'] as $in=>  $r)
 									@if(count($r))
+									@php
+									@endphp
 										<tr class="row-c">
 											<td>
 												<button onclick="$(this).parent().parent().remove();" class="btn btn-xs btn-danger" type="button">
@@ -107,7 +109,7 @@
 
 											<td colspan="{{4/count($r)}}">
 												<select class="form-control" required="" name="view[{{$k}}][{{$in}}][{{$rdd}}][type]">
-													<option value="map" {{$d['type']=="map"?'selected':''}}>MAP</option>
+													<option value="map" {{$k>4?'disabled':''}} {{$d['type']=="map"?'selected':''}}>MAP </option>
 													<option value="bar" {{$d['type']=="bar"?'selected':''}}>BAR CHART</option>
 													<option value="column" {{$d['type']=="column"?'selected':''}}>COLUMN CHART</option>
 													<option value="line" {{$d['type']=="line"?'selected':''}}>LINE CHART</option>
@@ -137,7 +139,7 @@
 		<div class="col-md-4">
 			<div class="box box-primary">
 				<div class="box-header with-border">
-					<button type="submit" class="btn btn-primary background-blue">Tambah</button>
+					<button type="submit" class="btn btn-primary background-blue">UPDATE</button>
 				</div>
 				<div class="box-body">
 					
@@ -167,11 +169,13 @@
 					</script>
 					<div class="form-group">
 						<label>Instansi</label>
-						<select class="form-control" id="instansi"   name="id_instansi" required="">
-						@php
-								$instansi=explode('|||',$data->instansi);
+						<select class="form-control" id="instansi"  name="id_instansi" required="">
+							@php
+								$instansi_R=explode('|||',$data->instansi);
 							@endphp
-							<option value="{{$instansi[0]}}" selected="">INSTANSI {{$instansi[1]}}</option>	
+							@foreach ($instansi as $i)
+								<option value="{{$i->id}}" {{$instansi_R[0]==$i->id?'selected':''}}>{{$i->text}}</option>
+							@endforeach
 						</select>
 					</div>
 					<div class="form-group">
@@ -188,6 +192,7 @@
 							@endforeach
 						</select>
 						<script type="text/javascript">
+							$('#instansi').select2();
 							$('#kategori').select2({
 								'ajax':{
 									url:'{{route('api.meta.kategori')}}',
@@ -210,27 +215,7 @@
 								}
 							});
 
-							$('#instansi').select2({
-								'ajax':{
-									url:'{{route('api.meta.instansi')}}',
-									headers:{
-										'Authorization':'Bearer {{Auth::User()->api_token}}',
-										 "Content-Type" : "application/json",
-									},
-									data: function (term, page) {
-							            return {
-							                q: term.term
-							            };
-							        },
-							        results: function (data, page) {
-							            console.log(data);
-							            return {
-							                results: data.itemName,
-							                more: more
-							            };
-							        }
-								}
-							});
+							
 						</script>
 					</div>
 				</div>
@@ -242,7 +227,7 @@
 		<div id="view_chose" class="">
 			<div class=" bg-success"  >
 				<select class="form-control" required="" name="view[XXXLEVEL][XXXROW][XXXRODATA][type]">
-				<option value="map">MAP</option>
+				<option value="map" xxxxx>MAP</option>
 				<option value="bar">BAR CHART</option>
 				<option value="column">COLUMN CHART</option>
 				<option value="line">LINE CHART</option>
@@ -289,6 +274,10 @@
 		tm=tm.replace(/XXXCOL/g,col);
 
 		tm=tm.replace(/XXXLEVEL/g,level);
+
+		if(level>4){
+			tm=tm.replace(/xxxxx/g,'disabled');
+		}
 		tm=tm.replace(/XXXROW/g,new Date().getTime());
 
 

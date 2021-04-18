@@ -31,6 +31,11 @@ class Data extends Migration
             $table->text('keywords')->nullable();
             $table->bigInteger('organization_id')->unsigned()->nullable();
             $table->mediumText('description')->nullable();
+            $table->bigInteger('id_user')->nullable();
+            $table->bigInteger('id_user_update')->nullable();
+            $table->integer('status')->default(3);
+            $table->mediumText('comments')->nullable();
+
             $table->timestamps();
 
             $table->foreign('organization_id')

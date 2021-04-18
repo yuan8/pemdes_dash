@@ -2,7 +2,7 @@
 @section('content_header')
 <h4>VIEW DATA TABLE [{{$data->table}}]</h4>
 <div class="btn-group">
-
+	
 @stop
 
 
@@ -58,6 +58,9 @@
 							</thead>
 							<tbody id="content_view_{{$k}}">
 								@foreach($level['map'] as $in=>  $r)
+									@php
+										// dd($r);
+									@endphp
 									@if(count($r))
 										<tr class="row-c">
 											<td>
@@ -68,7 +71,7 @@
 										@foreach($r as $rdd=> $d)
 											<td colspan="{{4/count($r)}}">
 												<select class="form-control" required="" name="view[{{$k}}][{{$in}}][{{$rdd}}][type]">
-													<option value="map" {{$d->type=="map"?'selected':''}}>MAP</option>
+													<option value="map" {{$d->type=="map"?'selected':''}} {{$d->level<=4?'':'disabled'}}>MAP</option>
 													<option value="bar" {{$d->type=="bar"?'selected':''}}>BAR CHART</option>
 													<option value="column" {{$d->type=="column"?'selected':''}}>COLUMN CHART</option>
 													<option value="line" {{$d->type=="line"?'selected':''}}>LINE CHART</option>
@@ -102,15 +105,13 @@
 		<div id="view_chose" class="">
 			<div class=" bg-success"  >
 				<select class="form-control" required="" name="view[XXXLEVEL][XXXROW][XXXRODATA][type]">
-				<option value="map">MAP</option>
+				<option value="map" disabled_aja >MAP</option>
 				<option value="bar">BAR CHART</option>
 				<option value="column">COLUMN CHART</option>
 				<option value="line">LINE CHART</option>
 				<option value="table">TABLE</option>
 				<option value="max">(4) DATA NILAI TERTINGGI</option>
-					<option value="pie"  >PIE (4) DATA NILAI TERTINGGI </option>
-
-
+				<option value="pie"  >PIE (4) DATA NILAI TERTINGGI </option>
 			</select>
 			</div>
 		</div>
@@ -123,6 +124,7 @@
 
 @section('js')
 <script type="text/javascript">
+
 	$('#t_hanya_desa').on('change',function(){
 		if($(this).prop('checked')){
 			$('.t-no-des').css('display','none');
@@ -160,6 +162,14 @@
 
 		tm=tm.replace(/XXXLEVEL/g,level);
 		tm=tm.replace(/XXXROW/g,new Date().getTime());
+
+		if(parseInt(level)>4){
+			tm=tm.replace(/disabled_aja/g,'disabled');
+
+		}else{
+			tm=tm.replace(/disabled_aja/g,'');
+
+		}
 
 
 		var tm_f='<tr class="row-c"><td><button onclick="$(this).parent().parent().remove();" class="btn btn-xs btn-danger" type="button"><i class="fa fa-trash"></i></button></td>';

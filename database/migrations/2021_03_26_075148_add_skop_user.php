@@ -19,6 +19,7 @@ class AddSkopUser extends Migration
             $table->bigInteger('id_regional')->unsigned();
             $table->bigInteger('id_user')->unsigned();
             $table->timestamps();
+            $table->unique(['id_regional','id_user']);
              $table->foreign('id_regional')
                   ->references('id')->on('master_regional')
                   ->onDelete('cascade')->onUpdate('cascade');

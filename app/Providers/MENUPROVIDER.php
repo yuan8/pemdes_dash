@@ -110,7 +110,18 @@ class MENUPROVIDER extends ServiceProvider
         $menu=[
             'top'=>[],
             'side_left'=>[
+
+
                 'Tahun Data '.$GLOBALS['tahun_access'],
+                 [
+                    'text'=>('USER DASHBOARD'),
+                    'href'=>route('admin.session.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'class'=>'',
+                    'icon'=>'fa fa-circle',
+                    'can'=>['is_super']
+
+
+                ],
                  [
                     'text'=>('KATEGORI'),
                     'href'=>route('admin.kategori.index',['tahun'=>$GLOBALS['tahun_access']]),
@@ -120,6 +131,7 @@ class MENUPROVIDER extends ServiceProvider
 
 
                 ],
+                
                  [
                     'text'=>('TABLE MAP'),
                     'href'=>route('admin.tablemap.index',['tahun'=>$GLOBALS['tahun_access']]),
@@ -130,11 +142,11 @@ class MENUPROVIDER extends ServiceProvider
                 ],
 
                 [
-                    'text'=>('DATASET'),
+                    'text'=>('DATASET MANUAL'),
                     'href'=>route('admin.data.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
-                    'can'=>['is_super']
+                    'can'=>['is_daerah']
 
                 ],
                 [
@@ -145,20 +157,58 @@ class MENUPROVIDER extends ServiceProvider
                 ],
                
                 [
-                    'text'=>('DATA VIEW'),
+                    'text'=>('DATASET'),
                     'href'=>route('admin.dataview.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
+                    'can'=>['is_admin']
+
+                ],
+                [
+                    'text'=>('MANAJEMEN INSTANSI'),
+                    'href'=>route('admin.instansi.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'class'=>'',
+                    'icon'=>'fa fa-user',
                     'can'=>['is_super']
+                    
+
+                ],
+                 [
+                    'text'=>('MANAJEMEN REGIONAL'),
+                    'href'=>route('admin.region.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'class'=>'',
+                    'icon'=>'fa fa-map',
+                    'can'=>['is_super']
+                    
 
                 ],
                  
                  [
-                    'text'=>('USERS'),
+                    'text'=>('MANAJEMEN USER'),
                     'href'=>route('admin.users.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-users',
                     'can'=>['is_super']
+                    
+
+                ],
+
+                 [
+                    'text'=>('SETTING'),
+                    'class'=>'',
+                    'submenu_class'=>'',
+                    'can'=>['is_super'],
+                    'href'=>'#',
+                    'submenu'=>[
+                        [
+                            'text'=>'TENTANG',
+                            'href'=>route('admin.set.index',['tahun'=>$GLOBALS['tahun_access']]),
+                            'class'=>'',
+                            'submenu_class'=>'',
+                            'icon'=>'fa fa-users',
+                            'can'=>['is_super']
+                        ]
+                    ]
                     
 
                 ],

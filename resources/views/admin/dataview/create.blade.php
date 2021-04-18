@@ -1,6 +1,6 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>TAMBAH DATA VIEW</h4>
+<h4>TAMBAH DATASET</h4>
 
 @stop
 

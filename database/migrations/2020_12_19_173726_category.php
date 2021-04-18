@@ -17,12 +17,12 @@ class Category extends Migration
         Schema::create('category', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('type');
+            $table->string('sub_type')->nullable();
             $table->string('name');
             $table->bigInteger('id_parent')->unsigned()->nullable();
             $table->string('slug');
             $table->string('image_path')->nullable();
             $table->string('route')->nullable();
-            
             $table->mediumText('description')->nullable();
 
             $table->timestamps();

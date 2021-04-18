@@ -50,12 +50,39 @@ class ValidasiCtrl extends Controller
 
 	public function index($tahun,Request $request){
 		$table=DB::table('master_table_map')->where('edit_daerah',true)->get();
+		$U=Auth::User();
 		$data_index=0;
 		if($request->data){
 			$data_index=$request->data;
 		}
 
-		if(Auth::User()->role==2){
+		if(Auth::User()->role==4){
+			  $kota=DB::table('kabkota as k')->join(
+                'provinsi as p','p.kdprovinsi','=',DB::raw("LEFT(k.kdkabkota,2)")
+            )->selectraw("LEFT(k.kdkabkota,2) as id_provinsi,k.kdkabkota as id,CONCAT(p.nmprovinsi,' - ',k.nmkabkota) as text")
+			 ->where('k.kdkabkota','=',$U->kode_daerah)
+            ->first();
+
+			if($kota){
+				
+				$kodedaerah=[
+					'kdprovinsi'=>$kota->id_provinsi,
+					'kdkota'=>$kota->id,
+					'kdkecamatan'=>null,
+					'kddesa'=>null,
+				];
+				return view('admin.validasi.index_daerah')->with([
+					'provinsi'=>$kodedaerah['kdprovinsi'],
+					'kodedaerah'=>$kodedaerah['kdkota'],'data_index'=>$data_index,'table'=>$table,'nama_daerah'=>$kota->text]);
+
+			}else{
+
+				return abort('404');
+
+			}
+		}
+		
+		if(Auth::User()->role==3){
 			$provinsi=DB::table('provinsi')
 			->whereIn('kdprovinsi',session('_regional_access')->toArray())
 			->where('kdprovinsi','!=','0')->where('kdprovinsi','!=','00')->get();
@@ -163,7 +190,7 @@ class ValidasiCtrl extends Controller
 		if($request->kdkecamatan){
 			$kddd=$request->kdkecamatan;
 
-			$where[]=[DB::raw("left(md.kode_bps,7)"),'=',$request->kdkecamatan];
+			$where[]=[DB::raw("left(md.kode_bps,6)"),'=',$request->kdkecamatan];
 			$daerah=DB::table('kecamatan')
 			->where('kdkecamatan',$request->kdkecamatan)->selectRaw("'".$daerah->parent." ".$daerah->name." -> ' as parent,
 				kdkecamatan as id,'KECAMATAN' as jenis,nmkecamatan as name")
@@ -183,7 +210,7 @@ class ValidasiCtrl extends Controller
 
 		$data=DB::connection('mysql')->table('master_desa as md')
 		->join($table_map['table'].' as d',[['md.kode_bps','=','d.kode_desa'],['d.tahun','=',DB::Raw($tahun)]])
-		->leftJoin('kecamatan as mkc',DB::raw("left(md.kode_bps,7)"),DB::raw('='),DB::raw('mkc.kdkecamatan'))
+		->leftJoin('kecamatan as mkc',DB::raw("left(md.kode_bps,6)"),DB::raw('='),DB::raw('mkc.kdkecamatan'))
 		->leftJoin('validasi_confirm as cfm',[
 			[DB::raw("(d.kode_desa)"),'=',DB::raw('cfm.kode_desa')],
 			['cfm.table','=',DB::RAW("'".$table_map['table']."'") ],

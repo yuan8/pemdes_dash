@@ -96,7 +96,7 @@
 										@foreach($r as $rdd=> $d)
 											<td colspan="{{4/count($r)}}">
 												<select class="form-control" required="" name="view[{{$k}}][{{$in}}][{{$rdd}}][type]">
-													<option value="map" {{$d->type=="map"?'selected':''}}>MAP</option>
+													<option value="map" {{$k>4?'disabled':''}} {{$d->type=="map"?'selected':''}}>MAP</option>
 													<option value="bar" {{$d->type=="bar"?'selected':''}}>BAR CHART</option>
 													<option value="column" {{$d->type=="column"?'selected':''}}>COLUMN CHART</option>
 													<option value="line" {{$d->type=="line"?'selected':''}}>LINE CHART</option>
@@ -156,7 +156,11 @@
 					</script>
 					<div class="form-group">
 						<label>Instansi</label>
-						<select class="form-control" id="instansi"   name="id_instansi" required="">	
+						<select class="form-control" id="instansi"   name="id_instansi" required="">
+						@foreach ($instansi as $i)
+							<option value="{{$i->id}}">{{$i->text}}</option>
+								{{-- expr --}}
+							@endforeach	
 						</select>
 					</div>
 					<div class="form-group">
@@ -169,7 +173,7 @@
 								'ajax':{
 									url:'{{route('api.meta.kategori')}}',
 									headers:{
-										'Authorization':'Bearer {{Auth::User()->api_token}}',
+										'authorization':'Bearer {{Auth::User()->api_token}}',
 										 "Content-Type" : "application/json",
 									},
 									data: function (term, page) {
@@ -187,27 +191,9 @@
 								}
 							});
 
-							$('#instansi').select2({
-								'ajax':{
-									url:'{{route('api.meta.instansi')}}',
-									headers:{
-										'Authorization':'Bearer {{Auth::User()->api_token}}',
-										 "Content-Type" : "application/json",
-									},
-									data: function (term, page) {
-							            return {
-							                q: term.term
-							            };
-							        },
-							        results: function (data, page) {
-							            console.log(data);
-							            return {
-							                results: data.itemName,
-							                more: more
-							            };
-							        }
-								}
-							});
+							$('#instansi').select2();
+
+
 						</script>
 					</div>
 				</div>
@@ -219,7 +205,7 @@
 		<div id="view_chose" class="">
 			<div class=" bg-success"  >
 				<select class="form-control" required="" name="view[XXXLEVEL][XXXROW][XXXRODATA][type]">
-				<option value="map">MAP</option>
+				<option value="map" xxxxx>MAP</option>
 				<option value="bar">BAR CHART</option>
 				<option value="column">COLUMN CHART</option>
 				<option value="line">LINE CHART</option>
@@ -266,6 +252,9 @@
 
 		tm=tm.replace(/XXXLEVEL/g,level);
 		tm=tm.replace(/XXXROW/g,new Date().getTime());
+		if(level>4){
+			tm=tm.replace(/xxxxx/g,'disabled');
+		}
 
 
 		var tm_f='<tr class="row-c"><td><button onclick="$(this).parent().parent().remove();" class="btn btn-xs btn-danger" type="button"><i class="fa fa-trash"></i></button></td>';

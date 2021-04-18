@@ -252,7 +252,15 @@ class HELPERPROVIDER extends ServiceProvider
 			],
 			[
 				'val'=>2,
-				'text'=>'ADMIN REGIONAL / BADAN'
+				'text'=>'ADMIN PUSAT'
+			],
+			[
+				'val'=>3,
+				'text'=>'ADMIN REGIONAL'
+			],
+			[
+				'val'=>4,
+				'text'=>'ADMIN KOTA/KAB'
 			],
 
 
@@ -269,7 +277,17 @@ class HELPERPROVIDER extends ServiceProvider
 				# code...
 				break;
 			case 2:
+			$data['text']='ADMIN PUSAT';
+
+				# code...
+				break;
+			case 3:
 			$data['text']='ADMIN REGIONAL';
+
+				# code...
+				break;
+			case 4:
+			$data['text']='ADMIN KAB/KOTA';
 
 				# code...
 				break;

@@ -19,6 +19,8 @@ class AddRegionalDetail extends Migration
             $table->bigInteger('id_regional')->unsigned();
             $table->bigInteger('kode_daerah');
             $table->timestamps();
+            $table->unique(['id_regional','kode_daerah']);
+
              $table->foreign('id_regional')
                   ->references('id')->on('master_regional')
                   ->onDelete('cascade')->onUpdate('cascade');

@@ -101,6 +101,7 @@ class DataCtrl extends Controller
 	}
 
 	public function create($tahun,$jenis){
+		$u=Auth::User();
 		$view=[];
 		 foreach([2=>'PROVINSI',4=>'KOTA/KAB',7=>'KECEMATAN',10=>"DESA/KELURAHAN"] as $kl=>$l){
                 $view[$kl]=[
@@ -117,7 +118,15 @@ class DataCtrl extends Controller
                 }                
           }
 
-		return view('admin.data.handle.create_data_set')->with(['jenis'=>$jenis,'view'=>$view]);
+          if($u->role!=1){
+          	$instansi=DB::table('category as c')->where('type','INSTANSI')
+          	->join('user_instansi as i','i.instansi_id','=','c.id')
+          	->where('i.user_id',$u->id)->selectRaw('c.id, c.name as text')->get();
+          }else{
+          	$instansi=DB::table('category as c')->where('type','INSTANSI')->get();
+          }
+
+		return view('admin.data.handle.create_data_set')->with(['instansi'=>$instansi,'jenis'=>$jenis,'view'=>$view]);
 
 		// switch ($jenis) {
 		// 	case 'TABLE':
@@ -316,6 +325,15 @@ class DataCtrl extends Controller
 		
 
 		if($data){
+
+			if($U->role!=1){
+          	$instansi=DB::table('category as c')->where('type','INSTANSI')
+          	->join('user_instansi as i','i.instansi_id','=','c.id')
+          	->where('i.user_id',$U->id)->selectRaw('c.id, c.name as text')->get();
+          }else{
+          	$instansi=DB::table('category as c')->where('type','INSTANSI')->get();
+          }
+
 			$map_view=[];
 
 			if($data->delivery_type=='VISUALISASI'){
@@ -345,7 +363,7 @@ class DataCtrl extends Controller
 	              }
 
 
-				return view('admin.data.handle.edit_data_set')->with(['data'=>$data,'jenis'=>$data->delivery_type,'view'=>$view]);
+				return view('admin.data.handle.edit_data_set')->with(['data'=>$data,'jenis'=>$data->delivery_type,'view'=>$view,'instansi'=>$instansi]);
 			}
 			
 
@@ -418,7 +436,7 @@ class DataCtrl extends Controller
 						'type'=>'FILE',
 						'extension'=>$ext,
 						'description'=>$request->description,
-						'organization_id'=>$request->id_instansi??15,
+						'organization_id'=>$request->id_instansi,
 						'size'=>$size,
 						'dashboard'=>(boolean)(($request->dashboard)),
 						'auth'=>(boolean)(($request->dashboard)?$request->auth:0),

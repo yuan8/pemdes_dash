@@ -1,6 +1,6 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>EDIT DATA VIEW</h4>
+<h4>EDIT DATASET</h4>
 @stop
 
 @section('content')
