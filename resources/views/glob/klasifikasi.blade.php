@@ -16,7 +16,7 @@
 
 
 						</h1>
-						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Data Desa Kelurahan Telah entri data di Sistem {{$d['name']}}</p>
+						<p class="background-primary btn-ov text-white f-10" style="padding:10px;">Desa Kelurahan Telah entri data di Sistem {{$d['name']}}</p>
 						
 					</div>
 				</div>
