@@ -31,7 +31,7 @@ class HomeCtrl extends Controller
                 'name'=>'Prodeskel',
                 'link'=>'http://prodeskel.binapemdes.kemendagri.go.id',
                 'data'=>(array)DB::connection('mysql')->table('dash_klasifikasi as d')
-                        ->selectRaw("(select count(distinct(dd.kode_bps)) from master_desa as dd ) as jumlah_desa,count(distinct(d.kode_desa)) as count,d.klasifikasi")
+                        ->selectRaw("(select count(distinct(dd.kode_dagri)) from master_desa as dd ) as jumlah_desa,count(distinct(d.kode_desa)) as count,d.klasifikasi")
                         ->groupBy('d.klasifikasi')
                         ->where('d.tahun',$tahun)
                         
@@ -43,7 +43,7 @@ class HomeCtrl extends Controller
                 'name'=>'Epdeskel',
                 'link'=>'http://epdeskel.binapemdes.kemendagri.go.id',
                 'data'=>DB::connection('mysql')->table('status_deskel as d')
-                        ->selectRaw("(select count(distinct(dd.kode_bps)) from master_desa as dd ) as jumlah_desa,count(distinct(d.kode_desa)) as count,d.klasifikasi")
+                        ->selectRaw("(select count(distinct(dd.kode_dagri)) from master_desa as dd ) as jumlah_desa,count(distinct(d.kode_desa)) as count,d.klasifikasi")
                         ->groupBy('d.klasifikasi')
                         ->where('d.tahun',$tahun)
                         ->get()->toArray(),
@@ -58,25 +58,27 @@ class HomeCtrl extends Controller
                 $data[$key]['data'][$i]=(array)$c;
                 $value['data'][$i]=(array)$c;
 
-            }
 
-            if(!isset($data[$key]['rekap']['jumlah_desa'])){
-                $data[$key]['rekap']=[
-                    'jumlah_desa'=>(int)isset($value['data'][0]['jumlah_desa'])?$value['data'][0]['jumlah_desa']:0,
-                    'count'=>isset($value['data'][0]['count'])?(int)$value['data'][0]['count']:0
-                ];
-            }else{
-                foreach ($value['data'] as $i => $c) {
-                    # code...
-                    if($key>0){
-                     $data[$key]['rekap']['count']+=(int)$c['count'];
+                if(!isset($data[$key]['rekap']['jumlah_desa'])){
+                    $data[$key]['rekap']=[
+                        'jumlah_desa'=>(int)isset($value['data'][0]['jumlah_desa'])?$value['data'][0]['jumlah_desa']:0,
+                        'count'=>isset($value['data'][0]['count'])?(int)$value['data'][0]['count']:0
+                    ];
+                }else{
+                    foreach ($value['data'] as $i => $c) {
+                        $c=(array)$c;
+                        # code...
+                        if($i>0){
+                            $data[$key]['rekap']['count']+=(int)$c['count'];
 
+
+                        }
                     }
                 }
             }
 
-        }
 
+        }
 
         return [
             'status'=>200,

@@ -159,7 +159,58 @@ if(isset($bind_side_left)){
         <!-- /.content-wrapper -->
 
         {{-- @hasSection('footer') --}}
-        <footer class="main-footer background-img-box">
+        <footer class="main-footer background-primary text-white">
+            <div class="row" >
+                <div class="col-md-4 text-center">
+                    <img src="{{asset('logo.png')}}" style="width:30px; margin-bottom: 10px;"> 
+                </div>
+                <div class="col-md-8">
+                    <H4 class="text-center">Layanan Terkait</H4>
+                    <hr>
+                    
+                </div>
+
+            </div>
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-md-4" style="float:left; position: relative;">
+                        
+                         <p>Jl. Raya Pasar Minggu No.19, RT.7/RW.1, Pejaten Barat, Ps. Minggu, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12510 </p>
+
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled">
+                        <li><a href="http://www.setjen.kemendagri.go.id/" target="_blank">Sekretariat Jenderal</a></li>
+                        <li><a href="http://www.ditjenpum.go.id/" target="_blank">Ditjen Bina Administrasi Kewilayahan</a></li>
+                        <li><a href="http://www.bangda.kemendagri.go.id/" target="_blank">Ditjen Bina Pembangunan Daerah</a></li>
+                        <li><a href="http://www.dukcapil.kemendagri.go.id/" target="_blank">Ditjen Kependudukan dan Pancatatan Sipil</a></li>
+                        <li><a href="http://itjen.kemendagri.go.id/" target="_blank">Inspektorat Jenderal</a></li>
+                        <li><a href="http://diklat.kemendagri.go.id/" target="_blank">Badan Pengembangan Sumber Daya Manusia</a></li>
+                </ul>
+                   
+                    <style type="text/css">
+                        ul li a{
+                            color:#fff;
+                        }
+                    </style>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled">
+                                                            <li><a href="http://kesbangpol.kemendagri.go.id/" target="_blank">Ditjen Politik dan Pemerintahan Umum</a></li>
+                                                            <li><a href="http://otda.kemendagri.go.id/" target="_blank">Ditjen Otonomi Daerah</a></li>
+                                                            <li><a href="http://binapemdes.kemendagri.go.id/" target="_blank">Ditjen Bina Pemerintahan Desa</a></li>
+                                                            <li><a href="http://keuda.kemendagri.go.id/" target="_blank">Ditjen Bina Keuangan Daerah</a></li>
+                                                            <li><a href="http://bpp.kemendagri.go.id/" target="_blank">Badan Penelitian dan Pengembangan</a></li>
+                                                            <li><a href="http://www.ipdn.ac.id/" target="_blank">Institut Pemerintahan Dalam Negeri</a></li>
+                                                    </ul>
+                </div>
+            </div>
+           <div class="row " style="background: yellow;">
+               <div class="col-md-12 text-center">
+                    <div class="text-center" style="color:#222">
+                 <h5><b>DITJEN BINA PEMERINTAHAN DESA - Copyright &copy {{$GLOBALS['tahun_access']}}</b></h5>
+            </div>
+               </div>
+           </div>
         </footer>
         {{-- @endif --}}
 

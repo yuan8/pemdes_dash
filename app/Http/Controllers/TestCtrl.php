@@ -24,22 +24,24 @@ class TestCtrl extends Controller
 
 	public function tt(Request $request){
 
-		// $table=DB::table('master_table_map')->get();
+		$table=DB::table('master_table_map')->get();
 
-		// foreach ($table as $key => $t) {
-		// 	DB::table('data')->insertOrIgnore([
-		// 		'type'=>'INTEGRASI',
-		// 		'delivery_type'=>'AUTOMATION',
-		// 		'table_view'=>$t->key_view,
-		// 		'name'=>strtoupper(str_replace('_', ' ', str_replace('dash_', 'Data ', $t->name))),
-		// 		'organization_id'=>15,
-		// 		'dashboard'=>1,
-		// 		'id_user'=>1,
+		foreach ($table as $key => $t) {
+			DB::table('data')->insertOrIgnore([
+				'type'=>'INTEGRASI',
+				'delivery_type'=>'AUTOMATION',
+				'table_view'=>$t->key_view,
+				'name'=>strtoupper(str_replace('_', ' ', str_replace('dash_', 'Data ', $t->name))),
+				'organization_id'=>23,
+				'dashboard'=>1,
+				'id_user'=>1,
 
-		// 	]);
-		// }
+			]);
+		}
 
-		$table=DB::table('provinsi')->get();
+		dd('ss');
+
+		$table=DB::table('master_table_map')->get();
 
 		foreach ($table as $key => $t) {
 			DB::table('category')->where('name','PEMDA PROVINSI ' .strtoupper($t->nmprovinsi))->update([

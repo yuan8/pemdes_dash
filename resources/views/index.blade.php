@@ -51,7 +51,8 @@
 	</div>
 </div>
 
-<div class="row" style="background: #222">
+@if(count($videos))
+<div class="row" style="background: #222; margin-top: 20px; min-height: 100px;">
 	<div class="col-md-12">
 		<h3 class="text-center text-white "><b>VIDEO PROFIL DESA</b></h3>
 	
@@ -73,6 +74,7 @@
 		
 	</div>
 </div>
+@endif
 <style type="text/css">
 	
 </style>
