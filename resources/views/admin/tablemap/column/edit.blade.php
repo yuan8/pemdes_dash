@@ -173,8 +173,8 @@
 
 
 			},
-			init:function(key==null){
-				if(key){
+			init:function(key=null){
+				if(key!=null){
 					var ct=this.items[key];
 
 					var interval_nilai=ct.interval_nilai??'';
