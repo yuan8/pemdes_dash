@@ -29,7 +29,7 @@
 					<th>JENIS</th>
 					<th>IMAGE</th>
 					<th>NAMA</th>
-					<th>ROUTE ACCESS</th>
+					{{-- <th>ROUTE ACCESS</th> --}}
 					<th>DESKRIPSI</th>
 
 				</tr>
@@ -45,7 +45,7 @@
 						<td>{{str_replace('_',' ',$d->type)}}</td>
 						<td><img style="width:20px;" src="{{asset($d->image_path)}}"></td>
 						<td>{{$d->name}}</td>
-						<td>{{$d->route}}</td>
+						{{-- <td>{{$d->route}}</td> --}}
 						<td>{{$d->description}}</td>
 
 					</tr>

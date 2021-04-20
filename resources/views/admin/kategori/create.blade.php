@@ -28,10 +28,11 @@
 				<label>DESKRIPSI</label>
 				<textarea class="form-control" name="description"></textarea>
 			</div>
-			<div class="form-group">
+			{{-- <div class="form-group">
 				<label>ROUTE</label>
 				<input type="text" class="form-control" name="route" >
-			</div>
+			</div> --}}
+			<input type="hidden" name="route" value="query.data.categorycal">
 			<div class="form-group">
 				<label>IMAGE</label>
 				<input type="file" accept="image/png" name="image_path" required="">
