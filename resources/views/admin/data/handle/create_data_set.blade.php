@@ -156,10 +156,11 @@
 					</script>
 					<div class="form-group">
 						<label>Instansi</label>
+						
 						<select class="form-control" id="instansi"   name="id_instansi" required="">
-						@foreach ($instansi as $i)
-							<option value="{{$i->id}}">{{$i->text}}</option>
-								{{-- expr --}}
+							
+							@foreach ($instansi??[] as $i)
+								<option value="{{$i->id}}">{{$i->text}}</option>
 							@endforeach	
 						</select>
 					</div>

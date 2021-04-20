@@ -17,7 +17,7 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-						<td>AKSI</td>
+						{{-- <td>AKSI</td> --}}
 						<td>NAMA</td>
 						<td>ROLE</td>
 						<td>EMAIL</td>
@@ -29,7 +29,7 @@
 				<tbody>
 					@foreach ($data as $d)
 						<tr>
-							<td></td>
+							{{-- <td></td> --}}
 							<td>{{$d->name}}</td>
 							<td>{{HPV::role_user($d->role)['text']}}</td>
 							<td>{{$d->email}}</td>

@@ -123,7 +123,7 @@ class DataCtrl extends Controller
           	->join('user_instansi as i','i.instansi_id','=','c.id')
           	->where('i.user_id',$u->id)->selectRaw('c.id, c.name as text')->get();
           }else{
-          	$instansi=DB::table('category as c')->where('type','INSTANSI')->get();
+          	$instansi=DB::table('category as c')->where('type','INSTANSI')->selectRaw('c.id, c.name as text')->get();
           }
 
 		return view('admin.data.handle.create_data_set')->with(['instansi'=>$instansi,'jenis'=>$jenis,'view'=>$view]);
@@ -331,7 +331,7 @@ class DataCtrl extends Controller
           	->join('user_instansi as i','i.instansi_id','=','c.id')
           	->where('i.user_id',$U->id)->selectRaw('c.id, c.name as text')->get();
           }else{
-          	$instansi=DB::table('category as c')->where('type','INSTANSI')->get();
+          	$instansi=DB::table('category as c')->where('type','INSTANSI')->selectRaw('c.id, c.name as text')->get();
           }
 
 			$map_view=[];
