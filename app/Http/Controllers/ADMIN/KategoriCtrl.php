@@ -78,6 +78,6 @@ class KategoriCtrl extends Controller
     		'image_path'=>$image_path
     	]);
 
-    	return redirect()->route('admin.kategori.index');
+    	return redirect()->route('admin.kategori.index',['tahun'=>$tahun]);
     }
 }
