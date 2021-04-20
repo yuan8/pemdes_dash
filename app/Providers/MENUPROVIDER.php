@@ -141,14 +141,7 @@ class MENUPROVIDER extends ServiceProvider
 
                 ],
 
-                [
-                    'text'=>('DATASET MANUAL'),
-                    'href'=>route('admin.data.index',['tahun'=>$GLOBALS['tahun_access']]),
-                    'class'=>'',
-                    'icon'=>'fa fa-file',
-                    'can'=>['is_daerah']
-
-                ],
+               
                 [
                     'text'=>('VALIDASI DATA'),
                     'href'=>route('admin.validasi.index',['tahun'=>$GLOBALS['tahun_access']]),
@@ -161,7 +154,15 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.dataview.index',['tahun'=>$GLOBALS['tahun_access']]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
-                    'can'=>['is_admin']
+                    'can'=>['is_super']
+
+                ],
+                 [
+                    'text'=>('DATASET MANUAL'),
+                    'href'=>route('admin.data.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
+                    'can'=>['is_daerah']
 
                 ],
                 [
