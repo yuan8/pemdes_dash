@@ -11,8 +11,8 @@
 			<div class="form-group">
 				<label>JENIS</label>
 				<select class="form-control" name="jenis" required="">
-						<option value="PRIMER_" {{old('jenis')=='PRIMER_'?'selected':''}}>KATEGORI PRIMER</option>
-						<option value="SEKUNDER_" {{old('jenis')=='SEKUNDER_'?'selected':''}}>KATEGORI PENDUKUNG</option>
+						<option value="TEMA_DATA_UTAMA" {{old('jenis')=='TEMA_DATA_UTAMA'?'selected':''}}>KATEGORI PRIMER</option>
+						<option value="TEMA_DATA_PENDUKUNG" {{old('jenis')=='TEMA_DATA_PENDUKUNG'?'selected':''}}>KATEGORI PENDUKUNG</option>
 					</select>
 				</select>
 
