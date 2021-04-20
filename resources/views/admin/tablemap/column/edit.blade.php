@@ -173,7 +173,7 @@
 
 
 			},
-			init:function(key=null){
+			init:function(key==null){
 				if(key){
 					var ct=this.items[key];
 
