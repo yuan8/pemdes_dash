@@ -15,7 +15,7 @@
       <h2 class="text-white" style="margin: 0px; line-height: 20px;"><b>DASHBOARD </b></h2>
       <h3 class="text-white text-uppercase" style="margin: 5px 0px 5px 0px; line-height: 18px;">Bina Pemerintahan Desa</h3>
          @if(!isset($hm))
-         <p class="text-white">Dashboard Bina Pemerintahan Desa Menyediakan Data Desa Yang Merupakan Himpunan data terkait potensi, tingkat perkembangan dan data dasar keluarga, dari pengumpulan data di sistem informasi yang berada di Direktorat Jendral Bina Pemerintahan Desa dan diverifikasi terlebih dahulu oleh Organisasi Peragkat Desa yang Berwenang. </p>
+         <p class="text-white">Dashboard Prodeskel Bina Pemerintahan Desa Menyajikan Data Desa Yang bersumber dari Prodeskel, Epdeskel dan Data Lainnya yang  pengumpulan dan pengelolaan data aplikasi sistem informasi  berada di Direktorat Jenderal Bina Pemerintahan Desa dan Intergrasi sistem serta verifikasi data terlebih dahulu oleh  Perangkat Desa, Kabupaten/Kota dan Provinsi yang Berwenang. </p>
          @endif
      </div>
     <div style="left:0; padding: 0px; right: 0; margin:auto; height: 55px; width: 90%; margin-left:15px; position: absolute; bottom:{{!isset($hm)?'-60px;':'-60px;'}}">
