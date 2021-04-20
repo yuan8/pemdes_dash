@@ -187,9 +187,13 @@
 								}
 								
 							}
-							$('#interval_nilai_'+ct.id).select2({
+							setTimeout(function(){
+								$('#interval_nilai_'+ct.id).select2({
 									tags:true
+								});
+								console.log('init key',key);
 							});
+							
 
 							// for (var o =0; o<window.aggregasi_tipe.length; o++) {
 							// 	$('#tipe_aggregasi_'+ct.id).append('<option value="'+window.aggregasi_tipe[o]+'" >'+window.aggregasi_tipe[o]+'</option>')
@@ -255,6 +259,7 @@
 					"interval_nilai_computed":[]
 
 				});
+
 				this.init(0);
 			},
 			simpan:function(){
