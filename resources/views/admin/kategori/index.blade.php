@@ -2,7 +2,7 @@
 @section('content_header')
 <h4>KATEGORI</h4>
 <div class="btn-group">
-<a href="{{route('admin.kategori.create')}}" class="btn btn-success">TAMBAH KATEGORI</a>
+<a href="{{route('admin.kategori.create',['tahun'=>$GLOBALS['tahun_access']])}}" class="btn btn-success">TAMBAH KATEGORI</a>
 	
 </div>
 @stop
