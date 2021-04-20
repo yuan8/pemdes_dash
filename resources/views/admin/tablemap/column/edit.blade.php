@@ -192,7 +192,7 @@
 									tags:true
 								});
 								console.log('init key',key);
-							});
+							},100);
 							
 
 							// for (var o =0; o<window.aggregasi_tipe.length; o++) {
