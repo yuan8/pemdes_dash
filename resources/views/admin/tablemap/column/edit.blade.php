@@ -201,7 +201,7 @@
 										dom_op+=('<option value="'+val_ct[i]+'" selected>'+val_ct[i]+'</option>');
 									}
 
-
+									console.log(val_ct,ct.id);
 								}
 
 								$('#interval_nilai_'+ct.id).html(dom_op);
