@@ -183,6 +183,7 @@
 						ct.interval_nilai=ct.interval_nilai_computed;
 					}
 
+
 					for (var o =0; o<ct.interval_nilai_computed.length; o++) {
 						if(ct.interval_nilai_computed[o]){
 							$('#interval_nilai_'+ct.id).append('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>');
@@ -193,6 +194,14 @@
 					setTimeout(function(){
 						for(item in data_components.items){
 							var ct=data_components.items[item];
+							var val_ct=($('#interval_nilai_'+ct.id).val());
+							var dom_op='';
+								if(val_ct){
+									dom_op+=('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>');
+								}
+
+								$('#interval_nilai_'+ct.id).html(dom_op);
+
 								$('#interval_nilai_'+ct.id).select2({
 									tags:true
 								});
