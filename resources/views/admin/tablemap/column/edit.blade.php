@@ -189,15 +189,13 @@
 						
 					}
 					setTimeout(function(){
-						$('#interval_nilai_'+ct.id).select2({
-							tags:true
-						});
-
-						console.log('init key',key);
+						for(item in this.items){
+							var ct=this.items[item];
+							$('#interval_nilai_'+ct.id).select2({
+								tags:true
+							});
+						}
 					},100);
-							
-
-
 
 				}else{
 					for(item in this.items){
@@ -226,7 +224,6 @@
 
 			},
 			remove:function(key){
-				console.log(key.stored);
 				if(key.stored){
 					window.remove_components.addItem(key);
 				}
