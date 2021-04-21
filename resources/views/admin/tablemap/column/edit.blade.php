@@ -196,8 +196,10 @@
 							var ct=data_components.items[item];
 							var val_ct=($('#interval_nilai_'+ct.id).val());
 							var dom_op='';
-								if(val_ct){
-									dom_op+=('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>');
+								if(Array.isArray(val_ct)){
+									for(i in val_ct){
+										dom_op+=('<option value="'+val_ct[i]+'" selected>'+val_ct[i]+'</option>');
+									}
 								}
 
 								$('#interval_nilai_'+ct.id).html(dom_op);
