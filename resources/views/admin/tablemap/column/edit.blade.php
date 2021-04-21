@@ -44,7 +44,7 @@
 				</tr>
 			</thead>
 			<tbody id="data_components" >
-					<tr v-for="item in items">
+					<tr v-for="item in items" v-bind:id="'column_'+item.id">
 						<td>
 							<button type="button" v-on:click="remove(item)" class="btn btn-xs btn-danger">
 								<i class="fa fa-times"></i>
@@ -148,7 +148,7 @@
 		methods:{
 			changeTipeData:function(key){
 				var val=key.tipe_data;
-				console.log(key);
+					console.log('tipe_data',key.id);
 					if(val=='string'){
 						
 						if(window.aggregasi_tipe_string.includes(val)){
@@ -168,21 +168,21 @@
 							this.items[this.items.indexOf(key)].aggregate_type='NONE';
 					}
 
-					
-
-
-
 			},
-			init:function(key=null){
+			init:function(key=null,data={}){
+				var val_interval=[];
 				if(key!=null){
 					var ct=this.items[key];
+					
+
 					var interval_nilai=ct.interval_nilai??'';
 
 					if(!Array.isArray(interval_nilai)){
 						ct.interval_nilai_computed=interval_nilai.split('|;|');
 						ct.interval_nilai=ct.interval_nilai_computed;
+					}else{
+						ct.interval_nilai_computed=interval_nilai;
 					}
-
 
 					for (var o =0; o<ct.interval_nilai_computed.length; o++) {
 						if(ct.interval_nilai_computed[o]){
@@ -190,33 +190,43 @@
 						}
 						
 					}
+					val_interval['cid_'+ct.id]=null;
+						scrollToDOM('#interval_nilai_'+ct.id);
+						$('#column_'+ct.id).addClass('bg-warning');
 
-					setTimeout(function(){
-						for(item in data_components.items){
-							var ct=data_components.items[item];
-							var val_ct=($('#interval_nilai_'+ct.id).val());
-							var dom_op='';
-								if(Array.isArray(val_ct)){
-									for(i in val_ct){
-										dom_op+=('<option value="'+val_ct[i]+'" selected>'+val_ct[i]+'</option>');
-									}
 
-									console.log(val_ct,ct.id);
-								}
 
-								$('#interval_nilai_'+ct.id).html(dom_op);
-								$('#interval_nilai_'+ct.id).trigger('change');
-								setTimeout(function(){
-									$('#interval_nilai_'+ct.id).select2({
-											tags:true
-									});
-								},100);
-						}
-					},100);
+
+					for(item in data_components.items){
+							var ct_2=data_components.items[item];
+							var val_ct=$('#interval_nilai_'+ct_2.id).val();
+							console.log(ct_2.id,$('#interval_nilai_'+ct_2.id).data('select2'));
+							if($('#interval_nilai_'+ct_2.id).data('select2')!=undefined){
+								$('#interval_nilai_'+ct_2.id).select2("destroy");
+							}
+
+							console.log(ct_2.id,'s');
+							$('#interval_nilai_'+ct_2.id).select2({
+								tags:true
+							});
+
+
+									
+							
+
+					}
+
+
+					
+
+
+
+						
 
 				}else{
 					for(item in this.items){
 						var ct=this.items[item];
+
 							var interval_nilai=ct.interval_nilai??'';
 							if(!Array.isArray(interval_nilai)){
 								ct.interval_nilai_computed=interval_nilai.split('|;|');
@@ -231,7 +241,9 @@
 									tags:true
 							});
 
-							console.log(item,this.items[item]);
+
+							$('#interval_nilai_'+ct.id).trigger('change');
+
 
 
 					}
@@ -248,7 +260,7 @@
 			},
 			add_column:function(){
 				this.new_column+=1;
-				this.items.unshift({
+				this.items.push({
 					id:'xx_'+this.new_column,
 					"stored":false,
 					"id_ms_table":1,
@@ -266,10 +278,12 @@
 					"tipe_data":"numeric",
 					"interval_nilai":"",
 					"interval_nilai_computed":[]
-
 				});
 
-				this.init(0);
+				setTimeout(function(){
+					data_components.init(data_components.items.length - 1);
+				},100);
+				
 			},
 			simpan:function(){
 				$('#form-column').submit();
