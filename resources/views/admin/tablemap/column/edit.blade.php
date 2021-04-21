@@ -203,7 +203,7 @@
 								}
 
 								$('#interval_nilai_'+ct.id).html(dom_op);
-
+								$('#interval_nilai_'+ct.id).trigger('change');
 								$('#interval_nilai_'+ct.id).select2({
 									tags:true
 								});
