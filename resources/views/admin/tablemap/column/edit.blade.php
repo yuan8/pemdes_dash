@@ -178,26 +178,25 @@
 					var ct=this.items[key];
 
 					var interval_nilai=ct.interval_nilai??'';
-							if(!Array.isArray(interval_nilai)){
-								ct.interval_nilai_computed=interval_nilai.split('|;|');
-							}
-							for (var o =0; o<ct.interval_nilai_computed.length; o++) {
-								if(ct.interval_nilai_computed[o]){
-									$('#interval_nilai_'+ct.id).append('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>')
-								}
-								
-							}
-							setTimeout(function(){
-								$('#interval_nilai_'+ct.id).select2({
-									tags:true
-								});
-								console.log('init key',key);
-							},100);
+					if(!Array.isArray(interval_nilai)){
+						ct.interval_nilai_computed=interval_nilai.split('|;|');
+						ct.interval_nilai=ct.interval_nilai_computed;
+					}
+					for (var o =0; o<ct.interval_nilai_computed.length; o++) {
+						if(ct.interval_nilai_computed[o]){
+							$('#interval_nilai_'+ct.id).append('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>')
+						}
+						
+					}
+					setTimeout(function(){
+						$('#interval_nilai_'+ct.id).select2({
+							tags:true
+						});
+
+						console.log('init key',key);
+					},100);
 							
 
-							// for (var o =0; o<window.aggregasi_tipe.length; o++) {
-							// 	$('#tipe_aggregasi_'+ct.id).append('<option value="'+window.aggregasi_tipe[o]+'" >'+window.aggregasi_tipe[o]+'</option>')
-							// }
 
 
 				}else{
@@ -217,11 +216,7 @@
 									tags:true
 							});
 
-							// for (var o =0; o<window.aggregasi_tipe.length; o++) {
-							// 	$('#tipe_aggregasi_'+ct.id).append('<option value="'+window.aggregasi_tipe[o]+'" >'+window.aggregasi_tipe[o]+'</option>')
-							// }
-
-							console.log(this.items[item]);
+							console.log(item,this.items[item]);
 
 
 					}
