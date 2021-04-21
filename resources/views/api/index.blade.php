@@ -155,7 +155,7 @@
 			<p>{!!nl2br($d->description)!!}</p>
 			</div>
 
-			<div class="table-responsive" style="margin-bottom: 10px; background: #fff">
+			<div class="table-responsive" style="margin-bottom: 10px;">
 				<table class="table table-bordered">
 				<thead>
 					<tr>
@@ -165,9 +165,9 @@
 					</tr>
 					<tr>
 						@foreach($d->map_column as $m)
-							<th colspan="1" class="bg-primary">Definisi/Konsep</th>
-							<th colspan="1" class="bg-primary">Satuan</th>
-							<th colspan="1" class="bg-primary">Key</th>
+							<th colspan="1" class="f">Definisi/Konsep</th>
+							<th colspan="1" class="">Satuan</th>
+							<th colspan="1" class="">Key</th>
 
 
 						@endforeach
@@ -176,9 +176,9 @@
 				</thead>
 				<tbody>
 					@foreach($d->map_column as $m)
-							<td colspan="1" >{{strtolower($m->definisi)}}</th>
-							<td colspan="1">{{strtolower($m->satuan)}}</td>
-							<td colspan="1">{{strtolower($m->name_column)}}</td>
+							<td colspan="1" style="color:#222" >{{strtolower($m->definisi)}}</th>
+							<td colspan="1" style="color:#222">{{strtolower($m->satuan)}}</td>
+							<td colspan="1" style="color:#222">{{strtolower($m->name_column)}}</td>
 
 					@endforeach
 				</tbody>
@@ -194,8 +194,10 @@
 
 	</div>
 	<style type="text/css">
-		table th, td{
+		table th ,td{
 			font-size: 10px!important;
+			color: #222;
+			background: #fff;
 		}
 		pre {
 			color:green;
