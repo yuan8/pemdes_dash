@@ -76,7 +76,7 @@
 							<textarea v-model="item.definisi" class="form-control"  v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][definisi]'"  ></textarea>
 						</td>
 						<td>
-							<select multiple="" v-bind:id="'interval_nilai_'+item.id" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][interval_nilai][]'"   v-model="item.interval_nilai_computed"  class="form-control"></select>
+							<select multiple="" v-bind:id="'interval_nilai_'+item.id" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][interval_nilai][]'"    class="form-control"></select>
 						</td>
 						<td>
 							<select required=""  v-model="item.aggregate_type" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][aggregate_type]'"  v-bind:id="'tipe_aggregasi_'+item.id"   class="form-control">
@@ -85,7 +85,7 @@
 							</select>
 						</td>
 						<td>
-							<select required=""     v-model="item.auth" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][auth]'"  class="form-control">
+							<select required=""  v-model="item.auth" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][auth]'"  class="form-control">
 								<option value="1">Ya</option>
 								<option value="0">Tidak</option>
 
@@ -114,9 +114,18 @@
 @stop
 @section('js')
 <script type="text/javascript">
-	var aggregasi_tipe=['NONE','COUNT_YA','COUNT_TIDAK','COUNT_ADA','COUNT_TIDAK_DATA','SUM','MAX','MIN','COUNT','COUNT_DISTINCT','AVERAGE'];
-	var aggregasi_tipe_string=['NONE','COUNT_YA','COUNT_TIDAK','COUNT_ADA','COUNT_TIDAK_DATA'];
-	var aggregasi_tipe_numeric=['NONE','SUM','MAX','MIN','COUNT','COUNT_DISTINCT','AVERAGE'];
+	 var aggregasi_tipe=['NONE','COUNT_YA','COUNT_TIDAK','COUNT_ADA','COUNT_TIDAK_DATA','SUM','MAX','MIN','COUNT','COUNT_DISTINCT','AVERAGE'];
+	 var aggregasi_tipe_string=['NONE','COUNT_YA','COUNT_TIDAK','COUNT_ADA','COUNT_TIDAK_DATA'];
+	 var aggregasi_tipe_numeric=['NONE','SUM','MAX','MIN','COUNT','COUNT_DISTINCT','AVERAGE'];
+</script>
+<script type="text/javascript">
+	
+
+
+
+
+
+
 
 	var remove_components=new Vue({
 		el:'#remove_components',
@@ -137,6 +146,10 @@
 			}
 		}
 	});
+
+
+
+
 
 	var data_components= new Vue({
 		el:"#data_components",
@@ -170,83 +183,42 @@
 
 			},
 			init:function(key=null,data={}){
-				var val_interval=[];
-				if(key!=null){
-					var ct=this.items[key];
-					
-
-					var interval_nilai=ct.interval_nilai??'';
-
-					if(!Array.isArray(interval_nilai)){
-						ct.interval_nilai_computed=interval_nilai.split('|;|');
-						ct.interval_nilai=ct.interval_nilai_computed;
-					}else{
-						ct.interval_nilai_computed=interval_nilai;
-					}
-
-					for (var o =0; o<ct.interval_nilai_computed.length; o++) {
-						if(ct.interval_nilai_computed[o]){
-							$('#interval_nilai_'+ct.id).append('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>');
-						}
-						
-					}
-					val_interval['cid_'+ct.id]=null;
-						scrollToDOM('#interval_nilai_'+ct.id);
-						$('#column_'+ct.id).addClass('bg-warning');
-
-
-
-
-					for(item in data_components.items){
-							var ct_2=data_components.items[item];
-							var val_ct=$('#interval_nilai_'+ct_2.id).val();
-							console.log(ct_2.id,$('#interval_nilai_'+ct_2.id).data('select2'));
-							if($('#interval_nilai_'+ct_2.id).data('select2')!=undefined){
-								$('#interval_nilai_'+ct_2.id).select2("destroy");
-							}
-
-							console.log(ct_2.id,'s');
-							$('#interval_nilai_'+ct_2.id).select2({
-								tags:true
-							});
-
-
-									
-							
-
-					}
-
-
-					
-
-
-
-						
-
-				}else{
+				
 					for(item in this.items){
 						var ct=this.items[item];
-
+						if($('#interval_nilai_'+ct.id).data('select2')==undefined){
 							var interval_nilai=ct.interval_nilai??'';
 							if(!Array.isArray(interval_nilai)){
-								ct.interval_nilai_computed=interval_nilai.split('|;|');
+								ct.interval_nilai_computed=Array.from(new Set(interval_nilai.split('|;|')));
 							}
-							for (var o =0; o<ct.interval_nilai_computed.length; o++) {
+
+							if(ct.interval_nilai_computed[0]!=''){
+								for (var o =0; o<ct.interval_nilai_computed.length; o++) {
 								if(ct.interval_nilai_computed[o]){
-									$('#interval_nilai_'+ct.id).append('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>')
+										$('#interval_nilai_'+ct.id).append('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>')
+									}
+
+									console.log($('#interval_nilai_'+ct.id).html());
+								
 								}
+
+								
+							}else{
 								
 							}
 							$('#interval_nilai_'+ct.id).select2({
 									tags:true
 							});
+							console.log('parse slectt 2',ct.id);
+						}
+						
 
 
-							$('#interval_nilai_'+ct.id).trigger('change');
+						$('#interval_nilai_'+ct.id).trigger('change');
 
 
 
-					}
+					
 
 				}
 					
@@ -260,6 +232,8 @@
 			},
 			add_column:function(){
 				this.new_column+=1;
+
+
 				this.items.push({
 					id:'xx_'+this.new_column,
 					"stored":false,
@@ -281,14 +255,21 @@
 				});
 
 				setTimeout(function(){
-					data_components.init(data_components.items.length - 1);
-				},100);
+					data_components.init();
+
+				},200);
+
 				
 			},
 			simpan:function(){
 				$('#form-column').submit();
 			}
 		},
+		watch:{
+			interval_nilai_computed:function(val,old){
+				console.log(val);
+			}
+		}
 		
 	}) ;
 

@@ -18,6 +18,7 @@
 
     <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+
     <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
   
     <!-- Theme style -->
@@ -55,7 +56,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition @yield('body_class')">
+<body class="hold-transition @yield('body_class')" >
 
 @yield('body')
 
@@ -100,6 +101,10 @@
 <script src="{{asset('bower_components/highcharts/modules/exporting.js')}}" charset="utf-8"></script>
 <script src="{{asset('bower_components/highcharts/modules/offline-exporting.js')}}" charset="utf-8"></script>
 
+
+
+<script src="{{asset('bower_components/vue/dist/vue.min.js')}}"></script>
+<script src="{{asset('bower_components/vue/dist/select2.js')}}"></script>
 
 
 
