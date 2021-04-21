@@ -176,26 +176,27 @@
 			init:function(key=null){
 				if(key!=null){
 					var ct=this.items[key];
-
 					var interval_nilai=ct.interval_nilai??'';
+
 					if(!Array.isArray(interval_nilai)){
 						ct.interval_nilai_computed=interval_nilai.split('|;|');
 						ct.interval_nilai=ct.interval_nilai_computed;
 					}
+
 					for (var o =0; o<ct.interval_nilai_computed.length; o++) {
 						if(ct.interval_nilai_computed[o]){
-							$('#interval_nilai_'+ct.id).append('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>')
+							$('#interval_nilai_'+ct.id).append('<option value="'+ct.interval_nilai_computed[o]+'" selected>'+ct.interval_nilai_computed[o]+'</option>');
 						}
 						
 					}
-					setTimeout(function(){
-						for(item in this.items){
-							var ct=this.items[item];
+
+					for(item in this.items){
+						var ct=this.items[item];
 							$('#interval_nilai_'+ct.id).select2({
 								tags:true
 							});
-						}
-					},100);
+							console.log('calling',item);
+					}
 
 				}else{
 					for(item in this.items){
