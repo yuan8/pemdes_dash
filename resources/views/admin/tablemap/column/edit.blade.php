@@ -190,13 +190,15 @@
 						
 					}
 
-					for(item in this.items){
-						var ct=this.items[item];
-							$('#interval_nilai_'+ct.id).select2({
-								tags:true
-							});
-							console.log('calling',item,'interval_nilai_'+ct.id);
-					}
+					setTimeout(function(){
+						for(item in data_components.items){
+							var ct=data_components.items[item];
+								$('#interval_nilai_'+ct.id).select2({
+									tags:true
+								});
+								console.log('calling',item,'interval_nilai_'+ct.id);
+						}
+					},300);
 
 				}else{
 					for(item in this.items){
