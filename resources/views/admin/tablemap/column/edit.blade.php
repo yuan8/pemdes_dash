@@ -195,7 +195,7 @@
 							$('#interval_nilai_'+ct.id).select2({
 								tags:true
 							});
-							console.log('calling',item);
+							console.log('calling',item,'interval_nilai_'+ct.id);
 					}
 
 				}else{
