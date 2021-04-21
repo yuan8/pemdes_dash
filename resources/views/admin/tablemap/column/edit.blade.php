@@ -200,16 +200,19 @@
 									for(i in val_ct){
 										dom_op+=('<option value="'+val_ct[i]+'" selected>'+val_ct[i]+'</option>');
 									}
+
+
 								}
 
 								$('#interval_nilai_'+ct.id).html(dom_op);
 								$('#interval_nilai_'+ct.id).trigger('change');
-								$('#interval_nilai_'+ct.id).select2({
-									tags:true
-								});
-								console.log('calling',item,'interval_nilai_'+ct.id);
+								setTimeout(function(){
+									$('#interval_nilai_'+ct.id).select2({
+											tags:true
+									});
+								},100);
 						}
-					},300);
+					},100);
 
 				}else{
 					for(item in this.items){
