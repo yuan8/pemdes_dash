@@ -111,14 +111,14 @@ class ValidasiCtrl extends Controller
 
 		if($request->kdkecamatan){
 			$kodedaerah['kdkecamatan']=$request->kdkecamatan;
-			$daerah=DB::table('master_desa')->where('kode_bps',$kodedaerah['kddesa'])->fisrt();
+			$daerah=DB::table('master_desa')->where('kode_dagri',$kodedaerah['kddesa'])->fisrt();
 
 
 		}
 
 		if($request->kddesa){
 			$kodedaerah['kddesa']=$request->kddesa;
-			$daerah=DB::table('master_desa')->where('kode_bps',$kodedaerah['kddesa'])->fisrt();
+			$daerah=DB::table('master_desa')->where('kode_dagri',$kodedaerah['kddesa'])->fisrt();
 		}
 
 
@@ -138,23 +138,26 @@ class ValidasiCtrl extends Controller
 		}
 		$table_map=(array)DB::table('master_table_map as tmap')->where('id',$data_index)->first();
 
-
 		$raw=[
 		];
 
+
+
 		if(!$table_map){
+
 			$GLOBALS['ab_message']=['title'=>''];
 
 			return abort(404);
 		}else{
-			$table_map=HPV::gen_map($table_map['key_view'],0);
+			$table_map=HPV::gen_map($table_map['key_view'],0,1000000000);
 			foreach ($table_map['columns'] as $key => $value) {
 				$raw[]='d.'.$value['name_column'];
 			}
 		}
 
 
-		if(Auth::User()->role==2){
+		if(Auth::User()->role==3){
+
 			if(!in_array($request->kdprovinsi, session('_regional_access')->toArray())) {
 				return abort(404);
 			}
@@ -165,7 +168,7 @@ class ValidasiCtrl extends Controller
 		if($request->kdprovinsi){
 			$kddd=$request->kdprovinsi;
 
-			$where[]=[DB::raw("left(md.kode_bps,2)"),'=',$request->kdprovinsi];
+			$where[]=[DB::raw("left(md.kode_dagri,2)"),'=',$request->kdprovinsi];
 			$daerah=DB::table('provinsi')
 			->where('kdprovinsi',$request->kdprovinsi)
 			->selectRaw("
@@ -178,7 +181,7 @@ class ValidasiCtrl extends Controller
 		if($request->kdkota){
 			$kddd=$request->kdkota;
 
-			$where[]=[DB::raw("left(md.kode_bps,4)"),'=',$request->kdkota];
+			$where[]=[DB::raw("left(md.kode_dagri,4)"),'=',$request->kdkota];
 			$daerah=DB::table('kabkota')
 			->where('kdkabkota',$request->kdkota)
 			->selectRaw("'".$daerah->jenis.' '.$daerah->name." -> ' as parent,kdkabkota as id,'KAB/KOTA' as jenis,nmkabkota as name")
@@ -190,7 +193,7 @@ class ValidasiCtrl extends Controller
 		if($request->kdkecamatan){
 			$kddd=$request->kdkecamatan;
 
-			$where[]=[DB::raw("left(md.kode_bps,6)"),'=',$request->kdkecamatan];
+			$where[]=[DB::raw("left(md.kode_dagri,6)"),'=',$request->kdkecamatan];
 			$daerah=DB::table('kecamatan')
 			->where('kdkecamatan',$request->kdkecamatan)->selectRaw("'".$daerah->parent." ".$daerah->name." -> ' as parent,
 				kdkecamatan as id,'KECAMATAN' as jenis,nmkecamatan as name")
@@ -200,23 +203,25 @@ class ValidasiCtrl extends Controller
 
 		if($request->kddesa){
 			$kddd=$request->kddesa;
-			$where[]=[DB::raw("(md.kode_bps)"),'=',$request->kddesa];
+			$where[]=[DB::raw("(md.kode_dagri)"),'=',$request->kddesa];
 			$daerah=DB::table('master_desa')
-			->where('kode_bps',$request->kddesa)->selectRaw("'".$daerah->parent." ".$daerah->jenis." ".$daerah->name." -> ' as parent,
-				kode_bps as id, 'DESA' as jenis,desa as name")
+			->where('kode_dagri',$request->kddesa)->selectRaw("'".$daerah->parent." ".$daerah->jenis." ".$daerah->name." -> ' as parent,
+				kode_dagri as id, 'DESA' as jenis,desa as name")
 			->first();
 
 		}
 
 		$data=DB::connection('mysql')->table('master_desa as md')
-		->join($table_map['table'].' as d',[['md.kode_bps','=','d.kode_desa'],['d.tahun','=',DB::Raw($tahun)]])
-		->leftJoin('kecamatan as mkc',DB::raw("left(md.kode_bps,6)"),DB::raw('='),DB::raw('mkc.kdkecamatan'))
+		->join($table_map['table'].' as d',[['md.kode_dagri','=','d.kode_desa'],['d.tahun','=',DB::Raw($tahun)]])
+		->leftJoin('kecamatan as mkc',DB::raw("left(md.kode_dagri,6)"),DB::raw('='),DB::raw('mkc.kdkecamatan'))
+		->leftJoin('kabkota as mkab',DB::raw("left(md.kode_dagri,4)"),DB::raw('='),DB::raw('mkab.kdkabkota'))
+	
 		->leftJoin('validasi_confirm as cfm',[
 			[DB::raw("(d.kode_desa)"),'=',DB::raw('cfm.kode_desa')],
 			['cfm.table','=',DB::RAW("'".$table_map['table']."'") ],
 			['cfm.tahun','=',DB::RAW($tahun)]
 		])
-		->selectRaw("md.kode_bps as id_desa,(case when (cfm.id) then 'VALID' else 'BELUM' end)  as status_validasi,cfm.tanggal_validasi as valid_date , md.desa as name, mkc.nmkecamatan as name_kecamatan".(count($raw)?','.implode(',', $raw):'' ));
+		->selectRaw("mkab.nmkabkota as name_kota,md.stapem as jenis_daerah,md.kode_dagri as id_desa,(case when (cfm.id) then 'VALID' else 'BELUM' end)  as status_validasi,cfm.tanggal_validasi as valid_date , md.desa as name, mkc.nmkecamatan as name_kecamatan".(count($raw)?','.implode(',', $raw):'' ));
 
 
 
@@ -227,11 +232,11 @@ class ValidasiCtrl extends Controller
 
 		if($request->export_format){
 
-			$data=$data->orderBy('md.kode_bps','asc')->get();
+			$data=$data->orderBy('md.kode_dagri','asc')->get();
 			return static::export_format($tahun,$data,$table_map['name'].' '.$daerah->parent.' '.$daerah->name,$table_map,$kddd);
 		}else{
 
-			$data=$data->orderBy('md.kode_bps','asc')->paginate(10);
+			$data=$data->orderBy('md.kode_dagri','asc')->paginate(10);
 
 		}	
 
@@ -243,12 +248,15 @@ class ValidasiCtrl extends Controller
 
 
 		$verifikasi=[
-			'sudah'=>(int)DB::table($table_map['table'].' as d')
-			->join('master_desa as md','md.kode_bps','=','d.kode_desa')
+			'sudah'=>(int)DB::connection('mysql')->table($table_map['table'].' as d')
+			->join('master_desa as md','md.kode_dagri','=','d.kode_desa')
 			->join('validasi_confirm as cfm',[[DB::raw("(d.kode_desa)"),'=',DB::raw('cfm.kode_desa')],['cfm.table','=',DB::RAW("'".$table_map['table']."'")],['cfm.tahun','=',DB::raw($tahun)]])
+		
 			->count(),
+
 			
 		];
+
 
 		$verifikasi['belum']=$data->total()-$verifikasi['sudah'];
 
@@ -276,7 +284,7 @@ class ValidasiCtrl extends Controller
 	public function form_upload($tahun,Request $request){
 		if($request->kdprovinsi){
 			$kdd=$request->kdprovinsi;
-			$where[]=[DB::raw("left(md.kode_bps,2)"),'=',$request->kdprovinsi];
+			$where[]=[DB::raw("left(md.kode_dagri,2)"),'=',$request->kdprovinsi];
 			$daerah=DB::table('provinsi')
 
 			->where('kdprovinsi',$request->kdprovinsi)
@@ -290,7 +298,7 @@ class ValidasiCtrl extends Controller
 		if($request->kdkota){
 			$kdd=$request->kdkota;
 
-			$where[]=[DB::raw("left(md.kode_bps,4)"),'=',$request->kdkota];
+			$where[]=[DB::raw("left(md.kode_dagri,4)"),'=',$request->kdkota];
 			$daerah=DB::table('kabkota')
 			->where('kdkabkota',$request->kdkota)
 			->selectRaw("'".$daerah->jenis.' '.$daerah->name." -> ' as parent,kdkabkota as id,'KAB/KOTA' as jenis,nmkabkota as name")
@@ -302,7 +310,7 @@ class ValidasiCtrl extends Controller
 		if($request->kdkecamatan){
 			$kdd=$request->kdkecamatan;
 
-			$where[]=[DB::raw("left(md.kode_bps,7)"),'=',$request->kdkecamatan];
+			$where[]=[DB::raw("left(md.kode_dagri,7)"),'=',$request->kdkecamatan];
 			$daerah=DB::table('kecamatan')
 			->where('kdkecamatan',$request->kdkecamatan)->selectRaw("'".$daerah->parent." ".$daerah->name." -> ' as parent,
 				kdkecamatan as id,'KECAMATAN' as jenis,nmkecamatan as name")
@@ -312,10 +320,10 @@ class ValidasiCtrl extends Controller
 
 		if($request->kddesa){
 			$kdd=$request->kddesa;
-			$where[]=[DB::raw("(md.kode_bps)"),'=',$request->kddesa];
+			$where[]=[DB::raw("(md.kode_dagri)"),'=',$request->kddesa];
 			$daerah=DB::table('master_desa')
-			->where('kode_bps',$request->kddesa)->selectRaw("'".$daerah->parent." ".$daerah->jenis." ".$daerah->name." -> ' as parent,
-				kode_bps as id, 'DESA' as jenis,desa as name")
+			->where('kode_dagri',$request->kddesa)->selectRaw("'".$daerah->parent." ".$daerah->jenis." ".$daerah->name." -> ' as parent,
+				kode_dagri as id, 'DESA' as jenis,desa as name")
 			->first();
 
 		}
@@ -345,7 +353,6 @@ class ValidasiCtrl extends Controller
 		$level=HPV::level($request->kd);
 		$table=DB::table('master_table_map')->find($idtable);
 
-
 		$spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('dist-web/format-validasi3.xlsx'));
 		$sheet=$spreadsheet->setActiveSheetIndex(0);
 		$pointer_head=8;
@@ -362,7 +369,7 @@ class ValidasiCtrl extends Controller
 			$app=false;
 			dd('DOKUMEN TIDAK SESUAI UNTUK VALIDASI DATA PADA DAERAH INI');
 		}
-    	$index_data=9;
+    	$index_data=10;
 
     	$data_change=[];
     	$data_head=[
@@ -374,11 +381,13 @@ class ValidasiCtrl extends Controller
 			
 			foreach ($sheet->toArray() as $key => $d) {
 				if($key==4){
-					for($index=7;$index<count($d);$index+=2){
+					for($index=7;$index<count($d);$index++){
 						$data_head[$index]=$d[$index];
 					}
+
 				}
-				if($key>=8){
+				if($key>=9){
+
 
 					if($d[1]=='VALID'){
 						$dddd=[
@@ -387,7 +396,7 @@ class ValidasiCtrl extends Controller
 						];
 						foreach ($d as $keyr => $x) {
 							
-							for($index=7;$index<count($d);$index+=2){
+							for($index=7;$index<count($d);$index++){
 								$dddd[$data_head[$index]]=$d[$index];
 							}
 						}
@@ -401,9 +410,11 @@ class ValidasiCtrl extends Controller
 						];
 						
 					}
+
 				}
 				# code...
 			}
+
 
 		}
 
@@ -446,6 +457,17 @@ class ValidasiCtrl extends Controller
 					['kode_desa'=>$d['kode_desa'],'tahun'=>$d['tahun']],
 					$d['data_xx']
 				);
+				
+
+			}else{
+
+				DB::connection('mysql')->table($d['table'])->where([
+					['kode_desa','=',$d['kode_desa']],
+					['tahun','=',$d['tahun']]
+				])->updateOrInsert(
+					['kode_desa'=>$d['kode_desa'],'tahun'=>$d['tahun']],
+					$d['data_xx']
+				);
 
 			}
 
@@ -468,12 +490,90 @@ class ValidasiCtrl extends Controller
 
 	public function export_format($tahun,$data,$title,$map=[],$kddd){
 		$data=(HPV::maping_row($data,$map));
+
+
 		$spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('dist-web/format-validasi3.xlsx'));
+
+		$sheet=$spreadsheet->setActiveSheetIndex(1);
+
+		$DATASTYLE=[
+			'font' => [
+        		'bold' => true,
+
+    		],
+    		'alignment'=>[
+    			'wrapText'=>true,
+    		],
+    		'borders' => [
+		        'allBorders' => [
+		            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+		        ],
+		    ],
+		    
+		];
+
+
+		$row_start=7;
+		$them_interval=[];
+		foreach (['NAMA DATA','SATUAN','DEFINISI','TIPE DATA','INTERVAL NILAI'] as $key => $value) {
+			# code...
+			$sheet->getCell(static::nta($key+2).($row_start-1))
+    							->setValue($value);
+		}
+
+		$no_meta=0;
+		if(isset($data[0])){
+			foreach ($data[0] as $key => $value) {
+				if($value['type']=='DATA'){
+					$no_meta+=1;
+					$sheet->getCell(static::nta(1).$row_start)
+    									->setValue($no_meta);
+					foreach (['name','satuan','definisi','tipe_data','interval_nilai'] as $key_c => $col) {
+							if($col=='interval_nilai'){
+								$int=($value['interval_nilai'])?explode('|;|',$value['interval_nilai']):[];
+								if($int){
+									$sheet->getCell(static::nta($key_c+2).$row_start)
+    									->setValue($int[0]);
+									$them_interval[$key] =$spreadsheet->getActiveSheet()->getCell(static::nta($key_c+2).$row_start)
+							   		 ->getDataValidation();
+									$them_interval[$key]->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
+									$them_interval[$key]->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION );
+									$them_interval[$key]->setAllowBlank(false);
+									$them_interval[$key]->setShowInputMessage(true);
+									$them_interval[$key]->setShowErrorMessage(true);
+									$them_interval[$key]->setShowDropDown(true);
+									$them_interval[$key]->setErrorTitle('Input error');
+									$them_interval[$key]->setError('Value is not in list.');
+									$them_interval[$key]->setPromptTitle('Pick from list');
+									$them_interval[$key]->setPrompt('Please pick a value from the drop-down list.');
+									$them_interval[$key]->setFormula1('"'.implode(',', $int).'"');
+								}
+							}else{
+								$sheet->getCell(static::nta($key_c+2).$row_start)
+    							->setValue($value[$col]);
+							}
+
+						# code...
+					}
+					$row_start+=1;
+
+
+				}
+				# code...
+			
+			}
+		}
+
+		$sheet->getStyle(static::nta(1).'7:'.static::nta(6).($no_meta+6))->applyFromArray($DATASTYLE);
+
+		
 		$sheet=$spreadsheet->setActiveSheetIndex(0);
 		$pointer_head=8;
 		$sheet=$spreadsheet->getActiveSheet();
 		$index_head=8;
 		$max_column=2;
+
+		// dd($data);
 
 		$sheet->getCell(static::nta(1).'1')
     					->setValue('VALIDATE-'.$kddd);
@@ -525,22 +625,7 @@ class ValidasiCtrl extends Controller
 		    ],
 		];
 
-		$DATASTYLE=[
-			'font' => [
-        		'bold' => true,
-
-    		],
-    		'alignment'=>[
-    			'wrapText'=>true,
-    		],
-    		'borders' => [
-		        'allBorders' => [
-		            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-		        ],
-		    ],
-		    
-		];
-
+		
 		$HEADNUMBERSTYLE=[
 			'font' => [
         		'bold' => true,
@@ -574,6 +659,14 @@ class ValidasiCtrl extends Controller
 				foreach ($row as $kcol => $h) {
 					$sheet->getCell(static::nta($h['pointer_c']).''.$h['pointer_r'])
 			    	->setValue($h['value']);
+			    	
+			    	if($h['type']=='DATA'){
+			    		if(isset($them_interval[$kcol])){
+				    		$sheet->getCell(static::nta($h['pointer_c']).''.$h['pointer_r'])->setDataValidation(clone $them_interval[$kcol]);
+				    	}
+			    	}
+
+			    	
 			    	if($h['name_column']=='valid_date'){
 			    		$sheet->getCell(static::nta($h['pointer_c']).''.$h['pointer_r'])
 	    					->setValue($h['value']!=null?Carbon::parse($h['value'])->format('Y-m-d'):null);
@@ -588,7 +681,7 @@ class ValidasiCtrl extends Controller
 			    	}
 
 			    	if($h['type']=='DATA'){
-			    		$sheet->mergeCells((static::nta($h['pointer_c']).''.$h['pointer_r']).':'.(static::nta($h['pointer_c']+1).''.$h['pointer_r']));
+			    		// $sheet->mergeCells((static::nta($h['pointer_c']).''.$h['pointer_r']).':'.(static::nta($h['pointer_c']+1).''.$h['pointer_r']));
 			    	}
 			    	
 
@@ -596,23 +689,25 @@ class ValidasiCtrl extends Controller
 					if($krow==0){
 						if($h['type']=='DATA'){
 
+							$sheet->getCell(static::nta($h['pointer_c']).'5')
+			    					->setValue($h['name_column']);
+			    			$sheet->getCell(static::nta($h['pointer_c']).'6')
+			    					->setValue($h['tipe_data']);
 							 $sheet->getCell(static::nta($h['pointer_c']).'7')
 			    					->setValue(strtoupper($h['name']));
-			    			$sheet->mergeCells((static::nta($h['pointer_c']).'7').":".(static::nta($h['pointer_c']+1).'7'));
-			    			$sheet->getCell(static::nta($h['pointer_c']).'5')
-			    					->setValue($h['name_column']);
-			    			$sheet->mergeCells((static::nta($h['pointer_c']).'5').":".(static::nta($h['pointer_c']+1).'5'));
-			    			$sheet->getCell(static::nta($h['pointer_c']).'6')
-			    					->setValue($h['aggregate_type']);
-			    			$sheet->getCell(static::nta($h['pointer_c']+1).'6')
+			    			// $sheet->mergeCells((static::nta($h['pointer_c']).'7').":".(static::nta($h['pointer_c']+1).'7'));
+			    			
+			    			// $sheet->mergeCells((static::nta($h['pointer_c']).'5').":".(static::nta($h['pointer_c']+1).'5'));
+			    			
+			    			$sheet->getCell(static::nta($h['pointer_c']).'8')
 			    					->setValue($h['satuan']);
 
-			    			$sheet->getCell(static::nta($h['pointer_c']).'8')
+			    			$sheet->getCell(static::nta($h['pointer_c']).'9')
 			    					->setValue($index_head);
-			    			$sheet->mergeCells((static::nta($h['pointer_c']).'8').":".(static::nta($h['pointer_c']+1).'8'));
+			    			// $sheet->mergeCells((static::nta($h['pointer_c']).'8').":".(static::nta($h['pointer_c']+1).'8'));
 
 			    			if($max_column<$h['pointer_c']){
-			    				$max_column=$h['pointer_c']+1;
+			    				$max_column=$h['pointer_c'];
 			    			}
 
 			    			$index_head+=1;
@@ -623,13 +718,14 @@ class ValidasiCtrl extends Controller
 				}
 					
 			}
-			$sheet->getStyle(static::nta(8).'6:'.static::nta($max_column).'7')->applyFromArray($HEADSTYLE);
-			$sheet->getStyle(static::nta(8).'8:'.static::nta($max_column).'8')->applyFromArray($HEADNUMBERSTYLE);
+			$sheet->getStyle(static::nta(8).'6:'.static::nta($max_column).'8')->applyFromArray($HEADSTYLE);
+			$sheet->getStyle(static::nta(8).'9:'.static::nta($max_column).'9')->applyFromArray($HEADNUMBERSTYLE);
 
-			$sheet->getStyle(static::nta(1).'9:'.static::nta($max_column).((count($data)-1)+9) )->applyFromArray($DATASTYLE);
-			$sheet->setAutoFilter(static::nta(1).'8:'.static::nta($max_column).((count($data)-1)+9));
+			$sheet->getStyle(static::nta(1).'10:'.static::nta($max_column).((count($data))+9) )->applyFromArray($DATASTYLE);
 
-			$sheet->getStyle((static::nta(3).'9:'.static::nta(3).((count($data)-1)+9)))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+			$sheet->setAutoFilter(static::nta(1).'9:'.static::nta($max_column).((count($data))+9));
+
+			$sheet->getStyle((static::nta(3).'10:'.static::nta(3).((count($data))+9)))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
 
 		}
 

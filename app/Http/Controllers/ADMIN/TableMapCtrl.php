@@ -25,6 +25,7 @@ class TableMapCtrl extends Controller
             'edit_daerah'=>(int)$request->format_validasi
         ]);
 
+        Alert::success('Berhasil','Table Map berhasil ditambahkan');
         return back();
     }
 
@@ -102,7 +103,9 @@ class TableMapCtrl extends Controller
             'key_view'=>$request->key_view,
             'edit_daerah'=>(int)$request->format_validasi
             
-        ]);
+            ]);
+            Alert::success('Berhasil','Table Map berhasil diupdate');
+
         }
 
         return back();
@@ -172,7 +175,9 @@ class TableMapCtrl extends Controller
                  $id_c=(int)str_replace('ID_', '', $r);
                     DB::table('master_column_map')->where('id',$id_c)->delete();
 
-             }    
+             } 
+            Alert::success('Berhasil','Table Map Column berhasil diupdate');
+
 
         }
 
@@ -208,6 +213,8 @@ class TableMapCtrl extends Controller
                     # code...
                 }
              }
+            Alert::success('Berhasil','Table Map View berhasil diupdate');
+
          }
 
          return back();
@@ -229,6 +236,8 @@ class TableMapCtrl extends Controller
 
         if($data){
              $data=DB::table('master_table_map')->where('id',$id)->delete();
+            Alert::success('Berhasil','Table Map View berhasil dihapus');
+
         }
 
         return back();

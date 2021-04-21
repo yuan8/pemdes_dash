@@ -67,7 +67,7 @@ class LoginController extends Controller
                     Auth::login($agent);
                     $u=Auth::User();
                     if($u){
-                        if($u->role!=1){
+                        if($u->role==3){
                             session(['_regional_access'=>DB::table('users_group as r')->selectRaw("rd.kode_daerah")
                                 ->leftJoin('master_regional_detail as rd','rd.id_regional','=','r.id_regional')->where('r.id_user',$u->id)->get()->pluck('kode_daerah')]);
                         

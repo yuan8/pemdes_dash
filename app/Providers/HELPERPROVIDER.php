@@ -103,7 +103,7 @@ class HELPERPROVIDER extends ServiceProvider
 		return $tb;
 	}
 
-	static function maping_row($data,$map,$ROW=8,$COLUMN=8){
+	static function maping_row($data,$map,$ROW=9,$COLUMN=8){
 
 		$DATA=[];
 		$POINTER_ROW=$ROW;
@@ -137,9 +137,10 @@ class HELPERPROVIDER extends ServiceProvider
 							'name_column'=>$keyc
 						];
 					}
+
 					if($keyc=='jenis_daerah'){
 						$DATA[$key][$keyc]=[
-							'name'=>'STATUS DAERAH',
+							'name'=>'JENIS DAERAH',
 							'satuan'=>'',
 							'type'=>'META',
 							'pointer_r'=>$POINTER_ROW,
@@ -149,6 +150,8 @@ class HELPERPROVIDER extends ServiceProvider
 							'name_column'=>$keyc
 						];
 					}
+
+					
 					if($keyc=='name_kecamatan'){
 						$DATA[$key][$keyc]=[
 							'name'=>'NAMA KECAMATAN',
@@ -206,7 +209,7 @@ class HELPERPROVIDER extends ServiceProvider
 						$DATA[$key][$keyc]['type']='DATA';
 						$DATA[$key][$keyc]['pointer_r']=$POINTER_ROW;
 						$DATA[$key][$keyc]['pointer_c']=$POINTER_COLUMN;
-						$POINTER_COLUMN+=2;
+						$POINTER_COLUMN+=1;
 
 
 					}
@@ -329,293 +332,293 @@ class HELPERPROVIDER extends ServiceProvider
 	}
 
 
-	static function table_data($table=null){
-		$tb= [
-			'dash_potensi_iklim_tanah_erosi'=>[
-				'name'=>'Data Potensi Iklim Tanah Erosi',
-				'table'=>'dash_potensi_iklim_tanah_erosi',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
-			],
-			'dash_potensi_jenis_lahan'=>[
-				'table'=>'dash_potensi_jenis_lahan',
-				'name'=>'Data Potensi Jenis Lahan',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
+	// static function table_data($table=null){
+	// 	$tb= [
+	// 		'dash_potensi_iklim_tanah_erosi'=>[
+	// 			'name'=>'Data Potensi Iklim Tanah Erosi',
+	// 			'table'=>'dash_potensi_iklim_tanah_erosi',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
+	// 		],
+	// 		'dash_potensi_jenis_lahan'=>[
+	// 			'table'=>'dash_potensi_jenis_lahan',
+	// 			'name'=>'Data Potensi Jenis Lahan',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
 
-			],
-			'dash_potensi_jumlah_penduduk'=>[
-				'table'=>'dash_potensi_jumlah_penduduk',
-				'name'=>'Data Potensi Jumlah Penduduk',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
+	// 		],
+	// 		'dash_potensi_jumlah_penduduk'=>[
+	// 			'table'=>'dash_potensi_jumlah_penduduk',
+	// 			'name'=>'Data Potensi Jumlah Penduduk',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
 
-			],
-			'dash_potensi_kepemilikan_lahan_pertanian'=>[
-				'table'=>'dash_potensi_kepemilikan_lahan_pertanian',
-				'name'=>'Data Potensi Kepemilikan Tanah Pertanian',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
+	// 		],
+	// 		'dash_potensi_kepemilikan_lahan_pertanian'=>[
+	// 			'table'=>'dash_potensi_kepemilikan_lahan_pertanian',
+	// 			'name'=>'Data Potensi Kepemilikan Tanah Pertanian',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
 
-			],
-			'dash_potensi_lembaga_kemasyarakatan'=>[
-				'table'=>'dash_potensi_lembaga_kemasyarakatan',
-				'name'=>'Data Potensi Lembaga Kemasyarakatan',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
+	// 		],
+	// 		'dash_potensi_lembaga_kemasyarakatan'=>[
+	// 			'table'=>'dash_potensi_lembaga_kemasyarakatan',
+	// 			'name'=>'Data Potensi Lembaga Kemasyarakatan',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
 
-			],
-			'dash_potensi_lembaga_pemerintahan'=>[
-				'table'=>'dash_potensi_lembaga_pemerintahan',
-				'name'=>'Data Potensi Lembaga Pemerintah',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
-			],
+	// 		],
+	// 		'dash_potensi_lembaga_pemerintahan'=>[
+	// 			'table'=>'dash_potensi_lembaga_pemerintahan',
+	// 			'name'=>'Data Potensi Lembaga Pemerintah',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
+	// 		],
 
-			'dash_potensi_luas_wilayah'=>[
-				'table'=>'dash_potensi_luas_wilayah',
-				'name'=>'Data Potensi Luas Wilayah',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
+	// 		'dash_potensi_luas_wilayah'=>[
+	// 			'table'=>'dash_potensi_luas_wilayah',
+	// 			'name'=>'Data Potensi Luas Wilayah',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
 
-			],
-			'dash_potensi_umur_penduduk'=>[
-				'table'=>'dash_potensi_umur_penduduk',
-				'name'=>'Data Potensi Umur Penduduk',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
+	// 		],
+	// 		'dash_potensi_umur_penduduk'=>[
+	// 			'table'=>'dash_potensi_umur_penduduk',
+	// 			'name'=>'Data Potensi Umur Penduduk',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
 
-			],
-			'jumlah_penduduk_dan_kk'=>[
-				'table'=>'jumlah_penduduk_dan_kk',
-				'name'=>'Data Jumlah Penduduk dan kk',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
+	// 		],
+	// 		'jumlah_penduduk_dan_kk'=>[
+	// 			'table'=>'jumlah_penduduk_dan_kk',
+	// 			'name'=>'Data Jumlah Penduduk dan kk',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
 
-			],
-			'nama_kades_prodes'=>[
-				'table'=>'nama_kades_prodes',
-				'name'=>'Data Nama Kepala Desa',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
+	// 		],
+	// 		'nama_kades_prodes'=>[
+	// 			'table'=>'nama_kades_prodes',
+	// 			'name'=>'Data Nama Kepala Desa',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
 
-			],
-			'dash_ddk_pekerjaan'=>[
-				'name'=>'Data DKK Pekerjaan',
-				'table'=>'dash_ddk_pekerjaan',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
-			],
-			'dash_ddk_pendidikan'=>[
-				'name'=>'Data DKK Tingkat Pendidikan',
-				'table'=>'dash_ddk_pendidikan',
-				'view_'=>[
-					2=>[
-						['bar','map'],
-						['table']
-					],
-					4=>[
-						['bar','map'],
-						['table']
-					],
-					7=>[
-						['bar'],
-						['table']
-					],
-					10=>[
-						['bar'],
-						['table']
-					]
-				]
-			],
+	// 		],
+	// 		'dash_ddk_pekerjaan'=>[
+	// 			'name'=>'Data DKK Pekerjaan',
+	// 			'table'=>'dash_ddk_pekerjaan',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
+	// 		],
+	// 		'dash_ddk_pendidikan'=>[
+	// 			'name'=>'Data DKK Tingkat Pendidikan',
+	// 			'table'=>'dash_ddk_pendidikan',
+	// 			'view_'=>[
+	// 				2=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				4=>[
+	// 					['bar','map'],
+	// 					['table']
+	// 				],
+	// 				7=>[
+	// 					['bar'],
+	// 					['table']
+	// 				],
+	// 				10=>[
+	// 					['bar'],
+	// 					['table']
+	// 				]
+	// 			]
+	// 		],
 			
 
-		];
+	// 	];
 
-		if($table){
-			return $tb[$table];
-		}else{
-			return array_values($tb);
-		}
+	// 	if($table){
+	// 		return $tb[$table];
+	// 	}else{
+	// 		return array_values($tb);
+	// 	}
 
 		
-	}
+	// }
 
 	static function vdata($key){
 		if(in_array($key, ['desa','kabkota','provinsi','kecamatan','kode_dagri'])){
