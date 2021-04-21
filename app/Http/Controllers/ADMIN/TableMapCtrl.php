@@ -132,7 +132,7 @@ class TableMapCtrl extends Controller
 
         if($data){
 
-             foreach ($request->columns as $key => $c) {
+             foreach ($request->columns??[] as $key => $c) {
                     $c=(array)$c;
                     $valid=Validator::make($c,[
                         'interval_nilai'=>'nullable|array',
