@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Carbon\Carbon;
+use Auth;
 class DataViewCtrl extends Controller
 {
     //
@@ -81,7 +82,7 @@ class DataViewCtrl extends Controller
         $meta_table['columns']=array_values($meta_table['columns']);
         $MAP_DATA=[
             'meta_table'=>$meta_table,
-            'data'=>$DATA,
+            'tb_data'=>$DATA,
             'level'=>$meta_table['level']
         ];
 
@@ -97,7 +98,6 @@ class DataViewCtrl extends Controller
 
 		if($request->tema){
 			$where[]=['c.type','=',$request->tema];
-
 			$Orwhere[]=['c.type','=',$request->tema];
 
 		}
@@ -110,7 +110,7 @@ class DataViewCtrl extends Controller
 		if($request->kategori){
 			$where[]=['gc.id_category','=',$request->kategori];
 			$Orwhere[]=['gc.id_category','=',$request->kategori];
-			$pilih_kategori=(array)DB::table('category')
+			$pilih_kategori=(array)DB::table('master_category')
 				->selectRaw("concat(replace(type,'_',' '),' - ',name) as text,id ")
 				->where([
 					['id','=',$request->kategori],
@@ -118,10 +118,11 @@ class DataViewCtrl extends Controller
 				->first();
 
 		}
-		$data=DB::table('data as d')
-		->leftJoin('data_group as gc','gc.id_data','=','d.id')
-		->leftJoin('category as c','c.id','=','gc.id_category')
-		->leftJoin('category as i','i.id','=','d.organization_id')
+		$data=DB::table('tb_data as d')
+		->leftJoin('tb_data_group as gc','gc.id_data','=','d.id')
+		->leftJoin('master_category as c','c.id','=','gc.id_category')
+		->leftJoin('tb_data_instansi as di','di.id_data','=','d.id')
+        ->leftJoin('master_instansi as i','i.id','=','di.id_instansi')
 		->selectRaw("group_concat(distinct(concat(c.name))) as nama_category,
 			i.name as instansi,
 		group_concat(distinct(c.type)) as tema ,d.*")
@@ -141,6 +142,7 @@ class DataViewCtrl extends Controller
 
 		$data=$data->paginate(10);
 
+
 		$data->appends([
 			'kategori'=>$request->kategori,
 			'q'=>$request->q,
@@ -155,12 +157,13 @@ class DataViewCtrl extends Controller
     public function edit($tahun,$id){
 
 
-    	$data=DB::table('data as d')
-		->leftJoin('data_group as gc','gc.id_data','=','d.id')
-		->leftJoin('category as c','c.id','=','gc.id_category')
-		->leftJoin('category as i','i.id','=','d.organization_id')
-
-		->selectRaw("group_concat(DISTINCT(concat(c.id,'|||',replace(c.type,'_',' '),'|||',c.name)) SEPARATOR '------') as category,concat(i.id,'|||',i.name) as instansi,  d.*")
+    	$data=DB::table('tb_data as d')
+        ->join('tb_data_detail_map as map','map.id_data','=','d.id')
+		->leftJoin('tb_data_group as gc','gc.id_data','=','d.id')
+		->leftJoin('master_category as c','c.id','=','gc.id_category')
+        ->leftJoin('tb_data_instansi as di','di.id_data','=','d.id')
+		->leftJoin('master_instansi as i','i.id','=','di.id_instansi')
+		->selectRaw("group_concat(DISTINCT(concat(c.id,'|||',replace(c.type,'_',' '),'|||',c.name)) SEPARATOR '------') as category,concat(i.id,'|||',i.name) as instansi,  d.*,map.id_map")
 		->groupBy('d.id')
 		->where([
 			['d.id','=',$id],
@@ -207,13 +210,13 @@ class DataViewCtrl extends Controller
     		if($data_up){
     			foreach ($request->category??[] as $key => $k) {
     				# code...
-    				DB::table('data_group')->insertOrIgnore([
+    				DB::table('tb_data_group')->insertOrIgnore([
     					'id_data'=>$id,
     					'id_category'=>$k
     				]);
 
     			}
-    			DB::table('data_group')->where('id_data',$id)
+    			DB::table('tb_data_group')->where('id_data',$id)
     			->whereNotIn('id_category',$request->category??[])->delete();
     			
     		}
@@ -242,7 +245,7 @@ class DataViewCtrl extends Controller
 		])->first();
 
 		if($data){
-			return view('admin.dataview.delete')->with('data',$data);
+			return view('admin.dataview.delete')->with('tb_data',$data);
 		}
 
     }
@@ -250,31 +253,42 @@ class DataViewCtrl extends Controller
     public function store($tahun,Request $request){
 
 
-    	$data=DB::table('data')->insertGetId([
-    		      'name'=>$request->name,
-    			'description'=>$request->description,
-    			'table_view'=>$request->table_view,
-    			'auth'=>$request->auth,
-    			'updated_at'=>Carbon::now(),
-    			'created_at'=>Carbon::now(),
+    	$data=DB::table('tb_data')->insertGetId([
+    		      'title'=>$request->name,
+                  'auth'=>$request->auth,
+
+    			'deskripsi'=>$request->description,
     			'type'=>'INTEGRASI',
-    			'delivery_type'=>'AUTOMATION',
-                'dashboard'=>true,
     			'keywords'=>json_encode($request->keywords),
-    			'organization_id'=>$request->id_instansi
 
     	]);
 
+        
+
     	if($data){
+            if(Auth::User()->can('is_only_daerah')){
+                
+            }
+
+            DB::table('tb_data_detail_map')->insertOrIgnore([
+                'id_data'=>$data,
+                'id_map'=>$request->id_table
+
+            ]);
+            DB::table('tb_data_instansi')->insertOrIgnore([
+                'id_data'=>$data,
+                'id_instansi'=>$request->id_instansi
+            ]);
+
     		foreach ($request->category as $key => $k) {
     				# code...
-    				DB::table('data_group')->insertOrIgnore([
+    				DB::table('tb_data_group')->insertOrIgnore([
     					'id_data'=>$data,
     					'id_category'=>$k
     				]);
 
     			}
-    			DB::table('data_group')->where('id_data',$data)
+    			DB::table('tb_data_group')->where('id_data',$data)
     			->whereNotIn('id_category',$request->category)->delete();
 
     	}
@@ -285,7 +299,7 @@ class DataViewCtrl extends Controller
 
     public function delete($tahun,$id){
 
-    	$data=DB::table('data')
+    	$data=DB::table('tb_data')
 		->where([
 			['id','=',$id],
 		])->delete();

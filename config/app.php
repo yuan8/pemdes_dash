@@ -169,14 +169,17 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+         App\Providers\AppServiceProvider::class,
+         App\Providers\AuthServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
+         App\Providers\EventServiceProvider::class,
+         App\Providers\RouteServiceProvider::class,
          RealRashid\SweetAlert\SweetAlertServiceProvider::class,
          Unisharp\Ckeditor\ServiceProvider::class,
          Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
+         
+         App\Providers\ChatterServiceProvider::class,
+         Kreait\Laravel\Firebase\ServiceProvider::class
 
     ],
 
@@ -231,10 +234,12 @@ return [
         'MENUS' => App\Providers\MENUPROVIDER::class,
         'YDB' => App\Providers\YDBPROVIDER::class,
         'HPV' => App\Providers\HELPERPROVIDER::class,
+        'HP' => App\Providers\HelperP::class,
         'MyHash' => App\Providers\PassProvider::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
         'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
         'THEM_ADMIN' => App\Providers\MENUAPI::class,
+        'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
 
 
         

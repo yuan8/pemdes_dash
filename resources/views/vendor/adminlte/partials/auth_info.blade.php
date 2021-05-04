@@ -7,6 +7,18 @@
   </a> 
 </li> 
 <li>
+  <a href="{{route('index',['tahun'=>$GLOBALS['tahun_access']])}}" >
+   
+        FaQ
+  </a> 
+</li> 
+<li>
+  <a href="{{url('forums')}}" >
+   
+        Forum
+  </a> 
+</li> 
+<li>
   <a href="{{route('public_tentang',['tahun'=>$GLOBALS['tahun_access']])}}"> Tentang </a>
 </li> 
 @if(Auth::check())

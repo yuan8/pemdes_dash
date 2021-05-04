@@ -29,9 +29,13 @@
 					<label>Nama</label>
 					<input type="text" required="" v-model="inst.name" class="form-control" name="name">
 				</div>
+				<div class="form-group" v-if="inst.type=='PEMDA KOTA/KAB'">
+					<label>KAB KOTA</label>
+					<select class="form-control" name="kode_daerah" id="kode_daerah" required=""></select>
+				</div>
 				<div class="form-group">
 					<label>Jenis Instansi</label>
-					<select class="form-control" required="" v-model="inst.sub_type" name="sub_type">
+					<select class="form-control" required="" id="jenis_instansi" v-model="inst.type" name="sub_type">
 						<option v-for="i in jenis_instansi" v-bind:value="i">@{{i}}</option>
 					</select>
 				</div>
@@ -61,16 +65,34 @@
 				id:null,
 				name:null,
 				description:null,
-				sub_type:null,
-				image_path:'logo.png'
+				type:null,
+				image_path:'logo.png',
 			},
 			jenis_instansi:[
-				'PUSAT','REGIONAL','PEMDA DAERAH'
+				'PUSAT','PEMDA KOTA/KAB',
 			],
 
 			image_path:null,
 			img_path_update:null,
 
+		},
+		watch:{
+			'inst.type':function(val){
+				if(val=='PEMDA KOTA/KAB'){
+					setTimeout(function(){
+						$('#kode_daerah').html('');
+						$.get('{{route('api.meta.kota')}}/',function(res){
+						res=res.result;
+
+						for(var i=0;i<res.length;i++){
+							$('#kode_daerah').append('<option value="'+res[i].id+'" >'+res[i].text+'</option>');
+						}
+						$('#kode_daerah').trigger('change');
+						$('#kode_daerah').select2();
+					});
+					},500);
+				}
+			}
 		},
 	
 		methods:{
@@ -78,7 +100,11 @@
 
 				setTimeout(function(){
 					window.instansi.image_path='{{url('')}}/'+window.instansi.inst.image_path;
-				},100)
+					// $('#jenis_instansi').select2();
+
+				},100);
+
+				
 			},
 			img_update:function(ev){
 
@@ -95,6 +121,9 @@
 			}
 		}
 	});
+	setTimeout(function(){
 	instansi.init();
+
+	},500);
 </script>
 @stop

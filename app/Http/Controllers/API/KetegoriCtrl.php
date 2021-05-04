@@ -16,7 +16,7 @@ class KetegoriCtrl extends Controller
 		}
 		return [
 			'results'=>
-				DB::table('category')
+				DB::table('master_category')
 				->selectRaw("concat(replace(type,'_',' '),' - ',name) as text,id ")
 				->where([
 					['name','like','%'.$request->q.'%'],
@@ -32,7 +32,7 @@ class KetegoriCtrl extends Controller
 	public function instansi(Request $request){
 		return [
 			'results'=>
-				DB::table('category')
+				DB::table('master_category')
 				->selectRaw("concat(replace(type,'_',' - '),' ',name) as text,id ")
 				->where([
 					['name','like','%'.$request->q.'%'],

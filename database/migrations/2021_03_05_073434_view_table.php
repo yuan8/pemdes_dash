@@ -19,6 +19,7 @@ class ViewTable extends Migration
             $table->bigInteger('id_ms_table')->unsigned();
             $table->string('type');
             $table->integer('level');
+          
             $table->integer('row');
             $table->bigInteger('id_user')->unsigned();
             $table->timestamps();

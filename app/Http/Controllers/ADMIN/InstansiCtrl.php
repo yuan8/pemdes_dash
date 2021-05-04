@@ -14,26 +14,19 @@ class InstansiCtrl extends Controller
 {
     //
       public function index(Request $request){
-    	$data=DB::table('category as r')
-    	->where('r.type','INSTANSI');
+    	$data=DB::table('master_instansi as r');
 
     	if($request->q){
     		$data=$data->where([
                 ['r.name','like','%'.$request->q.'%'],
-                ['r.type','=','INSTANSI']
-
-                ]
-            )
-            ->orWhere(
-                [
-                ['r.sub_type','like','%'.$request->q.'%'],
-                ['r.type','=','INSTANSI']
-
                 ]
             );
+            
+           
 
     	}
-    	$data=$data->leftJoin('data as d','r.id','=','d.organization_id')
+        
+    	$data=$data->leftJoin('tb_data_instansi as d','r.id','=','d.id_instansi')
     	->groupBy('r.id')
     	->selectRaw("r.*,count(distinct(d.id)) as count")
     	->paginate(15);
@@ -43,7 +36,7 @@ class InstansiCtrl extends Controller
     }
 
     public function show($tahun,$id,$slug,Request $request){
-        $data=DB::table('category')
+        $data=DB::table('master_category')
         ->where('type','INSTANSI')->where('id',$id)->first();
 
         if($data){
@@ -62,9 +55,11 @@ class InstansiCtrl extends Controller
     public function store($tahun,Request $request){
          $dataup=[
                 'name'=>$request->name,
-                'sub_type'=>$request->sub_type,
-                'type'=>'INSTANSI',
-                'description'=>$request->description,
+                'type'=>$request->sub_type,
+                'kode_daerah'=>($request->sub_type=='PEMDA KOTA/KAB'?$request->kode_daerah:null),
+                'deskripsi'=>$request->deskripsi,
+                'id_user'=>Auth::User()->id,
+                'id_user_update'=>Auth::User()->id,
                 'updated_at'=>Carbon::now(),
                 'created_at'=>Carbon::now()
             ];
@@ -78,7 +73,7 @@ class InstansiCtrl extends Controller
                 $dataup['image_path']='/logo.png';
             }
 
-             $data=DB::table('category')->insert($dataup);
+             $data=DB::table('master_instansi')->insert($dataup);
              if($data){
                 Alert::success('Berhasil');
                 return redirect()->route('admin.instansi.index',['tahun'=>$GLOBALS['tahun_access']]);
@@ -89,7 +84,7 @@ class InstansiCtrl extends Controller
     }
 
     public function update($tahun,$id,Request $request){
-         $data=DB::table('category')
+         $data=DB::table('master_category')
         ->where('type','INSTANSI')->where('id',$id)->first();
 
         if($data){
@@ -106,7 +101,7 @@ class InstansiCtrl extends Controller
                 $path=Storage::url($path);
                 $dataup['image_path']=$path;
             }
-            $data=DB::table('category')->where('id',$id)->update($dataup);
+            $data=DB::table('master_category')->where('id',$id)->update($dataup);
             Alert::success('Berhasil','Data telah diupdate');
             return back();
 
@@ -118,7 +113,7 @@ class InstansiCtrl extends Controller
     }
 
     public function delete($tahun,$id){
-        $data=DB::table('category')
+        $data=DB::table('master_category')
         ->where('type','INSTANSI')->where('id',$id)->delete();
 
         if($data){

@@ -11,7 +11,7 @@
 
 
 @section('content')
-<h4><b>{{$data->name}} ({{$data->key_view}})</b></h4>
+<h4><b>{{$data->name}}</b></h4>
 <form id="form-column" action="{{route('admin.tablemap.update.columns',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}" method="post">
 	@csrf
 	@method('PUT')
@@ -51,21 +51,21 @@
 							</button>
 						</td>
 						<td>
-							<input required="" type="text" v-model="item.name" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][name]'"  class="form-control"   value="">
+							<input required="" type="text" v-model="item.name" v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][name]'"  class="form-control"   value="">
 						
 
 						</td>
 						<td>
-							<select required=""  class="form-control" v-model="item.name_column"  v-model="item.name" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][name_column]'" >
+							<select required=""  class="form-control" v-model="item.name_column"  v-model="item.name" v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][name_column]'" >
 								<option v-for="c in columns" v-bind:value="c.Field" >@{{c.Field}}</option>
 							</select>
 						</td>
 						<td>
-							<input type="text" v-model="item.satuan" v-model="item.name" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][satuan]'"   class="form-control"  >
+							<input type="text" v-model="item.satuan" v-model="item.name" v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][satuan]'"   class="form-control"  >
 							
 						</td>
 						<td>
-							<select required=""  v-on:change="changeTipeData(item)" class="form-control" v-model="item.tipe_data" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][tipe_data]'"  >
+							<select required=""  v-on:change="changeTipeData(item)" class="form-control" v-model="item.tipe_data" v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][tipe_data]'"  >
 									<option value="string">String</option>
 									<option value="numeric">Numeric</option>
 
@@ -73,33 +73,33 @@
 							
 						</td>
 						<td>
-							<textarea v-model="item.definisi" class="form-control"  v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][definisi]'"  ></textarea>
+							<textarea v-model="item.definisi" class="form-control"  v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][definisi]'"  ></textarea>
 						</td>
 						<td>
-							<select multiple="" v-bind:id="'interval_nilai_'+item.id" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][interval_nilai][]'"    class="form-control"></select>
+							<select multiple="" v-bind:id="'interval_nilai_'+item.id" v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][interval_nilai][]'"    class="form-control"></select>
 						</td>
 						<td>
-							<select required=""  v-model="item.aggregate_type" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][aggregate_type]'"  v-bind:id="'tipe_aggregasi_'+item.id"   class="form-control">
+							<select required=""  v-model="item.aggregate_type" v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][aggregate_type]'"  v-bind:id="'tipe_aggregasi_'+item.id"   class="form-control">
 								<option v-if="item.tipe_data=='string'" v-for="c in aggregasi_tipe_string" v-bind:value="c" >@{{c}} </option>
 								<option v-if="item.tipe_data=='numeric'" v-for="c in aggregasi_tipe_numeric" v-bind:value="c" >@{{c}} </option>
 							</select>
 						</td>
 						<td>
-							<select required=""  v-model="item.auth" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][auth]'"  class="form-control">
+							<select required=""  v-model="item.auth" v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][auth]'"  class="form-control">
 								<option value="1">Ya</option>
 								<option value="0">Tidak</option>
 
 							</select>
 						</td>
 						<td>
-							<select required=""     v-model="item.validate" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][validate]'"   class="form-control">
+							<select required=""     v-model="item.validate" v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][validate]'"   class="form-control">
 								<option value="1">Ya</option>
 								<option value="0">Tidak</option>
 
 							</select>
 						</td>
 						<td>
-							<select  required=""  v-model="item.dashboard" v-model="item.validate" v-bind:name="'columns['+(item.stored?'ID_':'NEW_')+item.id+'][dashboard]'"   class="form-control">
+							<select  required=""  v-model="item.dashboard" v-model="item.validate" v-bind:name="'columns['+(item.stored_status?'ID_':'NEW_')+item.id+'][dashboard]'"   class="form-control">
 								<option value="1">Ya</option>
 								<option value="0">Tidak</option>
 
@@ -225,7 +225,7 @@
 
 			},
 			remove:function(key){
-				if(key.stored){
+				if(key.stored_status){
 					window.remove_components.addItem(key);
 				}
 				this.items.splice(this.items.indexOf(key), 1);
@@ -236,7 +236,7 @@
 
 				this.items.push({
 					id:'xx_'+this.new_column,
-					"stored":false,
+					"stored_status":false,
 					"id_ms_table":1,
 					"name":"",
 					"name_column":"",

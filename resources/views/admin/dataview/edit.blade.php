@@ -13,13 +13,13 @@
 		<div class="box-body">
 			<div class="form-group">
 				<label>Judul</label>
-				<input type="text" required="" value="{{$data->name}}" name="name" class="form-control">
+				<input type="text" required="" value="{{$data->title}}" name="name" class="form-control">
 			</div>
 			
 
 			<div class="form-group">
 				<label>Deksripsi</label>
-				<textarea class="form-control" name="description">{!!$data->description!!}</textarea>
+				<textarea class="form-control" name="description">{!!$data->deskripsi!!}</textarea>
 			</div>
 			@php
 			@endphp
@@ -31,9 +31,7 @@
 					@endforeach
 				</select>
 				<script type="text/javascript">
-					$('#keywords').select2({
-						tags:true
-					});
+					
 				</script>
 			</div>
 
@@ -42,12 +40,11 @@
 				<select class="form-control" name="table_view" id="table_view" required="">
 					@foreach($tablemap as $k)
 					
-						<option value="{{$k->key_view}}" {{$data->table_view==$k->key_view?"selected":''}}>{{$k->key_view}} - {{$k->name}}</option>
+						<option value="{{$k->id}}" {{$data->id_map==$k->id?"selected":''}}>{{$k->name}}</option>
 					@endforeach
 				</select>
 				<script type="text/javascript">
-					$('#table_view').select2({
-					});
+					
 				</script>
 			</div>
 
@@ -70,11 +67,14 @@
 					</div>
 					<div class="form-group">
 						<label>INSTANSI</label>
-						<select class="form-control" id="instansi"  name="id_instansi" required="">	
-							@php
+													@php
 								$instansi=explode('|||',$data->instansi);
 							@endphp
+						<select class="form-control" id="instansi"  name="id_instansi" required="">	
+
+							@if(!empty($instansi[0]))
 							<option value="{{$instansi[0]}}" selected="">INSTANSI {{$instansi[1]}}</option>
+							@endif
 						</select>
 					</div>
 					<div class="form-group">
@@ -83,7 +83,6 @@
 							@foreach(explode('------',$data->category ) as $c )
 								@if($c!='')
 								@php
-									
 									$c=explode('|||',$c);
 								@endphp
 								<option value="{{$c[0]}}" selected="">{{$c[1]}} - {{$c[2]}}</option>
@@ -91,7 +90,8 @@
 							@endforeach
 						</select>
 						<script type="text/javascript">
-							$('#kategori').select2({
+							function	b(){
+								$('#kategori').select2({
 								'ajax':{
 									url:'{{route('api.meta.kategori')}}',
 									headers:{
@@ -134,6 +134,19 @@
 							        }
 								}
 							});
+
+							$('#table_view').select2();
+							
+							$('#keywords').select2({
+						tags:true
+					});
+
+							
+							}
+
+							setTimeout(function(){
+								b();
+							},500);
 						</script>
 					</div>
 				</div>

@@ -135,18 +135,19 @@
 
 	}
 
-	$('#kategori').select2();
-	$('#tema').select2();
-	$('#tema').on('change',function(){
-		ketegori();
+	$(function(){
+		setTimeout(function(){
+			$('#kategori').select2();
+		$('#tema').select2();
+		$('#tema').on('change',function(){
+			ketegori();
+		});
+
+		$('#tema').trigger('change');
+
+		$('#jenis').select2();
+		},500);
 	});
-
-	$('#tema').trigger('change');
-
-
-
-
-	$('#jenis').select2();
 
 
 	@if($request->kategori)

@@ -1,7 +1,9 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>{{$table->name}}</h4>
-<h4>{{$GLOBALS['tahun_access']}} - UPLOAD BULK VALIDASI DATA <b>{{($daerah)?($daerah->parent.' '.$daerah->jenis.' '.$daerah->name):''}}</b></h4>
+<h4>{{$level['data_name']}}</h4>
+@php
+@endphp
+<h4>{{$GLOBALS['tahun_access']}} -  {{$daerah}}</b></h4>
 
 @stop
 
@@ -13,9 +15,9 @@
 	<div class="box-body">
 		<div class="form-group">
 			<input type="hidden" name="kd" value="{{$kd}}">
-			<input type="hidden" name="table" value="{{$table->table}}">
+			<input type="hidden" name="id_table" value="{{$table->id}}">
 
-			<label>File Format Upload Validasi</label>
+			<label>File Format Upload </label>
 			<input type="file" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" name="file" required="">
 		</div>
 	</div>

@@ -68,21 +68,21 @@
 				@foreach($data as $d)
 					<tr>
 						<td>
-							<a href="{{route('get.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>HPV::slugify($d->name)])}}" target="_blank" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
+							{{-- <a href="{{route('get.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>HPV::slugify($d->title)])}}" target="_blank" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a> --}}
 							<a href="{{route('admin.dataview.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
 							<button onclick="showForm('{{route('admin.dataview.form_delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')"  class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </button>
 
 						</td>
-						<td>{{$d->name}}</td>
-						<td>{{$d->table_view}}</td>
+						<td>{{$d->title}}</td>
+						<td>{{$d->title}}</td>
 
 
 						<td>{{str_replace('_',' ',$d->tema)}}</td>
 
 						<td>{{$d->nama_category}}</td>
-						<td>{{$d->instansi}}</td>
+						<td>{{$d->title}}</td>
 
-						<td>{{$d->description}}</td>
+						<td>{{$d->deskripsi}}</td>
 
 					</tr>
 				@endforeach
@@ -126,6 +126,8 @@
 
 
 	}
+$(function(){
+	setTimeout(function(){
 
 	$('#kategori').select2();
 	$('#tema').select2();
@@ -133,11 +135,9 @@
 		ketegori();
 	});
 
-
-
-
-
 	$('#jenis').select2();
+},500);
+});
 
 
 	@if($request->kategori)

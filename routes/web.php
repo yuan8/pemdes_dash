@@ -1,125 +1,38 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 
 Route::get('/',function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);
 })->name('home');
-
-Route::GET('/y','TestCtrl@tt')->name('phising');
-
-Route::get('v/{tahun}/video/{id}/{slug?}',function($tahun,$id){
-	$data=DB::table('master_video')->find($id);	
-	if($data){
-		$else=DB::table('master_video')->where('id','!=',$id)->limit(4)->orderby(DB::raw("RAND()"))->get();	
-		return view('video.index')->with(['list'=>$else,'data'=>$data]);
-
-	}
-})->middleware('bindTahun')->name('video.detail');
-
-Route::get('/test',function(){
-	dd(Auth::User()->can('is_active'),Auth::User());
-	dd(session()->all());
-	// $arr=["sipd_14",
-	// 	"sipd_15",
-	// 	"sipd_16",
-	// 	"sipd_18",
-	// 	"sipd_19",
-	// 	"sipd_20",
-	// 	"sipd_21",
-	// 		"sipd_22",
-	// 		"sipd_23",
-	// 		"sipd_24",
-	// 		"sipd_25",
-	// 		"sipd_26",
-	// 		"sipd_27",
-	// 		"sipd_28",
-	// 		"sipd_29",
-	// 		"sipd_71",
-	// 		"sipd_72",
-	// 		"sipd_73",
-	// 		"sipd_74",
-	// 		"sipd_75",
-	// 		"sipd_76",
-	// 		"sipd_77",
-	// 		"sipd_78",
-	// 		"sipd_79",
-	// 		"sipd_80",
-	// 		"sipd_81",
-	// 		"sipd_82",
-	// 		"sipd_83",
-	// 		"sipd_84",
-	// 		"sipd_85",
-	// 		"sipd_86",
-	// 		"sipd_87",
-	// 		"sipd_88",
-	// 		"sipd_89",
-	// 		"sipd_90"];
-
-	// 		$data=[];
-	// 	foreach ($arr as $key => $value) {
-	// 		$dr=DB::connection($value)->table('public.r_program as p')
-	// 		->leftJoin('public.r_daerah as d','d.id_daerah','=','p.id_daerah')
-	// 		->groupBy(['p.id_daerah','d.kode_ddn_2'])
-	// 		->selectRaw("p.id_daerah as id ,max(d.nama_daerah) as nama_daerah,max(d.kode_ddn) as kodedaerah,(kode_ddn_2) as kodedaerah2")->orderBy('d.kode_ddn_2','asc')->get();
-	// 		$data[$value]=$dr;
-	// 	}
-
-	// 	return view('aaa')->with('data',$data);
-
-	// 	return $data;
-	// dd('find -O3 -L '.public_path('file_lombadesa').'/ -name "*.doc"');
-	exec('find '.public_path('file_lombadesa').'/ -name "*.doc"',$output,$rev);
-	dd($output);
-
-	$data= scandir(public_path('file_lombadesa'));
-	foreach ($data as $key => $value) {
-		if(is_numeric($value)){
-			$folders= scandir(public_path('file_lombadesa/'.$value));
-			foreach ($folders as $keydesa=> $desa) {
-				# code...
-				if(is_numeric($desa)){
-					$kodedesa=scandir(public_path('file_lombadesa/'.$value.'/'.$desa));
-					dd($kodedesa);
-					
-				}
-			}
-			
-		}
-	}
-});
-
-
-
 Route::get('/home',function(){
 	return redirect()->route('index');
 })->name('home.index');
 
-Route::prefix('test')->group(function(){
-	Route::get('cron','CronJob@handle');
-
-	Route::post('request','TestCtrl@req');
-
+Route::get('init','InitCtrl@init');
+Route::get('check',function(){
+	dd(DB::table('master_desa')->count());
 });
 
+
+Route::get('route', function()
+{
+    header('Content-Type: application/excel');
+    header('Content-Disposition: attachment; filename="routes.csv"');
+
+    $routes = Route::getRoutes();
+    $fp = fopen('php://output', 'w');
+    fputcsv($fp, ['METHOD', 'URI', 'NAME', 'ACTION'],';');
+    foreach ($routes as $route) {
+        fputcsv($fp, [head($route->methods()) , $route->uri(), $route->getName(), $route->getActionName()],';');
+    }
+    fclose($fp);
+});
 
 
 Route::middleware(['guest:web'])->get('/login','Auth\LoginController@showLoginForm')->name('login');
 Route::middleware('guest:web')->post('/login','Auth\LoginController@login');
 Route::middleware('auth:web')->post('/logout','Auth\LoginController@logout')->name('logout');
 
-
-	
 Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_active'])->group(function(){
 	Route::get('/','ADMIN\AdminCtrl@index')->name('admin.index');
 
@@ -167,9 +80,11 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 
 	Route::prefix('validasi')->group(function(){
 		Route::get('/','ADMIN\ValidasiCtrl@index')->name('admin.validasi.index');
+		Route::get('/data/build-berita-acara','ADMIN\BeritaAcaraCtrl@build')->name('admin.validasi.berita_acara.build');
+
 		Route::get('/data','ADMIN\ValidasiCtrl@data')->name('admin.validasi.data');
 		Route::get('/data/upload','ADMIN\ValidasiCtrl@form_upload')->name('admin.validasi.upload');
-		Route::post('/data/upload/{id}','ADMIN\ValidasiCtrl@validate_bulk')->name('admin.validasi.update.bulk');
+		Route::post('/data/upload/{id}','ADMIN\ValidasiCtrl@upload_data')->name('admin.validasi.update.bulk');
 		Route::post('/validated/{table}/{id}','ADMIN\ValidasiCtrl@validated')->name('admin.validasi.try');
 		Route::put('/validated/{table}/{id}','ADMIN\ValidasiCtrl@update')->name('admin.validasi.update');
 	});
@@ -230,52 +145,30 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 
 });
 
-
-
 Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
 
 	Route::get('/tentang-kami', 'ADMIN\SettingCtrl@public_tentang')->name('public_tentang');
 
-    Route::get('/get-descrition-data/{id}','HomeCtrl@get_data_description')->name('api.data.desc');
-
-	Route::prefix('sso')->group(function(){
-		Route::post('sso-try-attemp','SSOCtrl@attemp')->name('sso.attemp');
-		Route::get('sso-login/{id}','SSOCtrl@login')->name('sso.login');
-	});
-
-	Route::get('/keuangan-desa/', 'DASH\KeuanganDesaCtrl@index')->name('d.keuangan_desa.index');
-	Route::get('/keuangan-desa/data/{index?}', 'DASH\KeuanganDesaCtrl@show')->name('d.keuangan_desa.show');
-
-	Route::get('/pindah-tahun', 'HomeCtrl@pindahTahun')->name('p.tahun');
-	Route::post('/pindah-tahun', 'HomeCtrl@pindahkanTahun')->name('p.tahun.change');
-
-	Route::get('/tb/{h}', 'ADMIN\ValidasiCtrl@number_to_alphabet')->name('tb');
-
-	Route::get('/get-data-v-table/{id}/{slug?}','TestCtrl@view')->name('get.data.table');
-
-	Route::get('/category/{id}/{slug?}', 'KategoriCtrl@index')->name('kategori.index');
-
-	Route::get('/category-data/{id}/{slug?}', 'KategoriCtrl@data')->name('kategori.data');
-
-	Route::get('/construction', 'DASH\KONST@index')->name('d.konst');
 
 	Route::get('/query-data', 'DataCtrl@index')->name('query.data');
 
+	Route::get('/data-integrasi/{id}/{slug}', 'DataCtrl@detail')->name('data.int.detail');
+
 	Route::get('/instansi', 'DataCtrl@instansi')->name('organisasi');
-
 	Route::get('/tema', 'DataCtrl@tema')->name('tema');
-
 	Route::get('/query-data-type/{type}', 'DataCtrl@delivery_type')->name('query.data.delivery');
 
-	Route::get('/query-data-category/{id_category}/{slug}', 'DataCtrl@categorical')->name('query.data.categorycal');
-
-	Route::get('/data-detail/{id}/{slug?}', 'DataCtrl@detail')->name('query.data.detail');
 
 
 	Route::prefix('api-dokumentasi')->middleware(['auth:web'])->group(function(){
 		Route::get('/','API\APIDATACtrl@index')->name('doc.api');
 	});
+
+	Route::get('/pindah-tahun', 'HomeCtrl@pindahTahun')->name('p.tahun');
+	Route::post('/pindah-tahun', 'HomeCtrl@pindahkanTahun')->name('p.tahun.change');
+
+	Route::get('/query-data-category/{id_category}/{slug}', 'DataCtrl@categorical')->name('query.data.categorycal');
 });
 
-
+include __DIR__ .'/test.php';

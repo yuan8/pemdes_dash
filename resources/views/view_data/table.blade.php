@@ -38,6 +38,8 @@
 					<th rowspan="2">NAMA {{strtoupper($level_meta['level'])}}</th>
 					@if($level>=10)
 					<th rowspan="2">STATUS PEMERITAHAN {{strtoupper($level_meta['level'])}}</th>
+					<th rowspan="2">NAMA KECAMATAN </th>
+					<th rowspan="2">NAMA KOTA/KAB</th>
 					@endif
 
 					@if($level!=10)
@@ -69,12 +71,12 @@
 							@if(!isset($only1level))
 
 							<td scope="row" class="no-export">
-								@if(isset($dataset))
+								{{-- @if(isset($dataset))
 								<button onclick="get_data('#dom_l_{{$level_meta['count']}}','{{route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$id_dataset,'kdparent'=>$d['id']])}}')" type="button" class="btn btn-primary btn-xs background-blue"><i class="fa fa-eye"></i> Detail</button>
 								@else
 								<button onclick="get_data('#dom_l_{{$level_meta['count']}}','{{route('visual.data.table',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d['id_data'],'table'=>$table_meta['key_view'],'kdparent'=>$d['id']])}}')" type="button" class="btn btn-primary btn-xs background-blue"><i class="fa fa-eye"></i> Detail</button>
 
-								@endif
+								@endif --}}
 							</td>
 							@endif
 
@@ -85,6 +87,10 @@
 						<td scope="row" >{{$d['name']}}</td>
 						@if($level>=10)
 						<td >{{$d['status_desa']}}</td>
+						<td >{{$d['nama_kecamatan']}}</td>
+						<td >{{$d['nama_kota']}}</td>
+
+
 						@endif
 
 						@if($level!=10)

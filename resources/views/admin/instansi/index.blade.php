@@ -37,8 +37,8 @@
 						</td>
 						<td class="text-center"><img style="width:20px;" src="{{asset($d->image_path)}}"></td>
 						<td>{{$d->name}}</td>
-						<td>{{$d->sub_type}}</td>
-						<td><p class="one-line">{{$d->description}}</p></td>
+						<td>{{$d->type}}</td>
+						<td><p class="one-line">{{$d->deskripsi}}</p></td>
 
 					</tr>
 					@endforeach

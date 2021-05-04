@@ -21,9 +21,12 @@ class DbRowEntity extends Migration
             $table->string('name_column');
             $table->string('aggregate_type')->default('NONE');
             $table->string('satuan');
-            $table->boolean('auth');
-            $table->boolean('dashboard');
-            $table->boolean('validate');
+            $table->text('definisi')->nullable();
+            $table->string('tipe_data')->nullable();
+            $table->string('interval_nilai')->nullable();
+            $table->boolean('auth')->default(false);
+            $table->boolean('dashboard')->default(true);
+            $table->boolean('validate')->default(true);
             $table->bigInteger('id_user')->unsigned();
             $table->timestamps();
             $table->foreign('id_user')

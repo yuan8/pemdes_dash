@@ -72,8 +72,8 @@ if(isset($bind_side_left)){
                         @endif
                       
 
-                        <a href="{{ route('index',['tahun'=>$GLOBALS['tahun_access']]) }}" class="navbar-brand background-primary " style="padding: 5px 10px 5px 10px; "  >
-                             <img src="{{url('dist-web/logo.png')}}"  style="height:100%;" >
+                        <a href="{{ route('index',['tahun'=>$GLOBALS['tahun_access']]) }}" class="navbar-brand background-primary " style="padding: 5px 10px 5px 10px; margin-top: -1px; "  >
+                             <img src="{{url('dist-web/logo2.png')}}"  style="height:150%;" >
                         </a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="control-sidebar" >
                             <i class="fa fa-bars"></i> 

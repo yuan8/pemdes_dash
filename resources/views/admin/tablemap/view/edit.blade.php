@@ -17,7 +17,8 @@
 		</div>
 		<hr>
 		<p>
-			<input type="checkbox" id="t_hanya_desa" name="" value="10000000000" {{$data->start_level>0?'checked':''}}> <span>HANYA TAMPIL PADA TINGKAT DESA</span>
+			
+			<input type="checkbox" id="t_hanya_desa" name="start_level" value="10" {{$data->start_level!=2?'checked':''}}> <span>HANYA TAMPIL PADA TINGKAT DESA</span>
 		</p> 
 		@foreach($view as $k=>$level)
 		@php

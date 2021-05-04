@@ -18,6 +18,8 @@ class AddRegional extends Migration
         Schema::create('master_regional', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->text('deskripsi_min')->nulable();
+            $table->mediumText('deskripsi')->nulable();
             $table->timestamps();
 
          

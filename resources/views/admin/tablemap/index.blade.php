@@ -36,10 +36,8 @@
 					<th style="width: 250px;">AKSI</th>
 					<th>NAMA</th>
 
-					<th>KEY MAP</th>
 					<th>TABLE</th>
 					<th>FORMAT VALIDASI</th>
-
 					<th>JUMLAH DATA MAP COLUMN</th>
 
 				
@@ -65,7 +63,6 @@
 						</td>
 						<td>{{$d->name}}</td>
 
-						<td>{{$d->key_view}}</td>
 						<td>{{$d->table}}</td>
 						<td>{{$d->edit_daerah?'YA':'TIDAK'}}</td>
 

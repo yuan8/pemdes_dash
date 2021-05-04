@@ -17,7 +17,7 @@ class KategoriCtrl extends Controller
     		$jenis=$request->jenis;
     	}
         
-    	$data=DB::table('category')->where('type','like',(''.$jenis.'%'))->get();
+    	$data=DB::table('master_category')->where('type','like',(''.$jenis.'%'))->get();
     	return view('admin.kategori.index')->with(['data'=>$data,'req'=>$request]);
     }
 
@@ -29,7 +29,7 @@ class KategoriCtrl extends Controller
     }
 
     public function edit($tahun,$id){
-        $data=DB::table('category')->where('id',$id)->first();
+        $data=DB::table('master_category')->where('id',$id)->first();
         if($data){
             return view('admin.kategori.edit')->with(['data'=>$data]);
 
@@ -50,11 +50,11 @@ class KategoriCtrl extends Controller
         }
             $data['name']=$request->name;
             $data['type']=$request->jenis;
-            $data['route']=$request->route??'query.data.categorycal';
+            $data['route']=$request->route??'query.data.master_categorycal';
 
             $data['description']=$request->description;
 
-         DB::table('category')->where('id',$id)->update($data);
+         DB::table('master_category')->where('id',$id)->update($data);
 
         return back();
 
@@ -70,11 +70,11 @@ class KategoriCtrl extends Controller
     			$image_path=Storage::url($image_path);
     		}
     	}
-    	DB::table('category')->insert([
+    	DB::table('master_category')->insert([
     		'name'=>$request->name,
     		'description'=>$request->description,
     		'type'=>$request->jenis,
-    		'route'=>$request->route??'query.data.categorycal',
+    		'route'=>$request->route??'query.data.master_categorycal',
     		'image_path'=>$image_path
     	]);
 

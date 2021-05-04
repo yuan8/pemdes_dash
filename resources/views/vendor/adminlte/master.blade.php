@@ -5,9 +5,34 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@yield('title_prefix', config($CONF_THEM.'.title_prefix', ''))
-    @yield('title', config($CONF_THEM.'.title', 'AdminLTE 2'))
+    @yield('title', config($CONF_THEM.'.title','PROEPDESKEL'))
     @yield('title_postfix', config($CONF_THEM.'.title_postfix', ''))</title>
-    <!-- Tell the browser to be responsive to screen width -->
+     <script type="text/javascript">
+       METAUSER={
+        name:'{{Auth::check()?Auth::User()->name:''}}',
+
+        id:'{{Auth::check()?Auth::User()->id:''}}',
+        api_token:'{{Auth::check()?Auth::User()->api_token:'xx'}}',
+        email:'{{Auth::check()?Auth::User()->email:'xx'}}',
+
+       }
+       METANOTIF={
+        icon:'{{url('logo.png')}}',
+        image:'{{url('logo.png')}}',
+
+       }
+
+       function spawnNotification(body, title) {
+        var options = {
+            body: body,
+            icon: '{{url('logo.png')}}',
+            silent:false
+        }
+        var notification = new Notification(title, options);
+      }
+     </script>
+    <!-- T
+      ell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
@@ -17,7 +42,6 @@
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/vendor/Ionicons/css/ionicons.min.css') }}">
 
     <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
 
     <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
   
@@ -35,6 +59,8 @@
 
     <!-- <link rel="stylesheet" href="{{asset('bower_components/datatables/media/css/jquery.dataTables.css')}}"> -->
     <link rel="stylesheet" href="{{asset('bower_components/datatables/media/css/dataTables.bootstrap.css')}}">
+    <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+    
 
  <link rel="stylesheet" type="text/css" href="{{asset('/bower_components/components-font-awesome/css/all.min.css')}}">
      <script type="text/javascript" src="{{asset('bower_components/jquery-export/libs/js-xlsx/xlsx.core.min.js')}}"></script>
@@ -42,6 +68,8 @@
 
      <script type="text/javascript" src="{{asset('bower_components/jquery-export/tableExport.min.js')}}"></script>
      <script type="text/javascript" src="{{asset('bower_components/jquery.floatThead/dist/jquery.floatThead.min.js')}}"></script>
+     <script type="text/javascript">let _TOKEN_A='{{Auth::check()?Auth::User()->api_token:md5(rand(0,100))}}'</script>
+    
 
 
     @yield('adminlte_css')
@@ -102,10 +130,19 @@
 <script src="{{asset('bower_components/highcharts/modules/offline-exporting.js')}}" charset="utf-8"></script>
 
 
-
 <script src="{{asset('bower_components/vue/dist/vue.min.js')}}"></script>
 <script src="{{asset('bower_components/vue/dist/select2.js')}}"></script>
 
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script type="text/javascript">
+  let sw_root='{{url('sw.js')}}';
+</script>
+
+<script type="text/javascript" src="{{asset('js/app.js')}}"></script>
 
 
 
@@ -207,5 +244,17 @@
        if($('.ck-editor-init').html()!=undefined){
            $('.ck-editor-init').ckeditor();
        }
+    </script>
+
+    <script type="text/javascript">
+        $(function(){
+         Echo.private('App.User.'+window.METAUSER.id)
+            .notification((notification) => {
+                
+                window.notifO.fire(notification);
+            });
+
+        });
+
     </script>
 </html>

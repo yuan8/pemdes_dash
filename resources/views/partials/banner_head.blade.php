@@ -12,8 +12,8 @@
      	 @if(!isset($hm))
       <p class="text-white" style="margin-bottom:5px; line-height: 14px;"><b>SELAMAT DATANG</b></p>
       @endif
-      <h2 class="text-white" style="margin: 0px; line-height: 20px;"><b>DASHBOARD </b></h2>
-      <h3 class="text-white text-uppercase" style="margin: 5px 0px 5px 0px; line-height: 18px;">Bina Pemerintahan Desa</h3>
+      <h2 class="text-white" style="margin: 0px; margin-bottom: 10px; line-height: 20px;"><b>DASHBOARD PROEPDESKEL</b></h2>
+     {{--  <h3 class="text-white text-uppercase" style="margin: 5px 0px 5px 0px; line-height: 18px;">Bina Pemerintahan Desa</h3> --}}
          @if(!isset($hm))
          <p class="text-white">Dashboard Proepdeskel Bina Pemerintahan Desa Menyajikan Data Desa Yang bersumber dari Prodeskel, Epdeskel dan Data Lainnya yang  pengumpulan dan pengelolaan data aplikasi sistem informasi  berada di Direktorat Jenderal Bina Pemerintahan Desa dan Intergrasi sistem serta verifikasi data terlebih dahulu oleh  Perangkat Desa, Kabupaten/Kota dan Provinsi yang Berwenang. </p>
          @endif

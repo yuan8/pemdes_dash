@@ -31,7 +31,7 @@
 				</div>
 				<div class="form-group">
 					<label>Jenis Instansi</label>
-					<select class="form-control" required="" v-model="inst.sub_type" name="sub_type">
+					<select class="form-control" required="" id="jenis_instansi" v-model="inst.sub_type" name="sub_type">
 						<option v-for="i in jenis_instansi" v-bind:value="i">@{{i}}</option>
 					</select>
 				</div>
@@ -56,7 +56,8 @@
 		data:{
 			inst:<?= json_encode($data)?>,
 			jenis_instansi:[
-				'PUSAT','REGIONAL','PEMDA DAERAH'
+				'PUSAT','PEMDA KOTA/KAB',
+				
 			],
 
 			image_path:null,
@@ -69,6 +70,7 @@
 
 				setTimeout(function(){
 					window.instansi.image_path='{{url('')}}/'+window.instansi.inst.image_path;
+					$('#jenis_instansi').select2();
 				},100)
 			},
 			img_update:function(ev){
@@ -86,6 +88,10 @@
 			}
 		}
 	});
-	instansi.init();
+
+	setTimeout(function(){
+		instansi.init();
+		
+	},500);
 </script>
 @stop

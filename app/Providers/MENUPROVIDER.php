@@ -26,8 +26,13 @@ class MENUPROVIDER extends ServiceProvider
         //
     }
 
+   
 
     static function dashboard(){
+
+        $tahun=isset($GLOBALS['tahun_access'])?$GLOBALS['tahun_access']:date('Y');
+        $GLOBALS['tahun_access']=$tahun;
+        
         $menu=[
             'side_left'=>[
                
@@ -35,7 +40,7 @@ class MENUPROVIDER extends ServiceProvider
             'top'=>[
                  [
                     'text'=>('Data'),
-                    'href'=>route('query.data',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('query.data',['tahun'=>$tahun]),
                     'top_nav_class'=>'',
                     'class'=>'',
                     'icon'=>'fa fa-file',
@@ -44,7 +49,7 @@ class MENUPROVIDER extends ServiceProvider
 
                  [
                     'text'=>('Index Desa'),
-                    'href'=>route('organisasi',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('organisasi',['tahun'=>$tahun]),
                     'class'=>'',
                     'top_nav_class'=>'',
 
@@ -53,7 +58,7 @@ class MENUPROVIDER extends ServiceProvider
                 ],
                  [
                     'text'=>('Instansi'),
-                    'href'=>route('organisasi',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('organisasi',['tahun'=>$tahun]),
                     'top_nav_class'=>'',
                     'class'=>'',
 
@@ -62,7 +67,7 @@ class MENUPROVIDER extends ServiceProvider
                 ],
                  [
                     'text'=>('Tema'),
-                    'href'=>route('tema',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('tema',['tahun'=>$tahun]),
                     'top_nav_class'=>'',
                     'class'=>'',
 
@@ -71,7 +76,7 @@ class MENUPROVIDER extends ServiceProvider
                 ],
                 //  [
                 //     'text'=>('Publikasi'),
-                //     'href'=>route('query.data.delivery',['tahun'=>$GLOBALS['tahun_access'],'type'=>'publikasi']),
+                //     'href'=>route('query.data.delivery',['tahun'=>$tahun,'type'=>'publikasi']),
                 //     'top_nav_class'=>'',
                 //     'class'=>'',
 
@@ -80,7 +85,7 @@ class MENUPROVIDER extends ServiceProvider
                 // ],
                  [
                     'text'=>('Infografis'),
-                    'href'=>route('query.data.delivery',['tahun'=>$GLOBALS['tahun_access'],'type'=>'infografis']),
+                    'href'=>route('query.data.delivery',['tahun'=>$tahun,'type'=>'infografis']),
                     'top_nav_class'=>'',
                     'class'=>'',
                     
@@ -106,7 +111,8 @@ class MENUPROVIDER extends ServiceProvider
 
 
     public static function admin(){
-
+        $tahun=isset($GLOBALS['tahun_access'])?$GLOBALS['tahun_access']:date('Y');
+        $GLOBALS['tahun_access']=$tahun;
         $menu=[
             'top'=>[],
             'side_left'=>[
@@ -115,7 +121,7 @@ class MENUPROVIDER extends ServiceProvider
                 'Tahun Data '.$GLOBALS['tahun_access'],
                  [
                     'text'=>('USER DASHBOARD'),
-                    'href'=>route('admin.session.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.session.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-circle',
                     'can'=>['is_super']
@@ -124,7 +130,7 @@ class MENUPROVIDER extends ServiceProvider
                 ],
                  [
                     'text'=>('KATEGORI'),
-                    'href'=>route('admin.kategori.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.kategori.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-circle',
                     'can'=>['is_super']
@@ -134,7 +140,7 @@ class MENUPROVIDER extends ServiceProvider
                 
                  [
                     'text'=>('TABLE MAP'),
-                    'href'=>route('admin.tablemap.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.tablemap.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-code',
                     'can'=>['is_super']
@@ -144,14 +150,14 @@ class MENUPROVIDER extends ServiceProvider
                
                 [
                     'text'=>('VALIDASI DATA'),
-                    'href'=>route('admin.validasi.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.validasi.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-check',
                 ],
                
                 [
                     'text'=>('DATASET'),
-                    'href'=>route('admin.dataview.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.dataview.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
                     'can'=>['is_super']
@@ -159,7 +165,7 @@ class MENUPROVIDER extends ServiceProvider
                 ],
                  [
                     'text'=>('DATASET MANUAL'),
-                    'href'=>route('admin.data.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.data.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
                     'can'=>['is_daerah']
@@ -167,7 +173,7 @@ class MENUPROVIDER extends ServiceProvider
                 ],
                 [
                     'text'=>('MANAJEMEN INSTANSI'),
-                    'href'=>route('admin.instansi.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.instansi.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-user',
                     'can'=>['is_super']
@@ -176,7 +182,7 @@ class MENUPROVIDER extends ServiceProvider
                 ],
                  [
                     'text'=>('MANAJEMEN REGIONAL'),
-                    'href'=>route('admin.region.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.region.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-map',
                     'can'=>['is_super']
@@ -186,7 +192,7 @@ class MENUPROVIDER extends ServiceProvider
                  
                  [
                     'text'=>('MANAJEMEN USER'),
-                    'href'=>route('admin.users.index',['tahun'=>$GLOBALS['tahun_access']]),
+                    'href'=>route('admin.users.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-users',
                     'can'=>['is_super']
@@ -203,7 +209,7 @@ class MENUPROVIDER extends ServiceProvider
                     'submenu'=>[
                         [
                             'text'=>'TENTANG',
-                            'href'=>route('admin.set.index',['tahun'=>$GLOBALS['tahun_access']]),
+                            'href'=>route('admin.set.index',['tahun'=>$tahun]),
                             'class'=>'',
                             'submenu_class'=>'',
                             'icon'=>'fa fa-users',

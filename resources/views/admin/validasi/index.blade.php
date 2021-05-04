@@ -1,6 +1,6 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>VALIDASI DATA</h4>
+<h4>VALIDASI DATA - {{$nama_daerah}}</h4>
 
 @stop
 
@@ -34,7 +34,7 @@
 <div class="form-group">
 
 				<label>KOTA</label>
-				<select class="form-control" id="kota" name="kdkota" >
+				<select class="form-control" id="kota" name="kdkabkota" >
 					
 				</select>
 			</div>
@@ -69,18 +69,21 @@
 @section('js')
 
 <script type="text/javascript">
-	var kodedaerah={!!json_encode($kodedaerah)!!};
 	
-	$('#provinsi').select2();
-	$('#data').select2();
+	setTimeout(function(){
+		$('#provinsi').select2();
+		$('#data').select2();
+		$('#provinsi').trigger('change');
+
+	},2000);
 
 	
 
 	$('#provinsi').on('change',function(){
 		kdprovinsi(this.value);
+
 	});
 
-	$('#provinsi').trigger('change');
 
 	$('#kota').on('change',function(){
 		kdkota(this.value);
@@ -128,7 +131,6 @@
 	}
 
 	function kdkota(kd){
-		console.log('tk');
 
 		$('#kecamatan').val(null)
 		$('#kecamatan').html('');

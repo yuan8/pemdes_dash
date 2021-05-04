@@ -77,15 +77,15 @@ class TableMapCtrl extends Controller
             $master_c=[];
             foreach ($m as $key => $value) {
                 # code...
-                if(!in_array($value->Field, ['kode_desa','tahun'])){
+                if(!in_array($value->Field, ['kode_desa','tahun','id','status_validasi','validasi_date','updated_at'])){
                     $master_c[$value->Field]=$value;
                 }
 
             }
 
             $columns=DB::table('master_column_map as m')
-            ->selectraw("m.*,true as stored")
-            ->where('id_ms_table',$id)->get();
+            ->selectRaw("true as stored_status,m.*")
+            ->where('m.id_ms_table',$id)->get();
 
             return view('admin.tablemap.column.edit')->with(['data'=>$data,'columns'=>$columns,'master_c'=>$master_c]);
         }
@@ -140,7 +140,6 @@ class TableMapCtrl extends Controller
                     $valid=Validator::make($c,[
                         'interval_nilai'=>'nullable|array',
                         'interval_nilai.*'=>'nullable|'.($c['tipe_data']),
-
                     ]);
 
                     if($valid->fails()){
@@ -187,8 +186,9 @@ class TableMapCtrl extends Controller
     	
     }
     public function updateView($tahun,$id,Request $request){
-    	   $data=DB::table('master_table_map')->where('id',$id)
+    	$data=DB::table('master_table_map')->where('id',$id)
         ->first();
+
 
         if($data){
 
@@ -215,6 +215,16 @@ class TableMapCtrl extends Controller
              }
             Alert::success('Berhasil','Table Map View berhasil diupdate');
 
+         }
+
+         if($request->start_level){
+            DB::table('master_table_map')->where('id',$id)->update([
+                'start_level'=>$request->start_level
+            ]);
+         }else{
+              DB::table('master_table_map')->where('id',$id)->update([
+                'start_level'=>2
+            ]);
          }
 
          return back();

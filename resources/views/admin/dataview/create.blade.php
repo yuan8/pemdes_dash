@@ -36,10 +36,10 @@
 
 			<div class="form-group">
 				<label>KEY TABLE MAP</label>
-				<select class="form-control" name="table_view" id="table_view" required="">
+				<select class="form-control" name="id_table" id="table_view" required="">
 					@foreach($tablemap as $k)
 					
-						<option value="{{$k->key_view}}" >{{$k->key_view}} - {{$k->name}}</option>
+						<option value="{{$k->id}}" >{{$k->name}}</option>
 					@endforeach
 				</select>
 				<script type="text/javascript">
@@ -67,7 +67,7 @@
 					</div>
 					<div class="form-group">
 						<label>INSTANSI</label>
-						<select class="form-control" id="instansi"  name="id_instansi" required="">	
+						<select class="form-control" id="instansi"  name="id_instansi">	
 							
 						</select>
 					</div>
@@ -90,7 +90,6 @@
 							            };
 							        },
 							        results: function (data, page) {
-							            console.log(data);
 							            return {
 							                results: data.itemName,
 							                more: more

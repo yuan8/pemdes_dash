@@ -1,5 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);
-@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
 
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
@@ -501,7 +500,7 @@ mark,
 }
 
 .blockquote-footer::before {
-  content: "— ";
+  content: "\2014\A0";
 }
 
 .img-fluid {
@@ -8246,6 +8245,7 @@ button.bg-dark:focus {
 .user-select-all {
   -webkit-user-select: all !important;
      -moz-user-select: all !important;
+      -ms-user-select: all !important;
           user-select: all !important;
 }
 
@@ -10941,5 +10941,4 @@ a.text-dark:focus {
     border-color: #dee2e6;
   }
 }
-
 
