@@ -27,7 +27,7 @@ class InitCtrl extends Controller
     	}
 
     	$kc=DB::connection('server')->table('kecamatan')
-    	->selectRaw("kdkecamatan, nmkecamatan,left(kdkecamatan,4) as id_parent")->get();
+    	->selectRaw("kdkecamatan, concat('KECAMATAN ',nmkecamatan) as nmkecamatan,left(kdkecamatan,4) as id_parent")->get();
 
     	foreach ($kc as $key => $value) {
     		DB::table('master_kecamatan')->insertOrIgnore((array)$value);
