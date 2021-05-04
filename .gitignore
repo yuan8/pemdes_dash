@@ -9,6 +9,7 @@
 /public/bower_components/quill
 /storage/api-data
 /vendor
+/laravel-echo-server.json
 .env
 .env.backup
 .phpunit.result.cache
