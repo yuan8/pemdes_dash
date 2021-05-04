@@ -14,7 +14,6 @@ class InitCtrl extends Controller
     	ini_set('memory_limit', '7048M');
     	$provinsi=DB::connection('server')->table('provinsi')
     	->selectRaw("kdprovinsi, concat('PROVINSI ',nmprovinsi) as nmprovinsi")->get();
-        dd($provinsi);
 
     	foreach ($provinsi as $key => $value) {
     		DB::table('master_provinsi')->insertOrIgnore((array)$value);
