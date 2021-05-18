@@ -26,7 +26,7 @@ $authMiddleware = function ($accessor) use ($middleware) {
  */
 Route::group([
     'as'         => 'chatter.',
-    'prefix'     => $route('home'),
+    'prefix'     => (config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'/').$route('home'),
     'middleware' => $middleware('global', 'web'),
     'namespace'  => 'App\Http\Controllers\FORUM',
 ], function () use ($route, $middleware, $authMiddleware) {

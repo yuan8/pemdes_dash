@@ -13,7 +13,7 @@
   </a> 
 </li> 
 <li>
-  <a href="{{url('forums')}}" >
+  <a href="{{route('chatter.home')}}" >
    
         Forum
   </a> 
