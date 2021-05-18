@@ -16,7 +16,7 @@ Route::get('check',function(){
 
 if(config('proepdeskel.maintenance.status')){
 	Route::get('/','MaintenanceModeCtrl@index');
-	Route::get('/back-maintenance-code','MaintenanceModeCtrl@code');
+	Route::get('/mode-maintenance-code','MaintenanceModeCtrl@code');
 }
 
 Route::get('route', function()
