@@ -80,7 +80,7 @@ return [
          'server' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => '103.151.14.214',
+            'host' => env('DB_DATABASE_SERVER_HOST'),
             'port' =>'3306',
             'database' => 'dash_pemdes',
             'username' => 'admin',
