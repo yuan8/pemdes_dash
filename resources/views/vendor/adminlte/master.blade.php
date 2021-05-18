@@ -133,8 +133,6 @@
 <script src="{{asset('bower_components/highcharts/modules/full-screen.js')}}" charset="utf-8"></script>
 <script src="{{asset('bower_components/highcharts/modules/exporting.js')}}" charset="utf-8"></script>
 <script src="{{asset('bower_components/highcharts/modules/offline-exporting.js')}}" charset="utf-8"></script>
-
-
 <script src="{{asset('bower_components/vue/dist/vue.min.js')}}"></script>
 <script src="{{asset('bower_components/vue/dist/select2.js')}}"></script>
 
