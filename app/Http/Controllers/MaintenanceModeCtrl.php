@@ -9,7 +9,7 @@ class MaintenanceModeCtrl extends Controller
     //
 
     public function index(){
-
+    	return view('down.maintenance');
     }
 
     public function code(){

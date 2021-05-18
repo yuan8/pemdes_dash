@@ -3,7 +3,7 @@
 return array (
   'maintenance' => 
   array (
-    'status' => false,
+    'status' => true,
     'until' => NULL,
     'prefix'=>'dshdhsjhdjshdyeuih7ed'
   ),
