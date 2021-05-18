@@ -182,7 +182,7 @@ if(isset($bind_side_left)){
 
             </div> --}}
             <div class="row" style="margin-bottom: 20px;">
-                <div class="col-md-12 text-center" style="float:left; position: relative;">
+                <div class="col-md-4 " style="float:left; position: relative;">
                         
                          <p>Jl. Raya Pasar Minggu No.19, RT.7/RW.1, Pejaten Barat, Ps. Minggu, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12510 </p>
                          <p><b>Email :</b> pusdatinkomtel@kemendagri.go.id</p>
@@ -218,7 +218,7 @@ if(isset($bind_side_left)){
            <div class="row " style="background: yellow;">
                <div class="col-md-12 text-center">
                     <div class="text-center" style="color:#222">
-                 <h5><b>DITJEN BINA PEMERINTAHAN DESA - Copyright &copy {{$GLOBALS['tahun_access']}}</b></h5>
+                 <h5><b>DITJEN BINA PEMERINTAHAN DESA KEMENTRERIAN DALAM NEGERI - Copyright &copy {{$GLOBALS['tahun_access']}}</b></h5>
             </div>
                </div>
            </div>
