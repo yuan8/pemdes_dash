@@ -48,7 +48,7 @@ class DataCtrl extends Controller
 
        
         $data=DB::table('tb_data as dt')
-        ->leftJoin('tb_data_detail_info_graph as vis','vis.id_data','=','dt.id')
+        ->leftJoin('tb_data_detail_visualisasi as vis','vis.id_data','=','dt.id')
         ->whereRaw(implode(' and ', $Defwhere))->first();
 
         if($data){
@@ -85,7 +85,7 @@ class DataCtrl extends Controller
                 $size=$size / 1048576;
                 $data=null;
 
-                DB::table('tb_data_detail_info_graph')
+                DB::table('tb_data_detail_visualisasi')
                 ->updateOrInsert(
                 [
                     'id_data'=>$id
@@ -133,7 +133,7 @@ class DataCtrl extends Controller
 
        
         $data=DB::table('tb_data as dt')
-        ->leftJoin('tb_data_detail_info_graph as vis','vis.id_data','=','dt.id')
+        ->leftJoin('tb_data_detail_visualisasi as vis','vis.id_data','=','dt.id')
         ->leftJoin('tb_data_group as dg','dg.id_data','=','dt.id')
         ->leftJoin('master_provinsi as pro','pro.kdprovinsi','=','dt.kode_daerah')
         ->leftJoin('master_kabkota as kab','kab.kdkabkota','=','dt.kode_daerah')
@@ -218,7 +218,7 @@ class DataCtrl extends Controller
 		$size=$size / 1048576;
 
 
-		$data=DB::table('data')
+		$data=DB::table('tb_data')
 		->insertGetId([
 			'name'=>$request->name,
 			'type'=>'INFOGRAFIS',
@@ -314,7 +314,7 @@ class DataCtrl extends Controller
     		]);
 
 		if($data){
-				DB::table('tb_data_detail_info_graph')
+				DB::table('tb_data_detail_visualisasi')
 				->insert([
 					'id_data'=>$data,
 					'path_file'=>$path,
