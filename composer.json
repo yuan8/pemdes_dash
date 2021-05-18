@@ -13,7 +13,7 @@
         "dompdf/dompdf": "^1.0",
         "fideloper/proxy": "^4.0",
         "graham-campbell/markdown": "10.3",
-        "intervention/gif": "dev-master",
+        "intervention/gif": "0.5.0",
         "kreait/laravel-firebase": "2.4.0",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
