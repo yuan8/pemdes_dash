@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use DB;
 use Carbon\Carbon;
 use Auth;
+use Alert;
+use Validator;
 class DataViewCtrl extends Controller
 {
     //
@@ -21,7 +23,7 @@ class DataViewCtrl extends Controller
             'view_'=>[
                 2=>[],
                 4=>[],
-                7=>[],
+                6=>[],
                 10=>[]
             ]
         ];
@@ -182,44 +184,87 @@ class DataViewCtrl extends Controller
 
      public function update($tahun,$id,Request $request){
 
+         $valid=Validator::make($request->all(),[
+            'name'=>'string|required',
+            'auth'=>'boolean|nullable',
+            'description'=>'nullable|string',
+            'keywords'=>'array|nullable',
+            'id_table'=>'required|numeric'
+        ]);
 
-    	$data=DB::table('data as d')
-		
+        if($valid->fails()){
+            Alert::error('',$valid->errors()->first());
+            return back();
+        }
+
+    	$data=DB::table('tb_data as d')
 		->where([
 			['d.id','=',$id],
 			['d.type','=','INTEGRASI']
 		])->first();
 
 
+
     	if($data){
 
-    		$data_up=DB::table('data as d')->where([
+    		$data_up=DB::table('tb_data as d')->where([
     			['d.id','=',$id],
 				['d.type','=','INTEGRASI']
     		])->update([
-    			'name'=>$request->name,
-    			'description'=>$request->description,
-    			'table_view'=>$request->table_view,
+    			'title'=>$request->name,
+    			'deskripsi'=>$request->description,
     			'auth'=>$request->auth,
     			'updated_at'=>Carbon::now(),
+                'id_user_update'=>Auth::User()->id,
     			'keywords'=>json_encode($request->keywords),
-    			'organization_id'=>$request->id_instansi,
 
     		]);
 
-    		if($data_up){
-    			foreach ($request->category??[] as $key => $k) {
-    				# code...
-    				DB::table('tb_data_group')->insertOrIgnore([
-    					'id_data'=>$id,
-    					'id_category'=>$k
-    				]);
 
-    			}
-    			DB::table('tb_data_group')->where('id_data',$id)
-    			->whereNotIn('id_category',$request->category??[])->delete();
-    			
+    		if($data_up){
+
+
+
+                DB::table('tb_data_detail_map')->updateOrInsert([
+                    'id_data'=>$id,
+                    'id_map'=>$request->id_table
+                ],[
+                    'id_data'=>$id,
+                    'id_map'=>$request->id_table
+                ]);
+
+
+
+
+
+                DB::table('tb_data_instansi')->insertOrIgnore([
+                    'id_data'=>$id,
+                    'id_instansi'=>$request->id_instansi
+                ]);
+
+
+                DB::table('tb_data_instansi')->where('id_data',$id)
+                ->where('id_instansi','!=',$request->id_instansi)->delete();
+               
+
+
+
+                foreach ($request->category??[] as $key => $k) {
+                        DB::table('tb_data_group')->insertOrIgnore([
+                            'id_data'=>$id,
+                            'id_category'=>$k
+                        ]);
+
+                }
+
+
+
+                DB::table('tb_data_group')->where('id_data',$id)
+                ->whereNotIn('id_category',$request->category)->delete();
+
     		}
+
+            Alert::success('Berhasil','Berhasil mengubah dataset');
 
     		return back();
 
@@ -238,28 +283,43 @@ class DataViewCtrl extends Controller
 
     public function form_delete($tahun,$id){
 
-    	$data=DB::table('data as d')
-		
+    	$data=DB::table('tb_data as d')
 		->where([
 			['d.id','=',$id],
 		])->first();
 
+
 		if($data){
-			return view('admin.dataview.delete')->with('tb_data',$data);
+			return view('admin.dataview.delete')->with('data',$data);
 		}
 
     }
 
     public function store($tahun,Request $request){
 
+        $valid=Validator::make($request->all(),[
+            'name'=>'string|required',
+            'auth'=>'boolean|nullable',
+            'description'=>'nullable|string',
+            'keywords'=>'array|nullable'
+        ]);
+
+        if($valid->fails()){
+            Alert::error('',$valid->errors()->first());
+            return back();
+        }
+
 
     	$data=DB::table('tb_data')->insertGetId([
     		      'title'=>$request->name,
                   'auth'=>$request->auth,
-
-    			'deskripsi'=>$request->description,
-    			'type'=>'INTEGRASI',
-    			'keywords'=>json_encode($request->keywords),
+    			 'deskripsi'=>$request->description,
+    			 'type'=>'INTEGRASI',
+                 'status'=>1,
+                 'id_user'=>Auth::User()->id,
+                 'publish_date'=>Carbon::now(),
+                 'created_at'=>Carbon::now(),
+    			 'keywords'=>json_encode($request->keywords),
 
     	]);
 

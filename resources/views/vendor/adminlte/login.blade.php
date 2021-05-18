@@ -18,7 +18,7 @@ $CONF_MENU=MENUS::login();
         <!-- /.login-logo -->
         <div class="login-box-body">
             <p class="login-box-msg">LOGIN</p>
-            <form action="{{ url(config('adminlte.login_url', 'login')) }}" method="post">
+            <form action="{{route('login.post')}}" method="post">
                 {{ csrf_field() }}
 
                 <div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">

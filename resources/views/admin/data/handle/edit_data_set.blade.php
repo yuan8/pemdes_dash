@@ -17,16 +17,15 @@
 			<div class="box box-primary">
 		<div class="box-body">
 			<input type="hidden" name="type" value="{{$jenis}}" >
-			<input type="hidden" name="delivery_type" value="{{$data->delivery_type}}" >
 
 			<div class="form-group">
 				<label>Judul</label>
-				<input type="text" required="" name="name" class="form-control" value="{{$data->name}}">
+				<input type="text" required="" name="name" class="form-control" value="{{$data->title}}">
 			</div>
 
 			<div class="form-group">
 				<label>Deksripsi</label>
-				<textarea class="form-control "  name="description">{!!$data->description!!}</textarea>
+				<textarea class="form-control "  name="description">{!!$data->deskripsi!!}</textarea>
 			</div>
 
 			<div class="form-group">
@@ -37,15 +36,17 @@
 					@endforeach
 				</select>
 				<script type="text/javascript">
-					$('#keywords').select2({
-						tags:true
-					});
+					
 				</script>
 			</div>
 
 			@if(in_array($jenis,['TABLE','VISUALISASI']))
+			<hr>
+			<a href="{{url($data->path_file)}}" download="" class="btn btn-primary">Download File</a>
+			<hr>
 				<div class="form-group">
 					<label>Dokumen (.xlsx,.xls)</label>
+
 					<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" name="file" class="form-control" >
 				</div>
 			@elseif(in_array($jenis,['INFOGRAFIS']))
@@ -143,12 +144,18 @@
 				</div>
 				<div class="box-body">
 					
+				<div class="form-group">
+						<label>Publish Date</label>
+						<input type="date" class="form-control" value="{{\Carbon\Carbon::parse($data->publish_date)->format('Y-m-d')}}" name="publish_date" required="">
+					</div>
+					<hr>
 					<div class="form-group">
 						<label>Dapat Dilakukan Percarian</label>
-						<p><input type="radio" id="sc_true" {{$data->dashboard?'checked':''}}  class="c_sc" name="dashboard" value="1" > Tampil </p>
-						<p><input type="radio" name="dashboard" {{$data->dashboard?'':'checked'}} class="c_sc" value="0" > Tidak </p>
+						<p><input type="radio" id="sc_true" checked="" class="c_sc" name="dashboard" value="1" > Tampil </p>
+						<p><input type="radio" name="dashboard" class="c_sc" value="0" > Tidak </p>
 
 					</div>
+					<hr>
 					<div class="form-group" id="auth_f">
 						<label>Perlu Login</label>
 						<p><input type="radio" {{$data->auth?'checked':''}}  name="auth" value="1" > Ya </p>
@@ -167,17 +174,26 @@
 							}
 						});
 					</script>
+				@if(Auth::User()->role<=3)
 					<div class="form-group">
 						<label>Instansi</label>
-						<select class="form-control" id="instansi"  name="id_instansi" required="">
-							@php
-								$instansi_R=explode('|||',$data->instansi);
-							@endphp
-							@foreach ($instansi as $i)
-								<option value="{{$i->id}}" {{$instansi_R[0]==$i->id?'selected':''}}>{{$i->text}}</option>
-							@endforeach
+						
+						<select class="form-control" id="instansi"   name="id_instansi" required="">
+							
+							@foreach ($instansi??[] as $i)
+								<option value="{{$i->id}}">{{$i->text}}</option>
+							@endforeach	
 						</select>
 					</div>
+
+					@else
+					<div class="form-group">
+						<label>Instansi</label>
+						<p><b>{{HP::daerah_level($data->kode_daerah)}}</b></p>
+						<input type="hidden" name="id_instansi" required="" value="{{(Auth::User()->kode_daerah)}}">
+					</div>
+					@endif
+					<hr>
 					<div class="form-group">
 						<label>Ketegori</label>
 						<select class="form-control" id="kategori"  name="category[]" multiple="">
@@ -192,6 +208,10 @@
 							@endforeach
 						</select>
 						<script type="text/javascript">
+							setTimeout(function(){
+									$('#keywords').select2({
+						tags:true
+					});
 							$('#instansi').select2();
 							$('#kategori').select2({
 								'ajax':{
@@ -215,6 +235,7 @@
 								}
 							});
 
+							},1000);
 							
 						</script>
 					</div>

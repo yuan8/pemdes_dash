@@ -22,11 +22,9 @@ class DataTransaksiDetailManual2 extends Migration
             $table->string('path_file_render');
             $table->string('extension');
             $table->boolean('inheritance')->default(true);
-                
             $table->integer('level_start')->default(2);
             $table->integer('level_stop')->default(10);
             $table->double('size')->nullable();
-
              $table->foreign('id_data')
                   ->references('id')->on('tb_data')
                   ->onDelete('cascade')->onUpdate('cascade');

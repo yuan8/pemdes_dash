@@ -21,9 +21,15 @@ class DataTransaksi extends Migration
             $table->string('type');
             $table->boolean('auth')->default(0);
             $table->integer('tahun')->nullable();
+            $table->integer('kode_daerah')->nullable();
             $table->text('deskripsi_min')->nullable();
             $table->mediumText('deskripsi')->nullable();
             $table->text('keywords')->nullable();
+            $table->bigInteger('id_user');
+            $table->bigInteger('id_user_update');
+            $table->bigInteger('status');
+            $table->dateTime('publish_date')->nullable();
+            $table->timestamps();
         });
     }
 

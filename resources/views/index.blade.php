@@ -20,7 +20,7 @@
 		<div class="owl-carousel owl-theme  bg-slider-1">
 		  	@foreach($tema as $t)
 		  	<div class="item text-center" >
-					<a   href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
+					<a   href="{{route('data.tema',['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
 								<p><b>{{$t->name}}</b></p>
 
 						<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center point-hover" data-original-title="Pariwisata &amp; Kebudayaan">
@@ -36,7 +36,7 @@
 		<div class="owl-carousel owl-theme bg-slider-2 ">
 	  	@foreach($tema2 as $t)
 		  	<div class="item text-center" >
-					<a href="{{route(($t->route??'index'),['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
+					<a href="{{route('data.tema',['tahun'=>$GLOBALS['tahun_access'],'id'=>$t->id,'slug'=>HPV::slugify($t->name)])}}" class="text-center hover-scale"  style="position:relative; width:100%; float:left;" >
 							<p><b>{{$t->name}}</b></p>
 
 						<img data-toggle="tooltip" data-placement="top" title="" src="{{asset($t->image_path)}}" class="img-center img1 text-center point-hover" data-original-title="Pariwisata &amp; Kebudayaan">
@@ -78,52 +78,147 @@
 <style type="text/css">
 	
 </style>
-
-{{-- <div class="row background-img-box">
+<div class="row background-img-box">
 	<div class="col-md-12">
-		<h4 class="text-center text-white"><b>STATISTIK DATA</b></h4>
-
+		<h4 class="text-center text-white"><b>STATISTIK DATA TAHUN {{$GLOBALS['tahun_access']}}</b></h4>
 	</div>
 	<div class="container">
-		<div class="col-md-3">
+		<div class="col-md-2">
 		<div class="box box-solid">
+			<div class="box-header with-border">
+				DATA UTAMA
+			</div>
 			<div class="box-body">
 
-				<h3>3000 <small>P</small></h3>
+				<h3>{{$statistik_data['data_utama']}} <small>Data</small></h3>
 
 			</div>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<div class="box box-solid">
+			<div class="box-header with-border">
+				DATA PENDUKUNG
+				
+			</div>
 			<div class="box-body">
+				<h3>{{$statistik_data['data_pendukung']}} <small>Data</small></h3>
 
-				<h3>3000 <small>P</small></h3>
 
 			</div>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<div class="box box-solid">
+			<div class="box-header with-border">
+				VISUALISASI
+			</div>
 			<div class="box-body">
 
-				<h3>3000 <small>P</small></h3>
+				<h3>{{$statistik_data['visualisasi']}} <small>Data</small></h3>
+			
 
 			</div>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<div class="box box-solid">
+			<div class="box-header with-border">
+				INFROGRAFIS
+			</div>
 			<div class="box-body">
 
-				<h3>3000 <small>P</small></h3>
+				<h3>{{$statistik_data['infografis']}} <small>Data</small></h3>
+			
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				TABLE
+			</div>
+			<div class="box-body">
+				<h3>{{$statistik_data['table']}} <small>Data</small></h3>
+
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				PUBLIKASI
+			</div>
+			<div class="box-body">
+				<h3>{{$statistik_data['publikasi']}} <small>Data</small></h3>
+
 
 			</div>
 		</div>
 	</div>
 	</div>
 	
-</div> --}}
+</div>
+
+<div class="row background-img-box-red">
+	<div class="col-md-12">
+		<h4 class="text-center text-white"><b>STATISTIK PENGUNJUNG</b></h4>
+
+	</div>
+	<div class="container">
+		<div class="col-md-3">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				TOTAL PENGUNJUNG
+			</div>
+			<div class="box-body">
+
+				<h3>{{$kunjungan['total']}} <small>Pengunjung</small></h3>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				TOTAL PENGUNJUNG TAHUN {{$GLOBALS['tahun_access']}}
+			</div>
+			<div class="box-body">
+
+				<h3>{{$kunjungan['tahun_ini']}} <small>Pengunjung</small></h3>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				TOTAL PENGUNJUNG BULAN INI 
+			</div>
+			<div class="box-body">
+
+				<h3>{{$kunjungan['bulan_ini']}} <small>Pengunjung</small></h3>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				TOTAL PENGUNJUNG HARI INI 
+			</div>
+			<div class="box-body">
+
+				<h3>{{$kunjungan['hari_ini']}} <small>Pengunjung</small></h3>
+
+			</div>
+		</div>
+	</div>
+	</div>
+	
+</div>
 @stop
 
 @section('js')

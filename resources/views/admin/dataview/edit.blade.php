@@ -37,9 +37,9 @@
 
 			<div class="form-group">
 				<label>KEY TABLE MAP</label>
-				<select class="form-control" name="table_view" id="table_view" required="">
+				<select class="form-control" name="id_table" id="table_view" required="">
 					@foreach($tablemap as $k)
-					
+				
 						<option value="{{$k->id}}" {{$data->id_map==$k->id?"selected":''}}>{{$k->name}}</option>
 					@endforeach
 				</select>

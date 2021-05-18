@@ -18,8 +18,7 @@ class InstansiData extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('id_data')->unsigned();
             $table->bigInteger('id_instansi')->unsigned();
-            $table->bigInteger('id_user');
-            $table->bigInteger('id_user_update');
+  
             $table->unique(['id_data','id_instansi']);
             $table->foreign('id_instansi')
                   ->references('id')->on('master_instansi')

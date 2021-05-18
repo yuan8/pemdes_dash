@@ -438,7 +438,7 @@ class ValidasiCtrl extends Controller
     }
 
 
-    public function build_excel($data,$maping,$access,$abl_aksi,$tahun){
+    public function build_excel($ext,$data,$maping,$access,$abl_aksi,$tahun){
     	$rows=HP::maping_row($data,$maping);
     	$HEADSTYLE=[
 			'font' => [

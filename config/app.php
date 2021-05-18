@@ -139,6 +139,8 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+        App\Providers\SettingWebProvider::class,
+        
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -161,6 +163,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Shetabit\Visitor\Provider\VisitorServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -239,7 +242,10 @@ return [
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
         'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
         'THEM_ADMIN' => App\Providers\MENUAPI::class,
+        'WEBSET' => App\Providers\SettingWebProvider::class,
         'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
+        'Visitor' => Shetabit\Visitor\Facade\Visitor::class,
+
 
 
         

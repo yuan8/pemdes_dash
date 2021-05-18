@@ -21,7 +21,6 @@ class DataTransaksiDetailManual extends Migration
             $table->string('path_file');
             $table->string('extension');
             $table->double('size')->nullable();
-
             $table->foreign('id_data')
                   ->references('id')->on('tb_data')
                   ->onDelete('cascade')->onUpdate('cascade');

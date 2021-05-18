@@ -383,8 +383,61 @@ class HelperP extends ServiceProvider
 
         }
 
+        $datam=static::table_level($kode_daerah,'all');
 
-        $data_map=[];
+        $datam[$count]['select_data']=
+            [
+            'column'=>$column,
+            'table_data'=>$data->table.' as dt',
+            'map_column'=>$map_c
+            ];
+
+        $datam[$count]['columns']=$map_c;
+
+       
+        if($datam[$count]['daerah']==null){
+            $daerah=(array)DB::table($datam[$count]['table'])->where($datam[$count]['column_id'],$kode_daerah)->first();
+            $datam[$count]['daerah']=$daerah?'Di '.$daerah[$datam[$count]['column_name']]:'PER '.$datam[$count]['level'];
+
+        }
+
+        $return=[
+            'level_data'=>$datam[$count],
+            'columns'=>$map_c,
+            'column'=>$column,
+            'id_map'=>$data->id_map,
+            'data_table'=>$data->table.' as dt',
+            'data_name'=>DB::table('master_table_map')->select('name')->where('id',$data->id_map)
+            ->pluck('name')->first(),
+            'view_'=>[]
+        ];
+
+
+        foreach ([2,4,6,10] as $key => $l) {
+                foreach ([0,1,2,3] as $d => $ro) {
+                    $e=DB::table('master_view_method')
+                    ->where('level',$l)
+                    ->where('row',$ro)
+                    ->where('id_ms_table',$data->id_map)->get()->pluck('type')->toArray();
+                    if($e){
+                    $return['view_'][$l][$ro]=$e;
+
+                    }
+                }       
+                # code...
+        }
+
+
+        return $return;
+
+
+    }
+
+
+    static function table_level($kode_daerah,$ret='single'){
+    $count=strlen($kode_daerah);
+
+     $data_map=[];
         $datam=[];
         $datam[10]['level']='DESA';
         $datam[10]['count']=10;
@@ -432,7 +485,7 @@ class HelperP extends ServiceProvider
 
         $datam[2]['child']=$datam[4];
         $datam[0]['level']='NASIONAL';
-        $datam[0]['count']=0;
+        $datam[0]['count']=2;
         $datam[0]['table']='master_provinsi';
         $datam[0]['column_id']='kdprovinsi';
         $datam[0]['column_name']='nmprovinsi';
@@ -440,50 +493,11 @@ class HelperP extends ServiceProvider
         $datam[0]['daerah']='PER PROVINSI';
         $datam[0]['child']=$datam[2];
         
-        $datam[$count]['select_data']=
-            [
-            'column'=>$column,
-            'table_data'=>$data->table.' as dt',
-            'map_column'=>$map_c
-            ];
-
-        $datam[$count]['columns']=$map_c;
-        if($datam[$count]['daerah']==null){
-            $daerah=(array)DB::table($datam[$count]['table'])->where($datam[$count]['column_id'],$kode_daerah)->first();
-            $datam[$count]['daerah']=$daerah?'Di '.$daerah[$datam[$count]['column_name']]:'PER '.$datam[$count]['level'];
-
+        if($ret=='all'){
+            return $datam;
         }
-
-        $return=[
-            'level_data'=>$datam[$count],
-            'columns'=>$map_c,
-            'column'=>$column,
-            'id_map'=>$data->id_map,
-            'data_table'=>$data->table.' as dt',
-            'data_name'=>DB::table('master_table_map')->select('name')->where('id',$data->id_map)
-            ->pluck('name')->first(),
-            'view_'=>[]
-        ];
-
-
-        foreach ([2,4,6,10] as $key => $l) {
-                foreach ([0,1,2,3] as $d => $ro) {
-                    $e=DB::table('master_view_method')
-                    ->where('level',$l)
-                    ->where('row',$ro)
-                    ->where('id_ms_table',$data->id_map)->get()->pluck('type')->toArray();
-                    if($e){
-                    $return['view_'][$l][$ro]=$e;
-
-                    }
-                }       
-                # code...
-        }
-
-
-        return $return;
-
-
+        
+        return $datam[$count];
     }
 
 
@@ -492,6 +506,11 @@ class HelperP extends ServiceProvider
         switch ($data->type) {
             case 'INTEGRASI':
             return route('data.int.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title)]);
+                # code...
+                break;
+
+             case 'VISUALISASI':
+            return route('data.vis.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title)]);
                 # code...
                 break;
             
@@ -567,6 +586,39 @@ class HelperP extends ServiceProvider
                 'berita_acara'=>false
             ];
         }
+    }
+
+
+    static function status_verifikasi_dataset($kode){
+        switch ($kode) {
+            case 0:
+            return 'BELUM DILAKUKAN PENILAIAN OLEH ADMIN';
+                # code...
+                break;
+              case 1:
+            return 'PUBLISH';
+                # code...
+                break;
+             case 2:
+            return 'KORDINASI ULANG';
+                # code...
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        return '';
+
+    }
+
+     static function status_kode_verifikasi_dataset(){
+        return [
+            0=>'BELUM DILAKUKAN PENILAIAN OLEH ADMIN',
+            1=>'PUBLISH',
+            2=>'KORDINASI ULANG',
+        ];
+
     }
      static function daerah_level($kode_daerah){
         $count=strlen($kode_daerah);

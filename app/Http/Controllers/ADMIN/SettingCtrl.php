@@ -9,6 +9,25 @@ class SettingCtrl extends Controller
 {
     //
 
+    public function setData($context,$data){
+        $setting=file_get_contents(config_path('pemdeskel.php'));
+        switch ($context) {
+            case 'pages':
+                # code...
+                break;
+            case 'pages':
+                # code...
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        return $setting;
+
+    }
+
     public function public_tentang($tahun){
     	$data=(array)(DB::table('settings')->where('flag','TENTANG')->first()??['value'=>'','flag'=>'TENTANG']);
     	return view('admin.setting.public_tentang')->with('data',$data);

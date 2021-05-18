@@ -18,21 +18,19 @@
 			<input type="hidden" name="delivery_type" value="DATASET">
 			<div class="form-group">
 				<label>Judul</label>
-				<input type="text" required="" name="name" class="form-control">
+				<input type="text" required="" value="{{old('name')}}" name="name" class="form-control">
 			</div>
 
 			<div class="form-group">
 				<label>Deksripsi</label>
-				<textarea class="form-control "  name="description"></textarea>
+				<textarea class="form-control"  name="description">{{old('description')}}</textarea>
 			</div>
 
 			<div class="form-group">
 				<label>Keywords</label>
 				<select class="form-control" id="keywords" name="keywords[]" multiple=""></select>
 				<script type="text/javascript">
-					$('#keywords').select2({
-						tags:true
-					});
+					
 				</script>
 			</div>
 
@@ -129,19 +127,25 @@
 					<button type="submit" class="btn btn-primary background-blue">Tambah</button>
 				</div>
 				<div class="box-body">
-					
+					<div class="form-group">
+						<label>Publish Date</label>
+						<input type="date" class="form-control" name="publish_date" required="">
+					</div>
+					<hr>
 					<div class="form-group">
 						<label>Dapat Dilakukan Percarian</label>
 						<p><input type="radio" id="sc_true" checked="" class="c_sc" name="dashboard" value="1" > Tampil </p>
 						<p><input type="radio" name="dashboard" class="c_sc" value="0" > Tidak </p>
 
 					</div>
+					<hr>
 					<div class="form-group" id="auth_f">
 						<label>Perlu Login</label>
 						<p><input type="radio" name="auth" value="1" > Ya </p>
 						<p><input type="radio" name="auth" checked="" value="0" > Tidak </p>
 
 					</div>
+					<hr>
 
 					<script type="text/javascript">
 						$('.c_sc').on('change',function(){
@@ -154,6 +158,7 @@
 							}
 						});
 					</script>
+					@if(Auth::User()->role<=3)
 					<div class="form-group">
 						<label>Instansi</label>
 						
@@ -164,13 +169,24 @@
 							@endforeach	
 						</select>
 					</div>
+
+					@else
+					<div class="form-group">
+						<label>Instansi</label>
+						<p><b>{{HP::daerah_level(Auth::User()->kode_daerah)}}</b></p>
+						<input type="hidden" name="id_instansi" required="" value="{{(Auth::User()->kode_daerah)}}">
+					</div>
+					@endif
+					<hr>
 					<div class="form-group">
 						<label>Ketegori</label>
-						<select class="form-control" id="kategori"  name="category[]" multiple="">
+						<select class="form-control" id="kategori" required="" name="category[]" multiple="">
 							
 						</select>
 						<script type="text/javascript">
-							$('#kategori').select2({
+							$(function(){
+								setTimeout(function(){
+									$('#kategori').select2({
 								'ajax':{
 									url:'{{route('api.meta.kategori')}}',
 									headers:{
@@ -192,7 +208,16 @@
 								}
 							});
 
-							$('#instansi').select2();
+							@if(Auth::User()->role<=3)
+
+								$('#instansi').select2();
+							@endif
+
+							$('#keywords').select2({
+								tags:true
+							});
+								},500);
+							})
 
 
 						</script>

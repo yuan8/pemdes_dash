@@ -20,11 +20,10 @@ class KetegoriCtrl extends Controller
 				->selectRaw("concat(replace(type,'_',' '),' - ',name) as text,id ")
 				->where([
 					['name','like','%'.$request->q.'%'],
-					['type','like',($tema??'TEMA_%')]
 				])
 				->Orwhere([
-					['type','like','%'.$request->q.'%'],
-					['type','like',($tema??'TEMA_%')]])
+					['type','like','%'.$request->q.'%']
+				])
 				->get()->toArray()
 		];
 	}
@@ -32,17 +31,15 @@ class KetegoriCtrl extends Controller
 	public function instansi(Request $request){
 		return [
 			'results'=>
-				DB::table('master_category')
+				DB::table('master_instansi')
 				->selectRaw("concat(replace(type,'_',' - '),' ',name) as text,id ")
 				->where([
-					['name','like','%'.$request->q.'%'],
-					['type','=',('INSTANSI')]
+					['name','like','%'.$request->q.'%']
 				])
 				->Orwhere([
-					['type','like','%'.$request->q.'%'],
-					['type','=',('INSTANSI')]
+					['type','like','%'.$request->q.'%']
 
-				]
+					]
 				)
 				->get()->toArray()
 		];

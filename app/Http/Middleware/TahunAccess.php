@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use DB;
+use Carbon\Carbon;
 class TahunAccess
 {
     /**
@@ -28,6 +29,35 @@ class TahunAccess
         $tahun=$request->route('tahun')??date('Y');
 
 
+        $visitor_data=[
+          'browser'=>$request->visitor()->browser(),
+          'device'=>$request->visitor()->device(),
+          'platform'=>$request->visitor()->platform(),
+          'ip'=>$request->visitor()->ip(),
+          'useragent'=>$request->visitor()->useragent(),
+          'date'=>Carbon::now()->startOfday()->format('Y-m-d'),
+          'languages'=>json_encode($request->visitor()->languages())
+        ];
+
+
+        $visitor_update=$visitor_data;
+        $visitor_update['url']=$request->url();
+        $visitor_update['method']=$request->method();
+        $visitor_update['updated_at']=Carbon::now();
+        $visitor_update['created_at']=DB::raw("(case when created_at is null then CURRENT_TIMESTAMP else created_at end)");
+        $visitor_update['request']=json_encode($request->visitor()->request());
+        $up=DB::table('tb_visitor')->where($visitor_data)->first();
+
+        DB::table('tb_visitor')->updateOrinsert($visitor_data,$visitor_update);
+
+        if(!$up){
+          session(['popup_available_run'=>true]);
+        }else{
+          session(['popup_available_run'=>false]);
+
+        }
+        
+
 
 
         if(!isset($GLOBALS['list_tahun_access'])){
@@ -46,7 +76,7 @@ class TahunAccess
          if(!in_array($tahun,$GLOBALS['list_tahun_access']->toArray())){
               if (!static::is_api($request)) {
 
-                return redirect()->route('index',['tahun'=>$GLOBALS['list_tahun_access'][0]]);
+                  return redirect()->route('index',['tahun'=>$GLOBALS['list_tahun_access'][0]]);
             }
 
         }
@@ -59,7 +89,7 @@ class TahunAccess
             $GLOBALS['tahun_access']=$tahun;
             return $next($request);
         }
-            return $next($request);
+        return $next($request);
 
     }
 }

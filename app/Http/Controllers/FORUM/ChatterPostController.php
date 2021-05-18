@@ -4,7 +4,7 @@ namespace App\Http\Controllers\FORUM;
 
 use Auth;
 use Carbon\Carbon;
-use App\Events\DChatterAfterNewResponse;
+use App\Events\ChatterAfterNewResponse;
 use App\Events\ChatterBeforeNewResponse;
 use App\Mail\ForumMails\ChatterDiscussionUpdated;
 use App\ForumModels\Models;

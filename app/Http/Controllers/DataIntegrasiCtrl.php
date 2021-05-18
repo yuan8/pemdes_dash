@@ -317,7 +317,7 @@ class DataIntegrasiCtrl extends Controller
 				if($jenis=='INT'){
 					$ROUTE_NEXT=$level['count']!=10?route('vs.data.integrasi',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'kode_daerah'=>$d['id']]):null;
 				}else{
-					$ROUTE_NEXT=($level['count'])?route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'kdparent'=>$d['id']]):null;
+					$ROUTE_NEXT=($level['count'])?route('vs.data.visual',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'kdparent'=>$d['id']]):null;
 				}
 
 
@@ -412,7 +412,7 @@ class DataIntegrasiCtrl extends Controller
 			if($jenis=='INT'){
 					$ROUTE_NEXT=$level['count']!=10?route('vs.data.integrasi',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'kode_daerah'=>$d['id']]):null;
 				}else{
-					$ROUTE_NEXT=($level['count'])?route('visual.dataset',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'kdparent'=>$d['id']]):null;
+					$ROUTE_NEXT=($level['count'])?route('vs.data.visual',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'kdparent'=>$d['id']]):null;
 				}
 
 

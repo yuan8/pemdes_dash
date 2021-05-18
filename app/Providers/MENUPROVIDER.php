@@ -85,7 +85,7 @@ class MENUPROVIDER extends ServiceProvider
                 // ],
                  [
                     'text'=>('Infografis'),
-                    'href'=>route('query.data.delivery',['tahun'=>$tahun,'type'=>'infografis']),
+                    'href'=>route('data.type',['tahun'=>$tahun,'type'=>'INFOGRAFIS']),
                     'top_nav_class'=>'',
                     'class'=>'',
                     
@@ -200,25 +200,25 @@ class MENUPROVIDER extends ServiceProvider
 
                 ],
 
-                 [
-                    'text'=>('SETTING'),
-                    'class'=>'',
-                    'submenu_class'=>'',
-                    'can'=>['is_super'],
-                    'href'=>'#',
-                    'submenu'=>[
-                        [
-                            'text'=>'TENTANG',
-                            'href'=>route('admin.set.index',['tahun'=>$tahun]),
-                            'class'=>'',
-                            'submenu_class'=>'',
-                            'icon'=>'fa fa-users',
-                            'can'=>['is_super']
-                        ]
-                    ]
+                //  [
+                //     'text'=>('SETTING'),
+                //     'class'=>'',
+                //     'submenu_class'=>'',
+                //     'can'=>['is_super'],
+                //     'href'=>'#',
+                //     'submenu'=>[
+                //         [
+                //             'text'=>'TENTANG',
+                //             'href'=>route('admin.set.index',['tahun'=>$tahun]),
+                //             'class'=>'',
+                //             'submenu_class'=>'',
+                //             'icon'=>'fa fa-users',
+                //             'can'=>['is_super']
+                //         ]
+                //     ]
                     
 
-                ],
+                // ],
                  
             ],
             'side_right'=>[]

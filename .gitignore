@@ -1,12 +1,9 @@
 /node_modules
 /public/hot
 /public/storage/* 
-/public/bower_components/vue/types/tsconfig.json
 /public/file_lombadesa/*
 /storage/*.key
 /storage/app
-/public/bower_components/vue-quill-editor
-/public/bower_components/quill
 /storage/api-data
 /vendor
 /laravel-echo-server.json

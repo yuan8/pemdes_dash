@@ -15,7 +15,6 @@
 						<option value="TEMA_DATA_PENDUKUNG" {{old('jenis')=='TEMA_DATA_PENDUKUNG'?'selected':''}}>TEMA DATA PENDUKUNG</option>
 					</select>
 				</select>
-
 			</div>
 			<div class="form-group">
 				<label>NAMA</label>

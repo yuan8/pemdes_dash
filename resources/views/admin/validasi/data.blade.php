@@ -105,11 +105,11 @@
 					<a href="" class="btn btn-primary">DOWNLOAD DATA</a>
 				@else
 					<a href="{{ route('admin.validasi.berita_acara.build',array_merge(['tahun'=>$GLOBALS['tahun_access'],'kdkabkota'=>$req['kdkabkota'],'data'=>$req['data']])) }}" class="btn btn-danger">BUAT BERITA ACARA</a>
-					<a href="{{url()->full().'&export_format=true'}}" download="" class="btn btn-primary"> DOWNLOAD FORM</a>
+					<a href="{{url()->full().'&export_format=FORM'}}" download="" class="btn btn-primary"> DOWNLOAD FORM</a>
 					<a href="{{route('admin.validasi.upload',['tahun'=>$GLOBALS['tahun_access'],'kdprovinsi'=>$req['kdprovinsi'],'kdkabkota'=>$req['kdkabkota'],'kdkecamatan'=>$req['kdkecamatan'],'kddesa'=>$req['kddesa'],'data'=>$req['data']])}}" class="btn btn-success ">UPLOAD DATA PERUBAHAN</a>
 				@endif
 			@elseif($berita_acara['access_form'])
-				<a href="{{url()->full().'&export_format=true'}}" download="" class="btn btn-primary"> DOWNLOAD FORM</a>
+				<a href="{{url()->full().'&export_format=FORM'}}" download="" class="btn btn-primary"> DOWNLOAD FORM</a>
 					<a href="{{route('admin.validasi.upload',['tahun'=>$GLOBALS['tahun_access'],'kdprovinsi'=>$req['kdprovinsi'],'kdkabkota'=>$req['kdkabkota'],'kdkecamatan'=>$req['kdkecamatan'],'kddesa'=>$req['kddesa'],'data'=>$req['data']])}}" class="btn btn-success ">UPLOAD DATA PERUBAHAN</a>
 			@endif
 	

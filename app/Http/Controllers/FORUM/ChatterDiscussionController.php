@@ -5,6 +5,8 @@ namespace App\Http\Controllers\FORUM;
 use Auth;
 use Carbon\Carbon;
 use App\Events\ChatterAfterNewDiscussion;
+use App\Events\ChatterAfterNewResponse;
+use App\Events\ChatterBeforeNewResponse;
 use App\Events\ChatterBeforeNewDiscussion;
 use App\ForumModels\Models;
 use Event;

@@ -1,10 +1,11 @@
 <?php
 
 
-Route::get('/',function(){
+Route::get((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'/'),function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);
 })->name('home');
-Route::get('/home',function(){
+
+Route::get((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/home':'home'),function(){
 	return redirect()->route('index');
 })->name('home.index');
 
@@ -13,6 +14,10 @@ Route::get('check',function(){
 	dd(DB::table('master_desa')->count());
 });
 
+if(config('proepdeskel.maintenance.status')){
+	Route::get('/','MaintenanceModeCtrl@index');
+	Route::get('/back-maintenance-code','MaintenanceModeCtrl@code');
+}
 
 Route::get('route', function()
 {
@@ -29,8 +34,9 @@ Route::get('route', function()
 });
 
 
-Route::middleware(['guest:web'])->get('/login','Auth\LoginController@showLoginForm')->name('login');
-Route::middleware('guest:web')->post('/login','Auth\LoginController@login');
+Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':''))->middleware(['guest:web'])->get('/login','Auth\LoginController@showLoginForm')->name('login');
+
+Route::middleware('guest:web')->post('/login-submit','Auth\LoginController@login')->name('login.post');
 Route::middleware('auth:web')->post('/logout','Auth\LoginController@logout')->name('logout');
 
 Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_active'])->group(function(){
@@ -137,25 +143,35 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 		Route::get('/data','ADMIN\DataCtrl@data')->name('admin.data.detail');
 		Route::get('/data/create/{jenis}','ADMIN\DataCtrl@create')->name('admin.data.create');
 		Route::post('/data/create/{jenis}','ADMIN\DataCtrl@store')->name('admin.data.store');
-		Route::get('/data-set/edit/{id}','ADMIN\DataCtrl@edit')->name('admin.dataset.edit');
-		Route::put('/data-set/update/{id}','ADMIN\DataCtrl@update')->name('admin.dataset.update');
+		Route::get('/data-set/edit/{id}','ADMIN\DataCtrl@edit_visual')->name('admin.dataset.edit');
+		Route::put('/data-set/update/{id}','ADMIN\DataCtrl@update_visual')->name('admin.dataset.update');
 		Route::get('/data/update/{id}','ADMIN\DataCtrl@edit')->name('admin.data.edit');
 		Route::put('/data/update/{id}','ADMIN\DataCtrl@update')->name('admin.data.update');
 	});
 
 });
 
-Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
+Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'').'v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
 
 	Route::get('/tentang-kami', 'ADMIN\SettingCtrl@public_tentang')->name('public_tentang');
 
 
-	Route::get('/query-data', 'DataCtrl@index')->name('query.data');
+	Route::get('/query-data', 'DataCtrl@query')->name('query.data');
 
 	Route::get('/data-integrasi/{id}/{slug}', 'DataCtrl@detail')->name('data.int.detail');
+	Route::get('/data-visual/{id}/{slug}', 'DataCtrl@visualisasi_index')->name('data.vis.detail');
+
 
 	Route::get('/instansi', 'DataCtrl@instansi')->name('organisasi');
+
+	Route::get('/data-instansi-pemda/{kode_pemda}', 'DataCtrl@data_instansi_pemda')->name('data.instansi_pemda');
+
+	Route::get('/data-tema/{id}/{slug?}', 'DataCtrl@data_tema')->name('data.tema');
+	Route::get('/data-type/{type}', 'DataCtrl@data_type')->name('data.type');
+
+	Route::get('/data-instansi/{id_instansi}', 'DataCtrl@data_instansi')->name('data.instansi');
+
 	Route::get('/tema', 'DataCtrl@tema')->name('tema');
 	Route::get('/query-data-type/{type}', 'DataCtrl@delivery_type')->name('query.data.delivery');
 
@@ -168,7 +184,7 @@ Route::prefix('v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/pindah-tahun', 'HomeCtrl@pindahTahun')->name('p.tahun');
 	Route::post('/pindah-tahun', 'HomeCtrl@pindahkanTahun')->name('p.tahun.change');
 
-	Route::get('/query-data-category/{id_category}/{slug}', 'DataCtrl@categorical')->name('query.data.categorycal');
+	Route::get('/query-data-category/{id_category}/{slug}', 'DataCtrl@query')->name('query.data.categorycal');
 });
 
 include __DIR__ .'/test.php';

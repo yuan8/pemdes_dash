@@ -4,13 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@yield('title_prefix', config($CONF_THEM.'.title_prefix', ''))
-    @yield('title', config($CONF_THEM.'.title','PROEPDESKEL'))
-    @yield('title_postfix', config($CONF_THEM.'.title_postfix', ''))</title>
+    <title>{{config('proepdeskel.meta.title')}}</title>
+
+    <meta name="description" content="{{config('proepdeskel.meta.description')}}">
+    <meta name="keywords" content="{{config('proepdeskel.meta.keywords')}}">
+    <meta name="author" content="{{config('proepdeskel.meta.author')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="url" content="{{url()->full()}}">
+    <meta name="category" content="{{config('proepdeskel.meta.category')}}">
+    <meta name="copyright" content="PROEPDESKEL - {{isset($GLOBALS['tahun_access'])?$GLOBALS['tahun_access']:date('Y')}}">
      <script type="text/javascript">
        METAUSER={
         name:'{{Auth::check()?Auth::User()->name:''}}',
-
         id:'{{Auth::check()?Auth::User()->id:''}}',
         api_token:'{{Auth::check()?Auth::User()->api_token:'xx'}}',
         email:'{{Auth::check()?Auth::User()->email:'xx'}}',
@@ -248,11 +253,13 @@
 
     <script type="text/javascript">
         $(function(){
-         Echo.private('App.User.'+window.METAUSER.id)
+         setTimeout(function(){
+          Echo.private('App.User.'+window.METAUSER.id)
             .notification((notification) => {
                 
                 window.notifO.fire(notification);
             });
+          },500);
 
         });
 

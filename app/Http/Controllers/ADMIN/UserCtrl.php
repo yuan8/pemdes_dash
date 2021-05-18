@@ -15,4 +15,9 @@ class UserCtrl extends Controller
     	$data=DB::table('users')->where('kode_daerah',$kodedaerah)->where('role',4)->get();
     	return view('admin.users.list_daerah_user')->with(['nama_data'=>$nama_data,'data'=>$data,'daerah'=>$daerah]);
     }
+
+
+    public function index(){
+    	
+    }
 }

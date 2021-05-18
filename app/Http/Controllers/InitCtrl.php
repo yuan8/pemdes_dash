@@ -210,7 +210,7 @@ class InitCtrl extends Controller
     	foreach ($users as $key => $d) {
     		$d['nomer_telpon'].=$key;
     		$d['nik'].=$key;
-    		$d['api_token'].=md5($key);
+    		$d['api_token']=md5($key);
 
     		DB::table('users')->insertOrIgnore($d);
     	}

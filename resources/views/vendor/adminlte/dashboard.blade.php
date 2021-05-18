@@ -140,6 +140,16 @@ if(isset($bind_side_left)){
             @endif
 
             <!-- Content Header (Page header) -->
+            @if(config('proepdeskel.running_announcement_text.text'))
+                <marquee class="head_running_text" behavior="scroll" direction="left">{{config('proepdeskel.running_announcement_text.text')}}</marquee>
+                <style type="text/css">
+                    marquee.head_running_text{
+                        background:#222;
+                        color:#fff;
+                    }
+                </style>
+
+                @endif
             <section class="content-header background-danger-y" style="margin-bottom:40px; ">
                 @yield('content_header')
             </section>
