@@ -152,7 +152,7 @@
 			</div>	
 			<div class="bg-success" style="padding:10px; border-radius: 5px; margin-top: 10px; margin-bottom: 10px;">
 			<p ><b>Deskripsi</b></p>
-			<p>{!!nl2br($d->description)!!}</p>
+			<p>{!!nl2br($d->deskripsi)!!}</p>
 			</div>
 
 			<div class="table-responsive" style="margin-bottom: 10px;">

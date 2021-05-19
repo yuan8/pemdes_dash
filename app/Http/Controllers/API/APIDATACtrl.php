@@ -25,11 +25,12 @@ class APIDATACtrl extends Controller
         $desa=[];
 
 
-        $data=DB::table('data as d')->where('d.delivery_type','AUTOMATION')
-        ->join('master_table_map as m','m.key_view','=','d.table_view')
+        $data=DB::table('tb_data as d')->where('d.type','INTEGRASI')
+        ->join('tb_data_detail_map as dm','dm.id_data','=','d.id')
+        ->join('master_table_map as m','m.id','=','dm.id_map')
         ->groupBy('m.id')
-        ->selectRaw("m.*,d.description")
-        ->where('dashboard',true)
+        ->selectRaw("m.*,d.deskripsi")
+        // ->where('m.dashboard',true)
         ->orderBy('m.name','ASC')->get();
 
         foreach ($data as $key => $d) {
