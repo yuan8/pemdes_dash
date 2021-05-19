@@ -49,7 +49,7 @@ class MENUPROVIDER extends ServiceProvider
 
                  [
                     'text'=>('Index Desa'),
-                    'href'=>route('organisasi',['tahun'=>$tahun]),
+                    'href'=>route('index.desa',['tahun'=>$tahun]),
                     'class'=>'',
                     'top_nav_class'=>'',
 

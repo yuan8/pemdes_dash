@@ -1,6 +1,6 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>TABLE [{{$data->key_view}}]</h4>
+<h4>TABLE [{{$data->table}}]</h4>
 <h5>{{$data->name}}</h5>
 
 @stop
@@ -16,10 +16,7 @@
 				<label>Nama</label>
 				<input type="text" class="form-control" name="name" value="{{$data->name}}" required="">
 			</div>
-			<div class="form-group">
-				<label>Key Table</label>
-				<input type="text" class="form-control" name="key_view"  value="{{$data->key_view}}" required="">
-			</div>
+			
 			<div class="form-group">
 				<label>Table</label>
 				<input type="text" class="form-control" name="table" value="{{$data->table}}" required="">

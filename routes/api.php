@@ -29,6 +29,8 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
     	Route::get('instansi','API\KetegoriCtrl@instansi')->name('api.meta.instansi');
 
     });
+
+
 });
 
 Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'').'data/admin/{tahun}')->middleware(['auth:api','bindTahun'])->group(function(){
@@ -40,6 +42,8 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 });
 
 Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'').'d/{tahun}')->middleware(['bindTahun'])->group(function(){
+    Route::get('/index-desa-data', 'IndexDesaCtrl@data_index_desa')->name('index.desa.data');
+    
 	// Route::get('/visulisasi-p-table/{id}/{table}','TestCtrl@index')->name('visual.data.table');
     Route::get('/visulisasi-d-dataset/{id}','DataCtrl@visualisasi_data')->name('vs.data.visual');
     Route::get('/get-category-desa/','HomeCtrl@cat_desa')->name('re.cat.cat_desa');
@@ -59,6 +63,8 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'').'v/{tahun}')->middleware(['bindTahun','auth:api'])->group(function(){
     Route::post('get-data/{id}/{kodedaerah}','API\APIDATACtrl@getData')->name('api.public.getdata');
     Route::post('get-data-list-user-daerah/{kodedaerah}','ADMIN\UserCtrl@list_user_daerah')->name('api.list.user.daerah');
+
+
 
 
 });

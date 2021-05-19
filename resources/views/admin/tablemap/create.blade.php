@@ -15,10 +15,6 @@
 				<input type="text" class="form-control" name="name" required="">
 			</div>
 			<div class="form-group">
-				<label>Key Table</label>
-				<input type="text" class="form-control" name="key_view"   required="">
-			</div>
-			<div class="form-group">
 				<label>Table</label>
 				<input type="text" class="form-control" name="table"  required="">
 			</div>
@@ -26,7 +22,6 @@
 				<label>Gunakan Sebagai Format Data Validasi</label>
 				<p><input type="radio" value="1"  name="format_validasi" > Ya</p>
 				<p><input type="radio" value="0"  name="format_validasi" checked=""> Tidak</p>
-
 			</div>
 		</div>
 		<div class="box-footer">

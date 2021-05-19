@@ -42,15 +42,15 @@
 						<td>{{$d->email}}</td>
 						<td>{{HPV::role_user($d->role)['text']}}</td>
 						<td>
-							@if($d->access_web)
+							{{-- @if($d->access_web)
 								<i class=" text-success fa fa-check"></i> ACCESS
 							@else
 								NO ACCESS
-							@endif
+							@endif --}}
 							
 						</td>
 						<td>
-							@if($d->access_api)
+							{{-- @if($d->access_api)
 								<div class="btn-group">
 									<button class="btn btn-xs one-line" disabled="" style="width:100px;">{{$d->api_token}}</button>
 									<button class="btn btn-primary btn-xs">
@@ -59,7 +59,7 @@
 								</div>
 							@else
 								NO ACCESS
-							@endif
+							@endif --}}
 						</td>
 						<td>{{$d->is_active==TRUE?"ACTIVE":'UNACTIVE'}}</td>
 

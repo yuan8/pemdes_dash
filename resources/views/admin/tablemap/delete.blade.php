@@ -6,7 +6,7 @@
 			Konfirmasi Penghapusan Data Table Map
 		</div>
 		<div class="modal-body text-uppercase">
-			Menghapus Data {{$data->name}} [{{$data->key_view}}]
+			Menghapus Data {{$data->name}} [{{$data->table}}]
 		</div>
 
 		<div class="modal-footer">

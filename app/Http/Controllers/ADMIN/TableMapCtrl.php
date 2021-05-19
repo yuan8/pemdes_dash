@@ -8,25 +8,38 @@ use DB;
 use Auth;
 use Validator;
 use Alert;
+use Str;
 class TableMapCtrl extends Controller
 {
 
     public function create($tahun){
-        return view('admin.tablemap.create');
+        return view("admin.tablemap.create");
     }
 
      public function store($tahun,Request $request){
-          $data=DB::table('master_table_map')
-        ->insert([
-            'name'=>$request->name,
-            'table'=>$request->table,
-            'key_view'=>$request->key_view,
-            'id_user'=>Auth::User()->id,
-            'edit_daerah'=>(int)$request->format_validasi
-        ]);
+        $namin=str_replace(' ','_',trim($request->table));
+        $table=DB::select("Select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='".env('DB_DATABASE')."' and TABLE_NAME='".$namin."'");
 
-        Alert::success('Berhasil','Table Map berhasil ditambahkan');
+        if($table){
+             $data=DB::table('master_table_map')
+            ->insert([
+                'name'=>$request->name,
+                'table'=>$namin,
+                'id_user'=>Auth::User()->id,
+                'edit_daerah'=>(int)$request->format_validasi
+            ]);
+             Alert::success('Berhasil','Table Map berhasil ditambahkan');
+        }else{
+
+             Alert::error('Gagal','Nama Table '.$namin.' tidak tersedia');
+        }
+
         return back();
+
+
+       
+
+       
     }
 
     public function edit($tahun,$id){

@@ -159,6 +159,10 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 
 	Route::get('/query-data', 'DataCtrl@query')->name('query.data');
 
+	Route::get('/index-desa', 'IndexDesaCtrl@index')->name('index.desa');
+
+
+
 	Route::get('/data-integrasi/{id}/{slug}', 'DataCtrl@detail')->name('data.int.detail');
 	Route::get('/data-visual/{id}/{slug}', 'DataCtrl@visualisasi_index')->name('data.vis.detail');
 
