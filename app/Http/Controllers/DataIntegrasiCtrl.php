@@ -305,7 +305,7 @@ class DataIntegrasiCtrl extends Controller
 					$D[$k]=[
 						'name'=>$m['name'],
 						'yAxis'=>array_search($m['satuan'], $SATUAN_X),
-						'visible'=>($k>5)?false:true,
+						'visible'=>($k>config('proepdeskel.chart.series.max_series_show',5))?false:true,
 						'data'=>[]
 
 					];
