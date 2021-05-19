@@ -91,7 +91,7 @@ class DataCtrl extends Controller
         ->orderBy('dt.updated_at')
         ->selectRaw("dt.*,
                 (
-                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun>=".$tahun." end) 
+                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
@@ -186,7 +186,7 @@ class DataCtrl extends Controller
         ->orderBy('dt.updated_at')
         ->selectRaw("dt.*,
                 (
-                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun>=".$tahun." end) 
+                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
@@ -270,7 +270,7 @@ class DataCtrl extends Controller
         ->orderBy('dt.updated_at')
         ->selectRaw("dt.*,
                 (
-                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun>=".$tahun." end) 
+                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
@@ -359,7 +359,7 @@ class DataCtrl extends Controller
         ->orderBy('dt.updated_at')
         ->selectRaw("dt.*,
                 (
-                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun>=".$tahun." end) 
+                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
@@ -428,7 +428,7 @@ class DataCtrl extends Controller
         $now=Carbon::now();
         $Defwhere=[
             "(
-                (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun>=".$tahun." end) 
+                (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
             )",
             "dt.status=1",
             "dt.publish_date <= '".$now."'"
@@ -489,7 +489,7 @@ class DataCtrl extends Controller
         ->orderBy('dt.updated_at')
         ->selectRaw("dt.*,
                 (
-                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun>=".$tahun." end) 
+                    (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
@@ -512,7 +512,7 @@ class DataCtrl extends Controller
     	$data=DB::table('tb_data as dt')
     	->whereRaw(
     		"(
-    			(CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun." and dt.status=1 ) else dt.tahun>=".$tahun." end) 
+    			(CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun." and dt.status=1 ) else dt.tahun<=".$tahun." end) 
     		) AND (
     		dt.deskripsi like '%".$request->q."%' OR dt.title like '%".$request->q."%' OR dt.deskripsi_min like '%".$request->q."%' OR dt.keywords like '%".$request->q."%'
 
