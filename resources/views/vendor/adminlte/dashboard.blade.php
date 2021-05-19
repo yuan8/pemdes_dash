@@ -218,7 +218,7 @@ if(isset($bind_side_left)){
            <div class="row " style="background: yellow;">
                <div class="col-md-12 text-center">
                     <div class="text-center" style="color:#222">
-                 <h5><b>DITJEN BINA PEMERINTAHAN DESA KEMENTRERIAN DALAM NEGERI - Copyright &copy {{$GLOBALS['tahun_access']}}</b></h5>
+                 <h5><b>DITJEN BINA PEMERINTAHAN DESA KEMENTERIAN DALAM NEGERI - Copyright &copy {{$GLOBALS['tahun_access']}}</b></h5>
             </div>
                </div>
            </div>

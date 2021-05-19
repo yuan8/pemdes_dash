@@ -24,21 +24,26 @@
           @each('vendor.adminlte.partials.menu-item-top-nav', MENUS::dashboard()['top'], 'item')
         </ul>
      </div>
+     @if(!isset($mode_js))
         <form action="{{isset($route_search)?$route_search:route('query.data',['tahun'=>$GLOBALS['tahun_access']])}}" method="get">
+      @endif
           <div class="row">
             <div class="col-md-12" style="min-height: 40px;">
               <div style="width:100%; float: left; border-radius: 30px; overflow: hidden; border: 1px solid #fa090a ">
                 <div class="input-group" style="height:20px;">
                   <input type="text" class="form-control input-sm" name="q" placeholder="{{isset($placeholder_search)?$placeholder_search:'Cari Data,Tema,Instansi'}}	" style="border: none; height:50px;" value="{{isset($req)?$req->q:(isset($_GET['q'])?$_GET['q']:'')}}">
                   <span class="input-group-addon" style="background: #fff; border:none;">
-                    <button class="btn btn-warning btn-sm btn-ov" type="submit">Cari <i class="fa fa-search"></i></button>
+                    <button class="btn btn-warning btn-sm btn-ov" {{!isset($mode_js)?'type="submit"':'type="button" onclick="'.$mode_js.'"'}} >Cari <i class="fa fa-search"></i></button>
                   </span>
                 </div>
               </div>
             </div>
 
           </div>
+     @if(!isset($mode_js))
+
         </form>
+      @endif
 
     </div>
 

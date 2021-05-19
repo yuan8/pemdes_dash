@@ -11,7 +11,7 @@
 
 
 </div>
-@include('partials.banner_head',['placeholder_search'=>'Cari Data '.(isset($instansi)?ucfirst(strtolower($instansi->type)).' '.ucfirst(strtolower($instansi->name)):', Instansi, Tema'),'route_search'=>url()->full()])
+@include('partials.banner_head',['placeholder_search'=>'Cari Instansi','route_search'=>url()->full(),'mode_js'=>'getInstansi()'])
   @stop 
 
   @section('content')

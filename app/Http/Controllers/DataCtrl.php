@@ -294,6 +294,7 @@ class DataCtrl extends Controller
         $instansi=DB::table($level['table'].' as d')
                 ->selectRaw("'' as deskripsi, ".$level['column_id'].' as id, '.$level['column_name']." as name, null as image_path,'PEMDA' as type ,'".$level['level']."' as jenis")->where($level['column_id'],'=',$kode_daerah)
                 ->first();
+        $instansi->name=HP::daerah_level($kode_daerah);
 
        
         $now=Carbon::now();

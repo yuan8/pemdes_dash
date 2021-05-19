@@ -34,7 +34,7 @@
         </div>
 
         <div class="box-body">
-          <h3><b>{{str_replace('_',' ',str_replace('_', ' ', $instansi->type))}} - {{$instansi->name}}</b></h3>
+          <h3><b>{{str_replace('_',' ',str_replace('_', ' ', $instansi->type))}} - {!!str_replace('-', '<br>',$instansi->name)!!}</b></h3>
           <div class="btn-group ">
             <button class="btn btn-primary col-6">PROFILE CAPAIAN</button>
             <button class="btn btn-primary col-6">DATA</button>
@@ -51,7 +51,7 @@
           @endif
         </div>
         <div class="box-body">
-          <h3><b>{{str_replace('_',' ',str_replace('_', ' ', $instansi->type))}} - {{$instansi->name}}</b></h3>
+          <h3><b>{{str_replace('_',' ',str_replace('_', ' ', $instansi->type))}} - {!!str_replace(' -', '<br>',$instansi->name)!!}</b></h3>
           
           <p>{{$instansi->deskripsi}}</p>
         </div>
