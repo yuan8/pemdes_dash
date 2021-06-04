@@ -22,8 +22,6 @@ class DataIntegrasiCtrl extends Controller
     }
 
 	
-    //
-
 
 
 
@@ -146,9 +144,16 @@ class DataIntegrasiCtrl extends Controller
 
 
 
-
-
+			
+			if(isset($maping['view_'][$maping['level_data']['child']['count']==0?2:$maping['level_data']['child']['count']])){
 			$meta_entity=$maping['view_'][$maping['level_data']['child']['count']==0?2:$maping['level_data']['child']['count']];
+
+			}else{
+				$meta_entity=[];
+			}
+
+
+
 			$id_c='chart_id_'.rand(0,100).'_'.date('Ymdhi');
 			$return='<div class="row " id="'.$id_c.'">';
 			if(count($meta_entity)==0){
