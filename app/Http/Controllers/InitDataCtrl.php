@@ -11,7 +11,7 @@ class InitDataCtrl extends Controller
     
     public function copy_view(){
     	$data=DB::table('master_view_method')->where('id_ms_table',2)->get();
-    	foreach ($variable as $key => $value) {
+    	foreach ($data as $key => $value) {
     		$value=(array)$value;
     		$value['id_ms_table']=null;
     		unset($value['id']);
