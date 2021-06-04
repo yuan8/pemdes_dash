@@ -233,6 +233,7 @@ class DataIntegrasiCtrl extends Controller
 	static function rekap_data($data,$map,$get=4){
 		$data='{"data":'.json_encode($data).'}';
 		$jsonq = new Jsonq($data);
+
 		$data=$jsonq->from('data');
 		$columns=$map['columns'];
 		$columns=array_values($columns);
@@ -255,10 +256,11 @@ class DataIntegrasiCtrl extends Controller
 		$else=[];
 		foreach ($sum as $key => $value) {
 			if($key>$get){
+
 				if(!in_array($value['aggregate_type'],['NONE'])){
 					if(!isset($else[$value['satuan']])){
 						$else[$value['satuan']]=[
-							'name'=>$map['name'].' Lainya ('.$value['satuan'].')',
+							'name'=>$value['name'].' Lainya ('.$value['satuan'].')',
 							'value'=>(float)$value['value'],
 							'y'=>(float)$value['y'],
 							'key'=>'...',
