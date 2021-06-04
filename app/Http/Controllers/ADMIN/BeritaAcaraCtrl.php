@@ -11,17 +11,18 @@ use Auth;
 use Carbon\Carbon;
 class BeritaAcaraCtrl extends Controller
 {
-    //
 
     public function build($tahun,Request $request){
     	$access_data_daerah=$request->kddesa??$request->kdkecamatan??$request->kdkabkota??$request->kdprovinsi;
-
     	$check_access=HP::check_access($access_data_daerah);
-
+        
+        
     	$mapTb=DB::table('master_table_map as m')
     	->join('master_column_map as c',[['m.id','=','c.id_ms_table'],['c.validate','=',DB::raw(true)]])
     	->selectRaw('m.*,m.id as id_map')->where('m.id',$request->data)
     	->first();
+
+
     	$now=Carbon::now();
 
     	if($check_access and $mapTb){
@@ -135,8 +136,8 @@ class BeritaAcaraCtrl extends Controller
     			'data'=>$data_q
     		];
 
-    		DB::table('tb_berita_acara as e')->insertOrIgnore([
-    			'kode_daerah'=>$kode_daerah,
+    		DB::table('tb_berita_acara')->insertOrIgnore([
+    			'kode_daerah'=>$access_data_daerah,
     			'tahun'=>$tahun,
     			'id_table_map'=>$maping['id_map']
     		]);

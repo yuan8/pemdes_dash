@@ -174,7 +174,6 @@ class DataViewCtrl extends Controller
 
     	if($data){
     		$tablemap=DB::table('master_table_map')->get();
-        // dd($tablemap);
 
     		return view('admin.dataview.edit')->with(['data'=>$data,'tablemap'=>$tablemap]);
     	}else{
@@ -312,10 +311,11 @@ class DataViewCtrl extends Controller
 
     	$data=DB::table('tb_data')->insertGetId([
     		      'title'=>$request->name,
-                  'auth'=>$request->auth,
+                 'auth'=>$request->auth,
     			 'deskripsi'=>$request->description,
     			 'type'=>'INTEGRASI',
                  'status'=>1,
+                 'tahun'=>$tahun,
                  'id_user'=>Auth::User()->id,
                  'publish_date'=>Carbon::now(),
                  'created_at'=>Carbon::now(),

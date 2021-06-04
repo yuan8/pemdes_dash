@@ -1,6 +1,12 @@
 <?php
 
 
+Route::prefix('init')->group(function(){
+	Route::get('create-file','InitDataCtrl@createFile');
+
+	Route::get('data-table','InitDataCtrl@index');
+});
+
 Route::get((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'/'),function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);
 })->name('home');
@@ -66,6 +72,27 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 		Route::get('/tentang-kami','ADMIN\SettingCtrl@index')->name('admin.set.index');
 		Route::post('/tentang-kami','ADMIN\SettingCtrl@update')->name('admin.set.update');
 	});
+
+
+	Route::prefix('/publikasi')->middleware('can:is_daerah')->group(function(){
+		Route::get('/','ADMIN\PublicationCtrl@index')->name('admin.publikasi.index');
+		Route::get('/create/{type?}','ADMIN\PublicationCtrl@create')->name('admin.publikasi.create');
+		Route::post('/store','ADMIN\PublicationCtrl@store')->name('admin.publikasi.store');
+		Route::get('/edit/{id}','ADMIN\PublicationCtrl@edit')->name('admin.publikasi.edit');
+		Route::put('/edit/{id}','ADMIN\PublicationCtrl@update')->name('admin.publikasi.update');
+		Route::delete('data/delete/{id}','ADMIN\PublicationCtrl@delete')->name('admin.publikasi.delete');
+	});
+
+
+	Route::prefix('/g-category/{type}')->middleware('can:is_daerah')->group(function(){
+		Route::get('/','ADMIN\GlobalCategoryCtrl@index')->name('admin.cat.index');
+		Route::get('/create','ADMIN\GlobalCategoryCtrl@create')->name('admin.cat.create');
+		Route::post('/create','ADMIN\GlobalCategoryCtrl@store')->name('admin.cat.store');
+		Route::get('/{id}','ADMIN\GlobalCategoryCtrl@edit')->name('admin.cat.edit');
+		Route::put('/{id}','ADMIN\GlobalCategoryCtrl@update')->name('admin.cat.update');
+		Route::delete('/delete/{id}','ADMIN\GlobalCategoryCtrl@delete')->name('admin.cat.delete');
+	});
+
 
 
 	Route::prefix('/instansi')->middleware('can:is_super')->group(function(){
@@ -143,7 +170,7 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 		Route::get('/data','ADMIN\DataCtrl@data')->name('admin.data.detail');
 		Route::get('/data/create/{jenis}','ADMIN\DataCtrl@create')->name('admin.data.create');
 		Route::post('/data/create/{jenis}','ADMIN\DataCtrl@store')->name('admin.data.store');
-		Route::get('/data-set/edit/{id}','ADMIN\DataCtrl@edit_visual')->name('admin.dataset.edit');
+		Route::get('/data-set/edit/{id}','ADMIN\DataCtrl@edit')->name('admin.dataset.edit');
 		Route::put('/data-set/update/{id}','ADMIN\DataCtrl@update_visual')->name('admin.dataset.update');
 		Route::get('/data/update/{id}','ADMIN\DataCtrl@edit')->name('admin.data.edit');
 		Route::put('/data/update/{id}','ADMIN\DataCtrl@update')->name('admin.data.update');

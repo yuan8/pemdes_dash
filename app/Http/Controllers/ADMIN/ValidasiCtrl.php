@@ -15,8 +15,7 @@ use App\Notifications\UpdateData;
 
 class ValidasiCtrl extends Controller
 {
-    //
-
+    
 
     static function daerah_level($kode_daerah){
     	$count=strlen($kode_daerah);
@@ -205,13 +204,13 @@ class ValidasiCtrl extends Controller
             'nama_data'=>$mapTb->name
         ];
 
-        if($request->export_format=='FORM' and $expt_jadwal['status_jadwal']!=1){
-                return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
-        }else if($expt_jadwal['status_jadwal']>1 OR $expt_jadwal['status_jadwal']<1 ){
-                return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
-        }
+     //    if($request->export_format=='FORM' and $expt_jadwal['status_jadwal']!=1){
+     //            return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
+     //    }else if($expt_jadwal['status_jadwal']>1 OR $expt_jadwal['status_jadwal']<1 ){
+     //            return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
+     //    }
 
-
+        // dd($jadwal_status);
 
 
 

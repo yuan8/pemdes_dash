@@ -113,7 +113,6 @@ class TableMapCtrl extends Controller
         ->update([
             'name'=>$request->name,
             'table'=>$request->table,
-            'key_view'=>$request->key_view,
             'edit_daerah'=>(int)$request->format_validasi
             
             ]);
@@ -129,8 +128,8 @@ class TableMapCtrl extends Controller
             ->selectRaw("m.*,(select count(t.id) from master_column_map as t where t.id_ms_table=m.id) as count_column");
 
         if($request->q){
-            $data=$data->where([['table','like','%'.$request->q.'%']])
-            ->oRwhere([['key_view','like','%'.$request->q.'%']]);
+            $data=$data->where([['table','like','%'.$request->q.'%']]);
+           
 
         }
         $data=$data->paginate(15);

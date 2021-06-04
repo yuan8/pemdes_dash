@@ -11,6 +11,7 @@
 	<form action="{{route('admin.dataset.update',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}" enctype='multipart/form-data' method="post">
 		@csrf
 		@method('PUT')
+		
 
 		<div class="row">
 		<div class="col-md-8">
@@ -46,7 +47,6 @@
 			<hr>
 				<div class="form-group">
 					<label>Dokumen (.xlsx,.xls)</label>
-
 					<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" name="file" class="form-control" >
 				</div>
 			@elseif(in_array($jenis,['INFOGRAFIS']))
@@ -133,6 +133,7 @@
 			@endif
 		</div>
 	</div>
+	
 	
 
 

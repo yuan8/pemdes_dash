@@ -115,7 +115,98 @@ class DataCtrl extends Controller
     }
 
 
-    public function edit_visual($tahun,$id){
+    public function edit($tahun,$id){
+
+        $data=DB::table('tb_data as dt')->where('id',$id)
+        ->where('tahun',$tahun)->first();
+
+        if($data){
+            switch ($data->type) {
+                case 'VISUALISASI':
+                    # code...
+                    return static::edit_visual($tahun,$id);
+                    break;
+                case 'TABLE':
+                    # code...
+                    return static::edit_table($tahun,$id);
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+        }
+    }
+
+
+    static function edit_table($tahun,$id){
+        $Defwhere=[
+            "dt.tahun=".$tahun,
+            'dt.id='.$id,
+            "dt.type in ('TABLE')"
+        ];
+        $pilih_kategori='';
+
+        $where=[];
+
+        if(Auth::User()->role>2){
+             $Defwhere[]="dt.kode_daerah =".Auth::User()->kode_daerah;
+        }
+
+        $U=Auth::User();
+
+       
+        $data=DB::table('tb_data as dt')
+        ->leftJoin('tb_data_detail_visualisasi as vis','vis.id_data','=','dt.id')
+        ->leftJoin('tb_data_group as dg','dg.id_data','=','dt.id')
+        ->leftJoin('master_provinsi as pro','pro.kdprovinsi','=','dt.kode_daerah')
+        ->leftJoin('master_kabkota as kab','kab.kdkabkota','=','dt.kode_daerah')
+        ->leftJoin('master_kecamatan as kc','kc.kdkecamatan','=','dt.kode_daerah')
+        ->leftJoin('master_desa as ds','ds.kddesa','=','dt.kode_daerah')
+        ->leftJoin('master_category as c','c.id','=','dg.id_category')
+        ->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
+        ->leftjoin('master_instansi as i','i.id','=','di.id_instansi')
+        ->leftjoin('users as usc','usc.id','=','dt.id_user')
+        ->leftjoin('users as usu','usu.id','=','dt.id_user_update')
+        ->groupBy('dt.id')
+        ->orderBy('dt.updated_at')
+        ->selectRaw("dt.*,  
+                vis.path_file,
+                vis.path_file,
+                usc.name as nama_user_created,
+                usc.jabatan as jabatan_user_created,
+                i.name as nama_instansi,
+                (case when (i.type) then i.type else 'DAERAH' end) as jenis_instansi,
+                group_concat(c.type SEPARATOR ',') as tema,
+                group_concat(concat(c.id,'|||',c.type,'|||',c.name) SEPARATOR '------') as category,
+                case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
+
+        ->whereRaw(implode(' and ', $Defwhere))->first();
+
+        $u=Auth::User();
+
+        $instansi=[];
+        if($u->role!=1){
+            $instansi=DB::table('master_instansi as c')
+            ->where(
+                'type','REGIONAL'
+            )->selectRaw('c.id, c.name as text')->get();
+          }else{
+            $instansi=DB::table('master_instansi as c')->selectRaw('c.id, c.name as text')->get();
+          }
+
+        if($data){
+            return view('admin.data.table.edit')->with([
+                'jenis'=>$data->type,
+                'data'=>$data,
+                'category'=>[],
+                'instansi'=>$instansi,
+            ]);
+        }
+
+    }
+
+    static public function edit_visual($tahun,$id){
         $Defwhere=[
             "dt.tahun=".$tahun,
             'dt.id='.$id,
@@ -210,7 +301,9 @@ class DataCtrl extends Controller
 
     }
 
+
 	static function store_infografis($tahun,Request $request){
+
 		$path=Storage::put('public/publication/DATASET/'.$tahun,$request->file);
 		$path=Storage::url($path);
 		$ext = pathinfo($path, PATHINFO_EXTENSION);
@@ -261,7 +354,132 @@ class DataCtrl extends Controller
 	}
 
 
-	static public function store($tahun,Request $request){
+    public function store($tahun,$type='VISUALISASI',Request $request){
+        $type=strtoupper($type);
+       switch ($type) {
+           case 'VISUALISASI':
+            return static::store_visual($tahun,$request);
+               # code...
+               break;
+            case 'TABLE':
+            return static::store_table($tahun,$request);
+               # code...
+               break;
+            case 'INFOGRAFIS':
+            return static::store_infografis($tahun,$request);
+               # code...
+               break;
+           
+           default:
+               # code...
+               break;
+       }
+
+    }
+
+
+    static function store_table($tahun,Request $request){
+        $req=$request->all();
+
+        if($request->file){
+            $req['extension']=$request->file->getClientOriginalExtension();
+        }
+
+
+         $valid=Validator::make($req,[
+            'name'=>'string|required',
+            'auth'=>'boolean|nullable',
+            'description'=>'nullable|string',
+            'keywords'=>'array|nullable',
+            'publish_date'=>'date|required',
+            'id_instansi'=>'numeric|required',
+            'file'=>'file|required',
+            'extension'=>'required|string|in:xlsx'
+        ]);
+
+
+
+         if($valid->fails()){
+            Alert::error('',$valid->errors()->first());
+            return back()->withInputs();
+         }
+         else{
+            if(Auth::User()->can('is_admin')){
+                if(!$request->id_instansi){
+                    Alert::error('','instansi Belum Terisi');
+                    return back()->withInputs();
+                }
+            }
+
+         }
+
+         $data=DB::table('tb_data')->insertGetId([
+                'title'=>$request->name,
+                'auth'=>$request->auth,
+                'deskripsi'=>$request->description,
+                'type'=>'TABLE',
+                'publish_date'=>$request->publish_date,
+                'status'=>0,
+                'tahun'=>$tahun,
+                'kode_daerah'=>Auth::User()->can('is_only_daerah')?Auth::User()->kode_daerah:null,
+                'id_user'=>Auth::User()->id,
+                'created_at'=>Carbon::now(),
+                'updated_at'=>Carbon::now(),
+                'keywords'=>json_encode($request->keywords),
+
+        ]);
+
+        if($data){
+            if(Auth::User()->can('is_admin')){
+               DB::table('tb_data_instansi')->insertOrIgnore([
+                'id_data'=>$data,
+                'id_instansi'=>$request->id_instansi
+               ]);
+
+            }
+
+            foreach ($request->category as $key => $k) {
+                    # code...
+                    DB::table('tb_data_group')->insertOrIgnore([
+                        'id_data'=>$data,
+                        'id_category'=>$k
+                    ]);
+
+
+
+            }
+
+
+
+            $path=Storage::put('public/publication/DATASET_TABLE/'.$tahun.'/data-table-'.$data.'.'.$req['extension'],$request->file);
+            $path=Storage::url($path);
+            $size=filesize($request->file)??0;
+            $size=$size / 1048576;
+
+           
+               $check= DB::table('tb_data_detail_table')
+                ->insert([
+                    'id_data'=>$data,
+                    'path_file'=>$path,
+                    'extension'=>$req['extension'],
+                    'size'=>$size,
+                ]);
+        }
+
+
+        if(isset($check) and $check ){
+            Alert::success('Berhasil','Dataset Table ditambahkan');
+
+            return redirect()->route('admin.data.index',['tahun'=>$tahun]);
+        }
+
+        
+
+    }
+
+
+
+	static public function store_visual($tahun,Request $request){
 
 
         $valid=Validator::make($request->all(),[
@@ -271,7 +489,11 @@ class DataCtrl extends Controller
             'keywords'=>'array|nullable',
             'publish_date'=>'date|required',
             'id_instansi'=>'numeric|required',
+            'file'=>'file|required'
+
         ]);
+
+
 
         if($valid->fails()){
             Alert::error('',$valid->errors()->first());
@@ -387,10 +609,12 @@ class DataCtrl extends Controller
 		return view('admin.data.handle.create_data_set')->with(['instansi'=>$instansi,'jenis'=>$jenis,'view'=>$view]);
     }
 
+
+
     public function index($tahun,Request $request){
     	$Defwhere=[
     		"dt.tahun=".$tahun,
-    		"dt.type in ('DATATABLE','VISUALISASI')"
+    		"dt.type in ('TABLE','VISUALISASI')"
     	];
     	$pilih_kategori='';
 
@@ -475,7 +699,7 @@ class DataCtrl extends Controller
         		usc.name as nama_user_created,
         		usc.jabatan as jabatan_user_created,
         		i.name as nama_instansi,
-        		(case when (i.type) then i.type else 'DAERAH' end) as jenis_instansi,
+        		(case when (i.type is not null) then i.type else 'DAERAH' end) as jenis_instansi,
         		group_concat(c.type SEPARATOR ',') as tema,
         		group_concat(c.name SEPARATOR ',') as nama_category,
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
