@@ -1,11 +1,6 @@
 <?php
 
-
-Route::prefix('init')->group(function(){
-	Route::get('create-file','InitDataCtrl@createFile');
-
-	Route::get('data-table','InitDataCtrl@index');
-});
+include __DIR__ .'/web_console.php';
 
 Route::get((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'/'),function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);

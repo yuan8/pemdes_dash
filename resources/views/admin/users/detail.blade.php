@@ -101,7 +101,7 @@
 					</div>
 				
 				</div>
-				<div class="box" v-if="user.role!=1">
+				{{-- <div class="box" v-if="user.role!=1">
 				  		<div class="box-body">
 				  			 <div class="form-group">
 				            	<label >Instansi Akses</label>
@@ -113,7 +113,7 @@
 
 				            </div>
 				  		</div>
-				  	</div>
+				  	</div> --}}
 			</div>
 			<div class="col-md-4">
 				  <div class="box box-solid">
@@ -144,6 +144,7 @@
 				          <div class="box-body">
 				            <div v-if="user.role==3" >
 				            	<div class="form-group">
+
 				              <select class="form-control" id="regional" name="role_group[]" multiple="">
 				                @foreach($regional_list as $l)
 				                <option value="{{$l->id}}" {{in_array($l->id,$regional_list_acc->toArray())?'selected':''}}>{{$l->name}}</option>
@@ -157,7 +158,7 @@
 				            <div class="form-group" v-if="user.role==4">
 				              <select class="form-control" id="daerah_akses" name="daerah_akses" v-model="user.kode_daerah">
 				              	@foreach($daerah_ac as $l)
-					               		 <option value="{{$l->id}}"  >{{$l->text}}</option>
+					               		 <option value="{{$l->id}}"   >{{$l->text}}</option>
 					                @endforeach
 				              </select>
 				            </div>

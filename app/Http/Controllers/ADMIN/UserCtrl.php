@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ADMIN;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use Auth;
 class UserCtrl extends Controller
 {
     //
@@ -172,24 +173,27 @@ class UserCtrl extends Controller
         $data=DB::table('users')->find($id);
         $daerah_access=null;
         if($data){
+            $data_regional=[];
             $data->daerah_selected=null;
             if($data->role>3){
                 $level_kode=strlen(trim($data->kode_daerah));
                 switch ($level_kode) {
                     case 2:
-                        $daerah_access=DB::table('provinsi as pro')->where('kdprovinsi',$data->kode_daerah)
+                        $daerah_access=DB::table('master_provinsi as pro')->where('kdprovinsi',$data->kode_daerah)
                         ->selectraw('kdprovinsi as id,nmprovinsi as text')->first();
-                        $data->level_daerah='provinsi';
+
+                            $data->level_daerah='provinsi';
+                       
                         break;
                     case 4:
-                        $daerah_access=DB::table('kabkota as kab')->where('kdkabkota',$data->kode_daerah)
+                        $daerah_access=DB::table('master_kabkota as kab')->where('kdkabkota',$data->kode_daerah)
                         ->selectraw("kdkabkota as id,concat(nmkabkota,' - ',(select nmprovinsi from provinsi where left(kdkabkota,2)=kdprovinsi limit 1))  as text")->first();
                         $data->level_daerah='kab_kota';
 
                         # code...
                         break;
                     case 6:
-                         $daerah_access=DB::table('kecamatan as kec')->where('kdkecamatan',$data->kode_daerah)
+                         $daerah_access=DB::table('master_kecamatan as kec')->where('kdkecamatan',$data->kode_daerah)
                         ->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',(select nmkabkota from kabkota where kdkabkota = left(kdkecamatan,4) limit 1),' - ',(select nmprovinsi from provinsi where left(kdkecamatan,2)=kdprovinsi limit 1))  as text")->first();
                         $data->level_daerah='kecamatan';
 
@@ -225,22 +229,21 @@ class UserCtrl extends Controller
 
 
             
-            $instansi=DB::table('category as c')
-            ->where('c.type','INSTANSI')
+            $instansi=DB::table('master_instansi as c')
             ->get();
 
-            
+            // dd($instansi);
+             // $instansi_user=DB::table('user_instansi')
+             // ->where('user_id',$id)->select('instansi_id')->get()->pluck('instansi_id')->toArray();
 
-             $instansi_user=DB::table('user_instansi')
-             ->where('user_id',$id)->select('instansi_id')->get()->pluck('instansi_id')->toArray();
-
-            $daerah=DB::table('kabkota as k')->join(
-                'provinsi as p','p.kdprovinsi','=',DB::raw("LEFT(k.kdkabkota,2)")
+            $daerah=DB::table('master_kabkota as k')->join(
+                'master_provinsi as p','p.kdprovinsi','=',DB::raw("LEFT(k.kdkabkota,2)")
             )->selectraw("k.kdkabkota as id,CONCAT(p.nmprovinsi,' - ',k.nmkabkota) as text")
             ->get();
 
+            // ,'record_instansi'=>$instansi_user
             $regional_list=DB::table('master_regional')->get();
-            return view('admin.users.detail')->with(['data'=>$data,'regional_list_acc'=>$data_regional,'regional_list'=>$regional_list,'daerah_ac'=>$daerah,'instansi'=>$instansi,'record_instansi'=>$instansi_user]);
+            return view('admin.users.detail')->with(['data'=>$data,'regional_list_acc'=>$data_regional,'regional_list'=>$regional_list,'daerah_ac'=>$daerah_access,'instansi'=>$instansi]);
         }
 
     }

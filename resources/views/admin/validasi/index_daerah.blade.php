@@ -28,18 +28,17 @@
 							@php
 								$last_elemet=$element;
 							@endphp
-							<input type="hidden" name="{{$element}}" value="{{$kodedaerah[$element]}}">
+							<input type="hidden" id="{{$element}}" name="{{$element}}" value="{{$kodedaerah[$element]}}">
 						@else
 						<div class="form-group">
 							<label>{{strtoupper(str_replace('kd','', $element))}}</label>
 							<select id="{{$element}}" name="{{$element}}"  class="form-control"></select>
 
-
 							
 							<script type="text/javascript">
 							$(document).ready(function(){
 
-								@if($run_def)
+							@if($run_def)
 							@php
 								$run_def=false
 							@endphp
@@ -52,7 +51,7 @@
 
 							setTimeout(function(){
 								$('#kdkabkota').on('change',function(){
-									kdkota(this.value);
+									kdkabkota(this.value);
 								});
 
 								$('#kdkecamatan').on('change',function(){
@@ -95,7 +94,7 @@
 
 
 		$('#kdkabkota').on('change',function(){
-			kdkota(this.value);
+			kdkabkota(this.value);
 		});
 
 		$('#kdkecamatan').on('change',function(){
@@ -117,7 +116,7 @@
 		$('#desa').val(null).trigger('change');
 		$('#desa').html('').trigger('change');
 		$('#kdkabkota').append('<option value="" selected >-</option>');
-				$('#kota').trigger('change');
+		$('#kota').trigger('change');
 
 
 		if(kd){

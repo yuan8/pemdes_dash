@@ -102,7 +102,7 @@
 			@endphp
 
 			@can('is_daerah_provinsi')
-				<a href="" class="btn btn-warning"> Download Data</a>
+				<a href="" class="btn btn-success"> Download Data</a>
 			@endcan
 			@if($berita_acara['access'])
 				@if($berita_acara['berita_acara'])

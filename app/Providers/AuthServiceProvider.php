@@ -50,6 +50,22 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role<=4;
         });
 
+        Gate::define('is_daerah_provinsi', function ($user) {
+            return strlen($user->kode_daerah)==2;
+        });
+
+        Gate::define('is_daerah_kabkota', function ($user) {
+            return strlen($user->kode_daerah)==4;
+        });
+
+        Gate::define('is_daerah_kecamatan', function ($user) {
+            return strlen($user->kode_daerah)==6;
+        });
+
+        Gate::define('is_daerah_desa', function ($user) {
+            return strlen($user->kode_daerah)==10;
+        });
+
          Gate::define('is_only_daerah', function ($user) {
             return $user->role==4;
         });

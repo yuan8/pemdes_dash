@@ -82,7 +82,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_DATABASE_SERVER_HOST'),
             'port' =>'3306',
-            'database' => 'dash_pemdes',
+            'database' => 'dash_pemdes_real',
             'username' => 'admin',
             'password' => 'S@qpx231azq2',
             'unix_socket' => env('DB_SOCKET', ''),
