@@ -54,6 +54,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'database_migration' => [
+            'driver' => 'local',
+            'root' => public_path('../database/'),
+            'url' => env('APP_URL').'/storage',
+        ],
+
         'public_real' => [
             'driver' => 'local',
             'root' => public_path(''),

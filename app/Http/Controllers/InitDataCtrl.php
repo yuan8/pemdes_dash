@@ -111,7 +111,7 @@ class InitDataCtrl extends Controller
 
 		$con=env('DB_CON_INTEGRASI');
 		$exist=[];
-		$dir=scandir(storage_path('app/init-sql'));
+		$dir=scandir(storage_path('../database/init-sql'));
 		// $check=DB::connection('server')
 		// ->table('users')->get();
 
@@ -138,18 +138,18 @@ return [
 
 			if(!in_array($value->TABLE_NAME.'.php',$dir)){
 				$exist[]=$value->TABLE_NAME.'.php';
-				Storage::put('init-sql/'.$value->TABLE_NAME.'.php',$phps);
+				Storage::disk('database_migration')put('init-sql/'.$value->TABLE_NAME.'.php',$phps);
 
 			}
 		}
 		dd($exist);
 	}
 	public function index(){
-		$dir=scandir(storage_path('app/init-sql'));
+		$dir=scandir(storage_path('../database/init-sql'));
 		$exist=[];
 		foreach ($dir as $key => $file) {
 			if(!in_array($file,['.','..'])){
-				$todo=include(storage_path('app/init-sql/'.$file));
+				$todo=include(storage_path('../database/init-sql/'.$file));
 					$check=DB::table('INFORMATION_SCHEMA.TABLES')->where([
 						['TABLE_SCHEMA','=',env('DB_DATABASE')],
 						['TABLE_NAME','=',$todo['name']]
