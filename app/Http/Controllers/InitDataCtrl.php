@@ -9,6 +9,27 @@ use Carbon\Carbon;
 class InitDataCtrl extends Controller
 {
     
+    public function copy_view(){
+    	$data=DB::table('master_view_method')->where('id_ms_table',2)->get();
+    	foreach ($variable as $key => $value) {
+    		$value=(array)$value;
+    		$value['id_ms_table']=null;
+    		unset($value['id']);
+
+    		$data[$key]=$value;
+    		# code...
+    	}
+
+    	foreach (DB::table('master_table_map')->get() as $key => $value) {
+    		
+    		foreach ($data as $key => $d) {
+    			$d['id_ms_table']=$value->id;
+	    		DB::table('master_view_method')->insertOrIgnore($d);		# code...
+    		}
+
+
+    	}
+    }
 	public function server_(){
 		$MAP=DB::connection('server')->table('master_table_map')
 		->get();
