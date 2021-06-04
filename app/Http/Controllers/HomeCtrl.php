@@ -43,6 +43,7 @@ class HomeCtrl extends Controller
 	$statistik_data=[
 
 		'data_utama'=>DB::table('tb_data as d')
+        ->select('d.id')
 		->join('tb_data_group as g','g.id_data','=','d.id')
 		->join('master_category as c','c.id','=','g.id_category')
 		->where([
@@ -67,7 +68,7 @@ class HomeCtrl extends Controller
 			['c.type','=','TEMA_DATA_UTAMA'],
 			['d.tahun','=',$tahun],
 		])
-		->groupBy('d.id')->count(),
+		->groupBy('d.type')->count('d.id'),
 		'data_pendukung'=>DB::table('tb_data as d')
 		->join('tb_data_group as g','g.id_data','=','d.id')
 		->join('master_category as c','c.id','=','g.id_category')
@@ -93,35 +94,35 @@ class HomeCtrl extends Controller
 			['c.type','=','TEMA_DATA_PENDUKUNG'],
 			['d.tahun','=',$tahun],
 		])
-		->groupBy('d.id')->count(),
+		->groupBy('c.type')->count(),
 		'visualisasi'=>DB::table('tb_data as d')
 			->where([
 				['d.status','=',1],
 				['d.type','=','VISUALISASI'],
 				['d.tahun','=',$tahun],
 			])
-			->groupBy('d.id')->count(),
+			->groupBy('d.type')->count(),
 		'table'=>DB::table('tb_data as d')
 			->where([
 				['d.status','=',1],
 				['d.type','=','TABLE'],
 				['d.tahun','=',$tahun],
 			])
-			->groupBy('d.id')->count(),
+			->groupBy('d.type')->count(),
 		'infografis'=>DB::table('tb_data as d')
 			->where([
 				['d.status','=',1],
 				['d.type','=','INFOGRAFIS'],
 				['d.tahun','=',$tahun],
 			])
-			->groupBy('d.id')->count(),
+			->groupBy('d.type')->count(),
 		'publikasi'=>DB::table('tb_data as d')
 			->where([
 				['d.status','=',1],
 				['d.type','=','INFOGRAFIS'],
 				['d.tahun','=',$tahun],
 			])
-			->groupBy('d.id')->count(),
+			->groupBy('d.type')->count(),
 
 	];
 
