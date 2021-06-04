@@ -138,7 +138,7 @@ return [
 
 			if(!in_array($value->TABLE_NAME.'.php',$dir)){
 				$exist[]=$value->TABLE_NAME.'.php';
-				Storage::disk('database_migration')put('init-sql/'.$value->TABLE_NAME.'.php',$phps);
+				Storage::disk('database_migration')->put('init-sql/'.$value->TABLE_NAME.'.php',$phps);
 
 			}
 		}
