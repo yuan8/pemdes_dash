@@ -13,6 +13,8 @@ CREATE TABLE `dash_potensi_luas_wilayah` (
 	`id_user_desa_ver` bigint(20) DEFAULT NULL,
 	`id_user_kec_ver` bigint(20) DEFAULT NULL,
 	`id_user_kab_valid` bigint(20) DEFAULT NULL,
+	`daftar_draf` boolean DEFAULT 0,
+	
   `luas_wilayah` bigint(20) DEFAULT NULL,
   `penetapan_batas` tinyint(1) DEFAULT NULL,
   `peta_batas` tinyint(1) DEFAULT NULL,

@@ -9,4 +9,6 @@ Route::prefix('init')->group(function(){
 
 
 	Route::get('data-table','InitDataCtrl@index');
+	Route::get('data-table-drop','InitDataCtrl@drop');
+
 });

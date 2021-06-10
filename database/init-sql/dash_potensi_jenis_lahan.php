@@ -12,6 +12,8 @@ return [
     `id_user_desa_ver` bigint(20) DEFAULT NULL,
     `id_user_kec_ver` bigint(20) DEFAULT NULL,
     `id_user_kab_valid` bigint(20) DEFAULT NULL,
+  `daftar_draf` boolean DEFAULT 0,
+    
   `Sawah_Irigasi_Teknis` double DEFAULT NULL,
   `Sawah_Irigasi_setengah_Teknis` double DEFAULT NULL,
   `Sawah_Tadah_Hujan` double DEFAULT NULL,

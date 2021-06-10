@@ -197,4 +197,38 @@ return [
 
 		dd($exist,count($exist));
 	}
+
+	public function drop(){
+		$dir=scandir(storage_path('../database/init-sql'));
+		$exist=[];
+		foreach ($dir as $key => $file) {
+			if(!in_array($file,['.','..'])){
+				$todo=include(storage_path('../database/init-sql/'.$file));
+					$check=DB::table('INFORMATION_SCHEMA.TABLES')->where([
+						['TABLE_SCHEMA','=',env('DB_DATABASE')],
+						['TABLE_NAME','=',trim($todo['name'])]
+					])->first();
+
+
+					if($check){
+						if($todo['sql_create']){
+								$loop=DB::statement('DROP TABLE  '.env('DB_DATABASE').'.'.$todo['name']);
+
+						$exist[$todo['name']]='DROP';
+						}
+					
+					}
+
+					if(!$check){
+						$exist[$todo['name']]='NOT DROP';
+					}
+
+
+
+			}
+			
+		}
+
+		dd($exist,count($exist));
+	}
 }

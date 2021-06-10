@@ -13,6 +13,8 @@ CREATE TABLE `dash_potensi_lembaga_pemerintahan` (
 	`id_user_desa_ver` bigint(20) DEFAULT NULL,
 	`id_user_kec_ver` bigint(20) DEFAULT NULL,
 	`id_user_kab_valid` bigint(20) DEFAULT NULL,
+  `daftar_draf` boolean DEFAULT 0,
+  
   `Dasar_Hukum_Pembentukan` varchar(100) DEFAULT NULL,
   `Dasar_Hukum_Pembentukan_BPD` varchar(100) DEFAULT NULL,
   `Jumlah_Aparat_Pemerintahan_orang` int(11) DEFAULT NULL,

@@ -1,6 +1,6 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>VALIDASI DATA - {{$nama_daerah}}</h4>
+<h4>{{Auth::User()->can('is_only_daerah_verifikasi')?'VARIFIKASI':'VALIDASI'}} DATA  - {{$nama_daerah}}</h4>
 @stop
 
 

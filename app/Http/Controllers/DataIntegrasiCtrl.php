@@ -126,6 +126,7 @@ class DataIntegrasiCtrl extends Controller
 			->orderBy($maping['level_data']['child']['column_id'],'asc')
 			->where('dt.tahun','=',DB::raw($tahun))
 			->where('dt.kode_desa','like',DB::raw("'".$maping['level_data']['kode_daerah'].'%'."'"))
+			->where('dt.status_validasi',5)			
 			->get();
 
 

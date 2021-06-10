@@ -3,7 +3,7 @@
 
 return [
 "name"=>"dash_perkembangan_lembaga_kemasyarakatan",
-"sql_create"=>"CREATE TABLE `dash_potensi_lembaga_kemasyarakatan` (
+"sql_create"=>"CREATE TABLE `dash_perkembangan_lembaga_kemasyarakatan` (
 	`kode_desa` bigint(20) NOT NULL,
     `tahun` int(11) NOT NULL,
     `status_validasi` int(11) DEFAULT 0,
@@ -12,6 +12,8 @@ return [
     `id_user_desa_ver` bigint(20) DEFAULT NULL,
     `id_user_kec_ver` bigint(20) DEFAULT NULL,
     `id_user_kab_valid` bigint(20) DEFAULT NULL,
+  `daftar_draf` boolean DEFAULT 0,
+    
   `Jumlah_bumdesa` int(11) DEFAULT NULL,
   `Jumlah_RT` int(11) DEFAULT NULL,
   `Jumlah_RW` int(11) DEFAULT NULL,

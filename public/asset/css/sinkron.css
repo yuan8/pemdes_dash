@@ -6,6 +6,9 @@
 	left:auto;
 	right:0;
 }
+.sidebar-menu{
+  white-space:inherit!important;
+}
 .highcharts-container {
   max-width: calc(100%-100px)!important;
 }

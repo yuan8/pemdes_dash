@@ -149,11 +149,112 @@ class MENUPROVIDER extends ServiceProvider
 
                
                 [
-                    'text'=>('VALIDASI DATA'),
+                    'text'=>('VERIFIKASI DAN VALIDASI DATA'),
                     'href'=>route('admin.validasi.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-check',
+                    'can'=>['is_daerah_provinsi','is_regional'],
+
                 ],
+
+                [
+                    'text'=>('DATA'),
+                    'href'=>'#',
+                     'submenu_class'=>"treeview-menu",
+                    
+                    'class'=>'treeview',
+                    'icon'=>'fa fa-check',
+                    'can'=>['is_only_daerah_validasi'],
+                     'submenu'=>[
+                            [
+                                'text'=>('REKAP VALIDASI'),
+                                'href'=>route('admin.validasi.index',['tahun'=>$tahun]),
+                                'class'=>'',
+                                'icon'=>'fa fa-check',
+                                'can'=>['is_only_daerah_validasi']
+                            ],
+                            [
+                                'text'=>('VALIDASI DATA'),
+                                'href'=>route('admin.validasi.index',['tahun'=>$tahun]),
+                                'class'=>'',
+                                'icon'=>'fa fa-check',
+                                'can'=>['is_only_daerah_validasi']
+                            ]
+                    ]
+
+                ],
+
+
+                [
+                    'text'=>('DATA'),
+                    'href'=>'#',
+                    'submenu_class'=>"treeview-menu",
+
+                    'class'=>'treeview',
+                    'icon'=>'fa fa-check',
+                    'can'=>['is_only_daerah_verifikasi'],
+                    'submenu'=>[
+                            [
+                                'text'=>('REKAP'),
+                                'href'=>route('a.b.r.v.index',['tahun'=>$tahun]),
+                                'class'=>'',
+                                'icon'=>'fa fa-check',
+                                'can'=>['is_only_daerah_verifikasi']
+                            ],
+                            [
+                                'text'=>('VERIFIKASI DATA'),
+                                'href'=>route('admin.validasi.index',['tahun'=>$tahun]),
+                                'class'=>'',
+                                'icon'=>'fa fa-check',
+                                'can'=>['is_only_daerah_verifikasi']
+                            ]
+                    ]
+
+                ],
+
+
+                  [
+                    'text'=>('PENJADWALAN'),
+                    'href'=>route('a.p.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-clock',
+                    'can'=>['is_daerah_kabkota']
+                ],
+
+                 [
+                    'text'=>('BERITA ACARA'),
+                    'href'=>"#",
+                    'class'=>'treeview',
+                    'icon'=>'fa fa-check text-green',
+                    'can'=>['is_daerah_kabkota'],
+                    'submenu_class'=>"treeview-menu",
+                    'submenu'=>[
+                        [
+                            'text'=>('BUAT DATA BERITA ACARA'),
+                            'href'=>route('a.b.b.index',['tahun'=>$tahun]),
+                            'class'=>'',
+                            'icon'=>'fa fa-check text-green',
+                            'can'=>['is_daerah_kabkota'],
+                        ],
+                        [
+                            'text'=>('BERITA ACARA'),
+                            'href'=>route('admin.validasi.index',['tahun'=>$tahun]),
+                            'class'=>'',
+                            'icon'=>'fa fa-check text-green',
+                            'can'=>['is_daerah_kabkota'],
+                        ]
+
+                    ]
+                ],
+                [
+                    'text'=>('BERITA ACARA'),
+                    'href'=>route('admin.dataview.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
+                    'can'=>['is_only_daerah_verifikasi']
+
+                ],
+
                
                 [
                     'text'=>('DATASET'),

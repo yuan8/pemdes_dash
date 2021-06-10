@@ -13,6 +13,8 @@ CREATE TABLE `dash_potensi_sarpras_kominfo` (
 	`id_user_desa_ver` bigint(20) DEFAULT NULL,
 	`id_user_kec_ver` bigint(20) DEFAULT NULL,
 	`id_user_kab_valid` bigint(20) DEFAULT NULL,
+  `daftar_draf` boolean DEFAULT 0,
+  
   `Telepon_umum` double DEFAULT NULL,
   `Wartel` double DEFAULT NULL,
   `Warnet` double DEFAULT NULL,

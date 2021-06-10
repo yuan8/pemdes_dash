@@ -12,6 +12,8 @@ return [
     `id_user_desa_ver` bigint(20) DEFAULT NULL,
     `id_user_kec_ver` bigint(20) DEFAULT NULL,
     `id_user_kab_valid` bigint(20) DEFAULT NULL,
+	`daftar_draf` boolean DEFAULT 0,
+    
 	  `jenis_organisasi` varchar(255) DEFAULT NULL,
 	  `kepengurusan` varchar(255) DEFAULT NULL,
 	  `jumlah_buku_administrasi` double DEFAULT NULL,

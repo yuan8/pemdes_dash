@@ -13,6 +13,8 @@ return [
 	    `id_user_desa_ver` bigint(20) DEFAULT NULL,
 	    `id_user_kec_ver` bigint(20) DEFAULT NULL,
 	    `id_user_kab_valid` bigint(20) DEFAULT NULL,
+	`daftar_draf` boolean DEFAULT 0,
+	    
   `Jumlah_Keluarga_Memiliki_Tanah` int(11) DEFAULT NULL,
   `Jumlah_Keluarga_Tidak_Memiliki_Tanah` int(11) DEFAULT NULL,
   `Memiliki_Kurang_10_Ha` int(11) DEFAULT NULL,

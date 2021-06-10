@@ -13,6 +13,8 @@ CREATE TABLE `dash_potensi_sarpras_kesehatan` (
 	`id_user_desa_ver` bigint(20) DEFAULT NULL,
 	`id_user_kec_ver` bigint(20) DEFAULT NULL,
 	`id_user_kab_valid` bigint(20) DEFAULT NULL,
+  `daftar_draf` boolean DEFAULT 0,
+  
   `Rumah_sakit_umum` double DEFAULT NULL,
   `Puskesmas` double DEFAULT NULL,
   `Puskesmas_pembantu` double DEFAULT NULL,

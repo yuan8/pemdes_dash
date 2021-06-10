@@ -12,6 +12,8 @@ return [
     `id_user_desa_ver` bigint(20) DEFAULT NULL,
     `id_user_kec_ver` bigint(20) DEFAULT NULL,
     `id_user_kab_valid` bigint(20) DEFAULT NULL,
+  `daftar_draf` boolean DEFAULT 0,
+    
   `Curah_Hujan_mm` double DEFAULT NULL,
   `Jumlah_Bulan_Hujan_bulan` double DEFAULT NULL,
   `Kelembapan_Udara_persen` double DEFAULT NULL,

@@ -1,6 +1,8 @@
 <?php
 
 include __DIR__ .'/web_console.php';
+include __DIR__ .'/web_berita_acara.php';
+
 
 Route::get((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'/'),function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);
@@ -127,7 +129,7 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 		Route::post('/update/access/{id}','ADMIN\UserCtrl@up_access')->name('admin.users.up_access')->middleware(['can:is_super']);
 	});
 
-	Route::prefix('data-view')->group(function(){
+	Route::prefix('data-view')->middleware('can:is_admin')->group(function(){
 		Route::get('/','ADMIN\DataViewCtrl@index')->name('admin.dataview.index');
 		Route::get('form-edit/{id}','ADMIN\DataViewCtrl@edit')->name('admin.dataview.edit');
 		Route::get('form-delete/{id}','ADMIN\DataViewCtrl@form_delete')->name('admin.dataview.form_delete');

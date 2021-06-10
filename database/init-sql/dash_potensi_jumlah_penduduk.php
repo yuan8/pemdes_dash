@@ -12,6 +12,8 @@ return [
     `id_user_desa_ver` bigint(20) DEFAULT NULL,
     `id_user_kec_ver` bigint(20) DEFAULT NULL,
     `id_user_kab_valid` bigint(20) DEFAULT NULL,
+  `daftar_draf` boolean DEFAULT 0,
+    
   `Jumlah_Laki_Laki_orang` int(11) DEFAULT NULL,
   `Jumlah_Perempuan_orang` int(11) DEFAULT NULL,
   `Jumlah_Total_orang` int(11) DEFAULT NULL,

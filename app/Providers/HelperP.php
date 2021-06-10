@@ -29,6 +29,26 @@ class HelperP extends ServiceProvider
         //
     }
 
+    static function color_status_data($status,$lock){
+        $color='';
+        if($status==0 OR $status==null){
+            $color='bg-danger';
+        }
+        elseif($status==1){
+            $color='bg-gray';
+        }elseif($status==2){
+            $color='bg-success';
+        }elseif($status==3){
+            if($lock){
+                $color='bg-teal';
+            }else{
+                $color='bg-info';
+            }
+        }
+
+        return $color;
+    }
+
 
     static function roleName($role){
         switch ($role) {
@@ -236,7 +256,7 @@ class HelperP extends ServiceProvider
             ['id'=>2,'text'=>'Telah Diverifikasi Tingkat Desa'],
             ['id'=>3,'text'=>'Telah Diverifikasi Tingkat Kecamatan'],
             ['id'=>4,'text'=>'Telah Diverifikasi Tingkat Kabupaten/Kota'],
-            ['id'=>5,'text'=>'Data Final Dan Sudah Terdapat Berita Acara'],
+            ['id'=>5,'text'=>'Data Final'],
         ];
         return $data;
     }
@@ -290,7 +310,7 @@ class HelperP extends ServiceProvider
             break;
             case 5:
             # code...
-            return 'Data Final Dan Sudah Terdapat Berita Acara';
+            return 'Data Final';
             break;
             
             default:

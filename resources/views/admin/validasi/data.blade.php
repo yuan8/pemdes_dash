@@ -2,6 +2,18 @@
 @section('content_header')
 <h4>{{$GLOBALS['tahun_access']}} - VALIDASI DATA <b>{{($daerah)}}</b></h4>
 <hr style="border-color: #fff">
+@if($time_count_down??0 > 0)
+	
+	
+	<div  id="time_count">
+				<h5><b>WAKTU PENGISIAN : </b>
+					<span class="badge bg-maroon"><b><i>@{{days}} Hari</i></b> <b><i>@{{hours}} Jam</i></b>
+					<b><i>@{{minutes}} Menit</i></b>
+					<b><i>@{{seconds}} Detik</i></b></span>
+				</h5>
+	</div>
+@endif
+
 <div class="form-group">
 	<label>DATA</label>
 	<form method="get" action="{{url()->full()}}">
@@ -42,8 +54,9 @@
 	<script type="text/javascript">
 		$('#data').select2();
 	</script>
-</div>
-<hr style="border-color: #fff">
+	</div>
+	<hr style="border-color: #fff">
+	
 
 <div class="row bg-navy no-gutter" style=" padding-top: 10px;" >
 	<div class="col-md-12">
@@ -131,6 +144,8 @@
 
 @section('content')
 
+
+
 <div class="box box-primary">
 	<div class="box-header with-border">
 		<form action="" method="get" action="{{url()->full()}}">
@@ -171,6 +186,24 @@
 		</form>
 	</div>
 	<div class="box-body ">
+		@if(strlen($kode_daerah)==6)
+		<div class="row bg-maroon">
+			@if(Auth::User()->can('is_only_daerah_verifikasi'))
+				<div class="col-md-12 text-center" style="border-top:2px solid #fff; padding-bottom: 10px; padding-top: 10px;" >
+					<p class="text-center"><b><i>
+
+					KUNCI  "{{$nama_data}}" TERVERIFIKASI  KEDALAM DRAF BERITA ACARA</i></b> </p>
+					<form>
+					@csrf
+					<input type="hidden" name="id_map" value="{{$data_index}}">
+					<button class="btn bg-navy" type="submit"><i class="fa fa-key"></i> KUNCI DATA</button>
+				</form>
+				</div>
+				
+			@endif
+		@endif
+</div>
+		<h5><b>TOTAL DATA : {{count($data)}} DATA</b></h5>
 		@if(count($data)>0)
 
 			<div class="table-responsive">
@@ -186,6 +219,8 @@
 					<th rowspan="2" >NAMA KOTA/KAB</th>
 					<th rowspan="2" >NAMA PROVINSI</th>
 					<th rowspan="2" >STATUS DATA</th>
+					<th rowspan="2" >DATA BERITA ACARA</th>
+
 
 
 					@foreach($table_map['columns'] as $key=>$x)
@@ -210,7 +245,8 @@
 			@endphp
 			<tbody id="table-verifikasi-data">
 				@foreach ($data as $d)
-					<tr>
+				
+					<tr class="{{HP::color_status_data($d->status_data,$d->daftar_draf)}}">
 						<td></td>
 						<td>{{$d->id}}</td>
 						<td>{{$d->updated_at?Carbon\Carbon::parse($d->updated_at)->format('d F Y'):'-'}}</td>
@@ -220,24 +256,31 @@
 						<td>{{$d->nama_kecamatan}}</td>
 						<td>{{$d->nama_kota}}</td>
 						<td>{{$d->nama_provinsi}}</td>
+
 						<td>{{HP::verifikasi_status($d->status_data)}}</td>
+						<td>{{$d->daftar_draf?'YA':'TIDAK'}}</td>
+						
 						@php
 							$data_colm=(array)$d;
 						@endphp
 						@foreach ($table_map['columns'] as $key=>$c)
+						
 							<td>{!!$c['definisi']??'...'!!}</td>
 							<td>{{HPV::nformat($data_colm[$key]??'-')}}</td>
 							@php
+							
 								if((!isset($total[$key])) and ($c['tipe_data']=='numeric') ){
 									$total[$key]=0;
 								}
 
-								if(($c['tipe_data']='numeric')){
+								if(($c['tipe_data']=='numeric')){
 									if(in_array($c['aggregate_type'], ['SUM'])){
 										$total[$key]+=(double)$data_colm[$key];
 									}
 								}
-								
+
+
+
 							@endphp
 							{{-- expr --}}
 						@endforeach
@@ -248,6 +291,7 @@
 					</tr>
 
 				@endforeach
+
 				<tr id="tr-total" class="bg-primary">
 					<td colspan="8"><b>JUMLAH TOTAL</b></td>
 
@@ -329,4 +373,46 @@
 			}
 
 	</script>
+
+	<script type="text/javascript">
+		var time_count=new Vue({
+			el:"#time_count",
+			data:{
+				timeleft:{{$time_count_down}},
+				days:null,
+				hours:null,
+				minutes:null,
+				seconds:null
+
+			},
+			methods:{
+				time_count_down(){
+						this.timeleft = this.timeleft - ((1000));
+			    			console.log(this.timeleft);
+						 this.days = Math.floor(this.timeleft / (1000 * 60 * 60 * 24));
+						 this.hours = Math.floor((this.timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+						this.minutes = Math.floor((this.timeleft % (1000 * 60 * 60)) / (1000 * 60));
+						this.seconds = Math.floor((this.timeleft % (1000 * 60)) / 1000);
+
+						setTimeout(function(){
+							time_count.time_count_down();
+						},1000);
+				}
+			}
+		});
+
+		if($('#time_count').html()!=undefined){
+			time_count.time_count_down();
+		}
+
+
+
+
+
+
+		
+
+
+	</script>
+
 @stop

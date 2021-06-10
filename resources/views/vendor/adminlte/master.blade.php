@@ -93,6 +93,11 @@
 <body class="hold-transition @yield('body_class')" >
 
 @yield('body')
+<style type="text/css">
+  .sidebar-menu{
+  white-space:inherit!important;
+}
+</style>
 
 <div id="modal_sm" class="modal fade" role="dialog">
       <div class="modal-dialog">

@@ -17,6 +17,39 @@ class ValidasiCtrl extends Controller
 {
     
 
+    public function rekap_verifikasi($tahun){
+        $U=Auth::User();
+       $map=(array)DB::table('master_table_map as t')->where('edit_daerah',true)->get()->toArray();
+       $jumlah_desa=DB::table('master_desa')->where('kddesa','like',$U->kode_daerah.'%')->count();
+       $m_r=[];
+      
+       foreach ($map as $key => $m) {
+
+            if(DB::table('INFORMATION_SCHEMA.TABLES')
+            ->where([
+                ['TABLE_SCHEMA','=',config('database.connections.production.database')],
+                ['TABLE_NAME','like',trim($m->table)]
+            ])->first()){
+
+                $m->jumlah_desa=$jumlah_desa;
+                $m->rekap=(array)DB::table($m->table.' as dt')
+                ->whereRaw("dt.tahun=".$tahun." 
+                    and dt.kode_desa like '".$U->kode_daerah."%'")
+                ->selectRaw(
+                    implode(', ',["sum(case when status_validasi=2 then 1 else 0 end) as kat_2",
+                    "sum(case when status_validasi=3 then 1 else 0 end) as kat_3",
+                    "sum(case when status_validasi=5 then 1 else 0 end) as kat_5"])
+                )->first();
+                $m=(array)$m;
+                $m_r[]=$m;
+            }
+       }
+       return view('admin.validasi.rekap_verifikasi.index')->with('data',$m_r);
+
+       // dd($map);
+
+    }
+
     static function daerah_level($kode_daerah){
     	$count=strlen($kode_daerah);
 
@@ -230,10 +263,15 @@ class ValidasiCtrl extends Controller
     		$maping['column'][]="dt.status_validasi as status_data";
     		$maping['column'][]="dt.validasi_date as valid_date";
     		$maping['column'][]="dt.updated_at as updated_at";
+            $maping['column'][]="dt.daftar_draf as daftar_draf";
+
 
     		$defwhere=[
-    			['da.kddesa','like',DB::raw("'".$maping['level_data']['kode_daerah'].'%'."'")]
+    			['da.kddesa','like',DB::raw("'".$maping['level_data']['kode_daerah'].'%'."'")
+                ]
     		];
+
+            $defwhere_rekap=$defwhere;
     		
 
     		$defJoin=[
@@ -291,20 +329,23 @@ class ValidasiCtrl extends Controller
 				foreach ($OrWhere as $key => $value) {
 					if($key==0){
 						$data_query=$data_query->where($value);
-						$rekap=$rekap->where($value);
+						// $rekap=$rekap->where($value);
 
 					}
 						$data_query=$data_query->orWhere($value);
-						$rekap=$rekap->orWhere($value);
+						// $rekap=$rekap->orWhere($value);
 
 
 				}
 			}else{
 				$data_query=$data_query->where($defwhere);
-				$rekap=$rekap->where($defwhere);
+				// $rekap=$rekap->where($defwhere);
 
 			}
 			
+
+            $rekap=$rekap->where($defwhere_rekap);
+
 
 			$data_query=$data_query->get();
 
@@ -336,6 +377,7 @@ class ValidasiCtrl extends Controller
 
 
 
+
 			$req=$check_access['kode_daerah'];
 			$req['data']=$request->data;
 			$req['status_daerah']=$request->status_daerah;
@@ -351,15 +393,29 @@ class ValidasiCtrl extends Controller
 				'verifikasi'=>$rekap['jumlah_desa_ver_'.strlen($access_data_daerah)]
 			];
 
+            $time_input=DB::table('tb_jadwal_pengisian')
+            ->where('kode_daerah',substr($access_data_daerah,0,4))
+            ->where('level',strlen($access_data_daerah))
+            ->first();
+            $dif=null;
+            if($time_input){
+                $now=Carbon::now();
+                $last=Carbon::parse($time_input->selesai);
+                $dif=$now->diffAsCarbonInterval($last);
+                $dif=($dif->total('milliseconds'));
+
+            }
+
 			return view('admin.validasi.data')
 		->with(
 				[
 					'daerah'=>$check_access['nama_daerah'],
 					'table_map'=>$maping,
-					'data'=>$data_query,
+					'data'=>(array)$data_query->toArray(),
 					'req'=>$req,
 					'data_index'=>$request->data,
 					'table'=>$table,
+                    'time_count_down'=>$dif,
 					'rekap'=>$verifikasi,
 					'nama_data'=>$maping['data_name'],
 					'kode_daerah'=>$access_data_daerah

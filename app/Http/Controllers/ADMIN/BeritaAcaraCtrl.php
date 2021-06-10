@@ -12,6 +12,15 @@ use Carbon\Carbon;
 class BeritaAcaraCtrl extends Controller
 {
 
+    public function buat_index($tahun,Request $request){
+        $jenis_data=DB::table('master_table_map')->where([
+            ['edit_daerah','=',true],
+
+        ])->get();
+        $kecamatan=[];
+        return view('admin.beritaacara.buat.index')->with(['jenis_data'=>$jenis_data,'kecamatan'=>$kecamatan]);
+    }
+
     public function build($tahun,Request $request){
     	$access_data_daerah=$request->kddesa??$request->kdkecamatan??$request->kdkabkota??$request->kdprovinsi;
     	$check_access=HP::check_access($access_data_daerah);

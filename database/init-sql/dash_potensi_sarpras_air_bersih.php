@@ -13,6 +13,8 @@ CREATE TABLE `dash_potensi_sarpras_air_bersih` (
 	`id_user_desa_ver` bigint(20) DEFAULT NULL,
 	`id_user_kec_ver` bigint(20) DEFAULT NULL,
 	`id_user_kab_valid` bigint(20) DEFAULT NULL,
+  `daftar_draf` boolean DEFAULT 0,
+  
   `sumur_pompa` int(11) DEFAULT NULL,
   `sumur_gali` int(11) DEFAULT NULL,
   `hidran_umum` int(11) DEFAULT NULL,
