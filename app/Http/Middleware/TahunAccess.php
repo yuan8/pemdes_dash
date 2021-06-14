@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use DB;
 use Carbon\Carbon;
+use Auth;
 class TahunAccess
 {
     /**
@@ -56,24 +57,53 @@ class TahunAccess
           session(['popup_available_run'=>false]);
 
         }
-        
-
-
 
         if(!isset($GLOBALS['list_tahun_access'])){
             $GLOBALS['list_tahun_access']=(DB::table('tahun_access')->select('tahun')->orderBy('tahun','desc')->limit(5)->get()->pluck('tahun'));
         }
+        
+              
+        if(static::is_api($request)){
+              return $next($request);
+          
+        }
+
+        if($tahun){
+            $GLOBALS['tahun_access']=$tahun;
+            if(Auth::check()){
+              return $next($request);
+            }else{
+
+              if($tahun >=date('Y')){
+                 return redirect()->route('index',['tahun'=>(date('Y')-1)]);
+              }else if($tahun<(date('Y')-5) ){
+                return redirect()->route('index',['tahun'=>(date('Y')-1)]);
+              }else{
+                return $next($request);
+
+              }
+             
+            }
+        }else{
+          return redirect()->route('index',['tahun'=>(date('Y')-1)]);
+        }
+
+
+
+
+        
 
         if((int)$tahun<2020){
 
               if (!static::is_api($request)) {
                     return redirect()->route('index',['tahun'=>$GLOBALS['list_tahun_access'][0]]);
-            }
+              }
 
         }
 
 
-         if(!in_array($tahun,$GLOBALS['list_tahun_access']->toArray())){
+
+      if(!in_array($tahun,$GLOBALS['list_tahun_access']->toArray())){
               if (!static::is_api($request)) {
 
                   return redirect()->route('index',['tahun'=>$GLOBALS['list_tahun_access'][0]]);
@@ -83,6 +113,7 @@ class TahunAccess
 
         if((empty($tahun)) OR (!is_numeric($tahun))){
               if (!static::is_api($request)) {
+                    dd($url_new,$pre);
                 return redirect()->route('index',['tahun'=>date('Y')]);
             }
         }else{

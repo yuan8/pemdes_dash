@@ -182,7 +182,9 @@ return [
          Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
          
          App\Providers\ChatterServiceProvider::class,
-         Kreait\Laravel\Firebase\ServiceProvider::class
+         Kreait\Laravel\Firebase\ServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+
 
     ],
 
@@ -245,10 +247,7 @@ return [
         'WEBSET' => App\Providers\SettingWebProvider::class,
         'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
         'Visitor' => Shetabit\Visitor\Facade\Visitor::class,
-
-
-
-        
+          'PDF' => Barryvdh\DomPDF\Facade::class,
 
 
 

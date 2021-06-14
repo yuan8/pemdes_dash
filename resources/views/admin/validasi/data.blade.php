@@ -2,15 +2,18 @@
 @section('content_header')
 <h4>{{$GLOBALS['tahun_access']}} - VALIDASI DATA <b>{{($daerah)}}</b></h4>
 <hr style="border-color: #fff">
+@php
+	$berita_acara=HP::berita_acara($kode_daerah,$GLOBALS['tahun_access'],$table_map['id_map']);
+@endphp
 @if($time_count_down??0 > 0)
 	
 	
 	<div  id="time_count">
-				<h5><b>WAKTU PENGISIAN : </b>
-					<span class="badge bg-maroon"><b><i>@{{days}} Hari</i></b> <b><i>@{{hours}} Jam</i></b>
-					<b><i>@{{minutes}} Menit</i></b>
-					<b><i>@{{seconds}} Detik</i></b></span>
-				</h5>
+		<h5><b>WAKTU PENGISIAN : </b>
+			<span class="badge bg-maroon"><b><i>@{{days}} Hari</i></b> <b><i>@{{hours}} Jam</i></b>
+			<b><i>@{{minutes}} Menit</i></b>
+			<b><i>@{{seconds}} Detik</i></b></span>
+		</h5>
 	</div>
 @endif
 
@@ -24,7 +27,6 @@
 			@endforeach
 			<select class="form-control" name="data"  id="data" onchange="$(this).parent().parent().parent().submit()">
 				@foreach($table as $key=>$t)
-				
 					<option value="{{$t->id}}" {{$data_index==$t->id?'selected':''}}>{{$t->name}}</option>
 				@endforeach
 			</select>
@@ -99,7 +101,7 @@
 
 		<div class="box-solid box bg-blue">
 			<div class="box-header with-border">
-				<h4 class="text-capitalize"><b>Terverifikasi {{strtolower(HP::verifikasi_status_level($kode_daerah)['level'])}} </b></h4>
+				<h4 class="text-capitalize"><b>Terverifikasi {{strtolower(HP::verifikasi_status_level(strlen($kode_daerah)<=6?'101010':$kode_daerah)['level'])}} </b></h4>
 			</div>
 			<div class="box-body">
 				<p>{{HPV::nformat($rekap['verifikasi'])}} DESA</p>
@@ -110,18 +112,31 @@
 	<div class="col-md-12">
 		<h5>AKSI</h5>
 		<div class="btn-group">
-			@php
-				$berita_acara=HP::berita_acara($kode_daerah,$GLOBALS['tahun_access'],$table_map['id_map']);
-			@endphp
+		
 
-			@can('is_daerah_provinsi')
-				<a href="" class="btn btn-warning"> Download Data</a>
-			@endcan
+			{{-- @can('is_daerah_provinsi')
+				<a href="" class="btn btn-warning"> DOWNLOAD DATA</a>
+			@endcan --}}
 			@if($berita_acara['access'])
 				@if($berita_acara['berita_acara'])
-					<a href="" class="btn btn-primary">DOWNLOAD DATA</a>
+					<a href="{{$berita_acara['berita_acara']}}" download="" class="btn btn-primary">DOWNLOAD BERITA ACARA</a>
+						@if($time_count_down and (strlen($kode_daerah)==4))
+
+							<button onclick="hapus_berita_acara('{{route('admin.validasi.berita_acara.delete',array_merge(['tahun'=>$GLOBALS['tahun_access'],'kdkabkota'=>$req['kdkabkota'],'data'=>$req['data']]))}}')" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS BERITA ACARA</button>
+						@else
+						@can('is_admin')
+						@if((strlen($kode_daerah)==4))
+						<button onclick="hapus_berita_acara('{{route('admin.validasi.berita_acara.delete',array_merge(['tahun'=>$GLOBALS['tahun_access'],'kdkabkota'=>$req['kdkabkota'],'data'=>$req['data']]))}}')" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS BERITA ACARA</button>
+						@endif
+						@endcan
+					@endif
 				@else
-					<a href="{{ route('admin.validasi.berita_acara.build',array_merge(['tahun'=>$GLOBALS['tahun_access'],'kdkabkota'=>$req['kdkabkota'],'data'=>$req['data']])) }}" class="btn btn-danger">BUAT BERITA ACARA</a>
+					@can('is_daerah_kabkota_n_admin')
+					@if((strlen($kode_daerah)==4))
+					<a href="javascript:void(0)" onclick="build_berita_acara('{{route('admin.validasi.berita_acara.build',array_merge(['tahun'=>$GLOBALS['tahun_access'],'kdkabkota'=>$req['kdkabkota'],'data'=>$req['data']]))}}')" class="btn btn-danger">BUAT BERITA ACARA</a>
+					@endif
+					@endcan
+
 					<a href="{{url()->full().'&export_format=FORM'}}" download="" class="btn btn-primary"> DOWNLOAD FORM</a>
 					<a href="{{route('admin.validasi.upload',['tahun'=>$GLOBALS['tahun_access'],'kdprovinsi'=>$req['kdprovinsi'],'kdkabkota'=>$req['kdkabkota'],'kdkecamatan'=>$req['kdkecamatan'],'kddesa'=>$req['kddesa'],'data'=>$req['data']])}}" class="btn btn-success ">UPLOAD DATA PERUBAHAN</a>
 				@endif
@@ -146,6 +161,10 @@
 
 
 
+@if($berita_acara['berita_acara'])
+<iframe src="{{$berita_acara['berita_acara']}}" style="width:100%; border:none; height: 500px;" ></iframe>
+	
+@else
 <div class="box box-primary">
 	<div class="box-header with-border">
 		<form action="" method="get" action="{{url()->full()}}">
@@ -166,11 +185,20 @@
 				<div class="col-md-4">
 					<div class="form-group">
 						<label>VERIFIKASI STATUS</label>
+						@php
+						@endphp
 						<select class="form-control" name="verifikasi_status" onchange="$(this).parent().parent().parent().parent().submit()">
-							<option value="">SEMUA</option>
+							<option value="NULL">Semua</option>
 							@foreach (HP::verifikasi_list() as $vl)
-
-								<option value="{{$vl['id']}}" {{$vl['id']==$req['verifikasi_status']?'selected':''}}>{{$vl['text']}}</option>
+								@php
+									if($req['verifikasi_status']!==NULL){
+										$sel=(($vl['id']===(int)$req['verifikasi_status'])?'selected':'');
+									}else{
+										$sel='';
+									}
+									
+								@endphp
+								<option value="{{$vl['id']}}" {{$sel}} >{{$vl['text']}}</option>
 								{{-- expr --}}
 							@endforeach
 						</select>
@@ -197,12 +225,12 @@
 					@csrf
 					<input type="hidden" name="id_map" value="{{$data_index}}">
 					<button class="btn bg-navy" type="submit"><i class="fa fa-key"></i> KUNCI DATA</button>
-				</form>
+					</form>
 				</div>
 				
 			@endif
+		</div>
 		@endif
-</div>
 		<h5><b>TOTAL DATA : {{count($data)}} DATA</b></h5>
 		@if(count($data)>0)
 
@@ -211,6 +239,8 @@
 			<thead>
 				<tr>
 					<th rowspan="2" style="width:80px;">AKSI</th>
+					<th rowspan="2" style="width:80px;" >NO</th>
+
 					<th rowspan="2" >KODE</th>
 					<th rowspan="2" >UPDATED AT</th>
 					<th rowspan="2" >NAMA DESA</th>
@@ -219,7 +249,6 @@
 					<th rowspan="2" >NAMA KOTA/KAB</th>
 					<th rowspan="2" >NAMA PROVINSI</th>
 					<th rowspan="2" >STATUS DATA</th>
-					<th rowspan="2" >DATA BERITA ACARA</th>
 
 
 
@@ -244,10 +273,12 @@
 				$total=[];
 			@endphp
 			<tbody id="table-verifikasi-data">
-				@foreach ($data as $d)
+				@foreach ($data as $keyd=> $d)
 				
 					<tr class="{{HP::color_status_data($d->status_data,$d->daftar_draf)}}">
 						<td></td>
+						<td>{{$keyd+1}}</td>
+
 						<td>{{$d->id}}</td>
 						<td>{{$d->updated_at?Carbon\Carbon::parse($d->updated_at)->format('d F Y'):'-'}}</td>
 
@@ -258,7 +289,6 @@
 						<td>{{$d->nama_provinsi}}</td>
 
 						<td>{{HP::verifikasi_status($d->status_data)}}</td>
-						<td>{{$d->daftar_draf?'YA':'TIDAK'}}</td>
 						
 						@php
 							$data_colm=(array)$d;
@@ -293,7 +323,7 @@
 				@endforeach
 
 				<tr id="tr-total" class="bg-primary">
-					<td colspan="8"><b>JUMLAH TOTAL</b></td>
+					<td colspan="10"><b>JUMLAH TOTAL</b></td>
 
 				@foreach ($table_map['columns'] as $key=>$c)
 					@if($c['tipe_data']=='numeric')
@@ -326,6 +356,7 @@
 		
 	</div>
 </div>
+@endif
 
 @stop
 
@@ -405,14 +436,76 @@
 			time_count.time_count_down();
 		}
 
+		function build_berita_acara(url){
+			$('#build_berita_acara form').attr('action',url);
+			$('#build_berita_acara .pre').attr('href',url+'&preview=true');
 
+			$('#build_berita_acara ').modal();
 
+		}
 
-
-
+		function hapus_berita_acara(url){
+			$('#hapus_berita_acara form').attr('action',url);
 		
+			$('#hapus_berita_acara ').modal();
 
-
+		}
 	</script>
+
+
+	@if($berita_acara['berita_acara'])
+	<div class="modal fade" id="hapus_berita_acara">
+		<div class="modal-dialog">
+			<form action="" method="post">
+				@method('DELETE')
+
+				@csrf
+				<div class="modal-content">
+					<input type="hidden" name="redirect" value="{{url()->full()}}">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">HAPUS BERITA ACARA {{strtoupper($nama_data)}}</h4>
+				</div>
+				<div class="modal-body">
+					<p class="text-red">PENGHAPUSAN BERITA ACARA, HASIL BERITA ACARA TIDAK DAPAT DILIHAT KEMBALI</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				
+					<button type="submit" class="btn btn-primary">SETUJU</button>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+	@endif
+
+
+	@if($berita_acara['access_berita_acara'])
+	<div class="modal fade" id="build_berita_acara">
+		<div class="modal-dialog">
+			<form action="" method="post">
+
+				@csrf
+				<div class="modal-content">
+					<input type="hidden" name="redirect" value="{{url()->full()}}">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">BUAT BERITA ACARA {{strtoupper($nama_data)}}</h4>
+				</div>
+				<div class="modal-body">
+					<p>PASTIKAN DATA TELAH VALID!</p>
+					<p class="text-red">ANDA TIDAK DI PERBOLEHKAN KEMBALI MELAKUKAN EDITING DATA SETELAH PEMBUATAN BERITA ACARA INI</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<a target="_blank"  href=""  class="pre btn btn-info">PREVIEW</a>
+					<button type="submit" class="btn btn-primary">SETUJU</button>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+	@endif
 
 @stop

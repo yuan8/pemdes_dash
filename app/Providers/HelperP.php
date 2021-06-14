@@ -251,12 +251,12 @@ class HelperP extends ServiceProvider
 
     static function verifikasi_list(){
         $data=[
-            ['id'=>0,'text'=>"-"],
-            ['id'=>1,'text'=>'Hold Data'],
+            ['id'=>0,'text'=>"Data Terintegrasi"],
+            ['id'=>1,'text'=>'Data Tidak Terintegrasi'],
             ['id'=>2,'text'=>'Telah Diverifikasi Tingkat Desa'],
             ['id'=>3,'text'=>'Telah Diverifikasi Tingkat Kecamatan'],
             ['id'=>4,'text'=>'Telah Diverifikasi Tingkat Kabupaten/Kota'],
-            ['id'=>5,'text'=>'Data Final'],
+            ['id'=>5,'text'=>'Telah Divalidasi'],
         ];
         return $data;
     }
@@ -290,11 +290,11 @@ class HelperP extends ServiceProvider
         switch ($status) {
             case 0:
                 # code...
-            return 'Lookup Data Integrasi';
+            return 'Data Terintegrasi';
                 break;
             case 1:
             # code...
-            return 'Hold Data';
+            return 'Data Tidak Terintegrasi';
             break;
             case 2:
             # code...
@@ -310,7 +310,7 @@ class HelperP extends ServiceProvider
             break;
             case 5:
             # code...
-            return 'Data Final';
+            return 'Telah Divalidasi';
             break;
             
             default:
@@ -379,7 +379,7 @@ class HelperP extends ServiceProvider
                 'name_column'=>$val->name_column,
                 'satuan'=>$val->satuan,
                 'tipe_data'=>$val->tipe_data,
-
+                'flag'=>'data_'.$key,
                 'aggregate_type'=>$val->aggregate_type,
                 'interval_nilai'=>$val->interval_nilai,
                 'definisi'=>$val->definisi,
@@ -575,37 +575,28 @@ class HelperP extends ServiceProvider
 
     static function berita_acara($kode_daerah,$tahun,$id_table){
         $len=strlen($kode_daerah);
+        $kode_kota=substr($kode_daerah,0,4);
+        $kode_kota=substr($kode_daerah,0,4);
 
+        $berita=file_exists(storage_path('app/public/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.$id_table.'-full.pdf'));
+      
         if($len==4){
-            $berita=(array)DB::table('tb_berita_acara')->where([
-                ['tahun','=',$tahun],
-                ['kode_daerah','=',substr($kode_daerah,0,4)],
-                ['id_table_map','=',$id_table]
-            ])->first();
-
-            if($berita){
-                return [
-                    'access'=>true,
-                    'access_form'=>false,
-                    'berita_acara'=>$berita
-                 ];
-            }else{
-                return [
-                    'access'=>true,
-                    'access_form'=>true,
-
-                    'berita_acara'=>false
-                 ];
-            }
-        }else{
-            return [
-
-                'access'=>false,
-                'access_form'=>true,
-
-                'berita_acara'=>false
+             return [
+                'access'=>true,
+                'access_form'=>false,
+                'access_berita_acara'=>Auth::User()->can('is_daerah_kabkota_n_admin'),
+                'berita_acara'=>$berita?url('storage/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.$id_table.'-full.pdf'):null
             ];
-        }
+         }else if($len>4){
+            return [
+                'access'=>true,
+                'access_form'=>false,
+                'access_berita_acara'=>Auth::User()->can('is_daerah_kabkota_n_admin'),
+                'berita_acara'=>$berita?route('admin.validasi.berita_acara.build_daerah',['tahun'=>$tahun,'data'=>$id_table,'kode_daerah'=>$kode_daerah]):null
+            ];
+         }
+       
+            
     }
 
 

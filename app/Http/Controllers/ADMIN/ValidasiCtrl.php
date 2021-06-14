@@ -8,11 +8,10 @@ use Auth;
 use DB;
 use HP;
 use Carbon\Carbon;
-use Alert;
 use App\User;
 use Notification;
 use App\Notifications\UpdateData;
-
+use Alert;
 class ValidasiCtrl extends Controller
 {
     
@@ -219,16 +218,40 @@ class ValidasiCtrl extends Controller
 
 
     public function data($tahun,Request $request){
-       
 
     	$access_data_daerah=$request->kddesa??$request->kdkecamatan??$request->kdkabkota??$request->kdprovinsi;
     	$check_access=static::check_access($access_data_daerah);
+        $time_input=DB::table('tb_jadwal_pengisian')
+            ->where('kode_daerah',substr($access_data_daerah,0,4))
+            ->where('level',strlen($access_data_daerah))
+            ->first();
+
+
+
+
+
 
 
     	$mapTb=DB::table('master_table_map as m')
     	->join('master_column_map as c',[['m.id','=','c.id_ms_table'],['c.validate','=',DB::raw(true)]])
     	->selectRaw('m.*,m.id as id_map')->where('m.id',$request->data)
     	->first();
+
+         $dif=0;
+        if($time_input){
+            $now=Carbon::now();
+            $last=Carbon::parse($time_input->selesai);
+            if($now->lte($last)){
+                 $dif=$now->diffAsCarbonInterval($last);
+                $dif=($dif->total('milliseconds'));
+            }else{
+                $dif=0;
+               
+            }
+
+
+        }
+
 
         $jadwal_status=HP::check_jadwal_pengisian($access_data_daerah,$tahun);
         $expt_jadwal=[
@@ -237,11 +260,11 @@ class ValidasiCtrl extends Controller
             'nama_data'=>$mapTb->name
         ];
 
-     //    if($request->export_format=='FORM' and $expt_jadwal['status_jadwal']!=1){
-     //            return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
-     //    }else if($expt_jadwal['status_jadwal']>1 OR $expt_jadwal['status_jadwal']<1 ){
-     //            return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
-     //    }
+
+
+        if( $expt_jadwal['status_jadwal']<1){
+                return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
+        }
 
         // dd($jadwal_status);
 
@@ -286,9 +309,11 @@ class ValidasiCtrl extends Controller
     		$OrWhere=[];
 
     		
-
-    		if($request->verifikasi_status){
-    			$defwhere[]=['dt.status_validasi','=',$request->verifikasi_status];
+            if($request->verifikasi_status=='NULL'){
+                $request->verifikasi_status=NULL;
+            }
+    		if(($request->verifikasi_status!=NULL)){
+    			$defwhere[]=['dt.status_validasi','=',(int)$request->verifikasi_status];
 
     		}
     		if($request->status_daerah){
@@ -377,11 +402,10 @@ class ValidasiCtrl extends Controller
 
 
 
-
 			$req=$check_access['kode_daerah'];
 			$req['data']=$request->data;
 			$req['status_daerah']=$request->status_daerah;
-			$req['verifikasi_status']=$request->verifikasi_status;
+			$req['verifikasi_status']=($request->verifikasi_status==NULL)?NULL:(int)$request->verifikasi_status ;
 			$req['q']=$request->q;
 
 			// $rekap=DB::TABLE
@@ -390,23 +414,13 @@ class ValidasiCtrl extends Controller
 				'total'=>$rekap['total'],
 				'sudah'=>$rekap['jumlah_desa_valid'],
 				'belum'=>((int)$rekap['total'] - (int)$rekap['jumlah_desa_valid']),
-				'verifikasi'=>$rekap['jumlah_desa_ver_'.strlen($access_data_daerah)]
+				'verifikasi'=>$rekap['jumlah_desa_ver_'.(strlen($access_data_daerah)<=6?6:strlen($access_data_daerah))]
 			];
 
-            $time_input=DB::table('tb_jadwal_pengisian')
-            ->where('kode_daerah',substr($access_data_daerah,0,4))
-            ->where('level',strlen($access_data_daerah))
-            ->first();
-            $dif=null;
-            if($time_input){
-                $now=Carbon::now();
-                $last=Carbon::parse($time_input->selesai);
-                $dif=$now->diffAsCarbonInterval($last);
-                $dif=($dif->total('milliseconds'));
-
-            }
+            
 
 			return view('admin.validasi.data')
+            
 		->with(
 				[
 					'daerah'=>$check_access['nama_daerah'],
@@ -457,7 +471,7 @@ class ValidasiCtrl extends Controller
     			return [
     				'valid'=>true,
     				'list'=>['VALIDASI','UPDATE','NONE'],
-                    'abl_status'=>4
+                    'abl_status'=>5
 
     			];
     		}else{
@@ -964,6 +978,7 @@ class ValidasiCtrl extends Controller
                 ['kode_desa','=',$d['kode_desa']],
                 ['tahun','=',$d['tahun']],
             ])->first();
+            $check_status=false;
 
             if($check){
                 if($check->status_validasi<=$ac['abl_status']){

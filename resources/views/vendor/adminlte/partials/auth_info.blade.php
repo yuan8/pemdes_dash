@@ -43,9 +43,12 @@
 @endif   
 
 
+@if(Auth::check())
 <li>
-    <a href="{{route('p.tahun',['tahun'=>$GLOBALS['tahun_access']])}}"  ><i class="fa fa-calendar"></i> Pindah Tahun</a>
-  </li>
+    <a href="{{route('p.tahun',['tahun'=>$GLOBALS['tahun_access'],'pre'=>url()->full()])}}"  ><i class="fa fa-calendar"></i> Pindah Tahun</a>
+</li>
+@endif
+
 @if(Auth::check())
 @if(config($CONF_THEM.'.right_sidebar') and (in_array(Auth::User()->role,[1,3])))
  

@@ -58,6 +58,10 @@ class AuthServiceProvider extends ServiceProvider
             return strlen($user->kode_daerah)==4;
         });
 
+        Gate::define('is_daerah_kabkota_n_admin', function ($user) {
+            return strlen($user->kode_daerah)==4 OR $user->can('is_admin');
+        });
+
         Gate::define('is_daerah_kecamatan', function ($user) {
             return strlen($user->kode_daerah)==6;
         });

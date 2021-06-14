@@ -203,9 +203,11 @@ class HomeCtrl extends Controller
         ];
     }
 
-      public function pindahTahun($tahun){
+      public function pindahTahun($tahun,Request $request){
+
     	$tahuns=DB::table('tahun_access')->get();
-    	return view('pindah_tahun')->with(['tahuns'=>$tahuns]);
+
+    	return view('pindah_tahun')->with(['tahuns'=>$tahuns,'pre'=>$request->pre]);
     }
      public function pindahkanTahun($tahun,Request $request){
         $r=url('/v/'.$request->tahun_new);
@@ -215,11 +217,24 @@ class HomeCtrl extends Controller
         preg_match($mm, $request->url(), $output_array);
 
         $skop='v';
-
+        $pre=null;
+        if($request->pre){
+            $pre=$request->pre;
+        }
         if(isset($output_array[1])){
             $skop=$output_array[1];
             $s=$skop.'/'.$request->tahun_new;
             $url_new=preg_replace('/(admin|v)\/[2-9][0-9][0-9][0-9]/', $s, $request->url());
+            if($pre){
+                $mm=('/'.$url_main.'\/(admin|v)\/[2-9][0-9][0-9][0-9]/');
+                 preg_match($mm, $pre, $output_array);
+                if($pre!=$url_new){
+                    $skop=$output_array[1];
+                    $s=$skop.'/'.$request->tahun_new;
+                    $url_new=preg_replace('/(admin|v)\/[2-9][0-9][0-9][0-9]/', $s, $pre);
+                }
+            }
+            
 
             session(['change_tahun',$request->tahun_new]);
             Alert::success('Berhasil', 'Tahun Berhasil Dipindahkan');

@@ -46,7 +46,7 @@ class getData extends Command
 
         $ids=DB::table('master_desa as d')
         ->leftJoin($table.' as td','td.kode_desa','=','d.kddesa')
-        ->whereRaw("(td.status_validasi=0 and td.updated_at<'".$now."' and td.tahun=".$tahun.") OR (td.status_validasi is null)")
+        ->whereRaw("(td.status_validasi=0 and td.updated_at < '".$now."' and td.tahun=".$tahun.") OR (td.status_validasi is null)")
         ->limit(500)
         ->get()
         ->pluck('kddesa')

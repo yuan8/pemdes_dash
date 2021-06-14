@@ -14,6 +14,7 @@
 				<div class="box-body">
 				<div class="form-group">
 					<label>Pilih Tahun</label>
+					<input type="hidden" name="pre" value="{{$pre}}">
 					<select class="form-control" name="tahun_new">
 						@foreach($tahuns as $t)
 						<option value="{{$t->tahun}}" {{$GLOBALS['tahun_access']==$t->tahun?'selected':''}} >{{$t->tahun}}</option>

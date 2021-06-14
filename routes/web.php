@@ -110,7 +110,14 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 
 	Route::prefix('validasi')->group(function(){
 		Route::get('/','ADMIN\ValidasiCtrl@index')->name('admin.validasi.index');
+		Route::post('/data/build-berita-acara','ADMIN\BeritaAcaraCtrl@build')->name('admin.validasi.berita_acara.build');
+
 		Route::get('/data/build-berita-acara','ADMIN\BeritaAcaraCtrl@build')->name('admin.validasi.berita_acara.build');
+
+		Route::delete('/data/delete-berita-acara','ADMIN\BeritaAcaraCtrl@delete')->name('admin.validasi.berita_acara.delete');
+
+		Route::get('/data/build-berita-acara-daerah','ADMIN\BeritaAcaraCtrl@build_daerah')->name('admin.validasi.berita_acara.build_daerah');
+
 
 		Route::get('/data','ADMIN\ValidasiCtrl@data')->name('admin.validasi.data');
 		Route::get('/data/upload','ADMIN\ValidasiCtrl@form_upload')->name('admin.validasi.upload');

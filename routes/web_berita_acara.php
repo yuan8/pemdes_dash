@@ -8,7 +8,7 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 	});
 
 	Route::prefix('/berita-acara')->middleware('can:is_daerah_kabkota')->group(function(){
-		Route::get('/draf','ADMIN\BeritaAcaraCtrl@buat_index')->name('a.b.b.index');
+		Route::get('/file','ADMIN\BeritaAcaraCtrl@rekap')->name('a.b.b.index');
 
 	});
 
