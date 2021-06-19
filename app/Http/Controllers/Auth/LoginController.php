@@ -9,6 +9,8 @@ use MyHash;
 use App\User;
 use Auth;
 use DB;
+use Validator;
+use Alert;
 class LoginController extends Controller
 {
     /*
@@ -48,8 +50,14 @@ class LoginController extends Controller
     }
 
     public function login(Request $request){
+        $valid=Validator::make($request->all(),[
+            'email_atau_username'=>'required|min:2',
+            'password'=>'required|string'
+        ]);
 
-        $this->validateLogin($request);
+        if($valid->fails()){
+            return back()->withError();
+        }
 
       
         if (method_exists($this, 'hasTooManyLoginAttempts') &&
@@ -59,8 +67,7 @@ class LoginController extends Controller
             return $this->sendLockoutResponse($request);
         }
 
-        $agent=User::where('email',$request->email)->first();
-
+        $agent=User::where('email',$request->email_atau_username)->orWhere('username',$request->email_atau_username)->first();
         if($agent){
             if($agent->is_active){
                  if(MyHash::pass_match($request->password,$agent->password)){
@@ -73,7 +80,8 @@ class LoginController extends Controller
                         
                         }
                     }
-                return $this->sendLoginResponse($request);
+                    Alert::success('SELAMAT DATANG',$agent->name);
+                    return $this->sendLoginResponse($request);
 
                 }
 

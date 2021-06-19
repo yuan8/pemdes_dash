@@ -322,6 +322,7 @@ class HelperP extends ServiceProvider
     static public function level_build($data,$kode_daerah,$bind_desa,$context=0){
         $count=strlen($kode_daerah);
 
+
         if($count==0){
             $count=$data->start_level;
             if($data->start_level==2){
@@ -368,7 +369,9 @@ class HelperP extends ServiceProvider
             $column_map=$column_map->where('cm.auth',false);
         }
 
-
+        $table_m=DB::table('master_table_map')
+        ->select('*')->where('id',$data->id_map)
+            ->first();
 
 
         $column_map=$column_map->get();
@@ -408,7 +411,7 @@ class HelperP extends ServiceProvider
         $datam[$count]['select_data']=
             [
             'column'=>$column,
-            'table_data'=>$data->table.' as dt',
+            'table_data'=>$table_m->table.' as dt',
             'map_column'=>$map_c
             ];
 
@@ -421,14 +424,15 @@ class HelperP extends ServiceProvider
 
         }
 
+        
         $return=[
             'level_data'=>$datam[$count],
             'columns'=>$map_c,
             'column'=>$column,
+            'desk_table_map'=>isset($table_m->deskripsi)?$table_m->deskripsi:'',
             'id_map'=>$data->id_map,
-            'data_table'=>$data->table.' as dt',
-            'data_name'=>DB::table('master_table_map')->select('name')->where('id',$data->id_map)
-            ->pluck('name')->first(),
+            'data_table'=>$table_m->table.' as dt',
+            'data_name'=>$table_m->name,
             'view_'=>[]
         ];
 
@@ -540,6 +544,20 @@ class HelperP extends ServiceProvider
         }
     }
 
+    static function array_split(Array $data,Int $part){
+        $count=count($data);
+        $group_count=round($count/$part) ;
+        if($count>0){
+           return array_chunk($data,$group_count);
+        }else{
+            $p=[];
+            for ($i=0; $i <$part ; $i++) { 
+                $p[]=[];
+            }
+            return $p;
+        }
+
+    }
 
     static function check_jadwal_pengisian($kode_daerah,$tahun){
 
@@ -572,20 +590,23 @@ class HelperP extends ServiceProvider
 
     }
 
+     static function kode_data($kode_daerah,$kode_data){
+        return md5($kode_daerah.'-'.$kode_data);
+    }
 
     static function berita_acara($kode_daerah,$tahun,$id_table){
         $len=strlen($kode_daerah);
         $kode_kota=substr($kode_daerah,0,4);
         $kode_kota=substr($kode_daerah,0,4);
 
-        $berita=file_exists(storage_path('app/public/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.$id_table.'-full.pdf'));
+        $berita=file_exists(storage_path('app/public/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-full.pdf'));
       
         if($len==4){
              return [
                 'access'=>true,
                 'access_form'=>false,
                 'access_berita_acara'=>Auth::User()->can('is_daerah_kabkota_n_admin'),
-                'berita_acara'=>$berita?url('storage/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.$id_table.'-full.pdf'):null
+                'berita_acara'=>$berita?url('storage/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-full.pdf?v='.date('d-m-y-h:i')):null
             ];
          }else if($len>4){
             return [

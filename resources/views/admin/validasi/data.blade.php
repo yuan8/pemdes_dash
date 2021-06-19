@@ -6,8 +6,6 @@
 	$berita_acara=HP::berita_acara($kode_daerah,$GLOBALS['tahun_access'],$table_map['id_map']);
 @endphp
 @if($time_count_down??0 > 0)
-	
-	
 	<div  id="time_count">
 		<h5><b>WAKTU PENGISIAN : </b>
 			<span class="badge bg-maroon"><b><i>@{{days}} Hari</i></b> <b><i>@{{hours}} Jam</i></b>
@@ -50,9 +48,6 @@
 			</div>
 		</div>
 	</form>
-	
-	
-
 	<script type="text/javascript">
 		$('#data').select2();
 	</script>
@@ -112,12 +107,10 @@
 	<div class="col-md-12">
 		<h5>AKSI</h5>
 		<div class="btn-group">
+			
+			@if($berita_acara==null)
 		
-
-			{{-- @can('is_daerah_provinsi')
-				<a href="" class="btn btn-warning"> DOWNLOAD DATA</a>
-			@endcan --}}
-			@if($berita_acara['access'])
+			@elseif($berita_acara['access'])
 				@if($berita_acara['berita_acara'])
 					<a href="{{$berita_acara['berita_acara']}}" download="" class="btn btn-primary">DOWNLOAD BERITA ACARA</a>
 						@if($time_count_down and (strlen($kode_daerah)==4))
@@ -158,9 +151,6 @@
 
 
 @section('content')
-
-
-
 @if($berita_acara['berita_acara'])
 <iframe src="{{$berita_acara['berita_acara']}}" style="width:100%; border:none; height: 500px;" ></iframe>
 	
@@ -406,6 +396,14 @@
 	</script>
 
 	<script type="text/javascript">
+		const bc = new BroadcastChannel('build_berita_acara');
+
+		@if((session('done_build')))
+			bc.postMessage(<?=json_encode(session('done_build'))?>);
+		@endif
+
+
+
 		var time_count=new Vue({
 			el:"#time_count",
 			data:{
@@ -419,7 +417,6 @@
 			methods:{
 				time_count_down(){
 						this.timeleft = this.timeleft - ((1000));
-			    			console.log(this.timeleft);
 						 this.days = Math.floor(this.timeleft / (1000 * 60 * 60 * 24));
 						 this.hours = Math.floor((this.timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 						this.minutes = Math.floor((this.timeleft % (1000 * 60 * 60)) / (1000 * 60));
@@ -438,6 +435,7 @@
 
 		function build_berita_acara(url){
 			$('#build_berita_acara form').attr('action',url);
+
 			$('#build_berita_acara .pre').attr('href',url+'&preview=true');
 
 			$('#build_berita_acara ').modal();
@@ -490,22 +488,40 @@
 				<div class="modal-content">
 					<input type="hidden" name="redirect" value="{{url()->full()}}">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<button type="button" class="close crus" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title">BUAT BERITA ACARA {{strtoupper($nama_data)}}</h4>
 				</div>
 				<div class="modal-body">
 					<p>PASTIKAN DATA TELAH VALID!</p>
 					<p class="text-red">ANDA TIDAK DI PERBOLEHKAN KEMBALI MELAKUKAN EDITING DATA SETELAH PEMBUATAN BERITA ACARA INI</p>
+					<small class="text-yellow" id="submit_build_ket"></small>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<a target="_blank"  href=""  class="pre btn btn-info">PREVIEW</a>
-					<button type="submit" class="btn btn-primary">SETUJU</button>
+				<div class="modal-footer" >
+					
+					<div class="btn-group">
+						<a style="display: none;" href="{{route('game.pingpong')}}" target="_blank" class="btn btn-danger hiburan">Main Game</a>
+							<button type="button" class="crus btn btn-default" data-dismiss="modal">Close</button>
+					
+						<a target="_blank"  href=""  class="pre btn btn-info">PREVIEW</a>
+						<button type="button" onclick="submit_build()" class="crus btn btn-primary">SETUJU</button>
+					</div>
+				
 				</div>
 			</div>
 			</form>
 		</div>
 	</div>
 	@endif
+
+	<script type="text/javascript">
+		function submit_build(){
+			$('#submit_build_ket').html('Proses Pembuatan Berita acara memerlukan waktu yang cukup panjang tergatung jenis dan jumlah data, mohon menunggu dan tidak menuntup page atau merefresh!');
+			$('#build_berita_acara .crus').css('display','none');
+			$('#build_berita_acara .hiburan').css('display','block');
+
+
+			$('#build_berita_acara form' ).submit();
+		}
+	</script>
 
 @stop

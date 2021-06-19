@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Auth;
+use Validator;
+use Alert;
 class UserCtrl extends Controller
 {
     //
@@ -38,7 +40,34 @@ class UserCtrl extends Controller
 
             $data=[
                 'name'=>$request->name,
+                'username'=>str_replace(' ', '_', trim(($request->username))),
+                'email'=>$request->email,
             ];
+
+            $valid=Validator::make($data,[
+                'name'=>'required|string|min:3',
+                'email'=>'required|email',
+                'username'=>'required|string',
+
+
+            ]);
+
+            if($valid->fails()){
+                Alert::error('Gagal',$valid->errors()->first());
+                return back()->withError();
+            }
+
+            $check=DB::table('users')->whereRaw(
+                "
+                (id != ".$id.") and (username ='".$data['username']."') OR 
+                (id != ".$id.") and (email ='".$data['email']."')
+                "
+            )->first();
+            if($check){
+                 Alert::error('Gagal','username atau email telah digunakan sebelumya');
+                 return back();
+            }
+
             if($u->can('is_super')){
                 $data['is_active']=($request->is_active)?true:false;
                 $data['role']=$request->role;
@@ -187,7 +216,7 @@ class UserCtrl extends Controller
                         break;
                     case 4:
                         $daerah_access=DB::table('master_kabkota as kab')->where('kdkabkota',$data->kode_daerah)
-                        ->selectraw("kdkabkota as id,concat(nmkabkota,' - ',(select nmprovinsi from provinsi where left(kdkabkota,2)=kdprovinsi limit 1))  as text")->first();
+                        ->selectraw("kdkabkota as id,concat(nmkabkota,' - ',(select nmprovinsi from master_provinsi where left(kdkabkota,2)=kdprovinsi limit 1))  as text")->first();
                         $data->level_daerah='kab_kota';
 
                         # code...

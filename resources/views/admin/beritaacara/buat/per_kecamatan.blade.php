@@ -8,15 +8,17 @@
 		<table class="table table-bordered bg-gray">
 			<tr>
 				<th>
-					<h5>JUMLAH DESA</h5>
+					<p><b>JUMLAH DESA</b></p>
 						<p><b>{{HPV::nformat($kecamatan['jumlah_desa'])}} Desa</b></p>
 				</th>
 				<th>
-					<h5>JUMLAH DESA TERDATA</h5>
+					<p><b>JUMLAH DESA TERDATA</b></p>
+
 						<p><b>{{HPV::nformat($kecamatan['jumlah_data'])}} Desa</b></p>
 				</th>
 				<th>
-					<h5>PERSENTASE PELAPORAN</h5>
+					<p><b>PERSENTASE PELAPORAN</b></p>
+					
 						<p><b>{{HPV::nformat($kecamatan['persentase_pelaporan'])}} %</b></p>
 				</th>
 

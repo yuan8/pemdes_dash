@@ -21,13 +21,13 @@ $CONF_MENU=MENUS::login();
             <form action="{{route('login.post')}}" method="post">
                 {{ csrf_field() }}
 
-                <div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">
-                    <input type="email" name="email" class="form-control" value="{{ old('email') }}"
-                           placeholder="email">
+                <div class="form-group has-feedback {{ $errors->has('email_atau_username') ? 'has-error' : '' }}">
+                    <input type="text" name="email_atau_username" class="form-control" value="{{ old('email') }}"
+                           placeholder="Email/Username">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     @if ($errors->has('email'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('email') }}</strong>
+                            <strong>{{ $errors->first('email_atau_username') }}</strong>
                         </span>
                     @endif
                 </div>

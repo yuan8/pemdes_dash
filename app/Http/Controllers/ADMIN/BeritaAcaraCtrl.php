@@ -20,6 +20,167 @@ use Alert;
 class BeritaAcaraCtrl extends Controller
 {
 
+    public function pengesahan($tahun,$kode_daerah,$kode_data){
+        $kode_daerah=substr($kode_daerah,0,4);
+        $data=DB::table('tb_berita_acara')->where([
+            ['id_ms_table','=',$kode_data],
+            ['tahun','=',$tahun],
+            ['kode_daerah','=',$kode_daerah],
+        ])->first();
+
+
+    }
+
+
+    public function buat_doc_pengsahan($tahun,$kode_daerah,$kode_data){
+        $kode_daerah=substr($kode_daerah,0,4);
+        $head=null;
+            
+        if(file_exists(public_path('storage/berita-acara/'.$kode_daerah.'/'.$tahun.'/data-'.static::kode_data($kode_daerah,$kode_data).'-rekap.json'))){
+            $head=json_decode(file_get_contents(public_path('storage/berita-acara/'.$kode_daerah.'/'.$tahun.'/data-'.static::kode_data($kode_daerah,$kode_data).'-rekap.json')),true);
+        }
+
+        $data=DB::table('tb_berita_acara')->where([
+            ['id_ms_table','=',$kode_data],
+            ['tahun','=',$tahun],
+            ['kode_daerah','=',$kode_daerah],
+        ])->first();
+
+
+        $ttd=[
+            'path_berita_acara'=>null,
+            'path_ttd'=>null
+        ];
+
+        if($data){
+            $ttd['path_berita_acara']=$data->path_berita_acara?url($data->path_berita_acara??'').'?v='.date('y-m-d-h-i'):null;
+            $ttd['path_ttd']=$data->path_ttd?url($data->path_ttd??''):null;
+            $ttd['penanda_tangan']=$data->penanda_tangan?json_decode($data->penanda_tangan):[];
+
+            if($data->path_berita_acara){
+                if(!file_exists(public_path($data->path_berita_acara))){
+                     DB::table('tb_berita_acara')->where('id',$data->id)->update([
+                        'path_berita_acara'=>null
+                    ]);
+                     $ttd['path_berita_acara']=null;
+                }
+            }
+
+            if($data->path_ttd ){
+                if(!file_exists(public_path($data->path_ttd))){
+                    DB::table('tb_berita_acara')->where('id',$data->id)->update([
+                        'path_ttd'=>null
+                    ]);
+                     $ttd['path_ttd']=null;
+
+                }
+            }
+
+        }
+
+        if($ttd['path_berita_acara'] and (!$ttd['path_ttd'])){
+            $ttd['path_ttd']=route('a.b.r.berkas.appv',[
+                'tahun'=>$tahun,
+                'kode_daerah'=>$kode_daerah,'kode_data'=>$kode_data]);
+        }
+
+
+        $table=HP::level_build((Object)['id_map'=>$kode_data],$kode_daerah,1,1);
+
+
+        return view('admin.beritaacara.penandatanganan.edit')->with([
+            'data'=>$ttd,
+            'table'=>$table,
+            'head'=>$head,
+            'id_data'=>$kode_data,
+            'kode_daerah'=>$kode_daerah
+        ]);
+
+    
+    }
+
+    public function save_doc_pengsahan($tahun,$kode_daerah,$id_data,Request $request){
+            $data=DB::table('tb_berita_acara')->where([
+                ['kode_daerah','=',$kode_daerah],
+                ['tahun','=',$tahun],
+                ['id_ms_table','=',$id_data],
+
+            ])->first();
+
+            if($data){
+                 $data=DB::table('tb_berita_acara')
+                 ->where('id',$data->id)
+                 ->update(
+                    ['penanda_tangan'=>json_encode($request->peserta)]
+                 );
+            }
+
+            return back();  
+    }
+
+
+    public function berkas_pengesahan($tahun,$kode_daerah,$kode_data){
+         $data=DB::table('tb_berita_acara')->where([
+                ['kode_daerah','=',$kode_daerah],
+                ['tahun','=',$tahun],
+                ['id_ms_table','=',$kode_data],
+
+        ])->first();
+         $peserta=[];
+         $now=Carbon::now();
+         $table=HP::level_build((Object)['id_map'=>$kode_data],$kode_daerah,1,1);
+         if(file_exists(public_path('storage/berita-acara/'.$kode_daerah.'/'.$tahun.'/data-'.static::kode_data($kode_daerah,$kode_data).'-rekap.json'))){
+                  $rekap=json_decode(file_get_contents(public_path('storage/berita-acara/'.$kode_daerah.'/'.$tahun.'/data-'.static::kode_data($kode_daerah,$kode_data).'-rekap.json')),true);
+         }else{
+            $rekap=[];
+         }
+       
+         if($data){
+
+            $peserta=json_decode($data->penanda_tangan??'[]');
+            
+         }
+         // $view=view()
+         //        ->with(['peserta'=>$peserta,
+         //            'tahun'=>$tahun,
+         //            'now'=>$now,
+         //            'rekap'=>$rekap,
+         //            'table_map'=>$table
+         //        ])->render();
+
+                // return $view;
+             
+         $pdf = app('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->loadView('admin.beritaacara.penandatanganan.buat',[
+        'peserta'=>$peserta,
+         'tahun'=>$tahun,
+        'now'=>$now,
+        'rekap'=>$rekap,
+        'table_map'=>$table
+        ])
+        ->setPaper('A4', 'landscape');
+                
+        // $pdf = PDF::setOptions(["isPhpEnabled"=> true])
+        //         ->loadView('admin.beritaacara.penandatanganan.buat',[
+        //         'peserta'=>$peserta,
+        //          'tahun'=>$tahun,
+        //         'now'=>$now,
+        //         'rekap'=>$rekap,
+        //         'table_map'=>$table
+        //         ])
+        //         ->setPaper('A4', 'landscape');
+                // ->output();
+                // $pdf=$pdf->getDomPDF();
+         return $pdf->stream('pengesahan-berita-acara-'.$kode_daerah.'-'.$tahun.'/data-'.$kode_data.'.pdf',array('Attachment'=>false))  ;
+
+
+    }
+
+    static function kode_data($kode_daerah,$kode_data){
+        return md5($kode_daerah.'-'.$kode_data);
+    }
+
     public function rekap($tahun){
         $kode_daerah=substr(Auth::User()->kode_daerah, 0,4);
         $data=DB::table('master_table_map')->where('edit_daerah',true)->get();
@@ -32,21 +193,23 @@ class BeritaAcaraCtrl extends Controller
                     'file_signature'=>null
                 ];
             }
+           
 
 
         }
 
+        dd($data);
         return view('admin.beritaacara.rekap.index')->with(['rekap'=>$rekap,'count'=>count($data)]);
 
     }
 
     public function delete($tahun,Request $request){
         $access_data_daerah=$request->kddesa??$request->kdkecamatan??$request->kdkabkota??$request->kdprovinsi;
-        $file=file_exists(storage_path('app/public/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.$request->data.'-full.pdf'));
+        $file=file_exists(storage_path('app/public/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.static::kode_data($access_data_daerah,$request->data).'-full.pdf'));
       
         if($file){
             Alert::success('Berhasil');
-            Storage::delete(('/public/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.$request->data.'-full.pdf'));
+            Storage::delete(('/public/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.static::kode_data($access_data_daerah,$request->data).'-full.pdf'));
         }
 
         return back();
@@ -99,6 +262,10 @@ class BeritaAcaraCtrl extends Controller
             ->where('kdkecamatan','like',$kdkecamatan.'%')
             ->limit(1)->get();
             $data_q=[];
+            $total=[
+                        'jumlah_desa'=>0,
+                        'jumlah_desa_melapor'=>0
+                    ];
            
 
             foreach ($kecamatans as $kc) {
@@ -163,10 +330,12 @@ class BeritaAcaraCtrl extends Controller
                     }
                     
                     $data_query=$data_query->get()->toArray();
+                    
                     if(count($data_query)){
                     $data_q[$kc->kdkecamatan]['data']=$data_query;
                     $data_q[$kc->kdkecamatan]['jumlah_data']=count($data_query);
                     $data_q[$kc->kdkecamatan]['persentase_pelaporan']=HPV::nformat((count($data_query)/$data_q[$kc->kdkecamatan]['jumlah_desa']) *100);
+                   
 
                      $kecamatan_series[]=[
                         'name'=>$kc->nmkecamatan,
@@ -203,11 +372,7 @@ class BeritaAcaraCtrl extends Controller
                 'data'=>$data_q
             ];
 
-            DB::table('tb_berita_acara')->insertOrIgnore([
-                'kode_daerah'=>$access_data_daerah,
-                'tahun'=>$tahun,
-                'id_table_map'=>$maping['id_map']
-            ]);
+
             
             if($maping){
                 if(count($maping['columns'])>10){
@@ -237,6 +402,106 @@ class BeritaAcaraCtrl extends Controller
 
     }
 
+    public function penandatanganan($tahun){
+        $kode_daerah=substr(Auth::User()->kode_daerah,0,4);
+        $data=DB::table('master_table_map as m')
+        ->leftJoin('tb_berita_acara as ba',[
+            ['ba.id_ms_table','=','m.id'],
+            ['ba.tahun','=',DB::raw($tahun)],
+            ['ba.kode_daerah','=',DB::raw($kode_daerah)]
+            ]
+        )->where('m.edit_daerah',true)
+        ->select('m.id as id_data','m.table','m.name as nama_data','ba.*')
+        ->get();
+
+        foreach ($data as $key => $value) {
+
+            if($value->path_berita_acara){
+                if(!file_exists(public_path($value->path_berita_acara))){
+                     DB::table('tb_berita_acara')->updateOrInsert(
+                        [
+                            'kode_daerah'=>$kode_daerah,
+                            'tahun'=>$tahun,
+                            'id_ms_table'=>$value->id_data
+                        ],
+                        [
+                            'path_berita_acara'=>null,
+                            'path_ttd'=>null,
+                        ]
+                    );
+                    Storage::delete(public_path(str_replace('-full.pdf', '-rekap.json', $value->path_berita_acara)));
+                }
+                // lancar
+
+            }else if(file_exists(public_path('storage/berita-acara/'.$kode_daerah.'/'.$tahun.'/data-'.static::kode_data($kode_daerah,$value->id_data).'-full.pdf'))){
+                DB::table('tb_berita_acara')->updateOrInsert(
+                    [
+                        'kode_daerah'=>$kode_daerah,
+                        'tahun'=>$tahun,
+                        'id_ms_table'=>$value->id_data
+                    ],
+                    [
+                        'path_berita_acara'=>'storage/berita-acara/'.$kode_daerah.'/'.$tahun.'/data-'.static::kode_data($kode_daerah,$value->id_data).'-full.pdf',
+                        'id_user'=>Auth::User()->id,
+                        'kode_daerah'=>$kode_daerah,
+                        'tahun'=>$tahun,
+                        'id_ms_table'=>$value->id_data
+                    ]
+                );
+
+            }else{
+                DB::table('tb_berita_acara')->updateOrInsert(
+                    [
+                        'kode_daerah'=>$kode_daerah,
+                        'tahun'=>$tahun,
+                        'id_ms_table'=>$value->id_data
+                    ],
+                    [
+                        'path_berita_acara'=>null,
+                        'path_ttd'=>null,
+                    ]
+                );
+
+            }
+
+            
+        }
+
+
+        $data=DB::table('master_table_map as m')
+        ->leftJoin('tb_berita_acara as ba',[
+            ['ba.id_ms_table','=','m.id'],
+            ['ba.tahun','=',DB::raw($tahun)],
+            ['ba.kode_daerah','=',DB::raw($kode_daerah)]
+            ]
+        )->where('edit_daerah',true)
+        ->select('m.id as id_data','m.table','m.name as nama_data','ba.*')
+        ->get();
+        $jumlah_kecamatan=DB::table('master_kecamatan')->where('kdkecamatan','like',DB::raw("'".$kode_daerah."%'"))->count();
+        $jumlah_desa=DB::table('master_desa')->where('kddesa','like',DB::raw("'".$kode_daerah."%'"))->count();
+
+        foreach($data as $key=>$value){
+            $data[$key]->total_kec=$jumlah_kecamatan;
+            $data[$key]->total_des=$jumlah_desa;
+
+             $data[$key]->rekap_real=(array)DB::table($value->table.' as dt')
+                ->whereRaw("dt.tahun=".$tahun." 
+                    and dt.kode_desa like '".$kode_daerah."%'")
+                ->selectRaw(
+                    implode(', ',["sum(case when status_validasi=2 then 1 else 0 end) as kat_2",
+                    "sum(case when status_validasi=3 then 1 else 0 end) as kat_3",
+                    "count(distinct(case when status_validasi>1 then left(dt.kode_desa,6) else null end)) as jum_kec_l",
+                    "sum(case when status_validasi=5 then 1 else 0 end) as kat_5"])
+                )->first();
+        }
+
+
+
+        return view('admin.beritaacara.penandatanganan.index')->with(['data'=>$data]);
+
+
+    }
+
     public function build($tahun,Request $request){
 
         // return base64_encode(file_get_contents(public_path('dist-web/logo2.png')));
@@ -251,6 +516,10 @@ class BeritaAcaraCtrl extends Controller
 
 
     	$now=Carbon::now();
+        $total=[
+            'jumlah_desa'=>0,
+            'jumlah_desa_melapor'=>0,
+        ];
 
     	if($check_access and $mapTb){
 
@@ -361,6 +630,9 @@ class BeritaAcaraCtrl extends Controller
 					$data_q[$kc->kdkecamatan]['jumlah_data']=count($data_query);
 					$data_q[$kc->kdkecamatan]['persentase_pelaporan']=HPV::nformat((count($data_query)/$data_q[$kc->kdkecamatan]['jumlah_desa']) *100);
 
+                    $total['jumlah_desa']+=$data_q[$kc->kdkecamatan]['jumlah_desa'];
+                    $total['jumlah_desa_melapor']+=count($data_query);
+
                      $kecamatan_series[]=[
                         'name'=>$kc->nmkecamatan,
                         'data'=>[
@@ -396,11 +668,6 @@ class BeritaAcaraCtrl extends Controller
     			'data'=>$data_q
     		];
 
-    		DB::table('tb_berita_acara')->insertOrIgnore([
-    			'kode_daerah'=>$access_data_daerah,
-    			'tahun'=>$tahun,
-    			'id_table_map'=>$maping['id_map']
-    		]);
     		
             if($maping){
                 if(count($maping['columns'])>10){
@@ -424,6 +691,7 @@ class BeritaAcaraCtrl extends Controller
                 'now'=>$now,
                 'tahun'=>$tahun,
                 'count_kecamatan'=>$count_kecamatan,
+                'total'=>$total,
                 'kecamatan_series'=>array_chunk($kecamatan_series, 2)
             ])->render();
 
@@ -436,6 +704,7 @@ class BeritaAcaraCtrl extends Controller
                 'table_map'=>$maping,
                 'now'=>$now,
                 'tahun'=>$tahun,
+                'total'=>$total,
                 'count_kecamatan'=>$count_kecamatan,
                 'kecamatan_series'=>array_chunk($kecamatan_series, 2)
             ])->render();
@@ -444,7 +713,27 @@ class BeritaAcaraCtrl extends Controller
              return $view;
            }
 
-           Storage::put('public/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.$request->data.'/init.index','');
+
+
+           $json=[
+            'id_data'=>$maping['id_map'],
+            'table'=>trim(explode(' as ', $maping['data_table'])[0]),
+            'nama_data'=>$maping['data_name'],
+            'tahun'=>$tahun,
+            'daerah'=>strtoupper($check_access['nama_daerah']),
+            'rekap_desa'=>[
+                'melapor'=>$total['jumlah_desa_melapor'],
+                'total'=>$total['jumlah_desa'],
+
+            ],
+            'rekap_kecamatan'=>[
+                'melapor'=>count($data['data']),
+                'total'=>$count_kecamatan
+            ]
+           ];
+
+
+           Storage::put('public/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.static::kode_data($access_data_daerah,$request->data).'-rekap.json',json_encode($json,JSON_PRETTY_PRINT));
 
             // $pdf = PDF::loadHtml($view_rekap)
             // ->setPaper('A4', 'landscape');
@@ -457,12 +746,34 @@ class BeritaAcaraCtrl extends Controller
             //     $pdf->save(storage_path('app/public/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.$request->data).'/'.$kecamatan['id'].'.pdf');
             // }
 
+
            $pdf=PDF::loadHtml($view)
-            ->setPaper('A4', 'landscape')->save(storage_path('app/public/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.$request->data).'-full.pdf');
+            ->setPaper('A4', 'landscape')->save(storage_path('app/public/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.static::kode_data($access_data_daerah,$request->data)).'-full.pdf');
+
+            DB::table('tb_berita_acara')->updateOrInsert([
+                'kode_daerah'=>$access_data_daerah,
+                'tahun'=>$tahun,
+                'id_ms_table'=>$maping['id_map'],
+                ],[
+
+                'kode_daerah'=>$access_data_daerah,
+                'tahun'=>$tahun,
+                'id_ms_table'=>$maping['id_map'],
+                'id_user'=>Auth::User()->id,
+                'path_berita_acara'=>'storage/berita-acara/'.$access_data_daerah.'/'.$tahun.'/data-'.static::kode_data($access_data_daerah,$request->data).'-full.pdf'
+            ]);
 
            Alert::success('Berhasil','Berita Acara Berhasil Dibuat');
              if($request->redirect){
-            return redirect($request->redirect);
+                session(['done_build'=>[
+
+                   'text'=> strtoupper('Berita Acara '.$maping['data_name'].' Selesai'),
+                   'redirect'=>$request->redirect
+                ]
+                ]);
+
+                return redirect($request->redirect);
+
            }
 
             return $pdf->stream('berita-acara-'.$maping['data_name'].'-'.$tahun.'-'.$check_access['nama_daerah'].'.pdf',array("Attachment" => false));

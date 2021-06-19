@@ -3,6 +3,9 @@
 include __DIR__ .'/web_console.php';
 include __DIR__ .'/web_berita_acara.php';
 
+Route::get('ping-pong-pemdes',function(){
+	return view('game.pingpong.index');
+})->name('game.pingpong');
 
 Route::get((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'/'),function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);

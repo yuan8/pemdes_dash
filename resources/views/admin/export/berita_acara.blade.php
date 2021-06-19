@@ -7,7 +7,14 @@
 	<h2 class="text-center" style="margin:2px;">BERITA ACARA  {{strtoupper($table_map['data_name'])}} TAHUN {{$tahun}}</h2>
 	<h3 class="text-center" style="margin:2px;">{{strtoupper($daerah['nama_daerah'])}}</h3>
 	<p class="text-center">{{Carbon\Carbon::parse($now)->format('d F Y')}}</p>
+	<div style="padding: 10px; background: #f1f1f1; color:#222; margin-top: 5px;">
+		@php
+		@endphp
+		<p>{{$table_map['desk_table_map']}}</p>
+	</div>
 	<hr>
+
+	
 	<h3><b>REKAP KECAMATAN PELAPOR</b></h3>
 	<table class="table tdata table-bordered">
 		@php
@@ -56,24 +63,49 @@
 	</table>
 	<h3>METADATA - {{strtoupper($table_map['data_name'])}}</h3>
 	<table class="table table-bordered tdata ">
+		@php
+				$data_meta=HP::array_split($table_map['columns'],2);
+
+		@endphp
 		<thead>
 			<tr>
-				<th>DATA</th>
-				<th>DEFINISI</th>
-				<th>SATUAN</th>
-				<th>TIPE DATA</th>
-				<th>INTERVAL NILAI</th>
+				@for ($i = 0; $i <2 ; $i++)
+					<th style="width:25px;">NO</th>
+					<th>DATA</th>
+					<th>DEFINISI</th>
+					<th>SATUAN</th>
+					<th>TIPE DATA</th>
+					<th>INTERVAL NILAI</th>
+				@endfor
 			</tr>
 		</thead>
 		<tbody>
-			@foreach($table_map['columns'] as $c)
-			<tr>
-				<td>{{($c['name'])}}</td>
-				<td>{{($c['definisi'])}}</td>
-				<td>{{($c['satuan'])}}</td>
-				<td>{{($c['tipe_data'])}}</td>
-				<td>{{(implode(',',explode('|;|', $c['interval_nilai'])))}}</td>
-			</tr>
+			@foreach($data_meta[0] as $key=>$c)
+				<tr>
+						<td>{{$key+1}}</td>
+						<td>{{($c['name'])}}</td>
+						<td>{{($c['definisi'])}}</td>
+						<td>{{($c['satuan'])}}</td>
+						<td>{{($c['tipe_data'])}}</td>
+						<td>{{(implode(',',explode('|;|', $c['interval_nilai'])))}}</td>
+						@if(isset($data_meta[1][$key]))
+							<td>{{$key+count($data_meta[0])+1 }}</td>
+							<td>{{($data_meta[1][$key]['name'])}}</td>
+							<td>{{($data_meta[1][$key]['definisi'])}}</td>
+							<td>{{($data_meta[1][$key]['satuan'])}}</td>
+							<td>{{($data_meta[1][$key]['tipe_data'])}}</td>
+							<td>{{(implode(',',explode('|;|', $data_meta[1][$key]['interval_nilai'])))}}</td>
+						@else
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+
+
+						@endisset
+				</tr>
 			@endforeach
 		</tbody>
 	</table>
@@ -94,9 +126,8 @@
 			@endphp
 			@include('admin.beritaacara.buat.per_kecamatan',['kecamatan'=>$kecamatan])
 			
-			@if(($c_i+1)<$c_)
+			@if(($c_i+1)<=$c_)
 				<p class="break-print"></p>
-				
 			@endif
 		@endforeach
 

@@ -103,6 +103,14 @@ $CONF_MENU=MENUS::admin();
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
+            @can('is_only_daerah')
+                    {{-- expr --}}
+                    <div class="bg-yellow text-center" style=" color:#222!important; margin-top: 10px;">
+                    @if (Auth::check())
+                        <b>{{Auth::User()->nama_daerah_handle()}}</b>
+                    @endif
+                </div>
+                @endcan
 
             @if(config($CONF_THEM.'.layout') == 'top-nav')
             <div class="container-full">
@@ -115,7 +123,7 @@ $CONF_MENU=MENUS::admin();
 
             <!-- Main content -->
             <section class="content" style="padding-bottom: 30px;">
-
+                
                 @yield('content')
 
             </section>
