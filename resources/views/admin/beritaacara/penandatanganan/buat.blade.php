@@ -57,9 +57,11 @@
 
 <script type="text/php">
     if (isset($pdf)) {
+    	{{-- dd($pdf->get_height()); --}}
+    	$HEIGH=$pdf->get_height();
         $x =50;
-        $y = 10;
-        $text = "Page {PAGE_NUM} of {PAGE_COUNT}";
+        $y = 20;
+        $text = "Lembar Pengesahan Halaman {PAGE_NUM} / {PAGE_COUNT}";
         $font = null;
         $size = 10;
         $color = array(0,0,0);
