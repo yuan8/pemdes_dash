@@ -5,11 +5,11 @@ Route::prefix('provider-messager')->group(function(){
 		return [
 			'testing'=>ok
 		];
-	}
+	});
 
 	Route::post('status',function(){
 		return [
 			'testing_status'=>ok
 		];
-	}
+	});
 });
