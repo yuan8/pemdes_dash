@@ -2,6 +2,8 @@
 
 include __DIR__ .'/web_console.php';
 include __DIR__ .'/web_berita_acara.php';
+include __DIR__ .'/web_message.php';
+
 
 Route::get('ping-pong-pemdes',function(){
 	return view('game.pingpong.index');
