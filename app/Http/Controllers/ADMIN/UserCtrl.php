@@ -357,22 +357,23 @@ class UserCtrl extends Controller
             case 2:
                 $data=DB::table('master_provinsi')->selectraw('kdprovinsi as id,nmprovinsi as text')
                 ->where(DB::raw("nmprovinsi"),'like','%'.$request->q.'%')
+                ->limit(20)
                 ->get()->toArray();
                 # code...
                 break;
              case 4:
                 $data=DB::table('master_kabkota')->selectraw("kdkabkota as id,concat(nmkabkota,' - ',nmprovinsi) as text")
-                ->where(DB::raw("concat(nmkabkota,' - ',nmprovinsi)"),'like','%'.$request->q.'%')->get()->toArray();
+                ->where(DB::raw("concat(nmkabkota,' - ',nmprovinsi)"),'like','%'.$request->q.'%')->limit(20)->get()->toArray();
                 # code...
                 break;
             case 6:
                 $data=DB::table('master_kecamatan')->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi) as text")
-                ->where(DB::raw("concat(nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi)"),'like','%'.$request->q.'%')
+                ->where(DB::raw("concat(nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi)"),'like','%'.$request->q.'%')->limit(20)
                 ->get()->toArray();
                 break;
             case 10:
                 $data=DB::table('master_desa')->selectraw("kddesa as id,concat(nmdesa,' - ',nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi) as text")
-                ->where(DB::raw("concat(nmdesa,' - ',nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi)"),'like','%'.$request->q.'%')
+                ->where(DB::raw("concat(nmdesa,' - ',nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi)"),'like','%'.$request->q.'%')->limit(20)
                 ->get()->toArray();
             break;
             
@@ -451,7 +452,8 @@ class UserCtrl extends Controller
     public function add($tahun){
 
             return view('admin.users.add')->with([
-                'list_daerah_access'=>static::access_daerah($tahun)
+                'list_daerah_access'=>static::access_daerah($tahun),
+                'regional_list'=>DB::table('master_regional')->get()
             ]);
     }
 
@@ -462,7 +464,7 @@ class UserCtrl extends Controller
             'nik'=>'required|string|unique:users,nik|min:11',
             'nip'=>'required|string|unique:users,nip|min:10',
             'jabatan'=>'required|string|min:1',
-            'nomer_telpon'=>'required|string|min:11',
+            'nomer_telpon'=>'required|string|min:11|unique:users,nomer_telpon',
             'password'=>'required|confirmed|min:8',
 
         ];
@@ -502,10 +504,12 @@ class UserCtrl extends Controller
         ];
          $data=DB::table('users')->insertOrIgnore($data_insert);
 
-
         if($data){
             Alert::success('Berhasil','User Berhasil Ditambahkan');
             return redirect()->route('admin.users.index',['tahun'=>$GLOBALS['tahun_access']]);
+        }else{
+            Alert::error('Gagal','');
+            return back()->withInput();
         }
 
 

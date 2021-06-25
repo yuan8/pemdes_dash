@@ -75,7 +75,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
          Gate::define('is_daerah_admin', function ($user) {
-            return $user->role==4 and  (!empty($user->kode_daerah)) and $user->main_daerah==true;
+            return (($user->role==4 and  (!empty($user->kode_daerah)) and $user->main_daerah==true) or ($user->role<=2));
         });
 
          Gate::define('is_only_daerah_verifikasi', function ($user) {

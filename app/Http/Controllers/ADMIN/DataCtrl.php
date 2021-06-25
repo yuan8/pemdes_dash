@@ -639,9 +639,10 @@ class DataCtrl extends Controller
             ->first();
         }
 
-        if(Auth::User()->role>2){
+        if(Auth::User()->role>3){
         	 $Defwhere[]="dt.kode_daerah =".Auth::User()->kode_daerah;
         }
+
 
         if($request->jenis){
             $where[]="dt.type = ".$request->jenis;

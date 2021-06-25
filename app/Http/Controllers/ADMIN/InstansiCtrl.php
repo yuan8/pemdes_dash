@@ -19,8 +19,7 @@ class InstansiCtrl extends Controller
     	if($request->q){
     		$data=$data->where([
                 ['r.name','like','%'.$request->q.'%'],
-                ]
-            );
+            ]);
             
            
 

@@ -7,7 +7,7 @@
   </a> 
 </li> 
 <li>
-  <a href="{{route('index',['tahun'=>$GLOBALS['tahun_access']])}}" >
+  <a href="{{route('faq.index',['tahun'=>$GLOBALS['tahun_access']])}}" >
    
         FaQ
   </a> 

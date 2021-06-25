@@ -46,6 +46,8 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 
 Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'').'d/{tahun}')->middleware(['bindTahun'])->group(function(){
     Route::get('/index-desa-data', 'IndexDesaCtrl@data_index_desa')->name('index.desa.data');
+
+     Route::get('/get-data-faq', 'ADMIN\FaqCtrl@get_question')->name('api.faq.data');
     
 	// Route::get('/visulisasi-p-table/{id}/{table}','TestCtrl@index')->name('visual.data.table');
     Route::get('/visulisasi-d-dataset/{id}','DataCtrl@visualisasi_data')->name('vs.data.visual');

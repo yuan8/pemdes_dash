@@ -13,7 +13,7 @@ class RegionalCtrl extends Controller
 
     public function add($tahun){
 
-        $daerah=DB::table('provinsi')->selectRaw("kdprovinsi as id,nmprovinsi as text ")->get();
+        $daerah=DB::table('master_provinsi')->selectRaw("kdprovinsi as id,nmprovinsi as text ")->get();
                    
         return view('admin.regional.tambah')->with(['daerah'=>$daerah]);
 
@@ -61,7 +61,7 @@ class RegionalCtrl extends Controller
                 $data=DB::table('master_regional as r')->where('id',$id)->first();
 
                 if($data){
-                     $daerah=DB::table('provinsi')->selectRaw("kdprovinsi as id,nmprovinsi as text ")->get();
+                     $daerah=DB::table('master_provinsi')->selectRaw("kdprovinsi as id,nmprovinsi as text ")->get();
                      $data_req=DB::table('master_regional_detail')->where('id_regional',$id)->get()->pluck('kode_daerah')->toArray();
                     return view('admin.regional.detail')->with(['data'=>$data,'daerah'=>$daerah,'data_req'=>$data_req]);
                 }else{

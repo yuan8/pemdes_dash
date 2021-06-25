@@ -131,7 +131,7 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 		Route::put('/validated/{table}/{id}','ADMIN\ValidasiCtrl@update')->name('admin.validasi.update');
 	});
 
-	Route::prefix('users')->middleware(['can:is_daerah_admin,is_super'])->group(function(){
+	Route::prefix('users')->middleware('can:is_daerah_admin')->group(function(){
 		Route::get('/','ADMIN\UserCtrl@index')->name('admin.users.index');
 		Route::get('/detail/{id}','ADMIN\UserCtrl@show')->name('admin.users.detail');
 
@@ -178,6 +178,12 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 
 	});
 
+	Route::prefix('faq')->middleware('can:is_admin')->group(function(){
+		Route::get('/','ADMIN\FaqCtrl@index')->name('admin.faq.index');
+
+		
+	});
+
 	Route::prefix('data')->group(function(){
 		Route::get('/','ADMIN\DataCtrl@index')->name('admin.data.index');
 		Route::get('/data','ADMIN\DataCtrl@data')->name('admin.data.detail');
@@ -205,6 +211,12 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 
 	Route::get('/data-integrasi/{id}/{slug}', 'DataCtrl@detail')->name('data.int.detail');
 	Route::get('/data-visual/{id}/{slug}', 'DataCtrl@visualisasi_index')->name('data.vis.detail');
+
+	Route::prefix('faq')->group(function(){
+		Route::get('/','ADMIN\FaqCtrl@index_dash')->name('faq.index');
+
+		
+	});
 
 
 	Route::get('/instansi', 'DataCtrl@instansi')->name('organisasi');

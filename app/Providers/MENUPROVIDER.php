@@ -149,12 +149,12 @@ class MENUPROVIDER extends ServiceProvider
 
 
                  [   
-                            'text'=>'PENJADWALAN PENGISIAN',
-                             'href'=>route('a.p.index',['tahun'=>$tahun]),
-                            'class'=>'',
-                            'icon'=>'fa fa-clock',
-                            'can'=>['is_daerah_kabkota']
-                        ],
+                    'text'=>'PENJADWALAN PENGISIAN',
+                    'href'=>route('a.p.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-clock',
+                    'can'=>['is_daerah_kabkota']
+                 ],
 
 
                
@@ -251,7 +251,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.data.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
-                    'can'=>['is_daerah']
+                    'can'=>['is_only_daerah']
 
                 ],
                 [
@@ -273,15 +273,7 @@ class MENUPROVIDER extends ServiceProvider
 
                 ],
                  
-                 [
-                    'text'=>('MANAJEMEN USER'),
-                    'href'=>route('admin.users.index',['tahun'=>$tahun]),
-                    'class'=>'',
-                    'icon'=>'fa fa-users',
-                    'can'=>['is_super']
-                    
-
-                ],
+                
                  [
                     'text'=>('MANAJEMEN USER'),
                     'href'=>route('admin.users.index',['tahun'=>$tahun]),
@@ -309,6 +301,16 @@ class MENUPROVIDER extends ServiceProvider
                     
 
                 // ],
+
+                 [
+                    'text'=>('FAQ'),
+                    'href'=>route('admin.faq.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-map',
+                    'can'=>['is_admin']
+                    
+
+                ],
                  
             ],
             'side_right'=>[]

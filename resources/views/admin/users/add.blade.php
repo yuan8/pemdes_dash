@@ -67,12 +67,12 @@
 										<option value="0" > UNACTIVE </option>
 									</select>
 								</div>
-								<div class="form-group" >
+								<div class="form-group" v-if="user.role==4" >
 
 									<label>Admin Derah</label>
 									<p><span>	<input type="checkbox" name="main_daerah"  class="flat-red" v-model="user.main_daerah"></span> @{{user.main_daerah?'ADMIN DAERAH':'BUKAN ADMIN DAERAH'}}</p>
 								</div>
-								<div class="form-group" v-if="Boolean(user.main_daerah)==false">
+								<div class="form-group" v-if="(Boolean(user.main_daerah)==false)&& user.role==4">
 									<label>Role Walidata</label>
 									<p><span>	<input type="checkbox" name="walidata"  class="flat-red"  v-model="user.walidata"></span> @{{user.walidata?'STATUS WALIDATA':'STATUS PRODUSEN DATA'}}</p>
 								</div>
@@ -81,7 +81,7 @@
 
 								<div class="form-group">
 									<label>Role</label>
-									<select class="form-control" :disabled="user.is_active == 0" required="" v-model="user.role" name="role">
+									<select class="form-control" required="" v-model="user.role" name="role">
 									@foreach(HPV::role_list() as $key=>$r)
 										<option value="{{$r['val']}}">{{$r['text']}}</option>
 									@endforeach
@@ -255,7 +255,7 @@ var headVue=new Vue({
 				nik:'{{old('nik')}}',
 				nip:'{{old('nip')}}',
 				name:'{{old('name')}}',
-				role:{{Auth::User()->role==4?4:0}},
+				role:{{Auth::User()->role==4?4:old('role')??0}},
 				daerah_selected:null,
 				daerah_selected_regional:null,
 				main_daerah:{!!old('main_daerah')?'true':'false'!!},
@@ -435,7 +435,7 @@ var headVue=new Vue({
                     var val=this.user.nik??'';
                         var char_phone='';
                         val=val.replace(/[-]/g,'');
-                        val=val.slice(0,15);
+                        val=val.slice(0,16);
                         let arr_val=val.split('');
                         for(var i=0;i<arr_val.length;i++){
                           
@@ -491,6 +491,8 @@ var headVue=new Vue({
 		vuser.phoneNumber();
 		vuser.nikNumber();
 		vuser.check_scope();
+		vuser.username_bind();
+
 
 
 

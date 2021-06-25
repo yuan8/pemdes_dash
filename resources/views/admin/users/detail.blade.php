@@ -68,12 +68,12 @@
 									</select>
 								</div>
 								@if(Auth::User()->id!=$data->id)
-								<div class="form-group" >
+								<div class="form-group" v-if="user.role==4">
 
 									<label>Admin Derah</label>
 									<p><span>	<input type="checkbox" name="main_daerah"  class="flat-red" v-model="user.main_daerah"></span> @{{user.main_daerah?'ADMIN DAERAH':'BUKAN ADMIN DAERAH'}}</p>
 								</div>
-								<div class="form-group" v-if="Boolean(user.main_daerah)==false">
+								<div class="form-group" v-if="(Boolean(user.main_daerah)==false) && user.role==4">
 									<label>Role Walidata</label>
 									<p><span>	<input type="checkbox" name="walidata"  class="flat-red"  v-model="user.walidata"></span> @{{user.walidata?'STATUS WALIDATA':'STATUS PRODUSEN DATA'}}</p>
 								</div>
@@ -154,7 +154,7 @@
 
 				              <select class="form-control" id="regional" name="role_group[]" multiple="">
 				                @foreach($regional_list as $l)
-				                <option value="{{$l->id}}" {{in_array($l->id,$regional_list_acc->toArray())?'selected':''}}>{{$l->name}}</option>
+				                <option value="{{$l->id}}" {{in_array($l->id,$regional_list_acc)?'selected':''}}>{{$l->name}}</option>
 				                @endforeach
 				              </select>
 				             
@@ -330,7 +330,7 @@
 					}
 				}
 			},
-			 phoneNumber:function(){
+			phoneNumber:function(){
                 if(this.user.nomer_telpon){
                     var val=this.user.nomer_telpon;
                         var char_phone='';
@@ -418,7 +418,7 @@
                     var val=this.user.nik;
                         var char_phone='';
                         val=val.replace(/[-]/g,'');
-                        val=val.slice(0,15);
+                        val=val.slice(0,16);
                         let arr_val=val.split('');
                         for(var i=0;i<arr_val.length;i++){
                           
@@ -465,6 +465,8 @@
 		vuser.phoneNumber();
 		vuser.nikNumber();
 		vuser.check_scope();
+		vuser.username_bind();
+
 
 
 
