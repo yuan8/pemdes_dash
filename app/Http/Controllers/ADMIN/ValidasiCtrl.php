@@ -12,6 +12,7 @@ use App\User;
 use Notification;
 use App\Notifications\UpdateData;
 use Alert;
+use App\Http\Controllers\NotifChangeDataCtrl;
 class ValidasiCtrl extends Controller
 {
     
@@ -226,12 +227,6 @@ class ValidasiCtrl extends Controller
             ->where('level',strlen($access_data_daerah))
             ->first();
 
-
-
-
-
-
-
     	$mapTb=DB::table('master_table_map as m')
     	->join('master_column_map as c',[['m.id','=','c.id_ms_table'],['c.validate','=',DB::raw(true)]])
     	->selectRaw('m.*,m.id as id_map')->where('m.id',$request->data)
@@ -251,6 +246,8 @@ class ValidasiCtrl extends Controller
 
 
         }
+
+
 
 
         $jadwal_status=HP::check_jadwal_pengisian($access_data_daerah,$tahun);
@@ -888,7 +885,7 @@ class ValidasiCtrl extends Controller
                     $versuccess=static::verifikasi_data($data_verifikasi,$mapTb->table,$abl_check);
                     $valsuccess=static::validasi_data($data_validasi,$mapTb->table,$abl_check);
                     
-                    static::rekap($access_data_daerah,$maping);
+                    // static::rekap($access_data_daerah,$maping);
 
 
                     $data_req=['tahun'=>$tahun,'data'=>$id_map];
@@ -927,12 +924,11 @@ class ValidasiCtrl extends Controller
                     ];
 
                     static::notifUpdate($access_data_daerah,$notif_message);
-
+                    NotifChangeDataCtrl::change($access_data_daerah,$tahun,$maping['id_map'],Auth::User()->id);
 
                     Alert::success('Berhasil','Jumlah Update : '.count($upsuccess).' , Jumlah Verifikasi : '.count($versuccess).' , Jumlah Validasi :'.count($valsuccess));
 
 
-                    
                     $kdkd=[
                         'tahun'=>$tahun,
                         'id'=>$maping['id_map'],'data'=>$maping['id_map']];
@@ -1066,7 +1062,8 @@ class ValidasiCtrl extends Controller
             count(distinct(case when dt.status_validasi=4 then dt.kode_desa else null end) ) as ver_4,
             count(distinct(case when dt.status_validasi=5 then dt.kode_desa else null end) ) as ver_2,
             count(distinct(case when dt.kode_desa then dt.kode_desa else null end) ) as jumlah_data,
-            count(distinct(case when dt.status_validasi>0 then dt.kode_desa else null end) ) as handle
+            count(distinct(case when dt.status_validasi>0 then dt.kode_desa else null end) ) as handle,
+            
 
             "
         )->first();

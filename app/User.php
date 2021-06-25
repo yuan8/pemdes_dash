@@ -16,7 +16,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','api_token','role','kode_daerah'
+        'name', 'email', 'password','api_token','role','kode_daerah','nomer_telpon',
+        'nik','nip','profile_pic','jabatan','walidata','main_daerah','is_active','wa_number','wa_notif','email_notif'
     ];
 
     /**
@@ -43,6 +44,10 @@ class User extends Authenticatable
         }else{
             return null;
         }
+    }
+
+    public function routeNotificationForChatAPI(){
+        return str_replace('+','',str_replace('-', '', $this->nomer_telpon));
     }
 
     public function receivesBroadcastNotificationsOn()

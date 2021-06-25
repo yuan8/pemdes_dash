@@ -287,7 +287,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.users.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-users',
-                    'can'=>['is_daerah_kabkota']
+                    'can'=>['is_daerah_admin']
                 ],
 
                 //  [

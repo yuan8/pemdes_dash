@@ -33,5 +33,11 @@ return [
     'sparkpost' => [
         'secret' => env('SPARKPOST_SECRET'),
     ],
+    'chatapi' => [
+        'token'          => env('CHATAPI_TOKEN', ''),
+        'api_url'       => env('CHATAPI_URL', ''),
+    ],
+
+
 
 ];

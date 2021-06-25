@@ -12,4 +12,8 @@ Route::prefix('provider-messager')->group(function(){
 			'testing_status'=>ok
 		];
 	});
+
+	Route::get('test','NotifChangeDataCtrl@testing');
+	Route::get('test-blash','NotifChangeDataCtrl@notifWa');
+
 });

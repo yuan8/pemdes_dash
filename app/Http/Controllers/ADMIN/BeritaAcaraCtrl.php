@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Dompdf\Dompdf;
 use PDF;
 use Storage;
+use Validator;
 use Alert;
 
 
@@ -60,13 +61,15 @@ class BeritaAcaraCtrl extends Controller
             if($data->path_berita_acara){
                 if(!file_exists(public_path($data->path_berita_acara))){
                      DB::table('tb_berita_acara')->where('id',$data->id)->update([
-                        'path_berita_acara'=>null
+                        'path_berita_acara'=>null,
+                        'path_ttd'=>null,
+
                     ]);
                      $ttd['path_berita_acara']=null;
                 }
             }
 
-            if($data->path_ttd ){
+            if($data->path_ttd){
                 if(!file_exists(public_path($data->path_ttd))){
                     DB::table('tb_berita_acara')->where('id',$data->id)->update([
                         'path_ttd'=>null
@@ -77,6 +80,10 @@ class BeritaAcaraCtrl extends Controller
             }
 
         }
+
+         $ttd['path_ttd_them']=route('a.b.r.berkas.appv',[
+                'tahun'=>$tahun,
+                'kode_daerah'=>$kode_daerah,'kode_data'=>$kode_data]);
 
         if($ttd['path_berita_acara'] and (!$ttd['path_ttd'])){
             $ttd['path_ttd']=route('a.b.r.berkas.appv',[
@@ -108,11 +115,40 @@ class BeritaAcaraCtrl extends Controller
             ])->first();
 
             if($data){
-                 $data=DB::table('tb_berita_acara')
-                 ->where('id',$data->id)
-                 ->update(
-                    ['penanda_tangan'=>json_encode($request->peserta)]
-                 );
+
+                $data_up=[
+
+                ];
+
+                if($request->peserta){
+                    $data_up['penanda_tangan']=json_encode($request->peserta);
+                }
+
+                if($request->file_pengesahan){
+                    $valid=Validator::make($request->all(),[
+                        'file_pengesahan'=>'required|file|mimes:pdf'
+                    ]);
+
+                    if($valid->fails()){
+                        Alert::error('Gagal',$valid->erros()->first());                       
+                        return back()->withInput();
+                    }
+
+                    $file_ttd=$request->file('file_pengesahan')
+                    ->storeAs('public/berita-acara/'.$data->kode_daerah.'/'.$tahun, 'data-'.static::kode_data($data->kode_daerah,$data->id_ms_table).'-ttd.pdf');
+                    $data_up['path_ttd']=Storage::url($file_ttd);
+                }
+                
+                if(count($data_up)){
+                     $data=DB::table('tb_berita_acara')
+                     ->where('id',$data->id)
+                     ->update($data_up);
+                    if($data){
+                        Alert::success('Berhasil');
+                    }
+                }
+
+
             }
 
             return back();  

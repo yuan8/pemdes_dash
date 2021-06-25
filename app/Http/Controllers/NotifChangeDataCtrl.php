@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
+use Notification;
+use NotificationChannels\ChatAPI\ChatAPIMessage;
+use NotificationChannels\ChatAPI\ChatAPIChannel;
+use App\Notifications\WaBlash;
+
+
+
 class NotifChangeDataCtrl extends Controller
 {
     //
 
-
+   
     public static function change($kode_daerah,$tahun,$id_table,$id_user){
     	$len=strlen($kode_daerah);
 
@@ -17,12 +24,17 @@ class NotifChangeDataCtrl extends Controller
     	if($tmap){
     		$table=$tmap->table;
     		$ch_kode=$kode_daerah;
-    		foreach ([10,6,4,2] as $key => $level) {
-    			if(strlen($ch_kode)<$level){
-    				$ch_kode=substr($ch_kode,0,$level)
+            $acc=[];
+    		foreach ([2,4,6,10] as $key => $level) {
+
+    			if(strlen($ch_kode)>=$level){
+                    
+    				$daer=substr($ch_kode,0,$level);
+                    $acc[]=$daer;
+
     				$data=(array)DB::table($table.' as td')
 		    		->selectRaw("
-                        ".$ch_kode." as kode_daerah,
+                        ".$daer." as kode_daerah,
                         '".$id_table."' as id_table_map,
                         ".$tahun." as tahun,
 		    			count(distinct(case when td.status_validasi=5 then td.kode_desa else null end)) as valid,
@@ -33,48 +45,58 @@ class NotifChangeDataCtrl extends Controller
                         count(distinct(td.kode_desa)) as desa_terdata
 
 		    		")
-                    ->where('td.kode_desa','like',$ch_kode.'%')
+                    ->where('td.kode_desa','like',$daer.'%')
                     ->where('td.tahun',$tahun)
                     ->first();
 
                     if($data){
-                        $jumlah_desa_total=DB::table('master_desa')->where('kddesa','like',$ch_kode.'%')->count();
-                        $data['desa_tidak_terdata']=(int)$jumlah_desa_total- (int)['desa_terdata'];
-                        $data_up=$data;
-                        $data_up['updated_at']=Carbon::now(),
-                        $data_up['id_user']=$id_user,
-                        $data_up['kode_daerah_trigger']=$kode_daerah,
+                        $jumlah_desa_total=DB::table('master_desa')->where('kddesa','like',$daer.'%')->count();
 
-                        DB::table('tb_notifikasi_wa')->updateOrInsert($data,$data_up);
+                        $data['desa_tidak_terdata']=((int)$jumlah_desa_total) - ((int)$data['desa_terdata']);
+                        $data_up=$data;
+                        $data_up['updated_at']=Carbon::now();
+                        $data_up['id_user']=$id_user;
+                        $data_up['tahun']=$tahun;
+                        $data_up['kode_daerah_trigger']=$kode_daerah;
+                        $data_up['status']=0;
+                        $data_up['created_at']=Carbon::parse($tahun.'-12-30')->endOfMonth();
+                        $acc[]=$data_up;
+                        DB::table('tb_notifikasi_wa')->updateOrInsert([
+                            'id_table_map'=>$data_up['id_table_map'],
+                            'kode_daerah'=>$data_up['kode_daerah'],
+                            'tahun'=>$data_up['tahun'],
+                        ],$data_up);
                     }
     			}
     		}
 
 
     	}
+
+
     }
 
 
   
 
-    static function mes_them($key,$value){
+    static function mes_them($key,$value,$desa=0){
         $mes='';
         if($value){
             switch ($key) {
                 case 'unhandle':
-                    $mes='DATA BELUM DI VERIFIKASI : '.number_format($value).' DESA \n';
+                    $mes='DATA BELUM DI VERIFIKASI '.$desa?'':':'.number_format($value).' DESA';
                     break;
                  case 'ver_10':
-                    $mes='DATA DIVERIFIKASI DESA : '.number_format($value).' DESA \n';
+                    $mes='DATA VERF DESA/KEL '.$desa?'':':'.number_format($value).' DESA';
                     break;
                  case 'ver_6':
-                    $mes='DATA DIVERIFIKASI KECAMATAN : '.number_format($value).' DESA \n';
+                    $mes='DATA VERF KEC '.$desa?'':':'.number_format($value).' DESA';
                     break;
-                case 'ver_4':
-                    $mes='DATA DIVERIFIKASI KOTA/KAB : '.number_format($value).' DESA \n';
-                    break;
+                // case 'ver_4':
+                //     $mes='DATA DIVERIFIKASI KOTA/KAB '.$desa?'':':'.number_format($value).' DESA';
+                //     break;
                   case 'valid':
-                    $mes='DATA VALID : '.number_format($value).' DESA \n';
+                    $mes='DATA VALID '.$desa?'':':'.number_format($value).' DESA';
                     break;
                 
                 default:
@@ -111,37 +133,94 @@ class NotifChangeDataCtrl extends Controller
         }
     }
 
+    public function testing(){
+        $user=(object)['nomer_telpon'=>'6287836155136'];
+        $message=['content'=>'ss'];
 
-    public function notifWa(){
+        Notification::route('chatapi', $user->nomer_telpon)
+            ->notify(new WaBlash($message));
+
+
+       
+
+    }
+
+
+    public static function notifWa(){
+            $p=[];
+
+        set_time_limit(-1);
+        ini_set('memory_limit', '3048M');
 
         $waktu=Carbon::now()->addDays(-1)->startOfDay();
+        $waktu_end=Carbon::now()->addDays(-1)->endOfDay();
+
         $data=DB::table('tb_notifikasi_wa')
-        ->where('updated_at','>',$waktu)
-        ->where('tahun',date('Y'))
+        // ->where('updated_at','>=',$waktu)
+        // ->where('updated_at','<=',$waktu_end)
+        // ->where('tahun',date('Y'))
         ->where('status',0)
         ->limit(10)->get();
 
         foreach ($data as $keyi => $value) {
             $dmeta=static::level(strlen($value->kode_daerah));
-            $daerah=DB::table($dmeta[0])->selectRaw($dmeta[1].' as name')->where($dmeta[1],'=',$value->kode_daerah)->pluck('name')->first();
+            $daerah=DB::table($dmeta[0])
+            ->selectRaw("CONCAT('(',".$dmeta[1].",') ',".$dmeta[2].  ")".' as name')
+            ->where($dmeta[1],'=',$value->kode_daerah)
+            ->pluck('name')->first();
 
-            $message='KONDISI DATA '.''.' DAERAH '.$daerah.'\n';
-            foreach ($value as $key => $v) {
-                $message.=static::mes_them($key,$v);
+
+            $table=DB::table('master_table_map')->where('id',$value->id_table_map)->pluck('name')->first();
+
+$message='
+REKAP DATA '.strtoupper($waktu->format('d F Y')).'
+'.$table.' TAHUN '.$value->tahun.' DAERAH '.$daerah.' 
+
+';
+$nom=0;
+foreach ($value as $key => $v) {
+    $stat=static::mes_them($key,$v);
+    if($stat){
+    $nom++;
+
+$message.='
+'.($nom).'. '.static::mes_them($key,$v).'';
+
+
+    }
+}
+
+
+    $user=DB::table('users')->where([
+        ['kode_daerah','=',$value->kode_daerah],
+        ['role','=',4],
+        ['wa_number','=',true],
+        ['wa_notif','=',true],
+        ['is_active','=',true],
+        [DB::raw("CHAR_LENGTH(nomer_telpon)"),'>',10]
+    ])->get();
+
+            // dd(urlencode($message));
+
+
+            foreach ($user as $key => $u) {
+
+                $p[]=[$u->nomer_telpon,$table];
+                $m='HALLO '.strtoupper($u->name).' :-)
+'.$message;
+                 $not=Notification::route('chatapi', $u->nomer_telpon)
+                 ->notify(new WaBlash(['content'=>($m)]));
             }
 
-            $user=DB::table('users')->where([
-                ['kode_daerah','=',$value->kode_daerah],
-                ['role','=',4],
-                ['is_active','=',true],
-                [DB::raw("CHAR_LENGTH(nomer_telpon)"),'>',10]
-            ])->get()->pluck('nomer_telpon');
+            DB::table('tb_notifikasi_wa')->where('id',$value->id)->update([
+                'status'=>1
+            ]);
 
-            foreach ($user as $key => $value) {
-                
-            }
+
 
         }
+            return $p;
+
     }
 
 }

@@ -271,7 +271,7 @@ class HELPERPROVIDER extends ServiceProvider
 		return $data;
 	}
 
-	public static function role_user($role=null){
+	public static function role_user($role=null,$u=null){
 		$data=[];
 		switch ($role) {
 			case 1:
@@ -290,7 +290,24 @@ class HELPERPROVIDER extends ServiceProvider
 				# code...
 				break;
 			case 4:
-			$data['text']='ADMIN KAB/KOTA';
+			$data['text']='USER DAERAH';
+					if($u){
+						if($u->walidata){
+						$data['text']='<b>WALIDATA</b>';
+
+						}else if($u->main_daerah){
+							$data['text']='<b>ADMIN</b>';
+
+						}else{
+							$data['text']='<b>PRODUSEN DATA</b>';
+
+						}
+
+						$data['text'].=' '.$u->nama_daerah_handle();
+
+					}
+
+			
 
 				# code...
 				break;

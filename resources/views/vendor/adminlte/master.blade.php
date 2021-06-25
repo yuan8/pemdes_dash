@@ -265,12 +265,14 @@
     <script type="text/javascript">
         $(function(){
          setTimeout(function(){
-          Echo.private('App.User.'+window.METAUSER.id)
+          if(window.Echo !==undefined){
+             Echo.private('App.User.'+window.METAUSER.id)
             .notification((notification) => {
                 
                 window.notifO.fire(notification);
             });
-          },500);
+          }          
+        },500);
 
         });
 

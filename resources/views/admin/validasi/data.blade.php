@@ -204,23 +204,7 @@
 		</form>
 	</div>
 	<div class="box-body ">
-		@if(strlen($kode_daerah)==6)
-		<div class="row bg-maroon">
-			@if(Auth::User()->can('is_only_daerah_verifikasi'))
-				<div class="col-md-12 text-center" style="border-top:2px solid #fff; padding-bottom: 10px; padding-top: 10px;" >
-					<p class="text-center"><b><i>
-
-					KUNCI  "{{$nama_data}}" TERVERIFIKASI  KEDALAM DRAF BERITA ACARA</i></b> </p>
-					<form>
-					@csrf
-					<input type="hidden" name="id_map" value="{{$data_index}}">
-					<button class="btn bg-navy" type="submit"><i class="fa fa-key"></i> KUNCI DATA</button>
-					</form>
-				</div>
-				
-			@endif
-		</div>
-		@endif
+		
 		<h5><b>TOTAL DATA : {{count($data)}} DATA</b></h5>
 		@if(count($data)>0)
 

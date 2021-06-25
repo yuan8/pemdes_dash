@@ -48,8 +48,24 @@
 
 							@endif
 						</td>
-						<td></td>
-						<td></td>
+						<td>
+							@if($d->path_ttd)
+							<a target="_blank" href="{{asset($d->path_ttd)}}" class="btn btn-xs btn-primary">Pengesahan Berita Acara</a>
+							@else
+							Belum Terdapat Pengesahan
+
+							@endif
+
+						</td>
+						<td>
+							@if($d->path_ttd and $d->path_berita_acara)
+								Lengkap
+							@elseif($d->path_berita_acara)
+								Berita Acara Telah Dibuat, Silahkan melengkapi dengan Lembar pengesahan
+							@else
+								Belum Terdapat Data Berita Acara
+							@endif
+						</td>
 
 						<td style="min-width: 200px;">
 							<p>TEHIMPUN DARI {{HPV::nformat($d->rekap_real['jum_kec_l'])}} / {{HPV::nformat($d->total_kec)}} KECAMATAN</p>
@@ -78,7 +94,9 @@
 						</div>	
 						</td>
 						<td>
+							@if($d->path_berita_acara)
 							<a href="{{route('a.b.r.edit',['tahun'=>$GLOBALS['tahun_access'],'kode_daerah'=>Auth::User()->kode_daerah,'id'=>$d->id_data])}}" class="btn btn-warning btn-xs"><i class="fa fa-pen"></i> Edit</a>
+							@endif
 						</td>
 
 

@@ -34,6 +34,9 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 });
 
 Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'').'data/admin/{tahun}')->middleware(['auth:api','bindTahun'])->group(function(){
+    
+    Route::get('list-daerah','Admin\UserCtrl@access_daerah_admin')->name('api.list_access_daerah');
+
 	Route::get('validation-form/{table}/{id}','API\ValidateCtrl@form')->name('api.data.validate.form');
     Route::post('show-my-list-sso-access','SSOCtrl@List')->name('api.sso.list');
     // Route::post('add-my-list-sso-access','SSOCtrl@add')->name('api.sso.add');

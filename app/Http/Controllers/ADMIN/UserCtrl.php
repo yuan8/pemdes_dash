@@ -7,7 +7,10 @@ use App\Http\Controllers\Controller;
 use DB;
 use Auth;
 use Validator;
+use App\User;
 use Alert;
+use MyHash;
+use Hash;
 class UserCtrl extends Controller
 {
     //
@@ -21,13 +24,19 @@ class UserCtrl extends Controller
 
 
     public function index($tahun,Request $request){
-        $data=DB::table('users');
+        $data=User::where('id','!=',Auth::User()->id);
+        
+
+        if(Auth::User()->role==4 && Auth::User()->main_daerah){
+            $data=User::where('kode_daerah','like',Auth::User()->kode_daerah.'%');
+        }else{
+        }
 
         if($request->q){
             $data=$data->where('name','like','%'.$request->q.'%');
         }
 
-        $data=$data->paginate(10);
+        $data=$data->orderBy('kode_daerah','asc')->paginate(10);
 
         return view('admin.users.index')->with(['data'=>$data]);
 
@@ -36,21 +45,66 @@ class UserCtrl extends Controller
 
     public function up_profile($tahun,$id,Request $request){
         $u=Auth::User();
-        if(($u->role==1)OR ($id==$u->id)){
+        $x=false;
+
+        $ue=DB::table('users')->where('id',$id)->first();
+        if(!$ue){
+            return redirect()->route('admin.users.index',['tahun'=>$tahun]);
+        }
+
+        if($request->kode_daerah){
+             $x=strpos((string)$request->kode_daerah??'x', (string)(!empty($u->kode_daerah)?$u->kode_daerah:$request->kode_daerah))!==false;
+        }
+
+
+        if(($u->role==1) OR ($id==$u->id) OR $x ){
 
             $data=[
                 'name'=>$request->name,
                 'username'=>str_replace(' ', '_', trim(($request->username))),
                 'email'=>$request->email,
+                'nomer_telpon'=>$request->nomer_telpon,
+                'wa_number'=>$request->wa_number=='on'?true:false,
+                'wa_notif'=>$request->wa_notif=='on'?true:false,
+                'is_active'=>$request->is_active?true:false,
+                'nik'=>$request->nik?str_replace('-', '', trim($request->nik)):null,
+                'nip'=>$request->nip?trim($request->nip):null,
+
             ];
+
+            if($u->can('id_admin')){
+                    $data['role']=$request->role;
+            }else if($ue->role){
+                    $data['role']=$ue->role;
+            }
+
+            if($id!=$u->id){
+
+                $data['kode_daerah']=($data['role']==4)?($request->kode_daerah??null):null;
+                $data['walidata']=($data['role']==4)?($request->walidata=='on'?true:false):false;
+                if((string)$u->kode_daerah!=(string)$data['kode_daerah']){
+                    $data['main_daerah']=($data['role']==4)?($request->main_daerah=='on'?true:false):false;
+                }
+            }else{
+
+            }
+
+
+
+
+
 
             $valid=Validator::make($data,[
                 'name'=>'required|string|min:3',
                 'email'=>'required|email',
                 'username'=>'required|string',
-
+                'nomer_telpon'=>'required|string|min:11',
+                'wa_notif'=>'nullable|boolean',
+                'wa_number'=>'nullable|boolean',
+                'kode_daerah'=>'nullable|numeric',
 
             ]);
+
 
             if($valid->fails()){
                 Alert::error('Gagal',$valid->errors()->first());
@@ -204,33 +258,42 @@ class UserCtrl extends Controller
         if($data){
             $data_regional=[];
             $data->daerah_selected=null;
+            $data->daerah_selected_regional=null;
             if($data->role>3){
                 $level_kode=strlen(trim($data->kode_daerah));
                 switch ($level_kode) {
                     case 2:
-                        $daerah_access=DB::table('master_provinsi as pro')->where('kdprovinsi',$data->kode_daerah)
-                        ->selectraw('kdprovinsi as id,nmprovinsi as text')->first();
+                        
+                        $data->level_daerah='provinsi';
+                        $data->daerah_selected=DB::table('master_provinsi')->selectraw("kdprovinsi as id,nmprovinsi as text")
+                        ->where('kdprovinsi',$data->kode_daerah)
+                        ->first();
 
-                            $data->level_daerah='provinsi';
-                       
+
                         break;
                     case 4:
-                        $daerah_access=DB::table('master_kabkota as kab')->where('kdkabkota',$data->kode_daerah)
-                        ->selectraw("kdkabkota as id,concat(nmkabkota,' - ',(select nmprovinsi from master_provinsi where left(kdkabkota,2)=kdprovinsi limit 1))  as text")->first();
+                        
                         $data->level_daerah='kab_kota';
+                         $data->daerah_selected=DB::table('master_kabkota')->selectraw("kdkabkota as id,concat(nmkabkota,' - ',nmprovinsi) as text")
+                        ->where('kdkabkota',$data->kode_daerah)
+                        ->first();
 
                         # code...
                         break;
                     case 6:
-                         $daerah_access=DB::table('master_kecamatan as kec')->where('kdkecamatan',$data->kode_daerah)
-                        ->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',(select nmkabkota from kabkota where kdkabkota = left(kdkecamatan,4) limit 1),' - ',(select nmprovinsi from provinsi where left(kdkecamatan,2)=kdprovinsi limit 1))  as text")->first();
+                       
                         $data->level_daerah='kecamatan';
+                         $data->daerah_selected=DB::table('master_kecamatan')->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi) as text")
+                        ->where('kdkecamatan',$data->kode_daerah)
+                        ->first();
 
                         break;
                     case 10:
-                        $daerah_access=DB::table('master_desa as des')->where('kode_dagri',$data->kode_daerah)
-                        ->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',(select nmkabkota from kabkota where kdkabkota = left(kode_dagri,4) limit 1),' - ',(select nmprovinsi from provinsi where left(kode_dagri,2)=kdprovinsi limit 1))  as text")->first();
+                       
                         $data->level_daerah='desa';
+                        $data->daerah_selected=DB::table('master_desa')->selectraw("kddesa as id,concat(nmdesa,' - ',nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi) as text")
+                        ->where('kddesa',$data->kode_daerah)
+                        ->first();
 
                         break;
                     
@@ -239,7 +302,9 @@ class UserCtrl extends Controller
                         break;
                 }
 
-                $data->daerah_selected=$daerah_access;
+               
+
+
 
             }else if($data->role==3){
                 $data_regional=DB::table('users_group as ug')
@@ -251,13 +316,13 @@ class UserCtrl extends Controller
                 $data->level_daerah='regional';
                 $data->kode_daerah=null;
 
-                $data->daerah_selected=$data_regional;
+                $data->daerah_selected_regional=$data_regional;
 
             }
 
 
-
-            
+            // dd($data);
+            // 
             $instansi=DB::table('master_instansi as c')
             ->get();
 
@@ -272,27 +337,174 @@ class UserCtrl extends Controller
 
             // ,'record_instansi'=>$instansi_user
             $regional_list=DB::table('master_regional')->get();
-            return view('admin.users.detail')->with(['data'=>$data,'regional_list_acc'=>$data_regional,'regional_list'=>$regional_list,'daerah_ac'=>$daerah_access,'instansi'=>$instansi]);
+            return view('admin.users.detail')->with([
+                'data'=>$data,
+                'regional_list_acc'=>$data_regional,
+                'regional_list'=>$regional_list,
+                'daerah_ac'=>$daerah_access,
+                'instansi'=>$instansi,
+                'list_daerah_access'=>static::access_daerah($tahun)]);
         }
 
     }
 
+
+
+    public function access_daerah_admin($tahun,Request $request){
+        $scope=$request->scope??0;
+        $data=[];
+        switch ($scope) {
+            case 2:
+                $data=DB::table('master_provinsi')->selectraw('kdprovinsi as id,nmprovinsi as text')
+                ->where(DB::raw("nmprovinsi"),'like','%'.$request->q.'%')
+                ->get()->toArray();
+                # code...
+                break;
+             case 4:
+                $data=DB::table('master_kabkota')->selectraw("kdkabkota as id,concat(nmkabkota,' - ',nmprovinsi) as text")
+                ->where(DB::raw("concat(nmkabkota,' - ',nmprovinsi)"),'like','%'.$request->q.'%')->get()->toArray();
+                # code...
+                break;
+            case 6:
+                $data=DB::table('master_kecamatan')->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi) as text")
+                ->where(DB::raw("concat(nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi)"),'like','%'.$request->q.'%')
+                ->get()->toArray();
+                break;
+            case 10:
+                $data=DB::table('master_desa')->selectraw("kddesa as id,concat(nmdesa,' - ',nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi) as text")
+                ->where(DB::raw("concat(nmdesa,' - ',nmkecamatan,' - ',nmkabkota,' - ',nmprovinsi)"),'like','%'.$request->q.'%')
+                ->get()->toArray();
+            break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        return array('items'=>$data);
+    }
+
+    public static function access_daerah($tahun){
+        $data=Auth::User();
+        $daerah_access_inher=[];
+        if($data){
+            if($data->role==4){
+                 switch (strlen($data->kode_daerah)) {
+                    case 2:
+                        $provinsi=DB::table('master_provinsi')->selectraw('kdprovinsi as id,nmprovinsi as text')->where('kdprovinsi','like',$data->kode_daerah.'%')->get()->toArray();
+
+                         $kota=DB::table('master_kabkota')->selectraw('kdkabkota as id,nmkabkota as text')->where('kdkabkota','like',$data->kode_daerah.'%')->get()->toArray();
+
+                        $kecamatan=DB::table('master_kecamatan')->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',nmkabkota) as text")->where('kdkecamatan','like',$data->kode_daerah.'%')->get()->toArray();
+
+                         $desa=DB::table('master_desa')->selectraw("kddesa as id,concat('DESA ',nmdesa,' - ',nmkecamatan) as text")->where('kddesa','like',$data->kode_daerah.'%')->get()->toArray();
+
+                         $daerah_access_inher=array_merge($provinsi,$kota,$kecamatan,$desa);
+
+                        # code...
+                        break;
+                    case 4:
+                     $kota=DB::table('master_kabkota')->selectraw('kdkabkota as id,nmkabkota as text')->where('kdkabkota','like',$data->kode_daerah.'%')->get()->toArray();
+                        $kecamatan=DB::table('master_kecamatan')->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',nmkabkota) as text")->where('kdkecamatan','like',$data->kode_daerah.'%')->get()->toArray();
+                        $desa=DB::table('master_desa')->selectraw("kddesa as id,concat('DESA ',nmdesa,' - ',nmkecamatan) as text")->where('kddesa','like',$data->kode_daerah.'%')->get()->toArray();
+                        $daerah_access_inher=array_merge($kota,$kecamatan,$desa);
+
+
+                    break;
+
+                      case 6:
+                     
+                        $kecamatan=DB::table('master_kecamatan')->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',nmkabkota) as text")->where('kdkecamatan','like',$data->kode_daerah.'%')->get()->toArray();
+
+                        $desa=DB::table('master_desa')->selectraw("kddesa as id,concat('DESA ',nmdesa,' - ',nmkecamatan) as text")->where('kddesa','like',$data->kode_daerah.'%')->get()->toArray();
+
+                        $daerah_access_inher=array_merge($kecamatan,$desa);
+
+
+                    break;
+
+                        case 10:
+                     
+                        $kecamatan=DB::table('master_kecamatan')->selectraw("kdkecamatan as id,concat(nmkecamatan,' - ',nmkabkota) as text")->where('kdkecamatan','like',$data->kode_daerah.'%')->get()->toArray();
+
+                        $desa=DB::table('master_desa')->selectraw("kddesa as id,concat('DESA ',nmdesa,' - ',nmkecamatan) as text")->where('kddesa','like',$data->kode_daerah.'%')->get()->toArray();
+
+                        $daerah_access_inher=array_merge($kecamatan,$desa);
+
+
+                    break;
+                    
+                    default:
+                        # code...
+                        break;
+                }
+            }else{
+                
+            }
+        }
+
+        return $daerah_access_inher;
+    }
+
+
+
     public function add($tahun){
-            return view('admin.users.add');
+
+            return view('admin.users.add')->with([
+                'list_daerah_access'=>static::access_daerah($tahun)
+            ]);
     }
 
      public function store($tahun,Request $request){
+        $v=[
+            'username'=>'required|string|unique:users,username|min:3',
+            'email'=>'required|email|unique:users,email',
+            'nik'=>'required|string|unique:users,nik|min:11',
+            'nip'=>'required|string|unique:users,nip|min:10',
+            'jabatan'=>'required|string|min:1',
+            'nomer_telpon'=>'required|string|min:11',
+            'password'=>'required|confirmed|min:8',
 
-        $data=DB::table('users')->insertOrIgnore([
+        ];
+        $u_daerah=Auth::User()->role==4;
+
+
+        if($u_daerah){
+            $v['kode_daerah']='required|min:2';
+        }
+
+        $valid=Validator::make($request->all(),$v);
+
+
+        if($valid->fails()){
+            Alert::error('Gagal',$valid->errors()->first());
+            return back()->withInput();
+        }
+
+
+        $data_insert=[
             'name'=>$request->name,
             'email'=>$request->email,
+            'username'=>$request->username,
+            'nip'=>$request->nip,
+            'nik'=>$request->nik,
+            'jabatan'=>$request->jabatan,
+            'nomer_telpon'=>$request->nomer_telpon,
+            'wa_number'=>$request->wa_number=='on',
+            'wa_notif'=>($request->wa_notif=='on'),
+            'main_daerah'=>($request->main_daerah=='on')?true:false,
+            'walidata'=>($request->walidata=='on')?true:false,
+            'kode_daerah'=>$u_daerah?$request->kode_daerah:null,
             'password'=>MyHash::pass_encode($request->password),
-            'role'=>in_array($request->role, [1,2,3,4])?$request->role:2,
+            'role'=>$u_daerah?4:(in_array($request->role, [1,2,3,4])?$request->role:2),
             'api_token'=>Hash::make($request->email),
             'is_active'=>((boolean)$request->is_active)==true?true:false
-        ]);
+        ];
+         $data=DB::table('users')->insertOrIgnore($data_insert);
+
 
         if($data){
+            Alert::success('Berhasil','User Berhasil Ditambahkan');
             return redirect()->route('admin.users.index',['tahun'=>$GLOBALS['tahun_access']]);
         }
 

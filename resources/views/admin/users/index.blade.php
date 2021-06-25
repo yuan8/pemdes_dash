@@ -21,17 +21,24 @@
 				<tr>
 				<th>AKSI</th>
 				<th>NAME</th>
+				<th>USERNAME</th>
+
 				<th>EMAIL</th>
+				<th>KODE DAERAH</th>
+
 				<th>ROLE</th>
-				<th>AKSES WEB</th>
-				<th>AKSES API</th>
+				<th>NOMER TELPON</th>
+				<th>WA BLASH</th>
+
+
+				{{-- <th>AKSES API</th> --}}
 				<th>STATUS</th>
 
 			</tr>
 			</thead>
 			<tbody>
 				@foreach($data as $d)
-					<tr class="{{$d->is_active==TRUE?'':'bg-warning'}}">
+					<tr class="{{$d->is_active==TRUE?'':'bg-maroon'}}">
 						<td>
 							<div class="btn-group">
 								<a href="{{route('admin.users.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-warning btn-xs"><i class="fa fa-pen"></i> Edit</a>
@@ -39,18 +46,28 @@
 						</td>
 						
 						<td>{{$d->name}}</td>
+						<td>{{$d->username}}</td>
+
 						<td>{{$d->email}}</td>
-						<td>{{HPV::role_user($d->role)['text']}}</td>
+						<td>{{$d->kode_daerah}}</td>
+
+						<td>{!!HPV::role_user($d->role,$d)['text']!!}</td>
 						<td>
-							{{-- @if($d->access_web)
+							{{$d->nomer_telpon}}
+						</td>
+						<td>
+							{{$d->wa_notif?"ACTIVE":'NON ACTIVE'}}
+						</td>
+						{{-- <td>
+							@if($d->access_web)
 								<i class=" text-success fa fa-check"></i> ACCESS
 							@else
 								NO ACCESS
-							@endif --}}
+							@endif
 							
 						</td>
 						<td>
-							{{-- @if($d->access_api)
+							@if($d->access_api)
 								<div class="btn-group">
 									<button class="btn btn-xs one-line" disabled="" style="width:100px;">{{$d->api_token}}</button>
 									<button class="btn btn-primary btn-xs">
@@ -59,8 +76,8 @@
 								</div>
 							@else
 								NO ACCESS
-							@endif --}}
-						</td>
+							@endif
+						</td> --}}
 						<td>{{$d->is_active==TRUE?"ACTIVE":'UNACTIVE'}}</td>
 
 

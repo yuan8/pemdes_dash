@@ -13,7 +13,7 @@
 			@endif
 			<div class="row row-no-gutters">
 				<div class="col-md-9" style="height: 500px; overflow: scroll;">
-					<form enctype="multypart/form-data" action="{{route('a.b.r.save',['tahun'=>$GLOBALS['tahun_access'],'kode_daerah'=>$kode_daerah,'id_data'=>$id_data])}}" method="post">
+					<form enctype="multipart/form-data" action="{{route('a.b.r.save',['tahun'=>$GLOBALS['tahun_access'],'kode_daerah'=>$kode_daerah,'id_data'=>$id_data])}}" method="post">
 						@csrf
 						<div class="" v-if="context_menu=='berita_acara'">
 						<p><b>DATA BERITA ACARA</b></p>
@@ -59,10 +59,17 @@
 						<p><b>BERKAS PENGESAHAN</b></p>
 						<hr>
 						<div class="form-group">
-							<label>FILE PENGESAHAN</label>
-							<input type="file"  name="file_pengesahan" class="form-control">
+							<label>UPLOAD FILE PENGESAHAN BERTANDA TANGGAN</label>
+							 <div class="input-group">
+						      <input type="file" id="file-pengesahan-ttd" accept="application/pdf" v-on:change="file_change($event)"   name="file_pengesahan" class="form-control">
+						      <span class="input-group-btn">
+						        <button class="btn btn-danger" v-on:click="file_clear()" type="button"><i class="fa fa-trash"></i> Kosongkan</button>
+						        <a class="btn btn-primary" v-bind:href="path_ttd_them" download type="button"><i class="fa fa-download"></i> Themplate </a>
+						      </span>
+						    </div>
+							
 						</div>
-						<iframe v-bind:src="path_ttd" style="width:100%; height:480px; "></iframe>
+						<iframe v-bind:src="path_ttd_rendered" style="width:100%; height:480px; "></iframe>
 					</div>
 					<div>
 						<hr>
@@ -72,9 +79,9 @@
 				</div>
 				<div class="col-md-3" style="height: 500px; overflow: scroll; background:#222; padding:10px;">
 					 <ul class="list-group">
-					  <li class="list-group-item {{ $data['path_berita_acara']?'bg-yellow':'' }}" >{!! $data['path_berita_acara']?'<i class="fa fa-check"></i>':'' !!} <span v-on:click="active('berita_acara')">BERKAS DATA</span></li>
-					  <li class="list-group-item {{ $data['penanda_tangan']!=[]?'bg-yellow':'' }}">{!! $data['penanda_tangan']!=[]?'<i class="fa fa-check"></i>':'' !!} <span v-on:click="active('penandatanganan')">PESERTA DATA</span></li>
-					  <li class="list-group-item" {{ $data['path_ttd']?'bg-yellow':'' }}><span v-on:click="active('berkas_ttd')">BERKAS PENGESAAHAN</span></li>
+					  <li v-bind:class="'list-group-item '+(context_menu=='berita_acara'?'':'{{ $data['path_berita_acara']?'bg-yellow':'' }}')" >{!! $data['path_berita_acara']?'<i class="fa fa-check"></i>':'' !!} <span v-on:click="active('berita_acara')">BERKAS DATA</span></li>
+					  <li v-bind:class="'list-group-item '+(context_menu=='penandatanganan'?'':'{{ $data['penanda_tangan']!=[]?'bg-yellow':'' }}')">{!! $data['penanda_tangan']!=[]?'<i class="fa fa-check"></i>':'' !!} <span v-on:click="active('penandatanganan')">PESERTA DATA</span></li>
+					  <li v-bind:class="'list-group-item '+(context_menu=='berkas_ttd'?'':'{{ $data['path_ttd']?'bg-yellow':'' }}')"><span v-on:click="active('berkas_ttd')">{!! $data['path_ttd']?'<i class="fa fa-check"></i>':'' !!} BERKAS PENGESAAHAN</span></li>
 					</ul> 
 				</div>
 			</div>
@@ -92,12 +99,31 @@
 		data:{
 			'path_berita_acara':'{{$data['path_berita_acara']}}',
 			'path_ttd':'{{$data['path_ttd']}}',
+			'path_ttd_rendered':'{{$data['path_ttd']}}',
+			'path_ttd_them':'{{$data['path_ttd_them']}}',
+
 			'peserta':<?=($data['penanda_tangan'])?json_encode($data['penanda_tangan']):'[]'?>,
 			'context_menu':'berita_acara'
 		},
 		methods:{
 			active:function(ac){
 				this.context_menu=ac;
+			},
+			file_change:function(e){
+				var file = e.target.files[0]??null;
+				if(file){
+					if(file.type == "application/pdf"){
+						this.path_ttd_rendered=(URL.createObjectURL(file));
+					}
+				}else{
+					this.path_ttd_rendered=this.path_ttd;
+				}
+				
+
+			},
+			file_clear:function(){
+				$('#file-pengesahan-ttd').val(null);
+				this.path_ttd_rendered=this.path_ttd;
 			},
 			add_peseta:function(){
 				this.peserta.push({

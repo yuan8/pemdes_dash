@@ -131,14 +131,18 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 		Route::put('/validated/{table}/{id}','ADMIN\ValidasiCtrl@update')->name('admin.validasi.update');
 	});
 
-	Route::prefix('users')->group(function(){
-		Route::get('/','ADMIN\UserCtrl@index')->name('admin.users.index')->middleware(['can:is_super']);
+	Route::prefix('users')->middleware(['can:is_daerah_admin,is_super'])->group(function(){
+		Route::get('/','ADMIN\UserCtrl@index')->name('admin.users.index');
 		Route::get('/detail/{id}','ADMIN\UserCtrl@show')->name('admin.users.detail');
-		Route::get('/add/','ADMIN\UserCtrl@add')->name('admin.users.add')->middleware(['can:is_super']);
-		Route::post('/store/','ADMIN\UserCtrl@store')->name('admin.users.store')->middleware(['can:is_super']);
+
+		Route::get('/add/','ADMIN\UserCtrl@add')->name('admin.users.add');
+		Route::post('/store/','ADMIN\UserCtrl@store')->name('admin.users.store');
+
 		Route::post('/update/password/{id}','ADMIN\UserCtrl@up_pass')->name('admin.users.up_pass');
+
 		Route::post('/update/profile/{id}','ADMIN\UserCtrl@up_profile')->name('admin.users.up_profile');
-		Route::post('/update/access/{id}','ADMIN\UserCtrl@up_access')->name('admin.users.up_access')->middleware(['can:is_super']);
+
+		Route::post('/update/access/{id}','ADMIN\UserCtrl@up_access')->name('admin.users.up_access');
 	});
 
 	Route::prefix('data-view')->middleware('can:is_admin')->group(function(){

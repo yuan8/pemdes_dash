@@ -22,10 +22,10 @@ $CONF_MENU=MENUS::login();
                 {{ csrf_field() }}
 
                 <div class="form-group has-feedback {{ $errors->has('email_atau_username') ? 'has-error' : '' }}">
-                    <input type="text" name="email_atau_username" class="form-control" value="{{ old('email') }}"
-                           placeholder="Email/Username">
+                    <input type="text" name="email_atau_username" class="form-control" value="{{ old('email_atau_username') }}"
+                           placeholder="Email/Username/NIK/NIP">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                    @if ($errors->has('email'))
+                    @if ($errors->has('email_atau_username'))
                         <span class="help-block">
                             <strong>{{ $errors->first('email_atau_username') }}</strong>
                         </span>

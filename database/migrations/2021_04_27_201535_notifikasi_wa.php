@@ -20,6 +20,7 @@ class NotifikasiWa extends Migration
             $table->bigInteger('id_table_map')->unsigned();
             $table->bigInteger('id_user')->unsigned();
             $table->bigInteger('kode_daerah');
+            $table->integer('tahun');
             $table->bigInteger('kode_daerah_trigger')->nullable();
             $table->double('valid')->default(0);
             $table->double('ver_2')->default(0);
@@ -38,7 +39,7 @@ class NotifikasiWa extends Migration
 
 
 
-            $table->unique(['id_table_map','id_user','kode_daerah']);
+            $table->unique(['id_table_map','tahun','kode_daerah']);
 
             $table->foreign('id_user')
                   ->references('id')->on('users')

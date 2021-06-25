@@ -28,7 +28,9 @@ class TahunAccess
     {
 
         $tahun=$request->route('tahun')??date('Y');
-
+        if(!is_numeric($tahun)){
+            return redirect()->route('index',['tahun'=>(date('Y')-1)]);
+        }
 
         $visitor_data=[
           'browser'=>$request->visitor()->browser(),
