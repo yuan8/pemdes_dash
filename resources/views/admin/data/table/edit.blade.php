@@ -1,12 +1,17 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>EDIT DATASET {{$jenis}} </h4>
-
+<h4>EDIT DATASET {{$jenis}} - {{$data->nama_daerah}} </h4>
+@php
+@endphp
 
 @stop
 
 
 @section('content')
+	<div class="{{$data->status==0?"bg-maroon":($data->status==2?'bg-yellow':'bg-green')}}" style="padding: 10px; margin-bottom: 10px;">
+		{{HP::status_verifikasi_dataset($data->status)}}
+	</div>
+
 	<form action="{{route('admin.dataset.update',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}" enctype='multipart/form-data' method="post">
 		@csrf
 		@method('PUT')
@@ -38,8 +43,9 @@
 								
 							</script>
 						</div>
+						<a style="margin-bottom: 10px;" href="" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> Download Data</a>
 						<div class="form-group">
-							<label>Dokumen (.xlsx,.xls)</label>
+							<label>Update Dokumen (.xlsx,.xls)</label>
 							<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" name="file" class="form-control" >
 						</div>
 					</div>
@@ -48,14 +54,32 @@
 			<div class="col-md-4">
 			<div class="box box-primary">
 				<div class="box-header with-border">
-					<button type="submit" class="btn btn-primary background-blue">UPDATE</button>
+					<div class="btn-group">
+						<button type="submit" class="btn btn-primary background-blue">UPDATE</button>
+						<a href="" class="btn btn-info ">{{$data->status==1?'VIEW':'PREVIEW'}}</a>
+					</div>
 				</div>
 				<div class="box-body">
 					
 				<div class="form-group">
-						<label>Publish Date</label>
+					<label>Publish Date</label>
 						<input type="date" class="form-control" value="{{\Carbon\Carbon::parse($data->publish_date)->format('Y-m-d')}}" name="publish_date" required="">
-					</div>
+				</div>
+				
+
+				@can('is_wali_daerah_kab')
+				<div class="form-group">
+					<label>Status</label>
+					<select class="form-control" name="status" required="">
+						<option value="0" >BELUM DILAKUKAN PENILAIAN</option>
+
+						<option value="1" {{$data->status==1?'selected':''}} >PUBLISH</option>
+						<option value="2" {{$data->status==2?'selected':''}} >KORDINASI KEMBALI</option>
+					</select>
+				</div>
+
+				@endcan
+
 					<hr>
 					<div class="form-group">
 						<label>Dapat Dilakukan Percarian</label>

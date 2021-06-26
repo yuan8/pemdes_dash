@@ -28,8 +28,6 @@
 	<div class="box-footer" id="content-vue">
 		<form action="{{route('admin.set.update',['tahun'=>$GLOBALS['tahun_access']])}}" method="post">
 			@csrf
-		<textarea v-model="content" name="data[TENTANG]" style="display: none;"></textarea>
-		<button type="submit" class="btn btn-primary">SIMPAN</button>
 		</form>
 	</div>
 </div>

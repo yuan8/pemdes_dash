@@ -29,6 +29,8 @@
 				</div>
 			</div>
 
+			<p v-if="loading" class="text-center">Loading...</p>
+			<p v-if="loading==false && category.length==0" class="text-center">Data Tidak Ditemukan</p>
 
 		 <ul class="list-group">
 		  <li  v-for="(item,key) in category" class="list-group-item text-capitalize">
@@ -43,7 +45,7 @@
 			  			
 			  		</li>
 			  		<li v-if="quest_active==q.id" class="list-group-item text-capitalize bg-green">
-			  			<p>@{{q.answer}}</p>
+			  			<p v-html="q.answer"></p>
 			  		</li>
 		  		</span>
 		  	</ul>
@@ -69,6 +71,7 @@
 			search:'{{$req['q']??''}}',
 			cat_list:<?=json_encode($category??'[]')?>,
 			cat:{!!$req['category']??'""'!!},
+			loading:true,
 
 		},
 		methods:{
@@ -83,6 +86,7 @@
 				if(window.ajax_data){
 					window.ajax_data.abort();
 				}
+				this.loading=true;
 
 				setTimeout(function(){
 					window.ajax_data=$.ajax({
@@ -97,6 +101,8 @@
 
 					}
 				});
+				vfaq.loading=false;
+
 				},1000);
 			}
 		},

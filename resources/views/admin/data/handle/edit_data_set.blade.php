@@ -8,6 +8,9 @@
 @stop
 
 @section('content')
+<div class="{{$data->status==0?"bg-maroon":($data->status==2?'bg-yellow':'bg-green')}}" style="padding: 10px; margin-bottom: 10px;">
+		{{HP::status_verifikasi_dataset($data->status)}}
+	</div>
 	<form action="{{route('admin.dataset.update',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}" enctype='multipart/form-data' method="post">
 		@csrf
 		@method('PUT')
@@ -149,6 +152,18 @@
 						<label>Publish Date</label>
 						<input type="date" class="form-control" value="{{\Carbon\Carbon::parse($data->publish_date)->format('Y-m-d')}}" name="publish_date" required="">
 					</div>
+						@can('is_wali_daerah_kab')
+				<div class="form-group">
+					<label>Status</label>
+					<select class="form-control" name="status" required="">
+						<option value="0" >BELUM DILAKUKAN PENILAIAN</option>
+
+						<option value="1" {{$data->status==1?'selected':''}} >PUBLISH</option>
+						<option value="2" {{$data->status==2?'selected':''}} >KORDINASI KEMBALI</option>
+					</select>
+				</div>
+
+				@endcan
 					<hr>
 					<div class="form-group">
 						<label>Dapat Dilakukan Percarian</label>

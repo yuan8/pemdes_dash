@@ -33,6 +33,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('is_super', function ($user) {
             return $user->role==1;
         });
+
+        Gate::define('is_wali_daerah_kab', function ($user) {
+            return (($user->role==4 and $user->walidata and ($user->main_daerah!=true) and strlen($user->kode_daerah)==4)) OR ($user->role<=2);
+        });
         
         Gate::define('is_admin', function ($user) {
             return $user->role<=2;

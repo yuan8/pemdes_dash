@@ -2,13 +2,20 @@
 @section('content_header')
 <h4>DATA</h4>
 <div class="btn-group">
+	@can('is_only_daerah')
 <a href="{{route('admin.data.create',['tahun'=>$GLOBALS['tahun_access'],'type'=>'VISUALISASI'])}}" class="btn btn-success">TAMBAH DATA VISUALISASI</a>
 <a href="{{route('admin.data.create',['tahun'=>$GLOBALS['tahun_access'],'type'=>'TABLE'])}}" class="btn btn-success">TAMBAH DATA TABLE</a>
 
 
 <a href="{{route('admin.data.create',['tahun'=>$GLOBALS['tahun_access'],'type'=>'INFOGRAFIS'])}}" class="btn btn-success">TAMBAH DATA INFOGRAFIS</a>
-
+	@endcan
+	
 </div>
+<style type="text/css">
+	td{
+		vertical-align: middle!important;
+	}
+</style>
 <hr style="background: #fff; border-color: #fff;">
 <form method="get">
 	<div class="row">
@@ -82,6 +89,8 @@
 			<thead>
 				<tr>
 					<th>AKSI</th>
+					<th>JENIS DATA</th>
+
 					<th>JUDUL</th>
 					<th>KETEGORI</th>
 
@@ -99,11 +108,31 @@
 			</thead>
 			<tbody>
 				@foreach($data as $d)
-					<tr>
-						<td>
-							<a href="{{route('data.vis.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>Str::slug($d->title),'preview'=>true])}}" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
+					<tr class="{{$d->status==0?"bg-maroon":($d->status==2?'bg-yellow':'')}}">
+						<td class="bg-gray">
+							<div class="btn-group-vertical">
+								<a href="{{route('data.vis.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>Str::slug($d->title),'preview'=>true])}}" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
 							<a href="{{route('admin.dataset.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
 							<button onclick="showForm('{{route('admin.dataview.form_delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')" class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </buttom>
+
+							</div>
+						</td>
+						<td class="bg-gray">
+								@switch($d->type)
+								    @case('TABLE')
+								       <i class="fa fa-table"></i> TABLE
+								        @break
+								      @case('VISUALISASI')
+								       <i class="fa fa-area-chart"></i> CHART VISUAL
+								       @break
+								       @case('INFOGARFIS')
+								       <i class="fa fa-picture"></i> INFOGRAFIS
+								       @break
+								
+								    @default
+								            Default case...
+								@endswitch
+								
 
 						</td>
 						<td>{{$d->title}}</td>

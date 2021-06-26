@@ -251,7 +251,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.data.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
-                    'can'=>['is_only_daerah']
+                    'can'=>['is_daerah_admin']
 
                 ],
                 [
@@ -305,6 +305,15 @@ class MENUPROVIDER extends ServiceProvider
                  [
                     'text'=>('FAQ'),
                     'href'=>route('admin.faq.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-map',
+                    'can'=>['is_admin']
+                    
+
+                ],
+                 [
+                    'text'=>('FAQ KATEGORI'),
+                    'href'=>route('admin.faq.c.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-map',
                     'can'=>['is_admin']

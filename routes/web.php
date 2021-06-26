@@ -181,16 +181,43 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 	Route::prefix('faq')->middleware('can:is_admin')->group(function(){
 		Route::get('/','ADMIN\FaqCtrl@index')->name('admin.faq.index');
 
+		Route::get('/c/','ADMIN\FaqCtrl@c_index')->name('admin.faq.c.index');
+		Route::get('/c/add','ADMIN\FaqCtrl@c_add')->name('admin.faq.c.add');
+		Route::post('/c/store','ADMIN\FaqCtrl@c_store')->name('admin.faq.c.store');
+
+
+		Route::get('/c/edit/{id}','ADMIN\FaqCtrl@c_edit')->name('admin.faq.c.edit');
+		Route::put('/c/edit/{id}','ADMIN\FaqCtrl@c_update')->name('admin.faq.c.update');
+		Route::delete('/c/delete/{id}','ADMIN\FaqCtrl@c_delete')->name('admin.faq.c.delete');
+
+
+
+		Route::get('create/','ADMIN\FaqCtrl@add')->name('admin.faq.create');
+		Route::post('store/','ADMIN\FaqCtrl@store')->name('admin.faq.store');
+
+
+		Route::get('edit/{id}','ADMIN\FaqCtrl@edit')->name('admin.faq.edit');
+		Route::put('edit/{id}','ADMIN\FaqCtrl@update')->name('admin.faq.update');
+		Route::delete('delete/{id}','ADMIN\FaqCtrl@delete')->name('admin.faq.delete');
+
 		
 	});
 
-	Route::prefix('data')->group(function(){
+	Route::prefix('data')->middleware('can:is_daerah_admin')->group(function(){
 		Route::get('/','ADMIN\DataCtrl@index')->name('admin.data.index');
 		Route::get('/data','ADMIN\DataCtrl@data')->name('admin.data.detail');
+
+
 		Route::get('/data/create/{jenis}','ADMIN\DataCtrl@create')->name('admin.data.create');
+
+
 		Route::post('/data/create/{jenis}','ADMIN\DataCtrl@store')->name('admin.data.store');
+
+		
+
 		Route::get('/data-set/edit/{id}','ADMIN\DataCtrl@edit')->name('admin.dataset.edit');
 		Route::put('/data-set/update/{id}','ADMIN\DataCtrl@update_visual')->name('admin.dataset.update');
+
 		Route::get('/data/update/{id}','ADMIN\DataCtrl@edit')->name('admin.data.edit');
 		Route::put('/data/update/{id}','ADMIN\DataCtrl@update')->name('admin.data.update');
 	});

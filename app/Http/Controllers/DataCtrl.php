@@ -597,11 +597,10 @@ class DataCtrl extends Controller
         ->where('tahun',($tahun))
         ->whereRaw(implode(" and ", $whereRaw))
         ->where('id',$id)->first();
-
         config([
             'proepdeskel.meta.title'=>$data->title,
             'proepdeskel.meta.description'=>$data->deskripsi,
-            'proepdeskel.meta.keywords'=>implode(',',json_decode($data->keywords??[])),
+            'proepdeskel.meta.keywords'=>implode(',',json_decode($data->keywords??'[]')),
         ]);
 
         if($data){

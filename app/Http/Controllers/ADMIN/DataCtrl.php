@@ -5,113 +5,148 @@ namespace App\Http\Controllers\ADMIN;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
-use Alert;
 use Validator;
 use Auth;
 use Storage;
 use Carbon\Carbon;
+use Alert;
 class DataCtrl extends Controller
 {
     //
 
     public function update_visual($tahun,$id,Request $request){
-
-    $valid=Validator::make($request->all(),[
-        'name'=>'string|required',
-        'auth'=>'boolean|nullable',
-        'description'=>'nullable|string',
-        'keywords'=>'array|nullable',
-        'publish_date'=>'date|required',
-        'id_instansi'=>'numeric|required',
-    ]);
-
-    if($valid->fails()){
-        Alert::error('',$valid->errors()->first());
-        return back();
-    }
-
-      $Defwhere=[
-            "dt.tahun=".$tahun,
-            'dt.id='.$id,
-            "dt.type in ('VISUALISASI')"
-        ];
-        $pilih_kategori='';
-
-        $where=[];
         $U=Auth::User();
 
-
-        if($U->can('is_daerah')){
-             $Defwhere[]="dt.kode_daerah =".Auth::User()->kode_daerah;
-        }
-
-
-       
-        $data=DB::table('tb_data as dt')
-        ->leftJoin('tb_data_detail_visualisasi as vis','vis.id_data','=','dt.id')
-        ->whereRaw(implode(' and ', $Defwhere))->first();
-
-        if($data){
-
-            $data_up=[
-                'id_user_update'=>$U->id,
-                'updated_at'=>Carbon::now(),
-                'publish_date'=>$request->publish_date,
-                'deskripsi'=>$request->description,
-                'title'=>$request->name,
-                'tahun'=>$tahun,
-                'keywords'=>json_encode($request->keywords),
+           $data_up=[
+                    'id_user_update'=>$U->id,
+                    'updated_at'=>Carbon::now(),
+                    'publish_date'=>$request->publish_date,
+                    'deskripsi'=>$request->description,
+                    'title'=>$request->name,
+                    'tahun'=>$tahun,
+                    'keywords'=>json_encode($request->keywords),
             ];
 
-            if($U->can('is_daerah')){
-                $data_up['status']=0;
-            }
+        $dataset= DB::table('tb_data')->where('id',$id)->first();
+     if($dataset){
+        $v=[
+            'name'=>'string|required',
+            'auth'=>'boolean|nullable',
+            'description'=>'nullable|string',
+            'keywords'=>'array|nullable',
+            'publish_date'=>'date|required',
+            'id_instansi'=>'numeric|required',
+            'type'=>'required|string|in:VISUALISASI,TABLE,INFOGRAFIS'
+        ];
 
-
-            DB::table('tb_data')->where('id',$id)
-            ->update($data_up);
-
-            if($request->file){
-
-
-            
-               
-                $path_file=$request->file;
-                $MAP_DATA=DataViewCtrl::buildJson($path_file,$request);
-                $path=Storage::put('public/publication/DATASET/'.$tahun,$request->file);
-                $path=Storage::url($path);
-                $ext = pathinfo($path, PATHINFO_EXTENSION);
-                $size=filesize($request->file)??0;
-                $size=$size / 1048576;
-                $data=null;
-
-                DB::table('tb_data_detail_visualisasi')
-                ->updateOrInsert(
-                [
-                    'id_data'=>$id
-                ],[
-                    'id_data'=>$id,
-                    'path_file'=>$path,
-                    'extension'=>$ext,
-                    'size'=>$size,
-                ]);
-
-
-            }else{
-                $path_file=public_path($data->path_file);
-                $MAP_DATA=DataViewCtrl::buildJson($path_file,$request);
-
-            }
-
-                $MAP_DATA['meta_table']['id']=$data->id;
-
-
-                $JSON=Storage::put('public/publication/DATASET_VISUAL_JSON/'.$tahun.'/'.$id.'.json',json_encode($MAP_DATA));
-
+        if(Auth::User()->can('is_wali_daerah_kab')){
+            $v['status']='required|numeric|in:0,1,2';
+            $data_up['status']=$request->status;
 
         }
 
-        return back();
+        $valid=Validator::make($request->all(),$v);
+
+        if($valid->fails()){
+            Alert::error('',$valid->errors()->first());
+            return back();
+        }
+
+      
+
+
+            $Defwhere=[
+                "dt.tahun=".$tahun,
+                'dt.id='.$id,
+                "dt.type in ('INFOGRAFIS','TABLE','VISUALISASI')"
+            ];
+            $pilih_kategori='';
+
+            $where=[];
+
+
+            if($U->can('is_only_daerah')){
+                 $Defwhere[]="dt.kode_daerah like ".Auth::User()->kode_daerah.'%';
+            }
+           
+            $data=DB::table('tb_data as dt');
+            switch ($dataset->type) {
+                case 'VISUALISASI':
+                    $data=$data->leftJoin('tb_data_detail_visualisasi as vis','vis.id_data','=','dt.id');
+                    $table_join='tb_data_detail_visualisasi';
+
+
+                break;
+                case 'TABLE':
+                    $data=$data->leftJoin('tb_data_detail_table as vis','vis.id_data','=','dt.id');
+                    $table_join='tb_data_detail_table';
+
+                break;
+                case 'INFOGRAFIS':
+                    $data=$data->leftJoin('tb_data_detail_infograp as vis','vis.id_data','=','dt.id');
+                    $table_join='tb_data_detail_infograp';
+                break;
+                
+                default:
+                    # code...
+                    break;
+            }
+            
+            $data=$data->whereRaw(implode(' and ', $Defwhere))->first();
+
+            if($data){
+
+               
+
+                $up=DB::table('tb_data')->where('id',$id)
+                ->update($data_up);
+
+                if($request->file){
+
+
+                
+                   
+                    $path_file=$request->file;
+                    $MAP_DATA=DataViewCtrl::buildJson($path_file,$request);
+                    $path=Storage::put('public/publication/DATASET/'.$tahun,$request->file);
+                    $path=Storage::url($path);
+                    $ext = pathinfo($path, PATHINFO_EXTENSION);
+                    $size=filesize($request->file)??0;
+                    $size=$size / 1048576;
+                    $data=null;
+
+                    DB::table($table_join)
+                    ->updateOrInsert(
+                    [
+                        'id_data'=>$id
+                    ],[
+                        'id_data'=>$id,
+                        'path_file'=>$path,
+                        'extension'=>$ext,
+                        'size'=>$size,
+                    ]);
+
+
+                }else{
+                    $path_file=public_path($data->path_file);
+                    $MAP_DATA=DataViewCtrl::buildJson($path_file,$request);
+
+                }
+
+                    $MAP_DATA['meta_table']['id']=$data->id;
+
+
+                    $JSON=Storage::put('public/publication/DATASET_VISUAL_JSON/'.$tahun.'/'.$id.'.json',json_encode($MAP_DATA));
+
+
+            }
+
+            if($up){
+                Alert::success('Berhasil');
+            }
+
+            return back();
+     }
     }
 
 
