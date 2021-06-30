@@ -250,7 +250,7 @@
 				@foreach ($data as $keyd=> $d)
 					@php
 					@endphp
-					<tr class="{{HP::color_status_data($d->status_data,$d->daftar_draf)}}">
+					<tr class="">
 						<td></td>
 						<td>{{$keyd+1}}</td>
 
