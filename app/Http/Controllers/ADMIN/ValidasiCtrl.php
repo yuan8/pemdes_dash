@@ -284,7 +284,7 @@ class ValidasiCtrl extends Controller
     		$maping['column'][]="dt.status_validasi as status_data";
     		$maping['column'][]="dt.validasi_date as valid_date";
     		$maping['column'][]="dt.updated_at as updated_at";
-            $maping['column'][]="dt.daftar_draf as daftar_draf";
+            // $maping['column'][]="dt.daftar_draf as daftar_draf";
 
 
     		$defwhere=[
