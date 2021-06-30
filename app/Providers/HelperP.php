@@ -606,10 +606,10 @@ class HelperP extends ServiceProvider
     static function berita_acara($kode_daerah,$tahun,$id_table){
         $len=strlen($kode_daerah);
         $kode_kota=substr($kode_daerah,0,4);
-        $kode_kota=substr($kode_daerah,0,4);
 
         $berita=file_exists(storage_path('app/public/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-full.pdf'));
-      
+        
+     
         if($len==4){
              return [
                 'access'=>true,
@@ -623,6 +623,15 @@ class HelperP extends ServiceProvider
                 'access_form'=>false,
                 'access_berita_acara'=>Auth::User()->can('is_daerah_kabkota_n_admin'),
                 'berita_acara'=>$berita?route('admin.validasi.berita_acara.build_daerah',['tahun'=>$tahun,'data'=>$id_table,'kode_daerah'=>$kode_daerah]):null
+            ];
+         }
+
+
+         if(in_array(Auth::User()->role,[1,2,3])){
+            return ['access'=>false,
+                'access_form'=>false,
+                'access_berita_acara'=>false,
+                'berita_acara'=>null
             ];
          }
        

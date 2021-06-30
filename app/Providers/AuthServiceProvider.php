@@ -30,6 +30,9 @@ class AuthServiceProvider extends ServiceProvider
             return $user->is_active;
         });
 
+        Gate::define('all_daerah_data',function($user){
+            return $user->role==3 OR $user->role<=2;
+        });
         Gate::define('is_super', function ($user) {
             return $user->role==1;
         });

@@ -149,11 +149,11 @@
 
 @stop
 
-
 @section('content')
-@if($berita_acara['berita_acara'])
+@php
+@endphp
+@if($berita_acara['berita_acara'] and in_array(Auth::User()->role,[1,2,4]) )
 <iframe src="{{$berita_acara['berita_acara']}}" style="width:100%; border:none; height: 500px;" ></iframe>
-	
 @else
 <div class="box box-primary">
 	<div class="box-header with-border">
@@ -205,7 +205,7 @@
 	</div>
 	<div class="box-body ">
 		
-		<h5><b>TOTAL DATA : {{count($data)}} DATA</b></h5>
+		<h5><b>TOTAL DATA : {{HPV::nformat($paginate?$data->total():count($data))}} DATA</b></h5>
 		@if(count($data)>0)
 
 			<div class="table-responsive">
@@ -248,7 +248,8 @@
 			@endphp
 			<tbody id="table-verifikasi-data">
 				@foreach ($data as $keyd=> $d)
-				
+					@php
+					@endphp
 					<tr class="{{HP::color_status_data($d->status_data,$d->daftar_draf)}}">
 						<td></td>
 						<td>{{$keyd+1}}</td>
@@ -327,7 +328,10 @@
 		@endif
 	</div>
 	<div class="box-footer">
-		
+		@if ($paginate)
+
+			{{$data->links()}}
+		@endif
 	</div>
 </div>
 @endif
@@ -433,7 +437,8 @@
 
 		}
 	</script>
-
+	@php
+	@endphp
 
 	@if($berita_acara['berita_acara'])
 	<div class="modal fade" id="hapus_berita_acara">

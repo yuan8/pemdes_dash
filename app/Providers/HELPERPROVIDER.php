@@ -293,13 +293,13 @@ class HELPERPROVIDER extends ServiceProvider
 			$data['text']='USER DAERAH';
 					if($u){
 						if($u->walidata){
-						$data['text']='<b>WALIDATA</b>';
+						$data['text']='<b class="text-green">WALIDATA</b>';
 
 						}else if($u->main_daerah){
-							$data['text']='<b>ADMIN</b>';
+							$data['text']='<b class="text-red">ADMIN</b>';
 
 						}else{
-							$data['text']='<b>PRODUSEN DATA</b>';
+							$data['text']='<b class="text-green">PRODUSEN DATA</b>';
 
 						}
 

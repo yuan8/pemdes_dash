@@ -259,6 +259,7 @@ class ValidasiCtrl extends Controller
 
 
 
+
         if( $expt_jadwal['status_jadwal']<1){
                 return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
         }
@@ -368,8 +369,19 @@ class ValidasiCtrl extends Controller
 
             $rekap=$rekap->where($defwhere_rekap);
 
+            if(in_array(Auth::User()->role,[1,2,3]) or strlen($access_data_daerah)==2){
+                $data_query=$data_query->paginate(50);
+                $data_query->appends($request->all());
+                $paginate=true;
 
-			$data_query=$data_query->get();
+                }else{
+                $data_query=$data_query->get();
+                $paginate=false;
+
+
+                }
+
+
 
            
 
@@ -422,14 +434,15 @@ class ValidasiCtrl extends Controller
 				[
 					'daerah'=>$check_access['nama_daerah'],
 					'table_map'=>$maping,
-					'data'=>(array)$data_query->toArray(),
+					'data'=>$data_query,
 					'req'=>$req,
 					'data_index'=>$request->data,
 					'table'=>$table,
                     'time_count_down'=>$dif,
 					'rekap'=>$verifikasi,
 					'nama_data'=>$maping['data_name'],
-					'kode_daerah'=>$access_data_daerah
+					'kode_daerah'=>$access_data_daerah,
+                    'paginate'=>$paginate
 				]);
 
 
