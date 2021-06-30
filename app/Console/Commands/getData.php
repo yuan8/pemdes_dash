@@ -39,14 +39,16 @@ class getData extends Command
     public function handle()
     {
         //
-        $now=Carbon::now()->endOfDay();
+        $now_real=Carbon::now();
+        $now_last=Carbon::now()->endOfDay();
+
         $table=$this->argument('table');
         $tahun=$this->argument('tahun');
 
 
         $ids=DB::table('master_desa as d')
         ->leftJoin($table.' as td','td.kode_desa','=','d.kddesa')
-        ->whereRaw("(td.status_validasi=0 and td.updated_at < '".$now."' and td.tahun=".$tahun.") OR (td.status_validasi is null)")
+        ->whereRaw("(td.status_validasi=0 and td.updated_at < '".$now_real->addHours(-4)."' and td.tahun=".$tahun.") OR (td.status_validasi is null)")
         ->limit(500)
         ->get()
         ->pluck('kddesa')
@@ -72,7 +74,7 @@ class getData extends Command
 
             foreach ($data as $key => $v) {
                 $v=(array)$v;
-                $v['updated_at']=$now;
+                $v['updated_at']=$now_real;
                 $v['tahun']=$tahun;
 
                 $c=DB::table($table)->updateOrInsert(
@@ -89,7 +91,7 @@ class getData extends Command
 
             }
         }
-
+         $this->info("Building {$count} Data!");
         return $count;
     }
 }
