@@ -1,7 +1,4 @@
 
-
-
-
 a{
   color:#222;
 }
@@ -192,10 +189,6 @@ a{
   background-image: url("./../bg.png")!important;
   background-size: 60px 60px!important;
 }
-.background-img-box-red{
-  background-image: url("./../bg4.png")!important;
-  background-size: 60px 60px!important;
-}
 
 
 .content-header {
@@ -332,15 +325,3 @@ body{
     display: block!important;
     
     }
-
-.row-same {
-    display: table;
-}
-
-.row-same [class*="col-"] >.box{
-    float: none;
-    display: table-cell;
-    vertical-align: top;
-    max-width: 30%;
-
-}

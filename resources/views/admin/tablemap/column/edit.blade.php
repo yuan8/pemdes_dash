@@ -1,6 +1,6 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>TABLE COLUMNS [{{$data->table}}]</h4>
+<h4>TABLE  {{strtoupper($data->name)}}</h4>
 <div class="btn-group" >
 <a href="javascript:void(0)" onclick="data_components.add_column()" class="btn btn-success">TAMBAH COLUMN MAP</a>
 <a href="{{route('admin.tablemap.edit.view',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>HPV::slugify($data->name)])}}"  class="btn  btn-info"> <i class="fa fa-pen"></i> VIEW MAP</a>
@@ -156,7 +156,12 @@
 		data:{
 			items:<?= json_encode($columns) ?>,
 			columns:<?= json_encode($master_c)?>,
-			new_column:0
+			new_column:0,
+			aggregasi_tipe_numeric:window.aggregasi_tipe_numeric,
+			aggregasi_tipe_string:window.aggregasi_tipe_string,
+			aggregasi_tipe:window.aggregasi_tipe,
+			
+
 		},
 		methods:{
 			changeTipeData:function(key){
@@ -263,7 +268,8 @@
 			},
 			simpan:function(){
 				$('#form-column').submit();
-			}
+			},
+
 		},
 		watch:{
 			interval_nilai_computed:function(val,old){

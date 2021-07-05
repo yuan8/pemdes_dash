@@ -125,6 +125,10 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 
 
 		Route::get('/data','ADMIN\ValidasiCtrl@data')->name('admin.validasi.data');
+		Route::post('/data-update/{kode_daerah}/{data}','ADMIN\ValidasiCtrl@data_edited')->name('admin.validasi.data_update');
+
+
+
 		Route::get('/data/upload','ADMIN\ValidasiCtrl@form_upload')->name('admin.validasi.upload');
 		Route::post('/data/upload/{id}','ADMIN\ValidasiCtrl@upload_data')->name('admin.validasi.update.bulk');
 		Route::post('/validated/{table}/{id}','ADMIN\ValidasiCtrl@validated')->name('admin.validasi.try');

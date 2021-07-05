@@ -19,6 +19,58 @@ class HelperP extends ServiceProvider
         //
     }
 
+    public static function abl_aksi_front($TAG='NONE'){
+        $U=Auth::User();
+        // $abl=[99=>'UPDATE'];
+        
+        if($TAG=='ALL'){
+            $abl[2]='Verifikasi Desa/Kel';
+               $abl[3]='Verifikasi Kecamatan';
+               $abl[5]='Validasi Kota/Kab';
+               $abl[1]='Hold Data';
+               $abl[0]='Data Integrasi';
+
+        }
+
+
+        if($U->can('is_admin')){
+           $abl[2]='Verifikasi Desa/Kel';
+           $abl[3]='Verifikasi Kecamatan';
+           $abl[5]='Validasi Kota/Kab';
+           $abl[1]='Hold Data';
+
+        }else if($U->can('is_regional')){
+            $abl=[];
+
+        }
+        else if($U->can('is_daerah')){
+            switch (strlen($U->kode_daerah)) {
+                case 10:
+                    $abl[2]='Verifikasi Desa/Kel'; 
+                    $abl[1]='Hold Data';   
+                        
+                    break;
+                case 6:
+                    $abl[3]='Verifikasi Kecamatan';  
+                     $abl[2]='Verifikasi Desa/Kel';  
+                    $abl[1]='Hold Data';   
+                    break;
+                case 4:
+                    $abl[5]='Validasi Kota/Kab'; 
+                    $abl[3]='Verifikasi Kecamatan';  
+                    $abl[2]='Verifikasi Desa/Kel';  
+                    $abl[1]='Hold Data';
+
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+
+        return $abl;
+    } 
+
     /**
      * Bootstrap services.
      *
@@ -289,27 +341,21 @@ class HelperP extends ServiceProvider
     static function verifikasi_status($status){
         switch ($status) {
             case 0:
-                # code...
             return 'Data Terintegrasi';
                 break;
             case 1:
-            # code...
             return 'Data Tidak Terintegrasi';
             break;
             case 2:
-            # code...
             return 'Telah Diverifikasi Tingkat Desa';
             break;
             case 3:
-            # code...
             return 'Telah Diverifikasi Tingkat Kecamatan';
             break;
             case 4:
-            # code...
             return 'Telah Diverifikasi Tingkat Kabupaten/Kota';
             break;
             case 5:
-            # code...
             return 'Telah Divalidasi';
             break;
             

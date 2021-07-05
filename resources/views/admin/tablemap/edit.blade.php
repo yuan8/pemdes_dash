@@ -1,7 +1,6 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>TABLE [{{$data->table}}]</h4>
-<h5>{{$data->name}}</h5>
+<h4>TABLE  {{strtoupper($data->name)}}</h4>
 
 @stop
 

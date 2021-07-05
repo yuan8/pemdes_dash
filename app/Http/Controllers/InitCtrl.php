@@ -110,20 +110,20 @@ class InitCtrl extends Controller
     			'main_daerah'=>true,
     			'jabatan'=>'-'
     		],
-    		[
-    			'name'=>'provinsi aceh wali',
-    			'email'=>'prov_acehw@domain.com',
-    			'password'=>'TVRJek5284^444VTJOemc9',
-    			'nik'=>'12345678910',
-    			'nomer_telpon'=>'12345678910',
-    			'api_token'=>'tok_',
-    			'is_active'=>true,
-    			'role'=>4,
-    			'kode_daerah'=>11,
-    			'main_daerah'=>false,
-    			'walidata'=>true,
-    			'jabatan'=>'-'
-    		],
+    		// [
+    		// 	'name'=>'provinsi aceh wali',
+    		// 	'email'=>'prov_acehw@domain.com',
+    		// 	'password'=>'TVRJek5284^444VTJOemc9',
+    		// 	'nik'=>'12345678910',
+    		// 	'nomer_telpon'=>'12345678910',
+    		// 	'api_token'=>'tok_',
+    		// 	'is_active'=>true,
+    		// 	'role'=>4,
+    		// 	'kode_daerah'=>11,
+    		// 	'main_daerah'=>false,
+    		// 	'walidata'=>true,
+    		// 	'jabatan'=>'-'
+    		// ],
     		[
     			'name'=>'aceh selatan',
     			'email'=>'aceh_selatan@domain.com',
@@ -137,20 +137,20 @@ class InitCtrl extends Controller
     			'main_daerah'=>true,
     			'jabatan'=>'-'
     		],
-    		[
-    			'name'=>'aceh selatan wali',
-    			'email'=>'aceh_selatanw@domain.com',
-    			'password'=>'TVRJek5284^444VTJOemc9',
-    			'nik'=>'12345678910',
-    			'nomer_telpon'=>'12345678910',
-    			'api_token'=>'tok_',
-    			'is_active'=>true,
-    			'role'=>4,
-    			'kode_daerah'=>1101,
-    			'main_daerah'=>false,
-    			'walidata'=>true,
-    			'jabatan'=>'-'
-    		],
+    		// [
+    		// 	'name'=>'aceh selatan wali',
+    		// 	'email'=>'aceh_selatanw@domain.com',
+    		// 	'password'=>'TVRJek5284^444VTJOemc9',
+    		// 	'nik'=>'12345678910',
+    		// 	'nomer_telpon'=>'12345678910',
+    		// 	'api_token'=>'tok_',
+    		// 	'is_active'=>true,
+    		// 	'role'=>4,
+    		// 	'kode_daerah'=>1101,
+    		// 	'main_daerah'=>false,
+    		// 	'walidata'=>true,
+    		// 	'jabatan'=>'-'
+    		// ],
     		[
     			'name'=>'kecamatan a',
     			'email'=>'kecamatan_a@domain.com',
@@ -164,20 +164,20 @@ class InitCtrl extends Controller
     			'main_daerah'=>true,
     			'jabatan'=>'-'
     		],
-    		[
-    			'name'=>'kecamatan  a wali',
-    			'email'=>'kecamatan_aw@domain.com',
-    			'password'=>'TVRJek5284^444VTJOemc9',
-    			'nik'=>'12345678910',
-    			'nomer_telpon'=>'12345678910',
-    			'api_token'=>'tok_',
-    			'is_active'=>true,
-    			'role'=>4,
-    			'kode_daerah'=>110109,
-    			'main_daerah'=>false,
-    			'walidata'=>true,
-    			'jabatan'=>'-'
-    		],
+    		// [
+    		// 	'name'=>'kecamatan  a wali',
+    		// 	'email'=>'kecamatan_aw@domain.com',
+    		// 	'password'=>'TVRJek5284^444VTJOemc9',
+    		// 	'nik'=>'12345678910',
+    		// 	'nomer_telpon'=>'12345678910',
+    		// 	'api_token'=>'tok_',
+    		// 	'is_active'=>true,
+    		// 	'role'=>4,
+    		// 	'kode_daerah'=>110109,
+    		// 	'main_daerah'=>false,
+    		// 	'walidata'=>true,
+    		// 	'jabatan'=>'-'
+    		// ],
     		[
     			'name'=>'desa a',
     			'email'=>'desa_a@domain.com',
@@ -191,20 +191,20 @@ class InitCtrl extends Controller
     			'main_daerah'=>true,
     			'jabatan'=>'-'
     		],
-    		[
-    			'name'=>'desa a wali',
-    			'email'=>'desa_aw@domain.com',
-    			'password'=>'TVRJek5284^444VTJOemc9',
-    			'nik'=>'12345678910',
-    			'nomer_telpon'=>'12345678910',
-    			'api_token'=>'tok_',
-    			'is_active'=>true,
-    			'role'=>4,
-    			'kode_daerah'=>1101092012,
-    			'main_daerah'=>false,
-    			'walidata'=>true,
-    			'jabatan'=>'-'
-    		]
+    		// [
+    		// 	'name'=>'desa a wali',
+    		// 	'email'=>'desa_aw@domain.com',
+    		// 	'password'=>'TVRJek5284^444VTJOemc9',
+    		// 	'nik'=>'12345678910',
+    		// 	'nomer_telpon'=>'12345678910',
+    		// 	'api_token'=>'tok_',
+    		// 	'is_active'=>true,
+    		// 	'role'=>4,
+    		// 	'kode_daerah'=>1101092012,
+    		// 	'main_daerah'=>false,
+    		// 	'walidata'=>true,
+    		// 	'jabatan'=>'-'
+    		// ]
     	];
 
     	foreach ($users as $key => $d) {

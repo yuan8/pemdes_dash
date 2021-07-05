@@ -68,10 +68,15 @@ class LoginController extends Controller
         }
 
         $agent=User::where('email',$request->email_atau_username)
+        ->orWhere([
+            ['kode_daerah','=',($request->email_atau_username)],
+            ['role','=',4],
+        ])
         ->orWhere('username',$request->email_atau_username)
         ->orWhere('nik',str_replace('-', '', trim($request->email_atau_username)))
         ->orWhere('nip',str_replace('-', '', trim($request->email_atau_username)))
         ->first();
+
         if($agent){
             if($agent->is_active){
                  if(MyHash::pass_match($request->password,$agent->password)){

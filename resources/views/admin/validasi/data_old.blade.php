@@ -15,8 +15,6 @@
 	</div>
 @endif
 
-
-
 <div class="form-group">
 	<label>DATA</label>
 	<form method="get" action="{{url()->full()}}">
@@ -152,30 +150,12 @@
 @stop
 
 @section('content')
-
-
-
 @php
 @endphp
 @if($berita_acara['berita_acara'] and in_array(Auth::User()->role,[1,2,4]) )
 <iframe src="{{$berita_acara['berita_acara']}}" style="width:100%; border:none; height: 500px;" ></iframe>
 @else
 <div class="box box-primary">
-	<div id="data-edited">
-	<form id="form-save-edit" action="{{route('admin.validasi.data_update',['tahun'=>$GLOBALS['tahun_access'],
-	'kode_daerah'=>$kode_daerah,'data'=>$table_map['id_map']])}}" method="post">
-		@csrf
-
-		<div v-for="(item,key) in data">
-			<input type="hidden" v-bind:name="'edited['+item.id+']'" v-model="item.data" >
-		</div>
-		<div class="text-center" v-if="data.length>0">
-		<p class="bg-maroon"><b>Anda Telah Melakukan Perubahan @{{data.length}} Data Desa</b></p>
-		<button type="button" v-on:click="submit" class="btn btn-primary" >Kirim Perubahan</button>
-		<hr>
-		</div>
-	</form>
-</div>
 	<div class="box-header with-border">
 		<form action="" method="get" action="{{url()->full()}}">
 			@foreach($req as $keyr=>$r)
@@ -229,7 +209,7 @@
 		@if(count($data)>0)
 
 			<div class="table-responsive">
-				<table class="table-bordered table" id="data-table">
+				<table class="table-bordered table">
 			<thead>
 				<tr>
 					<th rowspan="2" style="width:80px;">AKSI</th>
@@ -267,35 +247,76 @@
 				$total=[];
 			@endphp
 			<tbody id="table-verifikasi-data">
-			<tr v-for="(item,i) in data_desa" v-bind:class="build_status_text(item.status_data).color_bg">
-				<td class="bg-gray">
-					<button v-on:click="build_form_edit(item,i)" type="button" class="btn btn-warning btn-xs" >
-						Edit
-					</button>
-				</td>
-				<td>@{{i+1}} <i v-if="item.perubahan!=undefined" class="fa fa-check"></i></td>
-				<td>@{{item.id}}</td>
-				<td>@{{item.updated_at}}</td>
-				<td>@{{item.name}}</td>
-				<td>@{{item.status_desa}}</td>
-				<td>@{{item.nama_kecamatan}}</td>
-				<td>@{{item.nama_kota}}</td>
-				<td>@{{item.nama_provinsi}}</td>
-				<td>@{{build_status_text(item.status_data).text}}</td>
+				@foreach ($data as $keyd=> $d)
+					@php
+					@endphp
+					<tr class="">
+						<td></td>
+						<td>{{$keyd+1}}</td>
 
-				<template v-for="(column,c) in data_column">
-					<td>@{{column.definisi}}</td>
+						<td>{{$d->id}}</td>
+						<td>{{$d->updated_at?Carbon\Carbon::parse($d->updated_at)->format('d F Y'):'-'}}</td>
 
-					<td>
-						@{{item[c]??'-'}} 
-					</td>
-				</template>
+						<td>{{$d->name}}</td>
+						<td>{{$d->status_desa}}</td>
+						<td>{{$d->nama_kecamatan}}</td>
+						<td>{{$d->nama_kota}}</td>
+						<td>{{$d->nama_provinsi}}</td>
+
+						<td>{{HP::verifikasi_status($d->status_data)}}</td>
+						
+						@php
+							$data_colm=(array)$d;
+						@endphp
+						@foreach ($table_map['columns'] as $key=>$c)
+						
+							<td>{!!$c['definisi']??'...'!!}</td>
+							<td>{{HPV::nformat($data_colm[$key]??'-')}}</td>
+							@php
+							
+								if((!isset($total[$key])) and ($c['tipe_data']=='numeric') ){
+									$total[$key]=0;
+								}
+
+								if(($c['tipe_data']=='numeric')){
+									if(in_array($c['aggregate_type'], ['SUM'])){
+										$total[$key]+=(double)$data_colm[$key];
+									}
+								}
+
+
+
+							@endphp
+							{{-- expr --}}
+						@endforeach
 
 
 
 
+					</tr>
 
-			</tr>
+				@endforeach
+
+				<tr id="tr-total" class="bg-primary">
+					<td colspan="10"><b>JUMLAH TOTAL</b></td>
+
+				@foreach ($table_map['columns'] as $key=>$c)
+					@if($c['tipe_data']=='numeric')
+							@if(($c['tipe_data']=='numeric'))
+								@if(in_array($c['aggregate_type'], ['SUM']))
+									<td></td>
+									<td colspan=""><b>{{HPV::nformat($total[$key])}}</b></td>	
+								@else
+									<td></td>
+									<td colspan=""><b>-</b></td>
+								@endif
+							@endif
+					@else
+					<td></td>
+					<td colspan="">-</td>
+					@endif
+				@endforeach
+				</tr>
 
 				
 			</tbody>
@@ -318,18 +339,7 @@
 @stop
 
 @section('js')
-
 	<script type="text/javascript">
-			unsaved=false;
-
-
-		function unloadPage(){ 
-		    if(unsaved){
-		        return "Data Perubahan Belum disimpan!. Simpan Terlebih dahulu atau abaikan pesan ini";
-		    }
-		}
-
-		window.onbeforeunload = unloadPage;
 
 		$(function(){
 			$('#table-verifikasi-data').prepend($('#tr-total').clone());
@@ -497,263 +507,10 @@
 			$('#submit_build_ket').html('Proses Pembuatan Berita acara memerlukan waktu yang cukup panjang tergatung jenis dan jumlah data, mohon menunggu dan tidak menuntup page atau merefresh!');
 			$('#build_berita_acara .crus').css('display','none');
 			$('#build_berita_acara .hiburan').css('display','block');
+
+
 			$('#build_berita_acara form' ).submit();
 		}
 	</script>
 
-	<script type="text/javascript">
-
-
-		window.de={};
-	var vdata=new Vue({
-		el:'#data-table',
-		data:{
-			data_desa:<?=json_encode($paginate?$data->items():$data)?>,
-			data_column:<?=json_encode($table_map['columns'])?>,
-			data_edit:[
-
-			],
-			edit_filed:[
-
-			]
-		}
-		,
-		methods:{
-			build_form_edit:function(data_desa,key){
-				window.de=JSON.parse(JSON.stringify(data_desa));
-				window.ModalEdit.data=de;
-				window.ModalEdit.key=key;
-				window.ModalEdit.show();
-
-			},
-			build_status_text:function(status=null){
-				switch(status){
-					case 1:
-					return {
-						text:'Hold Data',
-						color_bg:'bg-danger'
-					};
-					break;
-					case 2:
-					return {
-						text:'Verifikasi Desa/Kel',
-						color_bg:'bg-green'
-					};
-					break;
-					case 3:
-					return {
-						text:'Verifikasi Kecamatan',
-						color_bg:'bg-yellow'
-					};
-					break;
-					case 5:
-					return {
-						text:'Valid',
-						color_bg:''
-					};
-					
-					break;
-					default:
-					return {
-						text:'Integrasi Data',
-						color_bg:'bg-maroon'
-					};
-					break;
-				}
-			}
-		}
-	});
-
-	
-</script>
-
-<div class="modal fade" id="modal-edit">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content" >
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Edit Data @{{data.name}}</h4>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-md-6">
-						<label>Status Data</label>
-							<select class="form-control" v-model="data.status_data">
-							@php
-								$code_abl=array_keys(HP::abl_aksi_front());
-							@endphp
-							@foreach (HP::abl_aksi_front('ALL') as $code=>$l)
-								<option value="{{$code}}" {{in_array($code,$code_abl)?'':"disabled"}}>{{$l}}</option>
-							@endforeach
-						</select>
-					</div>
-				</div>
-				<hr>
-				<div class="row">
-					<div class="col-md-6">
-						<div v-for="(column,i) in data_column_1">
-							<div class="form-group" v-if="(column.interval_nilai.length==0)&&column.tipe_data=='numeric'">
-								<label>@{{column.name}}</label>
-								<div class="input-group">
-									<input type="number" name="" class="form-control" v-model="data[i]">
-									<span class="input-group-btn">
-										<button type="button" class="btn btn" disabled="">@{{column.satuan}}</button>
-									</span>
-								</div>
-							</div>
-							<div class="form-group" v-if="(column.interval_nilai.length>0)">
-								<label>@{{column.name}}</label>
-								<div class="input-group">
-									<select  name="" class="form-control" v-model="data[i]">
-										<option v-bind:value="i" v-for="(v) in column.interval_nilai">@{{i}}</option>
-									</select>
-									<span class="input-group-addon">
-										<button type="button" class="btn" disabled="">@{{column.satuan}}</button>
-									</span>
-								</div>
-							</div>
-							
-						</div>
-					</div>
-						<div class="col-md-6">
-						<div v-for="(column,i) in data_column_2">
-							<div class="form-group" v-if="(column.interval_nilai.length==0)&&column.tipe_data=='numeric'">
-								<label>@{{column.name}}</label>
-								<div class="input-group">
-									<input type="number" name="" class="form-control" v-model="data[i]">
-									<span class="input-group-btn">
-										<button type="button" class="btn btn" disabled="">@{{column.satuan}}</button>
-									</span>
-								</div>
-							</div>
-							<div class="form-group" v-if="(column.interval_nilai.length>0)">
-								<label>@{{column.name}}</label>
-								<div class="input-group">
-									<select  name="" class="form-control" v-model="data[i]">
-										<option v-bind:value="i" v-for="(v) in column.interval_nilai">@{{i}}</option>
-									</select>
-									<span class="input-group-addon">
-										<button type="button" class="btn" disabled="">@{{column.satuan}}</button>
-									</span>
-								</div>
-							</div>
-							
-						</div>
-					</div>
-
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button"  v-on:click="sinkronisasi" class="btn btn-primary">Simpan Perubahan</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<script type="text/javascript">
-
-
-	var ModalEdit=new Vue({
-		el:"#modal-edit",
-		data:{
-			data:{},
-			key:null,
-			data_column:<?=json_encode($table_map['columns'])?>,
-			data_column_array:<?=json_encode(array_values($table_map['columns']))?>,
-			data_column_1:{},
-			data_column_2:{}
-		},
-		methods:{
-			show:function(){
-				var chunk=this.data_column_array.length/2;
-				if(!(chunk % 1 === 0)){
-					chunk+=1;
-				}
-
-				for (var i =0;this.data_column_array.length>i; i++) {
-					if(i<chunk){
-						this.data_column_1['data_'+i]=this.data_column['data_'+i];
-					}else{
-						this.data_column_2['data_'+i]=this.data_column['data_'+i];
-					}
-				}				
-
-
-				$("#modal-edit").modal();
-			},
-			sinkronisasi:function(){
-				// window.vdata.data_desa[this.key]=this.data;
-				var dataset_update={
-					status_validasi:this.data.status_data
-				};
-
-				for((k) in this.data_column){
-					dataset_update[this.data_column[k].name_column]=this.data[k];
-					window.vdata.data_desa[this.key][k]=this.data[k];
-
-					
-				}
-				window.vdata.data_desa[this.key]['status_data']=879829289;
-				window.vdata.data_desa[this.key]['status_data']=parseInt(this.data.status_data);
-
-				window.vdata.data_desa[this.key]['perubahan']=' - Terdapat Perubahan';
-				
-				var key_exist=null;
-				for(key in window.EditedData.data){
-					if(window.EditedData.data[key].id==this.data.id){
-						key_exist=key;
-					}else{
-
-					}
-				}
-
-				if(key_exist){
-					window.EditedData.data[key_exist]={id:this.data.id,data:JSON.stringify(dataset_update)};
-				}else{
-					window.EditedData.data.push({id:this.data.id,data:JSON.stringify(dataset_update)});
-				}
-
-				
-
-				$('#modal-edit').modal('toggle');
-			}
-
-		}
-	});
-
-
-	var EditedData=new Vue({
-		el:"#data-edited",
-		data:{
-			data:[
-			],
-			list_ajax:{}
-			
-		},
-		methods:{
-			
-			submit:function(){
-				window.unsaved=false;
-				$('#form-save-edit').submit();
-			}
-		},
-		watch:{
-			data:function(){
-				if(this.data.length>0){
-					window.unsaved=true;
-				}else{
-					window.unsaved=false;
-				}
-			}
-		}
-	});
-
-
-
-</script>
-
 @stop
-
-
-

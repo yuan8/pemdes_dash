@@ -222,6 +222,7 @@ class ValidasiCtrl extends Controller
 
     	$access_data_daerah=$request->kddesa??$request->kdkecamatan??$request->kdkabkota??$request->kdprovinsi;
     	$check_access=static::check_access($access_data_daerah);
+        
         $time_input=DB::table('tb_jadwal_pengisian')
             ->where('kode_daerah',substr($access_data_daerah,0,4))
             ->where('level',strlen($access_data_daerah))
@@ -229,8 +230,15 @@ class ValidasiCtrl extends Controller
 
     	$mapTb=DB::table('master_table_map as m')
     	->join('master_column_map as c',[['m.id','=','c.id_ms_table'],['c.validate','=',DB::raw(true)]])
-    	->selectRaw('m.*,m.id as id_map')->where('m.id',$request->data)
+    	->selectRaw('m.*,m.id as id_map')
+        ->where('m.id',$request->data)
     	->first();
+
+        if(!$mapTb){
+            Alert::warning('','Data Tidak Dapat Dilihat Untuk Saat Ini');
+            return back();
+        }
+
 
          $dif=0;
         if($time_input){
@@ -1126,6 +1134,49 @@ class ValidasiCtrl extends Controller
 
 
         }
+    }
+
+
+    public function data_edited($tahun,$kode_daerah,$data_id,Request $request){
+        if($kode_daerah and $data_id){
+            $now=Carbon::now();
+           $table= DB::table('master_table_map')->find($data_id);
+            if($table){
+                $table=$table->table;
+                foreach ($request->edited as $key => $data) {
+                    $data=json_decode($data,true);
+                    $data['kode_desa']=$key;
+                    $data['tahun']=$tahun;
+                    $data['updated_at']=$now;
+                    switch ($data['status_validasi']) {
+                        case 5:
+                        $data['validasi_date']=$now;
+                            # code...
+                            break;
+                        
+                        default:
+                            # code...
+                            break;
+                    }
+
+
+
+                    $x=DB::table($table)->updateOrInsert(
+                        [
+                        'tahun'=>$tahun,
+                        'kode_desa'=>$key
+                        ],
+                         $data
+                    );
+
+
+
+                }
+            }
+        }
+
+        Alert::success('Berhasil','Data Berhasil Diperbarui');
+        return back();
     }
 
 }

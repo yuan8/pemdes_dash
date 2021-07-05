@@ -142,8 +142,8 @@
 
 
 
-<script src="{{asset('bower_components/vue/dist/vue.min.js')}}"></script>
-<script src="{{asset('bower_components/vue/dist/select2.js')}}"></script>
+{{-- <script src="{{asset('bower_components/vue/dist/vue.min.js')}}"></script> --}}
+{{-- <script src="{{asset('bower_components/vue/dist/select2.js')}}"></script> --}}
 
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
@@ -153,12 +153,25 @@
 <script type="text/javascript">
   let sw_root='{{url('sw.js')}}';
 </script>
+<script type="text/javascript">
+  Object.size = function(obj) {
+    var size = 0,
+      key;
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+  };
+
+  // Get the size of an object
+  const myObj = {}
+  var size = Object.size(myObj);
+  </script>
 
 
 
 
-
-<script type="text/javascript" src="{{asset('js/app.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/app.js?v='.date('is'))}}"></script>
 
 
 
@@ -172,7 +185,6 @@
     }
 </style>
 </body>
-@include('sweetalert::alert')
 
 
 <script type="text/javascript">
@@ -277,4 +289,7 @@
         });
 
     </script>
+
+@include('sweetalert::alert')
+
 </html>

@@ -1,6 +1,7 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>VIEW DATA TABLE [{{$data->table}}]</h4>
+<h4>TABLE MAP {{strtoupper($data->name)}}</h4>
+
 <div class="btn-group">
 	
 @stop

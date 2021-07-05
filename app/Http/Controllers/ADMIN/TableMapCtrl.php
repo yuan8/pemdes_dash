@@ -13,12 +13,18 @@ class TableMapCtrl extends Controller
 {
 
     public function create($tahun){
-        return view("admin.tablemap.create");
+        $table=collect(DB::select("SELECT 
+                TABLE_NAME
+            FROM
+                information_schema.tables where TABLE_SCHEMA='".env('DB_DATABASE')."' and TABLE_NAME like 'dash_%'"))->pluck('TABLE_NAME')->toArray();
+
+        return view("admin.tablemap.create")->with('tables',$table);
     }
 
      public function store($tahun,Request $request){
-        $namin=str_replace(' ','_',trim($request->table));
-        $table=DB::select("Select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='".env('DB_DATABASE')."' and TABLE_NAME='".$namin."'");
+        $namin=trim($request->table);
+        $table=DB::select("select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='".env('DB_DATABASE')."' and TABLE_NAME='".$namin."'");
+        
 
         if($table){
              $data=DB::table('master_table_map')

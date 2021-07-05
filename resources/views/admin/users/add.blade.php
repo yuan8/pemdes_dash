@@ -13,7 +13,7 @@
 			<div class="col-md-8">
 				<div class="box box-solid ">
 					<div v-bind:class="'box-header with-border '+(user.is_active?'':'bg-maroon')">
-								<p><b>Profil User (@{{user.username}})</b></p>
+								<p><b>Profil User @{{user.name.toUpperCase()}} (@{{user.username}})</b></p>
 					<input type="hidden" name="action_to" class="action_to" value="">
 
 							</div>
@@ -22,12 +22,14 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Email</label>
-									<input type="email" name="email" required="" class="form-control" v-model="user.email">
+									<input type="email" disabled="" name="m" required="" class="form-control" v-model="user.email">
+									<input type="hidden" name="email" v-model="user.email">
 								</div>
 								<div class="form-group">
 									<label>Username</label>
-									<input type="text" name="username" required="" class="form-control" v-model="user.username">
+									<input type="text" v-bind:disabled="disabled_account" name="us" required="" class="form-control" v-model="user.username">
 								</div>
+								<input type="hidden" name="username" v-model="user.username">
 								<div class="form-group">
 									<label>Nama</label>
 									<input type="text" name="name" required="" class="form-control" v-model="user.name">
@@ -52,13 +54,14 @@
 									<label>Nomer Telpon</label>
 									<input type="text" min="11" name="nomer_telpon" required="" class="form-control" v-model="user.nomer_telpon">
 								</div>
-								<div class="form-group" >
+								<div class="form-group" v-if="user.nomer_telpon.length>=16" >
 									<label>Status  Nomer Pada Aplikasi Whatsapp</label>
 									<p><span>	<input type="checkbox" name="wa_number"  class="flat-red" name="wa_number" v-model="user.wa_number"></span> @{{user.wa_number?'Terdaftar':'Tidak Terdaftar'}}</p>
 								</div>
+								<input type="hidden" name="wa_notif" v-model="user.wa_notif">
 								<div class="form-group" v-if="Boolean(user.wa_number)===true && user.role==4">
 									<label>Status Wa Blash</label>
-									<p><span>	<input type="checkbox" name="wa_notif"  class="flat-green"  v-model="user.wa_notif"></span> @{{user.wa_notif?'Aktif':'Tidak Aktif'}}</p>
+									<p><span>	<input type="checkbox" name=""  class="flat-green"  v-model="user.wa_notif"></span> @{{user.wa_notif?'Aktif':'Tidak Aktif'}}</p>
 								</div>
 								<div class="form-group">
 									<label>Status User</label>
@@ -88,6 +91,7 @@
 									</select>
 								</div>
 							@endcan
+							<input type="hidden" name="role" v-model="user.role">
 
 							<div class="form-group" >
 
@@ -110,7 +114,7 @@
 					</div>
 					<div class="box-footer">
 						<div class="form-group">
-							<button class="btn btn-primary" type="submit">UPDATE</button>					
+							<button class="btn btn-primary" type="submit">SIMPAN</button>					
 						</div>
 					</div>
 				
@@ -182,7 +186,7 @@
 
 				    		@can('is_daerah')
 				            <div class="form-group" v-if="parseInt(user.role)==4 && scope>=2">
-				              <select class="form-control" id="daerah_akses" name="kode_daerah"  v-model="user.kode_daerah">
+				              <select class="form-control" id="daerah_akses" name="kode_daerah"  >
 				              @if(Auth::User()->role==4)
 				              	@foreach($list_daerah_access as $l)
 					               		 <option value="{{$l->id}}">{{$l->text}}</option>
@@ -259,6 +263,7 @@ var headVue=new Vue({
 				daerah_selected:null,
 				daerah_selected_regional:null,
 				main_daerah:{!!old('main_daerah')?'true':'false'!!},
+				kode_daerah:"{{old('kode_daerah')??(Auth::User()->role==4?Auth::User()->kode_daerah:"")}}",
 				walidata:{!!old('walidata')?'true':'false'!!},
 				nomer_telpon:'{{old('nomer_telpon')??'+62'}}',
 				wa_number:{!!old('wa_number')?'true':'false'!!},
@@ -270,6 +275,8 @@ var headVue=new Vue({
 
 
 			},
+			disabled_account:false,
+			listing_daerah:[],
 			scope:{{strlen(Auth::User()->kode_daerah)}},
 			list_scope:[
 
@@ -303,6 +310,17 @@ var headVue=new Vue({
 					this.user.password_conf_status='Password Tidak Sama';
 				}
 			},
+			check_account(){
+				if(this.user.role==4 && this.user.kode_daerah!=null){
+					this.disabled_account=true;
+					this.user.email=this.user.kode_daerah+"@"+"{{env('DOMAIN_MAIL')}}";
+					this.user.username=this.user.kode_daerah;
+						
+				}else{
+					this.disabled_account=false;
+				}
+				console.log(this.user.role,this.user.kode_daerah);
+			},
 			sr:function(val=this.user.role){
 				
 				if(val==2){
@@ -323,20 +341,26 @@ var headVue=new Vue({
 					setTimeout(function(){
 						if(({!!Auth::User()->role==4?'true':'false'!!}) && vuser.user.role==4){
 							$('#daerah_akses').select2();
+							$('#daerah_akses').trigger('change');
+							window.get_change_daerah();
 
 						}
 						$('#instansi_akses').select2();
 
 					},200);
+					this.user.main_daerah=true;
 
 				}
+
+				this.check_account();
 			},
 			username_bind:function(){
 				if(this.user.username){
 					if(this.user.username!=window.username_them){
 						this.user.username=this.user.username.replace(/ /g,'_');
-						window.username_them=this.user.username;
+						window.username_bindthem=this.user.username;
 						headVue.user.username=this.user.username;
+						this.user.email=this.user.username+'@'+'{{env('DOMAIN_MAIL')}}';
 					}
 				}
 			},
@@ -346,7 +370,7 @@ var headVue=new Vue({
                         var char_phone='';
                         val=val.replace(/[-]/g,'');
                         val=val.replace('+62','0');
-                        val=val.slice(0,12);
+                        val=val.slice(0,13);
                         let arr_val=val.split('');
                         for(var i=0;i<arr_val.length;i++){
                             if((i==0) && (arr_val[0]!='+')){
@@ -379,6 +403,13 @@ var headVue=new Vue({
 
                         }
 
+
+                        if(this.user.nomer_telpon.length<16){
+                        	this.user.wa_number=false;
+                        	this.user.wa_notif=false;
+
+                        }
+
                 }
 
             },
@@ -390,10 +421,8 @@ var headVue=new Vue({
 	            	y=window.build_daerah(val);
 	            	if(vuser.user.daerah_selected){
 	            		$('#daerah_akses').val(vuser.user.daerah_selected.id).trigger('change').text('ss');
-	            		console.log($('#daerah_akses').val());
 	            		if(vuser.user.daerah_selected){
 			      	 		var newOption = new Option(vuser.user.daerah_selected.text, vuser.user.daerah_selected.id, true, true);
-			      	 		console.log(newOption);
     						$('#daerah_akses').append(newOption).trigger('change');
 	            		}
 	            	}
@@ -401,6 +430,8 @@ var headVue=new Vue({
 
 				@else
 				$('#daerah_akses').select2();
+				window.get_change_daerah();
+
 
 				@endif
 
@@ -483,6 +514,7 @@ var headVue=new Vue({
 			'user.username':'username_bind',
 			'user.password':'password_check',
 			'user.password_conf':'password_check',
+			'user.kode_daerah':'check_account'
 
 		}
 	});
@@ -507,6 +539,7 @@ var headVue=new Vue({
 	});
 
 	$('#action_to').trigger('change');
+
 
 	function build_daerah(val){
 		console.log(val);
@@ -540,7 +573,17 @@ var headVue=new Vue({
     		}
     	});
 
+			get_change_daerah();
+		
+
 		return 'ss';
+	}
+
+	function get_change_daerah(){
+		$('#daerah_akses').on('change',function(){
+			vuser.user.kode_daerah=this.value;
+			vuser.check_account();
+		});
 	}
 
 </script>
