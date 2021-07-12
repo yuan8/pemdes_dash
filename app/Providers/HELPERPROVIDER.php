@@ -263,7 +263,7 @@ class HELPERPROVIDER extends ServiceProvider
 			],
 			[
 				'val'=>4,
-				'text'=>'ADMIN KOTA/KAB'
+				'text'=>'ADMIN DAERAH'
 			],
 
 

@@ -29,7 +29,7 @@
 		</script>
 	</div>
 	<div class="box-footer">
-		<button type="submit" class="btn btn-primary">SIMPAN</button>
+		<button type="submit" class="btn btn-primary">TAMBAH</button>
 	</div>
 </div>
 </form>

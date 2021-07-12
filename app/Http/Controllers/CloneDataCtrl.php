@@ -26,7 +26,7 @@ class CloneDataCtrl extends Controller
 
     	$production_con=env('DB_DATABASE');
     	
-    	$chek_exits=DB::
+    	// $chek_exits=DB::
 
 
     }

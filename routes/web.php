@@ -75,6 +75,21 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 		Route::post('/tentang-kami','ADMIN\SettingCtrl@update')->name('admin.set.update');
 	});
 
+	Route::prefix('/forum')->middleware('can:is_admin')->group(function(){
+		Route::get('/','ADMIN\ForumCtrl@index')->name('admin.forum.index');
+		Route::get('/tambah','ADMIN\ForumCtrl@tambah')->name('admin.forum.tambah');
+		Route::post('/tambah','ADMIN\ForumCtrl@store')->name('admin.forum.store');
+
+		Route::get('/show/{id}','ADMIN\ForumCtrl@edit')->name('admin.forum.edit');
+
+		Route::put('/show/{id}','ADMIN\ForumCtrl@update')->name('admin.forum.update');
+		Route::delete('/delete/{id}','ADMIN\ForumCtrl@delete')->name('admin.forum.delete');
+
+
+
+
+	});
+
 
 	Route::prefix('/publikasi')->middleware('can:is_daerah')->group(function(){
 		Route::get('/','ADMIN\PublicationCtrl@index')->name('admin.publikasi.index');

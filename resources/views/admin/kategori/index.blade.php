@@ -39,6 +39,7 @@
 					<tr>
 						<td>
 							<a href="{{route('admin.kategori.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-warning btn-xs"><i class="fa fa-pen"></i> Edit</a>
+							<a href="{{route('admin.kategori.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> </a>
 							
 						</td>
 						<td>{{$key+1}}</td>

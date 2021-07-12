@@ -119,41 +119,6 @@ class MENUPROVIDER extends ServiceProvider
 
 
                 'Tahun Data '.$GLOBALS['tahun_access'],
-                  [
-                    'text'=>('MANAJEMEN USER'),
-                    'href'=>route('admin.users.index',['tahun'=>$tahun]),
-                    'class'=>'',
-                    'icon'=>'fa fa-users',
-                    'can'=>['is_daerah_admin']
-                ],
-                 [
-                    'text'=>('USER DASHBOARD'),
-                    'href'=>route('admin.session.index',['tahun'=>$tahun]),
-                    'class'=>'',
-                    'icon'=>'fa fa-circle',
-                    'can'=>['is_super']
-
-
-                ],
-
-
-                 [
-                    'text'=>('KATEGORI'),
-                    'href'=>route('admin.kategori.index',['tahun'=>$tahun]),
-                    'class'=>'',
-                    'icon'=>'fa fa-circle',
-                    'can'=>['is_super']
-
-
-                ],
-                [
-                    'text'=>('TABLE MAP'),
-                    'href'=>route('admin.tablemap.index',['tahun'=>$tahun]),
-                    'class'=>'',
-                    'icon'=>'fa fa-code',
-                    'can'=>['is_super']
-
-                ],
                 [
                     'text'=>('MANAJEMEN INSTANSI'),
                     'href'=>route('admin.instansi.index',['tahun'=>$tahun]),
@@ -163,7 +128,7 @@ class MENUPROVIDER extends ServiceProvider
                     
 
                 ],
-                 [
+                [
                     'text'=>('MANAJEMEN REGIONAL'),
                     'href'=>route('admin.region.index',['tahun'=>$tahun]),
                     'class'=>'',
@@ -172,6 +137,33 @@ class MENUPROVIDER extends ServiceProvider
                     
 
                 ],
+                  [
+                    'text'=>('MANAJEMEN USER'),
+                    'href'=>route('admin.users.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-users',
+                    'can'=>['is_daerah_admin']
+                ],
+                 [
+                    'text'=>('KATEGORI'),
+                    'href'=>route('admin.kategori.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-circle',
+                    'can'=>['is_super']
+
+
+                ],
+                
+
+                [
+                    'text'=>('TABLE MAP'),
+                    'href'=>route('admin.tablemap.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-code',
+                    'can'=>['is_super']
+
+                ],
+
                 
                  
 
@@ -180,12 +172,30 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('a.p.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-clock',
-                    'can'=>['is_daerah_kabkota']
+                    // 'can'=>['is_daerah_kabkota']
                  ],
 
 
                
+              
+
                 [
+                    'text'=>('DATASET'),
+                    'href'=>route('admin.dataview.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
+                    'can'=>['is_super']
+
+                ],
+                 [
+                    'text'=>('DATASET MANUAL'),
+                    'href'=>route('admin.data.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
+                    'can'=>['is_daerah_admin']
+
+                ],
+                  [
                     'text'=>('VERIFIKASI DAN VALIDASI DATA'),
                     'href'=>route('admin.validasi.index',['tahun'=>$tahun]),
                     'class'=>'',
@@ -209,20 +219,49 @@ class MENUPROVIDER extends ServiceProvider
                     'can'=>['is_only_daerah_validasi']
                 ],
 
+                 [
+                            'text'=>('BERITA ACARA'),
+                            'href'=>route('a.b.ttd',['tahun'=>$tahun]),
+                            'class'=>'',
+                            'icon'=>'fa fa-check text-green',
+                            'can'=>['is_daerah_kabkota'],
+                ],
                 [
-                    'text'=>('DATASET'),
-                    'href'=>route('admin.dataview.index',['tahun'=>$tahun]),
+                    'text'=>('FAQ KATEGORI'),
+                    'href'=>route('admin.faq.c.index',['tahun'=>$tahun]),
                     'class'=>'',
-                    'icon'=>'fa fa-file',
-                    'can'=>['is_super']
+                    'icon'=>'fa fa-map',
+                    'can'=>['is_admin']
+                    
 
                 ],
                  [
-                    'text'=>('DATASET MANUAL'),
-                    'href'=>route('admin.data.index',['tahun'=>$tahun]),
+                    'text'=>('FAQ'),
+                    'href'=>route('admin.faq.index',['tahun'=>$tahun]),
                     'class'=>'',
-                    'icon'=>'fa fa-file',
-                    'can'=>['is_daerah_admin']
+                    'icon'=>'fa fa-map',
+                    'can'=>['is_admin']
+                    
+
+                ],
+                [
+                    'text'=>("KATEGORI FORUM"),
+                    'href'=>route('admin.forum.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-users',
+                    'can'=>['is_admin']
+                    
+
+                ],
+                
+                 
+                [
+                    'text'=>('USER SESSION'),
+                    'href'=>route('admin.session.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-circle',
+                    'can'=>['is_super']
+
 
                 ],
                 
@@ -266,13 +305,6 @@ class MENUPROVIDER extends ServiceProvider
                 //    ]
                 // ],
 
-                 [
-                            'text'=>('BERITA ACARA'),
-                            'href'=>route('a.b.ttd',['tahun'=>$tahun]),
-                            'class'=>'',
-                            'icon'=>'fa fa-check text-green',
-                            'can'=>['is_daerah_kabkota'],
-                ],
                 // [
                 //     'text'=>('BERITA ACARA'),
                 //     'href'=>route('a.b.ttd',['tahun'=>$tahun]),
@@ -308,24 +340,7 @@ class MENUPROVIDER extends ServiceProvider
 
                 // ],
 
-                 [
-                    'text'=>('FAQ'),
-                    'href'=>route('admin.faq.index',['tahun'=>$tahun]),
-                    'class'=>'',
-                    'icon'=>'fa fa-map',
-                    'can'=>['is_admin']
-                    
-
-                ],
-                 [
-                    'text'=>('FAQ KATEGORI'),
-                    'href'=>route('admin.faq.c.index',['tahun'=>$tahun]),
-                    'class'=>'',
-                    'icon'=>'fa fa-map',
-                    'can'=>['is_admin']
-                    
-
-                ],
+                
                  
             ],
             'side_right'=>[]

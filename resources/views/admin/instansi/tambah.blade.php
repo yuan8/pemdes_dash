@@ -1,6 +1,6 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>EDIT INSTANSI</h4>
+<h4>FORM PENAMBAHAN INSTANSI PUSAT</h4>
 @stop
 
 
@@ -33,12 +33,12 @@
 					<label>KAB KOTA</label>
 					<select class="form-control" name="kode_daerah" id="kode_daerah" required=""></select>
 				</div>
-				<div class="form-group">
+				{{-- <div class="form-group">
 					<label>Jenis Instansi</label>
 					<select class="form-control" required="" id="jenis_instansi" v-model="inst.type" name="sub_type">
 						<option v-for="i in jenis_instansi" v-bind:value="i">@{{i}}</option>
 					</select>
-				</div>
+				</div> --}}
 				<div class="form-group">
 					<label>Deskripsi</label>
 					<textarea class="form-control" v-model="inst.description" name="description"></textarea>

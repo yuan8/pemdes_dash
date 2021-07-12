@@ -190,6 +190,11 @@ a{
   background-size: 60px 60px!important;
 }
 
+.background-img-box-red{
+  background-image: url("./../bg2.png")!important;
+  background-size: 60px 60px!important;
+}
+
 
 .content-header {
   padding-top: 20px;

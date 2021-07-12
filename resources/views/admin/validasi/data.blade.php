@@ -323,13 +323,19 @@
 			unsaved=false;
 
 
-		function unloadPage(){ 
+		// function unloadPage(event){ 
+		//     if(unsaved){
+		//         return confirm("Data Perubahan Belum disimpan!. Simpan Terlebih dahulu atau abaikan pesan ini");
+		//     }
+		// }
+
+		window.onbeforeunload = function(){ 
 		    if(unsaved){
-		        return "Data Perubahan Belum disimpan!. Simpan Terlebih dahulu atau abaikan pesan ini";
+		        return ("Data Perubahan Belum disimpan!. Simpan Terlebih dahulu atau abaikan pesan ini");
+		    }else{
+		    	
 		    }
 		}
-
-		window.onbeforeunload = unloadPage;
 
 		$(function(){
 			$('#table-verifikasi-data').prepend($('#tr-total').clone());
@@ -382,7 +388,10 @@
 
 
 
-		var time_count=new Vue({
+		
+
+		if($('#time_count').html()!=undefined){
+			var time_count=new Vue({
 			el:"#time_count",
 			data:{
 				timeleft:{{$time_count_down}},
@@ -406,8 +415,6 @@
 				}
 			}
 		});
-
-		if($('#time_count').html()!=undefined){
 			time_count.time_count_down();
 		}
 
@@ -593,7 +600,7 @@
 					<div class="col-md-6">
 						<div v-for="(column,i) in data_column_1">
 							<div class="form-group" v-if="(column.interval_nilai.length==0)&&column.tipe_data=='numeric'">
-								<label>@{{column.name}}</label>
+								<label>@{{column.name}} <span ><i data-toggle="tooltip" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" class="fa fa-info"></i></button></span></label>
 								<div class="input-group">
 									<input type="number" name="" class="form-control" v-model="data[i]">
 									<span class="input-group-btn">
@@ -607,7 +614,7 @@
 									<select  name="" class="form-control" v-model="data[i]">
 										<option v-bind:value="i" v-for="(v) in column.interval_nilai">@{{i}}</option>
 									</select>
-									<span class="input-group-addon">
+									<span class="input-group-btn">
 										<button type="button" class="btn" disabled="">@{{column.satuan}}</button>
 									</span>
 								</div>
@@ -615,10 +622,10 @@
 							
 						</div>
 					</div>
-						<div class="col-md-6">
+					<div class="col-md-6">
 						<div v-for="(column,i) in data_column_2">
 							<div class="form-group" v-if="(column.interval_nilai.length==0)&&column.tipe_data=='numeric'">
-								<label>@{{column.name}}</label>
+								<label>@{{column.name}} </label>
 								<div class="input-group">
 									<input type="number" name="" class="form-control" v-model="data[i]">
 									<span class="input-group-btn">
@@ -630,9 +637,9 @@
 								<label>@{{column.name}}</label>
 								<div class="input-group">
 									<select  name="" class="form-control" v-model="data[i]">
-										<option v-bind:value="i" v-for="(v) in column.interval_nilai">@{{i}}</option>
+										<option v-bind:value="v" v-for="(v) in column.interval_nilai">@{{v}}</option>
 									</select>
-									<span class="input-group-addon">
+									<span class="input-group-btn">
 										<button type="button" class="btn" disabled="">@{{column.satuan}}</button>
 									</span>
 								</div>
@@ -668,10 +675,15 @@
 			show:function(){
 				var chunk=this.data_column_array.length/2;
 				if(!(chunk % 1 === 0)){
-					chunk+=1;
+					chunk=parseInt(chunk)+1;
 				}
 
 				for (var i =0;this.data_column_array.length>i; i++) {
+					if(this.data_column['data_'+i]['interval_nilai'].length>0){
+						if(!Array.isArray(this.data_column['data_'+i]['interval_nilai'])){
+						this.data_column['data_'+i]['interval_nilai']=this.data_column['data_'+i]['interval_nilai'].split('|;|');
+						}
+					}
 					if(i<chunk){
 						this.data_column_1['data_'+i]=this.data_column['data_'+i];
 					}else{

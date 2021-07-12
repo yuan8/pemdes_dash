@@ -27,9 +27,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('integrasi:data')
                  ->everyFifteenMinutes();
 
-        $schedule->command('wa:blash ')
+        $schedule->command('wa:blash')
                  ->cron('0 7 * * *');
-                 
                  
          $schedule->command('yvideo:get '.date('Y'))
                  ->everyFifteenMinutes();

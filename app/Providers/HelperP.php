@@ -38,7 +38,6 @@ class HelperP extends ServiceProvider
            $abl[3]='Verifikasi Kecamatan';
            $abl[5]='Validasi Kota/Kab';
            $abl[1]='Hold Data';
-
         }else if($U->can('is_regional')){
             $abl=[];
 

@@ -453,7 +453,9 @@ class UserCtrl extends Controller
 
             return view('admin.users.add')->with([
                 'list_daerah_access'=>static::access_daerah($tahun),
-                'regional_list'=>DB::table('master_regional')->get()
+                'regional_list_acc'=>DB::table('master_regional')->get()->pluck('id'),
+                'regional_list'=>DB::table('master_regional')->get(),
+
             ]);
     }
 
