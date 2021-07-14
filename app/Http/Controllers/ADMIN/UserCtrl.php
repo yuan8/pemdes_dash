@@ -56,8 +56,7 @@ class UserCtrl extends Controller
              $x=strpos((string)$request->kode_daerah??'x', (string)(!empty($u->kode_daerah)?$u->kode_daerah:$request->kode_daerah))!==false;
         }
 
-
-        if(($u->role==1) OR ($id==$u->id) OR $x ){
+        if(($u->role<=2) OR ($id==$u->id) OR $x ){
 
             $data=[
                 'name'=>$request->name,
@@ -72,22 +71,28 @@ class UserCtrl extends Controller
 
             ];
 
-            if($u->can('id_admin')){
+            if($u->can('is_admin')){
                     $data['role']=$request->role;
             }else if($ue->role){
                     $data['role']=$ue->role;
             }
 
-            if($id!=$u->id){
 
-                $data['kode_daerah']=($data['role']==4)?($request->kode_daerah??null):null;
-                $data['walidata']=($data['role']==4)?($request->walidata=='on'?true:false):false;
-                if((string)$u->kode_daerah!=(string)$data['kode_daerah']){
-                    $data['main_daerah']=($data['role']==4)?($request->main_daerah=='on'?true:false):false;
-                }
-            }else{
+            $data['kode_daerah']=($data['role']==4)?($request->kode_daerah??null):null;
+            $data['main_daerah']=($data['role']==4)?true:false;
 
-            }
+
+            // dd($data,$request->all());
+            // if($id!=$u->id){
+
+            //     $data['walidata']=($data['role']==4)?($request->walidata=='on'?true:false):false;
+            //     if((string)$u->kode_daerah!=(string)$data['kode_daerah']){
+                   
+            //     }
+
+            // }else{
+
+            // }
 
 
 
@@ -106,10 +111,14 @@ class UserCtrl extends Controller
             ]);
 
 
+
             if($valid->fails()){
+
                 Alert::error('Gagal',$valid->errors()->first());
-                return back()->withError();
+                return back();
             }
+
+
 
             $check=DB::table('users')->whereRaw(
                 "
@@ -170,7 +179,6 @@ class UserCtrl extends Controller
 
             }else{
             }
-
 
 
             if($request->action_to=='UPDATE_AND_BACKTOFORM'){

@@ -72,7 +72,7 @@
 @section('js')
 
 	<script type="text/javascript">
-		var data=<?=json_encode($data) ?>;
+		var data=<?=json_encode($data->items()) ?>;
 
 		var modal_vue=new Vue({
 			el:"#modal-hapus",
@@ -86,6 +86,7 @@
 			},
 			methods:{
 				init:function(key){
+					console.log(window.data);
 						window.modal_vue.$data.ins=data[key];
 						var url='{{route('admin.region.delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>'xxxx'])}}';
 						url=url.replace(/xxxx/g,this.ins.id);

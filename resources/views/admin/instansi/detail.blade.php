@@ -29,15 +29,15 @@
 					<label>Nama</label>
 					<input type="text" required="" v-model="inst.name" class="form-control" name="name">
 				</div>
-				<div class="form-group">
+				{{-- <div class="form-group">
 					<label>Jenis Instansi</label>
 					<select class="form-control" required="" id="jenis_instansi" v-model="inst.sub_type" name="sub_type">
 						<option v-for="i in jenis_instansi" v-bind:value="i">@{{i}}</option>
 					</select>
-				</div>
+				</div> --}}
 				<div class="form-group">
 					<label>Deskripsi</label>
-					<textarea class="form-control" v-model="inst.description" name="description"></textarea>
+					<textarea class="form-control" v-model="inst.deskripsi" name="description"></textarea>
 				</div>
 			</div>
 		</div>

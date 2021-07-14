@@ -93,6 +93,8 @@ class DataCtrl extends Controller
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
+                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
 
@@ -126,6 +128,7 @@ class DataCtrl extends Controller
 
         $now=Carbon::now();
         $Defwhere=[
+            "(CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) ",
             "dt.status=1",
             "c.id=".$id,
             "dt.publish_date <= '".$now."'"
@@ -188,6 +191,8 @@ class DataCtrl extends Controller
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
+                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
 
@@ -272,6 +277,8 @@ class DataCtrl extends Controller
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
+                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
 
@@ -294,18 +301,21 @@ class DataCtrl extends Controller
         $instansi=DB::table($level['table'].' as d')
                 ->selectRaw("'' as deskripsi, ".$level['column_id'].' as id, '.$level['column_name']." as name, null as image_path,'PEMDA' as type ,'".$level['level']."' as jenis")->where($level['column_id'],'=',$kode_daerah)
                 ->first();
+
         $instansi->name=HP::daerah_level($kode_daerah);
 
        
         $now=Carbon::now();
         $Defwhere=[
-            "dt.tahun=".$tahun,
+            "(CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) ",
             "dt.status=1",
-            "dt.kode_daerah=".$kode_daerah,
             "dt.publish_date <= '".$now."'"
         ];
 
-        $where=[];
+        $where=[
+            'dt.kode_daerah = '.$kode_daerah,
+            'dt.kode_daerah is null'
+        ];
 
         if($request->q){
             $where[]="dt.deskripsi like '%".$request->q."%' ";
@@ -362,6 +372,11 @@ class DataCtrl extends Controller
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
+                     ".$kode_daerah." as from_instansi_daerah,
+                    '".$instansi->name."'  as def_nama_instansi,   
+                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+
+                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
 
@@ -492,8 +507,18 @@ class DataCtrl extends Controller
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
+                GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
+
+        foreach($data as $key=>$d){
+            if($d->type!='INTEGRASI' AND $d->kode_daerah){
+            $data[$key]->def_nama_instansi=$d->nama_daerah;
+
+            }
+        }
+
 
         $data->appends([
             'q'=>$request->q
@@ -531,14 +556,19 @@ class DataCtrl extends Controller
     }
 
 
-    public function detail($tahun,$d,$slug){
+    public function detail($tahun,$d,$slug,Request $request){
         $data=DB::table('tb_data as dt')->where('dt.id',$d)
         ->leftJoin('tb_data_detail_map as dtm','dtm.id_data','=','dt.id')
         ->leftJoin('master_table_map as map','map.id','=','dtm.id_map')
         ->selectRaw("dt.*,dtm.id_map,map.inheritance,map.start_level,map.stop_level")
         ->where('type','INTEGRASI')->first();
         if($data){
-            return view('show_data.integrasi')->with('data',$data);
+            $nama_daerah=null;
+            if($request->kdparent){
+                $nama_daerah=HP::daerah_level($request->kdparent);
+            }
+
+            return view('show_data.integrasi')->with(['data'=>$data,'req'=>$request,'nama_daerah'=>$nama_daerah]);
         }
     }
 
@@ -597,13 +627,14 @@ class DataCtrl extends Controller
         ->where('tahun',($tahun))
         ->whereRaw(implode(" and ", $whereRaw))
         ->where('id',$id)->first();
-        config([
-            'proepdeskel.meta.title'=>$data->title,
-            'proepdeskel.meta.description'=>$data->deskripsi,
-            'proepdeskel.meta.keywords'=>implode(',',json_decode($data->keywords??'[]')),
-        ]);
+
 
         if($data){
+            config([
+                'proepdeskel.meta.title'=>$data->title,
+                'proepdeskel.meta.description'=>$data->deskripsi,
+                'proepdeskel.meta.keywords'=>implode(',',json_decode($data->keywords??'[]')),
+            ]);
 
             return view('show_data.dataset_visual')->with('data',$data);
         }else{
@@ -614,20 +645,49 @@ class DataCtrl extends Controller
 
 
      public function visualisasi_data($tahun,$id,Request $request){
+         $data=DB::table('tb_data as d')
+        ->where('tahun',($tahun))
+        ->where('type','VISUALISASI')
+        ->where('id',$id)->first();
+
         if($request->kdparent){
             $request->kode_daerah=$request->kdparent;
         }
-      $file_exist=file_exists(storage_path('/app/public/publication/DATASET_VISUAL_JSON/'.$tahun.'/'.$id.'.json'));
+
+        if($data){
+            if($data->kode_daerah){
+                if(!$request->kdparent){
+                    $request->kode_daerah=$data->kode_daerah;
+                    // switch(strlen($data->kode_daerah)){
+                    //     case 2:
+                    //         $request->kode_daerah=null;
+
+                    //     break;
+                    //     case 4:
+                    //         $request->kode_daerah=substr($data->kode_daerah,0,2);
+
+                    //     break;
+                    //     case 6:
+                    //         $request->kode_daerah=substr($data->kode_daerah,0,4);
+
+                    //     break;
+                    //     case 10:
+                    //         $request->kode_daerah=substr($data->kode_daerah,0,6);
+                    //     break;
+                    // }
+                }
+            }   
+        }
+      $file_exist=file_exists(storage_path('app/public/publication/DATASET_VISUAL_JSON/'.$tahun.'/'.$id.'.json'));
+
+      // dd(storage_path('app/public/publication/DATASET_VISUAL_JSON/'.$tahun.'/'.$id.'.json'));
         if($file_exist){
             $file_json=file_get_contents(storage_path('/app/public/publication/DATASET_VISUAL_JSON/'.$tahun.'/'.$id.'.json'));
             $meta_table=json_decode($file_json,true)['meta_table'];
             $meta_table['key_view']='f';
         }
 
-         $data=DB::table('tb_data as d')
-        ->where('tahun',($tahun))
-        ->where('type','VISUALISASI')
-        ->where('id',$id)->first();
+        
 
         $level=HP::table_level($request->kode_daerah)['child'];
         $level['count']=$level['count']>0?$level['count']:2;
@@ -655,11 +715,17 @@ class DataCtrl extends Controller
 
 
 
+            $selectRaw=$level['column_id'].' as id,'.$level['column_name'].' as name';
+            if($level['count']==10){
+                $selectRaw.=',stapem as status_desa,nmkecamatan as nama_kecamatan,nmkabkota as nama_kota';
+
+            }
+
+            
             $daerah=DB::table($level['table'].' as da')
              ->whereIn($level['column_id'],$data_list)
             ->where($level['column_id'],'like',$request->kode_daerah.'%')
-            ->selectRaw($level['column_id'].' as id,'.$level['column_name'].' as name')->get();
-
+            ->selectRaw($selectRaw)->get();
 
 
 
@@ -705,11 +771,12 @@ class DataCtrl extends Controller
                 'data'=>$DATA
         ];
 
+
         $data_type['series']=MAP::data_series('xx',$DATA,$meta_table,$level,$id,'DATASET');
         $data_type['series_map']=MAP::data_map('xx',$DATA,$meta_table,$level,$id,'DATASET');
         $data_type['data_sort']=MAP::rekap_data($DATA,$meta_table,4);
 
-
+        // dd($DATA);
         $vie=$meta_table['view_'];
         foreach ([2,4,6,10] as $key => $value) {
             $meta_entity[$value]=(isset($vie[$value]))?$vie[$value]:[];

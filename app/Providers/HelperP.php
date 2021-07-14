@@ -574,7 +574,11 @@ class HelperP extends ServiceProvider
 
         switch ($data->type) {
             case 'INTEGRASI':
-            return route('data.int.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title)]);
+            $q=['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title)];
+            if($data->from_instansi_daerah??null){
+                $q['kdparent']=$data->from_instansi_daerah;
+            }
+            return route('data.int.detail',$q);
                 # code...
                 break;
 

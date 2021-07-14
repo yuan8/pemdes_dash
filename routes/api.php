@@ -26,6 +26,8 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 
     Route::middleware('auth:api')->group(function(){
     	Route::get('kategori','API\KetegoriCtrl@get')->name('api.meta.kategori');
+      
+
     	Route::get('instansi','API\KetegoriCtrl@instansi')->name('api.meta.instansi');
 
     });

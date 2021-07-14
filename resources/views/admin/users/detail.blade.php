@@ -1,6 +1,6 @@
 @extends('vendor.adminlte.admin')
 @section('content_header')
-<h4>User {{$data->name}} / {{$data->email}}</h4>
+<h4 id="head-nativ">User @{{user.name}} / @{{user.email}}</h4>
 <div class="btn-group">
 </div>
 
@@ -13,7 +13,7 @@
 			<div class="col-md-8">
 				<div class="box box-solid ">
 					<div class="box-header with-border {{$data->is_active?'':'bg-maroon'}}">
-								<p><b>Profil User ({{$data->username}})</b></p>
+								<p><b>Profil User @{{user.name.toUpperCase()}} (@{{user.username}})</b></p>
 					<input type="hidden" name="action_to" class="action_to" value="">
 
 							</div>
@@ -22,11 +22,13 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Email</label>
-									<input type="email" name="email" required="" class="form-control" v-model="user.email">
+									<input type="email" disabled="" name="m" required="" class="form-control" v-model="user.email">
+									<input type="hidden" name="email" v-model="user.email">
 								</div>
 								<div class="form-group">
 									<label>Username</label>
-									<input type="text" name="username" required="" class="form-control" v-model="user.username">
+									<input type="text" v-bind:disabled="disabled_account" name="us" required="" class="form-control" v-model="user.username">
+									<input type="hidden" name="username" v-model="user.username">
 								</div>
 								<div class="form-group">
 									<label>Nama</label>
@@ -67,7 +69,7 @@
 										<option value="0" > UNACTIVE </option>
 									</select>
 								</div>
-								@if(Auth::User()->id!=$data->id)
+								{{-- @if(Auth::User()->id!=$data->id)
 								<div class="form-group" v-if="user.role==4">
 
 									<label>Admin Derah</label>
@@ -77,7 +79,7 @@
 									<label>Role Walidata</label>
 									<p><span>	<input type="checkbox" name="walidata"  class="flat-red"  v-model="user.walidata"></span> @{{user.walidata?'STATUS WALIDATA':'STATUS PRODUSEN DATA'}}</p>
 								</div>
-								@endif
+								@endif --}}
 								
 							@can('is_super')
 
@@ -106,19 +108,7 @@
 					</div>
 				
 				</div>
-				{{-- <div class="box" v-if="user.role!=1">
-				  		<div class="box-body">
-				  			 <div class="form-group">
-				            	<label >Instansi Akses</label>
-				            	<select id="instansi_akses" multiple="" class="form-control" name="instansi[]">
-				            			@foreach ($instansi as $i)
-					            		<option value="{{$i->id}}" {{in_array($i->id,$record_instansi)?'selected':''}}>{{$i->name}}</option>
-					            		@endforeach
-				            	</select>
-
-				            </div>
-				  		</div>
-				  	</div> --}}
+			
 			</div>
 			<div class="col-md-4">
 				  <div class="box box-solid">
@@ -127,7 +117,7 @@
 				        <label>JENIS AKSI UPDATE</label>
 				        <select class="form-control" name="action_to" id="action_to">
 				          <option value="UPDATE_AND_BACKTOFORM">Kembali Keform</option>
-				          <option value="UPDATE_AND_BACKTOLIST">Kembai ke User List</option>
+				          <option value="UPDATE_AND_BACKTOLIST">Kembali ke User List</option>
 				        </select>
 				      </div>
 				    </div>
@@ -151,10 +141,14 @@
 
 				            <div v-if="user.role==3" >
 				            	<div class="form-group">
+				            		@php
+				            		// dd(count($regional_list_acc)>0?$regional_list_acc->toArray():['x']);
+				              	@endphp
 
 				              <select class="form-control" id="regional" name="role_group[]" multiple="">
-				                @foreach($regional_list as $l)
-				                <option value="{{$l->id}}" {{in_array($l->id,$regional_list_acc)?'selected':''}}>{{$l->name}}</option>
+				              	
+				                @foreach($regional_list??[] as $l)
+				                <option value="{{$l->id}}" {{in_array($l->id,count($regional_list_acc)>0?$regional_list_acc->toArray():['x'])?'selected':''}}>{{$l->name}}</option>
 				                @endforeach
 				              </select>
 				             
@@ -262,12 +256,24 @@
 	var them_phone='';
 	var them_nik='';
 
+var headVue=new Vue({
+	el:'#head-nativ',
+	data:{
+		user:{
+			name:null,
+			username:null,
+			email:null
+		}
+	}
+});
 
 	var vuser=new Vue({
 		el:'#data-user',
 		data:{
 			user:<?= json_encode($data)?>,
-			scope:null,
+			disabled_account:false,
+			listing_daerah:[],
+			scope:{{strlen(Auth::User()->kode_daerah)}},
 			list_scope:[
 
 			
@@ -293,6 +299,24 @@
 
 		},
 		methods:{
+			password_check:function(){
+				if(this.user.password==this.user.password_conf){
+					this.user.password_conf_status=null;
+				}else{
+					this.user.password_conf_status='Password Tidak Sama';
+				}
+			},
+			check_account(){
+				if(this.user.role==4 && this.user.kode_daerah!=null){
+					this.disabled_account=true;
+					this.user.email=this.user.kode_daerah+"@"+"{{env('DOMAIN_MAIL')}}";
+					this.user.username=this.user.kode_daerah;
+						
+				}else{
+					this.disabled_account=false;
+				}
+				console.log(this.user.role,this.user.kode_daerah);
+			},
 			sr:function(val=this.user.role){
 				
 				if(val==2){
@@ -309,34 +333,43 @@
 
 						},200);
 				}else if(val==4){
+            					this.scope_change();
 
 					setTimeout(function(){
 						if(({!!Auth::User()->role==4?'true':'false'!!}) && vuser.user.role==4){
-							console.log('ss');
+
 							$('#daerah_akses').select2();
+							$('#daerah_akses').trigger('change');
+
+							window.get_change_daerah();
 
 						}
 						$('#instansi_akses').select2();
 
 					},200);
+					this.user.main_daerah=true;
 
 				}
+
+				this.check_account();
 			},
 			username_bind:function(){
 				if(this.user.username){
 					if(this.user.username!=window.username_them){
 						this.user.username=this.user.username.replace(/ /g,'_');
-						window.username_them=this.user.username;
+						window.username_bindthem=this.user.username;
+						headVue.user.username=this.user.username;
+						this.user.email=this.user.username+'@'+'{{env('DOMAIN_MAIL')}}';
 					}
 				}
 			},
-			phoneNumber:function(){
+			 phoneNumber:function(){
                 if(this.user.nomer_telpon){
                     var val=this.user.nomer_telpon;
                         var char_phone='';
                         val=val.replace(/[-]/g,'');
                         val=val.replace('+62','0');
-                        val=val.slice(0,12);
+                        val=val.slice(0,13);
                         let arr_val=val.split('');
                         for(var i=0;i<arr_val.length;i++){
                             if((i==0) && (arr_val[0]!='+')){
@@ -369,24 +402,38 @@
 
                         }
 
+
+                        if(this.user.nomer_telpon.length<16){
+                        	this.user.wa_number=false;
+                        	this.user.wa_notif=false;
+
+                        }
+
                 }
 
             },
             scope_change:function(){
             	var val=this.scope;
-				setTimeout(function(){
+				@if(Auth::User()->role!=4)
+					setTimeout(function(){
 
 	            	y=window.build_daerah(val);
 	            	if(vuser.user.daerah_selected){
 	            		$('#daerah_akses').val(vuser.user.daerah_selected.id).trigger('change').text('ss');
-	            		console.log($('#daerah_akses').val());
 	            		if(vuser.user.daerah_selected){
 			      	 		var newOption = new Option(vuser.user.daerah_selected.text, vuser.user.daerah_selected.id, true, true);
-			      	 		console.log(newOption);
     						$('#daerah_akses').append(newOption).trigger('change');
 	            		}
 	            	}
 	            },500);
+
+				@else
+				$('#daerah_akses').select2();
+				window.get_change_daerah();
+
+
+				@endif
+
 
             },
             check_scope:function(){
@@ -415,7 +462,7 @@
             },
              nikNumber:function(){
                 if(this.user.nik!=them_nik){
-                    var val=this.user.nik;
+                    var val=this.user.nik??'';
                         var char_phone='';
                         val=val.replace(/[-]/g,'');
                         val=val.slice(0,16);
@@ -453,11 +500,21 @@
 
 		},
 		watch:{
+			'user.name':function(){
+				headVue.user.name=this.user.name;
+			},
+			'user.email':function(){
+				headVue.user.email=this.user.email;
+			},
 			'user.role':'sr',
 			'user.nomer_telpon':'phoneNumber',
 			'user.nik':'nikNumber',
 			'scope':'scope_change',
-			'user.username':'username_bind'
+			'user.username':'username_bind',
+			'user.password':'password_check',
+			'user.password_conf':'password_check',
+			'user.kode_daerah':'check_account'
+
 		}
 	});
 
@@ -466,6 +523,8 @@
 		vuser.nikNumber();
 		vuser.check_scope();
 		vuser.username_bind();
+
+		headVue.user=vuser.user;
 
 
 
@@ -482,8 +541,8 @@
 
 	$('#action_to').trigger('change');
 
+
 	function build_daerah(val){
-		console.log(val);
 			var c=$('#daerah_akses').select2({
     		ajax:{
     			 headers: {
@@ -514,7 +573,17 @@
     		}
     	});
 
+			get_change_daerah();
+		
+
 		return 'ss';
+	}
+
+	function get_change_daerah(){
+		$('#daerah_akses').on('change',function(){
+			vuser.user.kode_daerah=this.value;
+			vuser.check_account();
+		});
 	}
 
 </script>

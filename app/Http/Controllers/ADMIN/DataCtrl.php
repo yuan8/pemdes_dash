@@ -24,8 +24,9 @@ class DataCtrl extends Controller
                     'deskripsi'=>$request->description,
                     'title'=>$request->name,
                     'tahun'=>$tahun,
-                    'keywords'=>json_encode($request->keywords),
+                    'keywords'=>json_encode($request->keywords??[]),
             ];
+
 
         $dataset= DB::table('tb_data')->where('id',$id)->first();
      if($dataset){

@@ -61,14 +61,20 @@ class TahunAccess
         }
 
         if(!isset($GLOBALS['list_tahun_access'])){
-            $GLOBALS['list_tahun_access']=(DB::table('tahun_access')->select('tahun')->orderBy('tahun','desc')->limit(5)->get()->pluck('tahun'));
+            for($i=date('Y');$i>(date('Y')-6);$i--){
+              $GLOBALS['list_tahun_access'][]=$i;
+
+            }
         }
+
         
               
         if(static::is_api($request)){
+              $GLOBALS['tahun_access']=$tahun??date('Y');
               return $next($request);
           
         }
+
 
         if($tahun){
             $GLOBALS['tahun_access']=$tahun;
@@ -115,7 +121,6 @@ class TahunAccess
 
         if((empty($tahun)) OR (!is_numeric($tahun))){
               if (!static::is_api($request)) {
-                    dd($url_new,$pre);
                 return redirect()->route('index',['tahun'=>date('Y')]);
             }
         }else{

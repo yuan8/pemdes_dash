@@ -188,7 +188,7 @@
 								setTimeout(function(){
 									$('#kategori').select2({
 								'ajax':{
-									url:'{{route('api.meta.kategori')}}',
+									url:'{{route('api.meta.kategori',['tema'=>'TEMA_DATA_PENDUKUNG'])}}',
 									headers:{
 										'authorization':'Bearer {{Auth::User()->api_token}}',
 										 "Content-Type" : "application/json",

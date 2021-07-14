@@ -140,7 +140,7 @@
 				        <label>JENIS AKSI UPDATE</label>
 				        <select class="form-control" name="action_to" id="action_to">
 				          <option value="UPDATE_AND_BACKTOFORM">Kembali Keform</option>
-				          <option value="UPDATE_AND_BACKTOLIST">Kembai ke User List</option>
+				          <option value="UPDATE_AND_BACKTOLIST">Kembali ke User List</option>
 				        </select>
 				      </div>
 				    </div>
@@ -524,9 +524,7 @@ var headVue=new Vue({
 		vuser.nikNumber();
 		vuser.check_scope();
 		vuser.username_bind();
-
-
-
+		headVue.user=vuser.user;
 
 
 	function action_to(){

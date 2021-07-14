@@ -29,10 +29,10 @@
 					<label>Nama</label>
 					<input type="text" required="" v-model="inst.name" class="form-control" name="name">
 				</div>
-				<div class="form-group" v-if="inst.type=='PEMDA KOTA/KAB'">
+				{{-- <div class="form-group" v-if="inst.type=='PEMDA KOTA/KAB'">
 					<label>KAB KOTA</label>
 					<select class="form-control" name="kode_daerah" id="kode_daerah" required=""></select>
-				</div>
+				</div> --}}
 				{{-- <div class="form-group">
 					<label>Jenis Instansi</label>
 					<select class="form-control" required="" id="jenis_instansi" v-model="inst.type" name="sub_type">

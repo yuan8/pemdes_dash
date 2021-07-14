@@ -35,9 +35,8 @@ class InstansiCtrl extends Controller
     }
 
     public function show($tahun,$id,$slug,Request $request){
-        $data=DB::table('master_category')
-        ->where('type','INSTANSI')->where('id',$id)->first();
-
+        $data=DB::table('master_instansi')
+        ->where('type','PUSAT')->where('id',$id)->first();
         if($data){
             return view('admin.instansi.detail')->with(['data'=>$data]);
 
@@ -54,8 +53,7 @@ class InstansiCtrl extends Controller
     public function store($tahun,Request $request){
          $dataup=[
                 'name'=>$request->name,
-                'type'=>$request->sub_type,
-                'kode_daerah'=>($request->sub_type=='PEMDA KOTA/KAB'?$request->kode_daerah:null),
+                'type'=>$request->sub_type??'PUSAT',
                 'deskripsi'=>$request->deskripsi,
                 'id_user'=>Auth::User()->id,
                 'id_user_update'=>Auth::User()->id,
@@ -83,15 +81,14 @@ class InstansiCtrl extends Controller
     }
 
     public function update($tahun,$id,Request $request){
-         $data=DB::table('master_category')
-        ->where('type','INSTANSI')->where('id',$id)->first();
-
+         $data=DB::table('master_instansi')
+        ->where('type','PUSAT')->where('id',$id)->first();
+        // dd($data);
         if($data){
-
             $dataup=[
                 'name'=>$request->name,
-                'sub_type'=>$request->sub_type,
-                'description'=>$request->description,
+                'type'=>$request->sub_type??'PUSAT',
+                'deskripsi'=>$request->description,
                 'updated_at'=>Carbon::now()
             ];
 
@@ -100,9 +97,9 @@ class InstansiCtrl extends Controller
                 $path=Storage::url($path);
                 $dataup['image_path']=$path;
             }
-            $data=DB::table('master_category')->where('id',$id)->update($dataup);
+            $data=DB::table('master_instansi')->where('id',$id)->update($dataup);
             Alert::success('Berhasil','Data telah diupdate');
-            return back();
+             return redirect()->route('admin.instansi.index',['tahun'=>$GLOBALS['tahun_access']]);
 
         }else{
             Alert::error('Gagal','data tidak tersedia');
@@ -112,8 +109,8 @@ class InstansiCtrl extends Controller
     }
 
     public function delete($tahun,$id){
-        $data=DB::table('master_category')
-        ->where('type','INSTANSI')->where('id',$id)->delete();
+        $data=DB::table('master_instansi')
+        ->where('type','PUSAT')->where('id',$id)->delete();
 
         if($data){
             Alert::success('Berhasil','Data telah dihapus');

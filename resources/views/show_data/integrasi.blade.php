@@ -18,6 +18,7 @@
 <div class="box box-solid">
 	<div class="box-header with-border">
 		<h4 class="text-center" ><b>{{strtoupper($data->title)}} - {{$GLOBALS['tahun_access']}}</b></h4>
+		<p class="text-center">{{isset($nama_daerah)?$nama_daerah:''}}</p>
 			<div class="box-solid box btn-ov " style="border: 1px solid #fa090a">
 	  		<div class="box-body">
 	  			<p>{!!nl2br($data->deskripsi)!!}</p>
@@ -95,7 +96,11 @@
 
 	@if($data->id_map)
 		@if($data->inheritance)
+			@if($req->kdparent)
+			get_data('#dom_l_{{strlen($req->kdparent)}}','{{route('vs.data.integrasi',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}?kode_daerah={{$req->kdparent}}');
+			@else
 			get_data('#dom_l_{{$data->start_level}}','{{route('vs.data.integrasi',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}?kode_daerah=');
+			@endif
 
 		@else
 		// 

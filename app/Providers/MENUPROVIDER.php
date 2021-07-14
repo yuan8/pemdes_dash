@@ -172,7 +172,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('a.p.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-clock',
-                    // 'can'=>['is_daerah_kabkota']
+                    'can'=>['is_daerah_kabkota']
                  ],
 
 

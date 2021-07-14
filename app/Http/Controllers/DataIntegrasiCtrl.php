@@ -46,7 +46,6 @@ class DataIntegrasiCtrl extends Controller
 
 
         	
-        	
 
 
 	        $data_query=
@@ -371,7 +370,9 @@ class DataIntegrasiCtrl extends Controller
 	}
 
 
-	public static function data_map($table,$data,$map,$level,$md,$jenis='INT'){
+	public static function data_map($table,$data,$map,$level,$md,$jenis='INT',$tahun_access=null){
+
+
 
 		$D=[];
 
@@ -422,6 +423,8 @@ class DataIntegrasiCtrl extends Controller
 				}else{
 					$ROUTE_NEXT=($level['count'])?route('vs.data.visual',['tahun'=>$GLOBALS['tahun_access'],'id'=>$md,'kdparent'=>$d['id']]):null;
 				}
+
+
 
 
 			$D[]=[
