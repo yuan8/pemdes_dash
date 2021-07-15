@@ -3,7 +3,7 @@
 /public/storage/* 
 /public/file_lombadesa/*
 /storage/*.key
-/storage/app
+/storage/app/public
 /storage/api-data
 /vendor
 /config/proepdeskel.php
