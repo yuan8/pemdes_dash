@@ -11,11 +11,10 @@ use HPV;
 use HP;
 use Auth;
 use Nahid\JsonQ\Jsonq;
-
 use App\Http\Controllers\DataIntegrasiCtrl as MAP;
-
 use App\Http\Controllers\Controller\ADMIN\DataViewCtrl;
 use WEBSET;
+
 class DataCtrl extends Controller
 {
 
@@ -605,6 +604,36 @@ class DataCtrl extends Controller
         return 0;
 
         
+    }
+
+
+    public function table_index($tahun,$id,$slug,Request $request){
+         $whereRaw=[
+            "type = 'TABLE'"
+        ];
+
+        if($request->preview){
+            if(Auth::User()->can('is_admin') ){
+
+            }else{
+              $whereRaw[]='kode_daerah='.Auth::User()->kode_daerah;
+            }
+        }else{
+              $whereRaw[]='status=1';
+              $whereRaw[]="publish_date <= '".Carbon::now()."'";  
+        }
+
+         $data=DB::table('tb_data as d')
+        ->where('tahun',($tahun))
+        ->whereRaw(implode(" and ", $whereRaw))
+        ->where('id',$id)->first();
+
+        if($data){
+            dd($data);
+
+        }else{
+            return abort(404);
+        }
     }
 
      public function visualisasi_index($tahun,$id,$slug,Request $request){

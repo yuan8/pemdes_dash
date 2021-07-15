@@ -5,6 +5,9 @@
 @if($jenis=='VISUALISASI')
 	<a href="{{url('dist-web/CONTOH_INPUT.xlsx')}}" download="" class="btn btn-success">Download Template Input</a>
 @endif
+@if($jenis=='TABLE')
+	<a href="{{url('dist-web/CONTOH_TABLE.xlsx')}}" download="" class="btn btn-success">Download Template Input</a>
+@endif
 @stop
 
 @section('content')

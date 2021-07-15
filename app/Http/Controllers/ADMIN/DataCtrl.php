@@ -493,7 +493,7 @@ class DataCtrl extends Controller
             $size=$size / 1048576;
 
            
-               $check= DB::table('tb_data_detail_table')
+            $check= DB::table('tb_data_detail_table')
                 ->insert([
                     'id_data'=>$data,
                     'path_file'=>$path,

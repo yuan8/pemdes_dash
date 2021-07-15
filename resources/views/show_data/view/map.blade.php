@@ -9,7 +9,7 @@ $id_dom='c_map_'.rand(0,100).'_'.date('is');
 @endif
    
 <div style="width: 100%; height: 500;">
-<div id="{{$id_dom}}" style="width:100%; max-height:100%"></div>
+<div id="{{$id_dom}}" class="map" style="width:100%; max-height:100%"></div>
     
 </div>
 

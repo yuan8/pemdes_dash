@@ -258,6 +258,10 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 	Route::get('/data-integrasi/{id}/{slug}', 'DataCtrl@detail')->name('data.int.detail');
 	Route::get('/data-visual/{id}/{slug}', 'DataCtrl@visualisasi_index')->name('data.vis.detail');
 
+	Route::get('/data-table/{id}/{slug}', 'DataCtrl@table_index')->name('data.vis.detail');
+
+	Route::get('/data-infografis/{id}/{slug}', 'DataCtrl@infografis_index')->name('data.infograp.detail');
+
 	Route::prefix('faq')->group(function(){
 		Route::get('/','ADMIN\FaqCtrl@index_dash')->name('faq.index');
 

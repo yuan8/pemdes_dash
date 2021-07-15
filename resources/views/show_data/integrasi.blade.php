@@ -115,5 +115,67 @@
 
 
 </script>
+<div id="section-to-print">
+	<div v-for="i in [2,4,6,10]">
+		<div v-if="level['lev_'+i]" class="break-print">
+			<div >
+				{{-- map --}}
+				@{{level['lev_'+i].map}}
+			</div>
+			<div >
+				{{-- bar --}}
+				@{{level['lev_'+i].bar}}
+			</div>
+			<div>
+				{{-- table --}}
+				@{{level['lev_'+i].table}}
+			</div>
+	</div>
+	</div>
+</div>
+<style type="text/css">
+	@media print {
+	  body * {
+	    visibility: hidden;
+	  }
+	  #section-to-print, #section-to-print * {
+	    visibility: visible;
+	  }
+	  #section-to-print {
+	    position: absolute;
+	    left: 0;
+	    top: 0;
+	  }
+}
+</style>
 
+<script type="text/javascript">
+	var v_section_print=new Vue({
+		el:'#section-to-print',
+		data:{
+			level:{
+				lev_2:null,
+				lev_2:null,
+				lev_4:null,
+				lev_6:null,
+				lev_10:null,
+			}
+		},
+		methods:{
+			init_level:function(lev){
+			setTimeout(function(){
+				var data={
+					title:null,
+					sub_title:null,
+					map:$('#dom_l_'+lev+' .map svg')[0],
+					table:$('#dom_l_'+lev+' .table')[0],
+					bar:$('#dom_l_'+lev+' .chart-pemdes svg')[0],
+				}
+				window.v_section_print.level['lev_'+lev]=data;
+			},1000);
+
+			}
+		}
+	});
+</script>
 @stop

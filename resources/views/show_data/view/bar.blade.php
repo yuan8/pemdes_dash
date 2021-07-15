@@ -3,7 +3,7 @@ $id_dom='c_bar_'.rand(0,100).'_'.date('is');
  ?>
    
  
-<div id="{{$id_dom}}" style="width:100%"></div>
+<div id="{{$id_dom}}" class="chart-pemdes" style="width:100%"></div>
 
 
 <script type="text/javascript">
