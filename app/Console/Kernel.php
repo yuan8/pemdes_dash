@@ -30,8 +30,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('wa:blash')
                  ->cron('0 7 * * *');
                  
-         $schedule->command('yvideo:get '.date('Y'))
-                 ->everyFifteenMinutes();
+         // $schedule->command('yvideo:get '.date('Y'))
+         //         ->everyFifteenMinutes();
     }
 
     /**
