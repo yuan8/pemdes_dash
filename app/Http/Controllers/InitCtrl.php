@@ -26,6 +26,8 @@ class InitCtrl extends Controller
     			'nip'=>$value->kdprovinsi.'-',
     			'nik'=>$value->kdprovinsi.'-',
     			'main_daerah'=>true,
+    			'role'=>4,
+    			'kode_daerah'=>$value->kdprovinsi,
     			'is_active'=>true,
     			'api_token'=>md5($value->kdprovinsi)
 
@@ -45,6 +47,8 @@ class InitCtrl extends Controller
     			'nip'=>$value->kdkabkota.'-',
     			'nik'=>$value->kdkabkota.'-',
     			'main_daerah'=>true,
+    			'role'=>4,
+    			'kode_daerah'=>$value->kdkabkota,
     			'is_active'=>true,
     			'api_token'=>md5($value->kdkabkota)
 
@@ -64,6 +68,8 @@ class InitCtrl extends Controller
     			'nip'=>$value->kdkecamatan.'-',
     			'nik'=>$value->kdkecamatan.'-',
     			'main_daerah'=>true,
+    			'role'=>4,
+    			'kode_daerah'=>$value->kdkecamatan,
     			'is_active'=>true,
     			'api_token'=>md5($value->kdkecamatan)
 
@@ -86,6 +92,8 @@ class InitCtrl extends Controller
     			'nip'=>$value->kddesa.'-',
     			'nik'=>$value->kddesa.'-',
     			'main_daerah'=>true,
+    			'role'=>4,
+    			'kode_daerah'=>$value->kddesa,
     			'is_active'=>true,
     			'api_token'=>md5($value->kddesa)
 
@@ -124,136 +132,7 @@ class InitCtrl extends Controller
     			'role'=>1,
     			'jabatan'=>'-'
     		],
-    		// [
-    		// 	'name'=>'admin 1',
-    		// 	'email'=>'admin1@domain.com',
-    		// 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// 	'nik'=>'12345678910',
-    		// 	'nomer_telpon'=>'12345678910',
-    		// 	'api_token'=>'tok_',
-    		// 	'is_active'=>true,
-    		// 	'role'=>2,
-    		// 	'jabatan'=>'-'
-    		// ],
-    		// [
-    		// 	'name'=>'regional 1',
-    		// 	'email'=>'reg1@domain.com',
-    		// 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// 	'nik'=>'12345678910',
-    		// 	'nomer_telpon'=>'12345678910',
-    		// 	'api_token'=>'tok_',
-    		// 	'is_active'=>true,
-    		// 	'role'=>3,
-    		// 	'jabatan'=>'-'
-    		// ],
-    		// [
-    		// 	'name'=>'provinsi aceh',
-    		// 	'email'=>'prov_aceh@domain.com',
-    		// 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// 	'nik'=>'12345678910',
-    		// 	'nomer_telpon'=>'12345678910',
-    		// 	'api_token'=>'tok_',
-    		// 	'is_active'=>true,
-    		// 	'role'=>4,
-    		// 	'kode_daerah'=>11,
-    		// 	'main_daerah'=>true,
-    		// 	'jabatan'=>'-'
-    		// ],
-    		// // [
-    		// // 	'name'=>'provinsi aceh wali',
-    		// // 	'email'=>'prov_acehw@domain.com',
-    		// // 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// // 	'nik'=>'12345678910',
-    		// // 	'nomer_telpon'=>'12345678910',
-    		// // 	'api_token'=>'tok_',
-    		// // 	'is_active'=>true,
-    		// // 	'role'=>4,
-    		// // 	'kode_daerah'=>11,
-    		// // 	'main_daerah'=>false,
-    		// // 	'walidata'=>true,
-    		// // 	'jabatan'=>'-'
-    		// // ],
-    		// [
-    		// 	'name'=>'aceh selatan',
-    		// 	'email'=>'aceh_selatan@domain.com',
-    		// 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// 	'nik'=>'12345678910',
-    		// 	'nomer_telpon'=>'12345678910',
-    		// 	'api_token'=>'tok_',
-    		// 	'is_active'=>true,
-    		// 	'role'=>4,
-    		// 	'kode_daerah'=>1101,
-    		// 	'main_daerah'=>true,
-    		// 	'jabatan'=>'-'
-    		// ],
-    		// // [
-    		// // 	'name'=>'aceh selatan wali',
-    		// // 	'email'=>'aceh_selatanw@domain.com',
-    		// // 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// // 	'nik'=>'12345678910',
-    		// // 	'nomer_telpon'=>'12345678910',
-    		// // 	'api_token'=>'tok_',
-    		// // 	'is_active'=>true,
-    		// // 	'role'=>4,
-    		// // 	'kode_daerah'=>1101,
-    		// // 	'main_daerah'=>false,
-    		// // 	'walidata'=>true,
-    		// // 	'jabatan'=>'-'
-    		// // ],
-    		// [
-    		// 	'name'=>'kecamatan a',
-    		// 	'email'=>'kecamatan_a@domain.com',
-    		// 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// 	'nik'=>'12345678910',
-    		// 	'nomer_telpon'=>'12345678910',
-    		// 	'api_token'=>'tok_',
-    		// 	'is_active'=>true,
-    		// 	'role'=>4,
-    		// 	'kode_daerah'=>110109,
-    		// 	'main_daerah'=>true,
-    		// 	'jabatan'=>'-'
-    		// ],
-    		// // [
-    		// // 	'name'=>'kecamatan  a wali',
-    		// // 	'email'=>'kecamatan_aw@domain.com',
-    		// // 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// // 	'nik'=>'12345678910',
-    		// // 	'nomer_telpon'=>'12345678910',
-    		// // 	'api_token'=>'tok_',
-    		// // 	'is_active'=>true,
-    		// // 	'role'=>4,
-    		// // 	'kode_daerah'=>110109,
-    		// // 	'main_daerah'=>false,
-    		// // 	'walidata'=>true,
-    		// // 	'jabatan'=>'-'
-    		// // ],
-    		// [
-    		// 	'name'=>'desa a',
-    		// 	'email'=>'desa_a@domain.com',
-    		// 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// 	'nik'=>'12345678910',
-    		// 	'nomer_telpon'=>'12345678910',
-    		// 	'api_token'=>'tok_',
-    		// 	'is_active'=>true,
-    		// 	'role'=>4,
-    		// 	'kode_daerah'=>1101092012,
-    		// 	'main_daerah'=>true,
-    		// 	'jabatan'=>'-'
-    		// ],
-    		// // [
-    		// // 	'name'=>'desa a wali',
-    		// // 	'email'=>'desa_aw@domain.com',
-    		// // 	'password'=>'TVRJek5284^444VTJOemc9',
-    		// // 	'nik'=>'12345678910',
-    		// // 	'nomer_telpon'=>'12345678910',
-    		// // 	'api_token'=>'tok_',
-    		// // 	'is_active'=>true,
-    		// // 	'role'=>4,
-    		// // 	'kode_daerah'=>1101092012,
-    		// // 	'main_daerah'=>false,
-    		// // 	'walidata'=>true,
-    		// // 	'jabatan'=>'-'
-    		// // ]
+    		
     	];
 
     	foreach ($users as $key => $d) {
