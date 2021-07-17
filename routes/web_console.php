@@ -8,6 +8,8 @@ Route::prefix('init')->group(function(){
 
 
 	Route::get('build-db','InitCtrl@init');
+	Route::get('{tahun}/build-dataset','InitCtrl@initial_dataset');
+
 
 	Route::get('data-table','InitDataCtrl@index');
 	Route::get('data-table-drop','InitDataCtrl@drop');

@@ -226,8 +226,210 @@ class InitCtrl extends Controller
 
 
 
-    	
+    }
 
+    public function initial_dataset($tahun){
+    	$table=collect(DB::select("SELECT 
+                TABLE_NAME
+            FROM
+                information_schema.tables where TABLE_SCHEMA='".env('DB_DATABASE')."' and TABLE_NAME like 'dash_%'"))->pluck('TABLE_NAME')->toArray();
+
+    	foreach($table as $key=>$t){
+    		DB::table('master_table_map')->updateOrinsert([
+    			'table'=>$t
+    		],[
+    			'table'=>$t,
+    			'name'=>strtoupper(str_replace('_',' ',str_replace('dash_','MAP ',$t))),
+    			'edit_daerah'=>true,
+    			'id_user'=>1
+
+    		]);
+    		$map_t=DB::table('master_table_map')->where('table',$t)->first();
+
+    		$id_map=$map_t->id;
+    		$m=DB::select(DB::raw("DESCRIBE ".$t));
+            $master_c=[];
+            foreach ($m as $fi => $value) {
+               $field=$value->Field;
+                if(!in_array($value->Field, ['kode_desa','tahun','id','status_validasi','validasi_date','updated_at','id_user_desa_ver','id_user_kec_ver','id_user_kab_valid','daftar_draf'])){
+                	$type_data='string';
+                	if(strpos($value->Type,'varchar')!==false){
+                		$value->Type='varchar';
+                	}
+                	switch ($value->Type) {
+                		case 'bigint':
+                			$type_data='numeric';
+                			break;
+                		case 'varchar(255)':
+                		$type_data='string';
+                			break;
+                		case 'tinyint(1)':
+                		$type_data='numeric';
+                			break;
+                		case 'varchar(30)':
+                		$type_data='string';
+                			break;
+                		case 'varchar':
+                		$type_data='string';
+                			break;
+                		case 'varchar(10)':
+                		$type_data='string';
+                		case 'varchar(100)':
+                		$type_data='string';
+                			break;
+                		case 'int':
+                		$type_data='number';
+                			break;
+                		case 'double':
+                		$type_data='number';
+                			break;
+                		default:
+                		dd($value->Type);
+                			// code...
+                			break;
+                	}
+                	DB::table('master_column_map')->updateOrInsert([
+                		'id_ms_table'=>$id_map,
+                		'name_column'=>$field,
+                		
+                	],[
+                		'id_ms_table'=>$id_map,
+                		'name_column'=>$field,
+                		'aggregate_type'=>'SUM',
+                		'satuan'=>'-',
+                		'definisi'=>'-',
+                		'name'=>strtoupper(str_replace('_',' ',$field)),
+                		'tipe_data'=>$type_data,
+                		'interval_nilai'=>null,
+                		'id_user'=>1
+                	]);
+
+                	
+
+                }
+
+            }
+
+            $view=[
+        		['id_ms_table'=>null,
+        		'type'=>'map',
+        		'level'=>2,
+        		'row'=>0,
+        		'id_user'=>1],
+        		['id_ms_table'=>null,
+        		'type'=>'bar',
+        		'level'=>2,
+        		'row'=>0,
+        		'id_user'=>1],
+        		['id_ms_table'=>null,
+        		'type'=>'table',
+        		'level'=>2,
+        		'row'=>1,
+        		'id_user'=>1],
+
+        		['id_ms_table'=>null,
+        		'type'=>'map',
+        		'level'=>4,
+        		'row'=>0,
+        		'id_user'=>1],
+        		['id_ms_table'=>null,
+        		'type'=>'bar',
+        		'level'=>4,
+        		'row'=>0,
+        		'id_user'=>1],
+        		['id_ms_table'=>null,
+        		'type'=>'table',
+        		'level'=>4,
+        		'row'=>1,
+        		'id_user'=>1],
+
+        		['id_ms_table'=>null,
+        		'type'=>'map',
+        		'level'=>6,
+        		'row'=>0,
+        		'id_user'=>1],
+        		['id_ms_table'=>null,
+        		'type'=>'bar',
+        		'level'=>6,
+        		'row'=>0,
+        		'id_user'=>1],
+        		['id_ms_table'=>null,
+        		'type'=>'table',
+        		'level'=>6,
+        		'row'=>1,
+        		'id_user'=>1],
+
+
+        		['id_ms_table'=>null,
+        		'type'=>'map',
+        		'level'=>10,
+        		'row'=>0,
+        		'id_user'=>1],
+        		['id_ms_table'=>null,
+        		'type'=>'bar',
+        		'level'=>10,
+        		'row'=>0,
+        		'id_user'=>1],
+        		['id_ms_table'=>null,
+        		'type'=>'table',
+        		'level'=>10,
+        		'row'=>1,
+        		'id_user'=>1]
+        	];
+
+        	foreach ($view as $k => $v) {
+        		$v['id_ms_table']=$id_map;
+        		DB::table('master_view_method')->updateOrinsert([
+        			'id_ms_table'=>$v['id_ms_table'],
+        			'level'=>$v['level'],
+        			'type'=>$v['type'],
+        		],$v);
+        	}
+
+
+        	DB::table('tb_data')->updateOrinsert([
+        		'title'=>strtoupper(str_replace('_',' ',str_replace('dash_','DATA ',$t))),
+        	],[
+        		'type'=>'INTEGRASI',
+        		'tahun'=>$tahun,
+        		'id_user'=>1,
+        		'id_user_update'=>1,
+        		'status'=>1
+        	]);
+
+        	$dataset=DB::table('tb_data')->where('title',strtoupper(str_replace('_',' ',str_replace('dash_','DATA ',$t))))->first();
+        	$id_dataset=$dataset->id;
+
+        	DB::table('tb_data_detail_map')->updateOrInsert([
+        		'id_data'=>$id_dataset,
+        		'id_map'=>$id_map,
+        	],[
+        		'id_data'=>$id_dataset,
+        		'id_map'=>$id_map,
+        	]);
+
+        	DB::table('tb_data_group')->updateOrinsert([
+        		'id_data'=>$id_dataset,
+        		'id_category'=>1,
+
+        	],[
+        		'id_data'=>$id_dataset,
+        		'id_category'=>1,
+        	]);
+        	
+        	DB::table('tb_data_instansi')->updateOrinsert([
+        		'id_data'=>$id_dataset,
+        		'id_instansi'=>1,
+
+        	],[
+        		'id_data'=>$id_dataset,
+        		'id_instansi'=>1,
+        	]);
+
+
+
+
+    	}
     }
 
 
