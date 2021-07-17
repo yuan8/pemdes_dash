@@ -52,6 +52,9 @@ class getDataAll extends Command
             ]);
         }
 
+        $this->info("Building Report {$rekap}");
+
+
         return $rekap;
 
     }
