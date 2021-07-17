@@ -17,20 +17,55 @@ class InitCtrl extends Controller
 
     	foreach ($provinsi as $key => $value) {
     		DB::table('master_provinsi')->insertOrIgnore((array)$value);
+    		DB::table('users')->insertOrIgnore([
+    			'username'=>$value->kdprovinsi,
+    			'email'=>$value->kdprovinsi.'@'.env('DOMAIN_MAIL'),
+    			'password'=>MyHash::pass_encode('admin_'.$value->kdprovinsi),
+    			'nip'=>$value->kdprovinsi.'-',
+    			'nik'=>$value->kdprovinsi.'-',
+    			'main_daerah'=>true,
+    			'is_active'=>true,
+    			'api_token'=>md5($value->kdprovinsi)
+
+    		]);
     	}
 
     	$kota=DB::connection('server')->table('kabkota')
     	->selectRaw("kdkabkota, concat(case when stapem=0 then 'KAB ' else 'KOTA 'end ,nmkabkota) as nmkabkota,left(kdkabkota,2) as id_parent")->get();
 
     	foreach ($kota as $key => $value) {
+    		
     		DB::table('master_kabkota')->insertOrIgnore((array)$value);
+    		DB::table('users')->insertOrIgnore([
+    			'username'=>$value->kdkabkota,
+    			'email'=>$value->kdkabkota.'@'.env('DOMAIN_MAIL'),
+    			'password'=>MyHash::pass_encode('admin_'.$value->kdkabkota),
+    			'nip'=>$value->kdkabkota.'-',
+    			'nik'=>$value->kdkabkota.'-',
+    			'main_daerah'=>true,
+    			'is_active'=>true,
+    			'api_token'=>md5($value->kdkabkota)
+
+    		]);
     	}
 
     	$kc=DB::connection('server')->table('kecamatan')
     	->selectRaw("kdkecamatan, concat('KECAMATAN ',nmkecamatan) as nmkecamatan,left(kdkecamatan,4) as id_parent")->get();
 
     	foreach ($kc as $key => $value) {
+    		
     		DB::table('master_kecamatan')->insertOrIgnore((array)$value);
+    		DB::table('users')->insertOrIgnore([
+    			'username'=>$value->kdkecamatan,
+    			'email'=>$value->kdkecamatan.'@'.env('DOMAIN_MAIL'),
+    			'password'=>MyHash::pass_encode('admin_'.$value->kdkecamatan),
+    			'nip'=>$value->kdkecamatan.'-',
+    			'nik'=>$value->kdkecamatan.'-',
+    			'main_daerah'=>true,
+    			'is_active'=>true,
+    			'api_token'=>md5($value->kdkecamatan)
+
+    		]);
     	}
 
 
@@ -40,7 +75,19 @@ class InitCtrl extends Controller
     	->selectRaw("kode_bps as kddesa, (case when stapem=0 then 'DESA ' else stapem end) as stapem , desa as nmdesa,left(kode_bps,6) as id_parent")->get();
 
 	    	foreach ($desa as $key => $value) {
-	    		$check=DB::table('master_desa')->insertOrIgnore((array)$value);
+	    		
+	    	$check=DB::table('master_desa')->insertOrIgnore((array)$value);
+	    	DB::table('users')->insertOrIgnore([
+    			'username'=>$value->kddesa,
+    			'email'=>$value->kddesa.'@'.env('DOMAIN_MAIL'),
+    			'password'=>MyHash::pass_encode('admin_'.$value->kddesa),
+    			'nip'=>$value->kddesa.'-',
+    			'nik'=>$value->kddesa.'-',
+    			'main_daerah'=>true,
+    			'is_active'=>true,
+    			'api_token'=>md5($value->kddesa)
+
+    		]);
 
 	    		
 	    }
