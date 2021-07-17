@@ -51,8 +51,9 @@ class getData extends Command
         ->whereRaw("(td.status_validasi=0 and td.updated_at < '".$now_real->addHours(-4)."' and td.tahun=".$tahun.") OR (td.status_validasi is null)")
         ->limit(500)
         ->get()
-        ->pluck('kddesa')
+        // ->pluck('kddesa')
         ->toArray();
+        dd($ids);
         $count=0;
          $this->info("find data ".count($ids)." from table ".$table);
 
