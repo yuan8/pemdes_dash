@@ -287,10 +287,10 @@ class InitCtrl extends Controller
                 		$type_data='string';
                 			break;
                 		case 'int':
-                		$type_data='number';
+                		$type_data='numeric';
                 			break;
                 		case 'double':
-                		$type_data='number';
+                		$type_data='numeric';
                 			break;
                 		default:
                 		dd($value->Type);
