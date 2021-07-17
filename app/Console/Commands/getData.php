@@ -46,13 +46,11 @@ class getData extends Command
         $tahun=$this->argument('tahun');
 
 
-        $ids=DB::table('master_desa as d')
-        ->leftJoin($table.' as td','td.kode_desa','=','d.kddesa')
-        ->whereRaw("(td.status_validasi=0 and td.updated_at < '".$now_real->addHours(-4)."' and td.tahun=".$tahun.") OR (td.status_validasi is null)")
-        ->limit(500)
-        ->get()
-        ->pluck('kddesa')
-        ->toArray();
+        $ids=collect(DB::select("select d.kddesa from master_desa as d left join ".$table." as td on ".
+            "((td.kode_desa = d.kddesa and td.status_validasi = 0 and td.updated_at < '".$now_real->addHours(-4)."' and td.tahun = ".$tahun.") OR (td.status_validasi is null)) limit 500"
+        ))->pluck('kddesa')->toArray();
+
+
         $count=0;
          $this->info("find data ".count($ids)." from table ".$table);
 
