@@ -256,8 +256,14 @@ class InitCtrl extends Controller
                 	if(strpos($value->Type,'varchar')!==false){
                 		$value->Type='varchar';
                 	}
+                	if(strpos($value->Type,'bigint')!==false){
+                		$value->Type='bigint';
+                	}
                 	switch ($value->Type) {
                 		case 'bigint':
+                			$type_data='numeric';
+                			break;
+                		case 'bigint(20)':
                 			$type_data='numeric';
                 			break;
                 		case 'varchar(255)':
@@ -416,7 +422,7 @@ class InitCtrl extends Controller
         		'id_data'=>$id_dataset,
         		'id_category'=>1,
         	]);
-        	
+
         	DB::table('tb_data_instansi')->updateOrinsert([
         		'id_data'=>$id_dataset,
         		'id_instansi'=>1,
