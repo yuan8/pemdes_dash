@@ -259,6 +259,9 @@ class InitCtrl extends Controller
                 	if(strpos($value->Type,'bigint')!==false){
                 		$value->Type='bigint';
                 	}
+                	if(strpos($value->Type,'int')!==false){
+                		$value->Type='int';
+                	}
                 	switch ($value->Type) {
                 		case 'bigint':
                 			$type_data='numeric';
@@ -404,6 +407,7 @@ class InitCtrl extends Controller
         	]);
 
         	$dataset=DB::table('tb_data')->where('title',strtoupper(str_replace('_',' ',str_replace('dash_','DATA ',$t))))->first();
+
         	$id_dataset=$dataset->id;
 
         	DB::table('tb_data_detail_map')->updateOrInsert([
