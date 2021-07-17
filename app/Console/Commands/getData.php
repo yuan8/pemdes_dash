@@ -73,6 +73,21 @@ class getData extends Command
             ->whereIn('kode_desa',$ids)
             ->get();
 
+            foreach($ids as $id){
+                $c=DB::table($table)->where('kode_desa',$id)->updateOrInsert(
+                    [
+                        'kode_desa'=>$id,
+                    ],
+                    [
+
+                        'updated_at'=>$now_real,
+                        'kode_desa'=>$id,
+                        'tahun'=>$tahun
+                    ]
+                
+                );
+            }
+
 
             foreach ($data as $key => $v) {
                 $v=(array)$v;
