@@ -140,8 +140,8 @@ if(isset($bind_side_left)){
             @endif
 
             <!-- Content Header (Page header) -->
-            @if(config('proepdeskel.running_announcement_text.text'))
-                <marquee class="head_running_text" behavior="scroll" direction="left">{{config('proepdeskel.running_announcement_text.text')}}</marquee>
+            @if(config('setting_proepdeskel.running_text.popup_announcement_text'))
+                <marquee class="head_running_text" behavior="scroll" direction="left">{{config('setting_proepdeskel.running_text.popup_announcement_text')}}</marquee>
                 <style type="text/css">
                     marquee.head_running_text{
                         background:#222;

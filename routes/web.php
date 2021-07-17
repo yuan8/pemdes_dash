@@ -241,6 +241,15 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 		Route::put('/data/update/{id}','ADMIN\DataCtrl@update')->name('admin.data.update');
 	});
 
+	Route::prefix('setting')->middleware('can:is_super')->group(function(){
+		Route::get('/','ADMIN\SettingCtrl@index')->name('admin.setting.index');
+		Route::post('/update','ADMIN\SettingCtrl@update')->name('admin.setting.update');
+
+	});
+
+
+
+
 });
 
 Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'').'v/{tahun?}/')->middleware(['bindTahun'])->group(function(){

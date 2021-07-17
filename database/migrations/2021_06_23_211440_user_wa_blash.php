@@ -36,5 +36,6 @@ class UserWaBlash extends Migration
     public function down()
     {
         //
+        
     }
 }

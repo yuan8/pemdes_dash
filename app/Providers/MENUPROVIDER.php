@@ -264,6 +264,14 @@ class MENUPROVIDER extends ServiceProvider
 
 
                 ],
+                 [
+                    'text'=>('SETTING'),
+                    'href'=>route('admin.setting.index',['tahun'=>$tahun]),
+                    'class'=>'',
+                    'icon'=>'fa fa-file',
+                    'can'=>['is_admin']
+
+                ],
                 
                 // [
                 //     'text'=>('DATA'),

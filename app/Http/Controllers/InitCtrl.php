@@ -224,7 +224,24 @@ class InitCtrl extends Controller
     		'id_user'=>1
     	]);
 
+
+
     	
+
+    }
+
+
+    public function bulild_column($table=null){
+    	$table_name=[];
+
+    	if($table){
+    		$table_name=[$table];
+    	}else{
+    		$table_name=DB::table('master_table_map')->pluck('table')->get()->toArray();
+
+    	}
+
+
 
     }
 }
