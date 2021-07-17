@@ -54,6 +54,8 @@ class getData extends Command
         ->pluck('kddesa')
         ->toArray();
         $count=0;
+         $this->info("find data ".count($ids)." from table ".$table);
+
 
         if(count($ids)){
             $column=['kode_desa'];
