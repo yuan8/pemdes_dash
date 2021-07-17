@@ -44,6 +44,7 @@ class getDataAll extends Command
         $rekap=[];
 
         $tahun=date('Y');
+        $this->info("Building {$tahun} Data!");
 
         foreach ($tb as $key => $table) {
             $rekap[$table]=Artisan::call('get-data:integrasi', [
