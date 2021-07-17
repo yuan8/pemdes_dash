@@ -15,8 +15,9 @@
 			
 		</form>
 	</div>
-	<div class="box-body table-responsive">
-		<table class="table table-bordered" id="table-user">
+	<div class="box-body ">
+		<div class="table-responsive">
+			<table class="table table-bordered" id="table-user">
 			<thead>
 				<tr>
 				<th>AKSI</th>
@@ -87,6 +88,8 @@
 				@endforeach
 			</tbody>
 		</table>
+		</div>
+		{{$data->links()}}
 	</div>
 </div>
 @stop
