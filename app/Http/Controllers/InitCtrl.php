@@ -89,7 +89,7 @@ class InitCtrl extends Controller
 	    		$kddesa=$ds->kddesa;
 	    	$check=DB::table('master_desa')->insertOrIgnore((array)$ds);
 	    	DB::table('users')->insertOrIgnore([
-    			'username'=>$kddesa
+    			'username'=>$kddesa,
     			'name'=>$ds->nmdesa,
     			'email'=>$kddesa.'@'.env('DOMAIN_MAIL'),
     			'password'=>MyHash::pass_encode('admin_'.$kddesa),
