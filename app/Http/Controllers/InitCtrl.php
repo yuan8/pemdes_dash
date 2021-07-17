@@ -21,6 +21,7 @@ class InitCtrl extends Controller
     		DB::table('master_provinsi')->insertOrIgnore((array)$value);
     		DB::table('users')->insertOrIgnore([
     			'username'=>$value->kdprovinsi,
+    			'name'=>$value->nmprovinsi,
     			'email'=>$value->kdprovinsi.'@'.env('DOMAIN_MAIL'),
     			'password'=>MyHash::pass_encode('admin_'.$value->kdprovinsi),
     			'nip'=>$value->kdprovinsi.'-',
@@ -42,6 +43,7 @@ class InitCtrl extends Controller
     		DB::table('master_kabkota')->insertOrIgnore((array)$value);
     		DB::table('users')->insertOrIgnore([
     			'username'=>$value->kdkabkota,
+    			'name'=>$value->nmkabkota,
     			'email'=>$value->kdkabkota.'@'.env('DOMAIN_MAIL'),
     			'password'=>MyHash::pass_encode('admin_'.$value->kdkabkota),
     			'nip'=>$value->kdkabkota.'-',
@@ -63,6 +65,7 @@ class InitCtrl extends Controller
     		DB::table('master_kecamatan')->insertOrIgnore((array)$value);
     		DB::table('users')->insertOrIgnore([
     			'username'=>$value->kdkecamatan,
+    			'name'=>$value->nmkecamatan,
     			'email'=>$value->kdkecamatan.'@'.env('DOMAIN_MAIL'),
     			'password'=>MyHash::pass_encode('admin_'.$value->kdkecamatan),
     			'nip'=>$value->kdkecamatan.'-',
@@ -82,21 +85,21 @@ class InitCtrl extends Controller
     	$desa=DB::connection('server')->table('master_desa')
     	->selectRaw("kode_bps as kddesa, (case when stapem=0 then 'DESA ' else stapem end) as stapem , desa as nmdesa,left(kode_bps,6) as id_parent")->get();
 
-	    	foreach ($desa as $key => $value) {
-	    		
-	    	$check=DB::table('master_desa')->insertOrIgnore((array)$value);
+	    	foreach ($desa as $key => $ds) {
+	    		$kddesa=$ds->kddesa;
+	    	$check=DB::table('master_desa')->insertOrIgnore((array)$ds);
 	    	DB::table('users')->insertOrIgnore([
-    			'username'=>$value->kddesa,
-    			'email'=>$value->kddesa.'@'.env('DOMAIN_MAIL'),
-    			'password'=>MyHash::pass_encode('admin_'.$value->kddesa),
-    			'nip'=>$value->kddesa.'-',
-    			'nik'=>$value->kddesa.'-',
+    			'username'=>$kddesa
+    			'name'=>$ds->nmdesa,
+    			'email'=>$kddesa.'@'.env('DOMAIN_MAIL'),
+    			'password'=>MyHash::pass_encode('admin_'.$kddesa),
+    			'nip'=>$kddesa.'-',
+    			'nik'=>$kddesa.'-',
     			'main_daerah'=>true,
     			'role'=>4,
-    			'kode_daerah'=>$value->kddesa,
+    			'kode_daerah'=>$kddesa,
     			'is_active'=>true,
-    			'api_token'=>md5($value->kddesa)
-
+    			'api_token'=>md5($kddesa)
     		]);
 
 	    		
