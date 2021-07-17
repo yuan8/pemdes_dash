@@ -10,6 +10,7 @@
 
 <div class="box-solid box">
 	<div class="box-header">
+		<p>{{$data->total()}} User</p>
 		<form action="{{url()->full()}}" method="get">
 			<input type="text" class="form-control" placeholder="Cari.."  name="q" value="{{isset($_GET['q'])?$_GET['q']:''}}">
 			
