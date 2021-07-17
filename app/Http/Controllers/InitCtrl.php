@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use MyHash;
+
 class InitCtrl extends Controller
 {
     //
