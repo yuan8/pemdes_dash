@@ -15,7 +15,7 @@
       <h2 class="text-white" style="margin: 0px; margin-bottom: 10px; line-height: 20px;"><b>DASHBOARD PROEPDESKEL</b></h2>
      {{--  <h3 class="text-white text-uppercase" style="margin: 5px 0px 5px 0px; line-height: 18px;">Bina Pemerintahan Desa</h3> --}}
          @if(!isset($hm))
-         <p class="text-white">{{config('proepdeskel.description')}}</p>
+         <p class="text-white">{{config('setting_proepdeskel.header_box.description')}}</p>
          @endif
      </div>
     <div style="left:0; padding: 0px; right: 0; margin:auto; height: 55px; width: 90%; margin-left:15px; position: absolute; bottom:{{!isset($hm)?'-60px;':'-60px;'}}">
