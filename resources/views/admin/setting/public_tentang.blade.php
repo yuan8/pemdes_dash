@@ -17,7 +17,7 @@
 		
 	</div>
 	<div class="col-md-9">
-		{!!config('setting_proepdeskel.tentang.description')!!}
+		{!!nl2br(config('setting_proepdeskel.tentang.description'))!!}
 	</div>
 	
 </div>
