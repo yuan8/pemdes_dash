@@ -123,6 +123,6 @@ class getData extends Command
          }
         }
          $this->info("Building {$count} Data!");
-        return $count;
+        return $count.' - kode desa awal '.(count($ids)?$ids[0]:'');
     }
 }
