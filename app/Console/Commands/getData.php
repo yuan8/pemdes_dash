@@ -43,21 +43,23 @@ class getData extends Command
         $now_last=Carbon::now()->endOfDay();
 
         $table=$this->argument('table');
+
         $tahun=$this->argument('tahun');
+
+         $this->info("get data  from table ".$table.' Tahun '.$tahun);
 
         $select="select d.kddesa from master_desa as d left join ".$table." as td on ".
             "(td.kode_desa=d.kddesa) where ((td.kode_desa = d.kddesa and td.status_validasi = 0 and td.updated_at < '".Carbon::now()->addHours(-4)."' and td.tahun = ".$tahun.") OR (td.status_validasi is null)) limit 500";
         $ids=collect(DB::select($select
         ))->pluck('kddesa')->toArray();
 
-        if($table="dash_ddk_pekerjaan"){
-            // dd($ids);
-        }
+       
       
 
 
         $count=0;
-         $this->info("find data ".count($ids)." from table ".$table);
+         $this->info("find ".count($ids)." list data task integrasi from table ".$table.' Tahun '.$tahun);
+
 
 
         if(count($ids)){
@@ -69,12 +71,15 @@ class getData extends Command
 
             $column=array_merge($column, $col);
 
+              $this->info("trying get data form staging...");
             $data=DB::connection('staging')
             ->table($table.' as td')
             ->selectRaw(implode(',', $column))
             ->where('tahun',$tahun)
             ->whereIn('kode_desa',$ids)
             ->get();
+
+
 
 
 
@@ -110,7 +115,6 @@ class getData extends Command
                         'updated_at'=>Carbon::now(),
                         'kode_desa'=>$id,
                         'tahun'=>$tahun,
-                        'status_validasi'=>0
                     ]
                 
                 );
