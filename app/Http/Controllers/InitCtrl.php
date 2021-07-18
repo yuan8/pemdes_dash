@@ -266,7 +266,6 @@ class InitCtrl extends Controller
         		'level'=>2,
         		'row'=>1,
         		'id_user'=>1],
-
         		['id_ms_table'=>null,
         		'type'=>'map',
         		'level'=>4,
@@ -282,12 +281,6 @@ class InitCtrl extends Controller
         		'level'=>4,
         		'row'=>1,
         		'id_user'=>1],
-
-        		['id_ms_table'=>null,
-        		'type'=>'map',
-        		'level'=>6,
-        		'row'=>0,
-        		'id_user'=>1],
         		['id_ms_table'=>null,
         		'type'=>'bar',
         		'level'=>6,
@@ -297,13 +290,6 @@ class InitCtrl extends Controller
         		'type'=>'table',
         		'level'=>6,
         		'row'=>1,
-        		'id_user'=>1],
-
-
-        		['id_ms_table'=>null,
-        		'type'=>'map',
-        		'level'=>10,
-        		'row'=>0,
         		'id_user'=>1],
         		['id_ms_table'=>null,
         		'type'=>'bar',

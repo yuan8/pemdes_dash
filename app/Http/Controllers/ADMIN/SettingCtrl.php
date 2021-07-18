@@ -53,6 +53,9 @@ class SettingCtrl extends Controller
             'running_text'=>
             [
                 'popup_announcement_text'=>'richtext'
+            ],
+            'header_box'=>[
+                'description'=>'richtext'
             ]
         ];
 
