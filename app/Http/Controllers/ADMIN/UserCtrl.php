@@ -68,6 +68,7 @@ class UserCtrl extends Controller
                 'is_active'=>$request->is_active?true:false,
                 'nik'=>$request->nik?str_replace('-', '', trim($request->nik)):null,
                 'nip'=>$request->nip?trim($request->nip):null,
+                'api_access'=>$request->api_access?(true):false,
 
             ];
 

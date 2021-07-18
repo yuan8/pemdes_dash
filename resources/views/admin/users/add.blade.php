@@ -21,6 +21,11 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
+									<label>Akses API</label>
+									<p><span>	<input type="checkbox" name="api_access"  class="flat-red"  v-model="user.api_access"></span> @{{user.api_access?'Dapat Diakses':'Tidak'}}</p>
+								</div>
+								
+								<div class="form-group">
 									<label>Email</label>
 									<input type="email" disabled="" name="m" required="" class="form-control" v-model="user.email">
 									<input type="hidden" name="email" v-model="user.email">

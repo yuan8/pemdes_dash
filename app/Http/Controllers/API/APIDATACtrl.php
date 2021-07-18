@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use DB;
 use Auth;
 use HPV;
+use HP;
+
 use Storage;
 use Validator;
 class APIDATACtrl extends Controller
@@ -113,7 +115,14 @@ class APIDATACtrl extends Controller
                     'status_text'=>'Fail',
                     'message'=>$valid->errors(),
                     'filters'=>$daerah??[],
-                    'access_user_meta'=>$USER,
+                    'access_user_meta'=>[
+                        'name'=>$USER->name,
+                        'email'=>$USER->email,
+                        'username'=>$USER->username,
+                        'role'=>HPV::role_user($USER->role,$USER)['text'],
+                        'token'=>$USER->api_token
+                        
+                    ],
                     'schedule'=>$checkTime,
                     'meta'=>$data??[],
                     'count_data'=>0,
@@ -124,21 +133,24 @@ class APIDATACtrl extends Controller
 
         }
 
-    	$data=(array)DB::table('data as d')->where([
+    	$data=(array)DB::table('tb_data as d')->where([
     		'd.type'=>'INTEGRASI',
     		'd.id'=>$id
     	])->selectRaw(
-    		"d.id as id_data,d.name as nama,".$tahun." as tahun, m.table as key_t,m.id as key_id"
+    		"d.id as id_data,d.title as nama,".$tahun." as tahun, m.table as key_t,m.id as key_id"
     	)
-    	->join('master_table_map as m','m.key_view','=','d.table_view')
+        ->join('tb_data_detail_map as dm','dm.id_data','=','d.id')
+    	->join('master_table_map as m','m.id','=','dm.id_map')
     	->first();
 
 
 
-    	$level=HPV::level($kodedaerah);
-    	$daerah=DB::table($level['parent']['table'])
-    	->selectRaw($level['parent']['table_name']." as nama_daerah, '".$level['parent']['level']."' as level,".$level['parent']['table_kode']." as id_daerah")
-    	->where($level['parent']['table_kode'],$kodedaerah)->first();
+
+    	$level=HP::table_level($kodedaerah);
+
+    	$daerah=DB::table($level['table'])
+    	->selectRaw($level['column_name']." as nama_daerah, '".$level['level']."' as level,".$level['column_id']." as id_daerah")
+    	->where($level['column_id'],$kodedaerah)->first();
 
     	if(!(($level and $checkTime['grand_access']) and ($daerah and $data)) ) {
     		$accept=false;
@@ -146,9 +158,21 @@ class APIDATACtrl extends Controller
 
     	if($accept){
     		if(file_exists(storage_path('app/api-data/'.$tahun.'_'.$id.'_fill_'.$kodedaerah.'.json'))){
-    			$data_get= json_decode(file_get_contents(storage_path('app/api-data/'.$tahun.'_'.$id.'_fill_'.$kodedaerah.'.json')));
+    			
     			$check_sum=filemtime(storage_path('app/api-data/'.$tahun.'_'.$id.'_fill_'.$kodedaerah.'.json'));
-    			$data['check_sum']=Carbon::parse($check_sum)->toDateTimeString();
+
+                if(Carbon::parse($check_sum)->addHours(6)->gte(Carbon::now())){
+                    $data_get= json_decode(file_get_contents(storage_path('app/api-data/'.$tahun.'_'.$id.'_fill_'.$kodedaerah.'.json')));
+                    $data['check_sum']=Carbon::parse($check_sum)->toDateTimeString();
+
+                }else{
+                    $data_db=static::dataGet($tahun,$data,$kodedaerah,$level);
+                    $data['check_sum']=$data_db['check_sum'];
+                    $data_get=$data_db['data'];
+
+                }
+
+                
 
 
     		}else{
@@ -170,7 +194,13 @@ class APIDATACtrl extends Controller
 	    				'text'=>''
 	    			],
 	    			'filters'=>$daerah??[],
-	    			'access_user_meta'=>$USER,
+	    			'access_user_meta'=>[
+                        'name'=>$USER->name,
+                        'email'=>$USER->email,
+                        'username'=>$USER->username,
+                        'role'=>HPV::role_user($USER->role,$USER)['text'],
+                        'token'=>$USER->api_token
+                    ],
 	    			'schedule'=>$checkTime,
 	    			'meta'=>$data??[],
 	    			'count_data'=>count($data_get),
@@ -234,6 +264,10 @@ class APIDATACtrl extends Controller
     }
 
     static function dataGet($tahun,$data,$kodedaerah,$level){
+       
+        
+
+
 
     	$column=DB::table('master_column_map')
     	->where('id_ms_table',$data['key_id'])
@@ -241,19 +275,21 @@ class APIDATACtrl extends Controller
     	->selectRaw("name,name_column as key_c,satuan,definisi,tipe_data,interval_nilai")
     	->get()->toArray();
 
+
     	$column_view=[];
-    	$selectRaw="desa.kode_dagri as kode_desa,desa as nama_desa";
+    	$selectRaw="desa.kddesa as kode_desa,desa.nmdesa as nama_desa";
     	foreach ($column as $key => $c) {
     		$selectRaw.=",".$c->key_c.' as data_'.$key;
     	}
 
     	
     	$data_db=DB::table($data['key_t'].' as data')
-    	->join('master_desa as desa','desa.kode_dagri','=','data.kode_desa')
-    	->where('desa.kode_dagri','like',$kodedaerah.'%')
+    	->join('master_desa as desa','desa.kddesa','=','data.kode_desa')
+    	->where('desa.kddesa','like',$kodedaerah.'%')
     	->where('data.tahun',$tahun)
     	->selectRaw($selectRaw)
     	->get()->toArray();
+
 
     	$data_get=[];
 
@@ -278,7 +314,7 @@ class APIDATACtrl extends Controller
 
         if(file_exists(storage_path('app/api-data/'.$tahun.'_'.$data['id_data'].'_fill_'.$kodedaerah.'.json')) ){
 
-         $check_sum=filemtime(file_get_contents(storage_path('app/api-data/'.$tahun.'_'.$data['id_data'].'_fill_'.$kodedaerah.'.json')));
+         $check_sum=filemtime((storage_path('app/api-data/'.$tahun.'_'.$data['id_data'].'_fill_'.$kodedaerah.'.json')));
 
         }else{
             $check_sum=Carbon::now();

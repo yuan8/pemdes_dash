@@ -18,10 +18,12 @@
 	</div>
 	<div class="box-body ">
 		<div class="table-responsive">
-			<table class="table table-bordered" id="table-user">
+			<table class="table table-bordered table-condensed" id="table-user">
 			<thead>
 				<tr>
 				<th>AKSI</th>
+				<th>AKSES API</th>
+
 				<th>NAME</th>
 				<th>USERNAME</th>
 
@@ -45,6 +47,14 @@
 							<div class="btn-group">
 								<a href="{{route('admin.users.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-warning btn-xs"><i class="fa fa-pen"></i> Edit</a>
 							</div>
+						</td>
+						<td class="text-center {{$d->api_access?'bg-primary':''}}">
+							@if($d->api_access)
+								<i class="fa fa-check"></i>
+							@else
+								<i class="fa fa-times"></i>
+
+							@endif
 						</td>
 						
 						<td>{{$d->name}}</td>

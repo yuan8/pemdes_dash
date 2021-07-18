@@ -21,6 +21,19 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
+									<label>Akses API</label>
+									<p><span>	<input type="checkbox" name="api_access"  class="flat-red"  v-model="user.api_access"></span> @{{user.api_access?'Dapat Diakses':'Tidak'}}</p>
+
+									<div class="input-group" v-if="user.api_access">
+								      <input id="mytoken" type="text" style="font-size:8px;"  disabled="true" class="form-control" v-model="user.api_token">
+								      <span class="input-group-btn">
+								        <button v-on:click="copy_token()" class="btn btn-default" type="button"><i class="fa fa-copy"></i> Token </button>
+								      </span>
+								      
+								    </div><!-- /input-group -->
+								</div>
+
+								<div class="form-group">
 									<label>Email</label>
 									<input type="email" disabled="" name="m" required="" class="form-control" v-model="user.email">
 									<input type="hidden" name="email" v-model="user.email">
@@ -299,6 +312,13 @@ var headVue=new Vue({
 
 		},
 		methods:{
+			copy_token:function(){
+				var copyText = document.getElementById("mytoken");
+					  copyText.select();
+					  copyText.setSelectionRange(0, 99999)
+					  document.execCommand("copy");
+					  alert("Copied the text: " + copyText.value);
+			},
 			password_check:function(){
 				if(this.user.password==this.user.password_conf){
 					this.user.password_conf_status=null;
