@@ -59,7 +59,6 @@
 					<th>TEMA</th>
 					<th>KETEGORI</th>
 					<th>INSTANSI</th>
-
 					<th>DESKRIPSI</th>
 
 				</tr>
@@ -74,13 +73,17 @@
 
 						</td>
 						<td>{{$d->title}}</td>
-						<td>{{$d->title}}</td>
+						<td>
+							{{$d->nama_map}}
+						
+
+						</td>
 
 
 						<td>{{str_replace('_',' ',$d->tema)}}</td>
 
 						<td>{{$d->nama_category}}</td>
-						<td>{{$d->title}}</td>
+						<td>{{$d->instansi}}</td>
 
 						<td>{{$d->deskripsi}}</td>
 

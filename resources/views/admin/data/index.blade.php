@@ -36,6 +36,7 @@
 		<div class="form-group">
 			<label>KATEGORI</label>
 			<select class="form-control" id="kategori" name="kategori">
+			
 			</select>
 		</div>
 

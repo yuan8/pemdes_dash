@@ -122,12 +122,14 @@ class DataViewCtrl extends Controller
 		}
 		$data=DB::table('tb_data as d')
 		->leftJoin('tb_data_group as gc','gc.id_data','=','d.id')
+        ->leftJoin('tb_data_detail_map as lmp','lmp.id_data','=','d.id')
+        ->leftJoin('master_table_map as mp','mp.id','=','lmp.id_map')
 		->leftJoin('master_category as c','c.id','=','gc.id_category')
 		->leftJoin('tb_data_instansi as di','di.id_data','=','d.id')
         ->leftJoin('master_instansi as i','i.id','=','di.id_instansi')
 		->selectRaw("group_concat(distinct(concat(c.name))) as nama_category,
 			i.name as instansi,
-		group_concat(distinct(c.type)) as tema ,d.*")
+		group_concat(distinct(c.type)) as tema ,d.*,mp.name as nama_map")
 		->groupBy('d.id');
 
 		if(count($where)){
