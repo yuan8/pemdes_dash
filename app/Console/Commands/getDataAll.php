@@ -50,11 +50,12 @@ class getDataAll extends Command
             $rekap[$table]=Artisan::call('get-data:integrasi', [
                     'tahun' => $tahun,'table'=>$table
             ]);
+           
 
             $this->info("Building Report Table {$table } - {$rekap[$table]}");
 
         }
-        dd($rekap);
+        // dd($rekap);
 
 
 

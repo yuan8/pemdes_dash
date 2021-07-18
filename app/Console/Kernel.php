@@ -25,7 +25,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('integrasi:data')
-                 ->everyFifteenMinutes();
+        ->everyFiveMinutes();
+                 // ->everyFifteenMinutes();
 
         $schedule->command('wa:blash')
                  ->cron('0 7 * * *');

@@ -83,8 +83,8 @@ class getData extends Command
                 $v=(array)$v;
                 $v['updated_at']=Carbon::now();
                 $v['tahun']=$tahun;
-                // $v['status_validasi']=5;
-                // $v['validasi_date']=Carbon::now();
+                $v['status_validasi']=5;
+                $v['validasi_date']=Carbon::now();
 
                 $c=DB::table($table)->updateOrInsert(
                     [
@@ -115,16 +115,14 @@ class getData extends Command
                 
                 );
 
-                // if($table=='dash_ddk_pekerjaan'){
-                //     $desa=DB::table($table)->where('kode_desa',$id)->first();
-                //      dd($c,$table,$id,$desa,
-                //         Carbon::now()->addHours(-4)->toDateTimeString());
-                // }
+               
 
             
          }
         }
         $this->info("Building {$count} Data!");
+        $this->info($count.'/'.count($ids).' - kode desa awal '.(count($ids)?$ids[0]:''));
+        return $count;
         return  $count.'/'.count($ids).' - kode desa awal '.(count($ids)?$ids[0]:'');
     }
 }
