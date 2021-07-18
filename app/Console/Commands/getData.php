@@ -45,10 +45,15 @@ class getData extends Command
         $table=$this->argument('table');
         $tahun=$this->argument('tahun');
 
-
-        $ids=collect(DB::select("select d.kddesa from master_desa as d left join ".$table." as td on ".
-            "((td.kode_desa = d.kddesa and td.status_validasi = 0 and td.updated_at < '".$now_real->addHours(-4)."' and td.tahun = ".$tahun.") OR (td.status_validasi is null)) limit 500"
+        $select="select d.kddesa from master_desa as d left join ".$table." as td on ".
+            "(td.kode_desa=d.kddesa) where ((td.kode_desa = d.kddesa and td.status_validasi = 0 and td.updated_at < '".Carbon::now()->addHours(-4)."' and td.tahun = ".$tahun.") OR (td.status_validasi is null)) limit 500";
+        $ids=collect(DB::select($select
         ))->pluck('kddesa')->toArray();
+
+        if($table="dash_ddk_pekerjaan"){
+            // dd($ids);
+        }
+      
 
 
         $count=0;
@@ -71,25 +76,12 @@ class getData extends Command
             ->whereIn('kode_desa',$ids)
             ->get();
 
-            foreach($ids as $id){
-                $c=DB::table($table)->where('kode_desa',$id)->updateOrInsert(
-                    [
-                        'kode_desa'=>$id,
-                    ],
-                    [
 
-                        'updated_at'=>$now_real,
-                        'kode_desa'=>$id,
-                        'tahun'=>$tahun
-                    ]
-                
-                );
-            }
 
 
             foreach ($data as $key => $v) {
                 $v=(array)$v;
-                $v['updated_at']=$now_real;
+                $v['updated_at']=Carbon::now();
                 $v['tahun']=$tahun;
 
                 $c=DB::table($table)->updateOrInsert(
@@ -105,6 +97,30 @@ class getData extends Command
 
 
             }
+
+            foreach($ids as $id){
+                $c=DB::table($table)->where('kode_desa',$id)->updateOrInsert(
+                    [
+                        'kode_desa'=>$id,
+                    ],
+                    [
+
+                        'updated_at'=>Carbon::now(),
+                        'kode_desa'=>$id,
+                        'tahun'=>$tahun,
+                        'status_validasi'=>0
+                    ]
+                
+                );
+
+                // if($table=='dash_ddk_pekerjaan'){
+                //     $desa=DB::table($table)->where('kode_desa',$id)->first();
+                //      dd($c,$table,$id,$desa,
+                //         Carbon::now()->addHours(-4)->toDateTimeString());
+                // }
+
+            
+         }
         }
          $this->info("Building {$count} Data!");
         return $count;
