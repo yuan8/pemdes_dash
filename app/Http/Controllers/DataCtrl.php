@@ -92,7 +92,7 @@ class DataCtrl extends Controller
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
-                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+                  GROUP_CONCAT(distinct(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name))) as nama_category,
 
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
@@ -190,7 +190,7 @@ class DataCtrl extends Controller
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
-                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+                  GROUP_CONCAT(distinct(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name))) as nama_category,
 
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
@@ -276,7 +276,7 @@ class DataCtrl extends Controller
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
-                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+                  GROUP_CONCAT(distinct(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name))) as nama_category,
 
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
@@ -373,9 +373,9 @@ class DataCtrl extends Controller
                 ) as nn,
                      ".$kode_daerah." as from_instansi_daerah,
                     '".$instansi->name."'  as def_nama_instansi,   
-                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+                  GROUP_CONCAT(distinct(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name))) as nama_category,
 
-                  GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+                 
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
 
@@ -506,7 +506,7 @@ class DataCtrl extends Controller
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
-                GROUP_CONCAT(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name)) as nama_category,
+                GROUP_CONCAT(distinct(concat(replace(replace(c.type,'_',' '),'TEMA DATA ','DATA '),' - ',c.name))) as nama_category,
 
                 case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
         ->paginate(15);
@@ -546,7 +546,6 @@ class DataCtrl extends Controller
     	->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
     	->leftJoin('master_instansi as in','in.id','=','di.id_instansi')
     	->selectRaw("dt.*,in.id as i_id,in.name as i_nama")
-
     	->paginate(10);
 
 

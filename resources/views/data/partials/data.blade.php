@@ -5,8 +5,10 @@
   </span>
   <div class="info-box-content">
     <span class="info-box-text">
-     <b>{{$d->title}}  <span style="font-size:10px">{{($d->type!='INTEGRASI')?'Tahun '.$d->tahun:''}} {{$d->nama_category}}</span></b>
+     <b>{{$d->title}}  <span style="font-size:10px">{{($d->type!='INTEGRASI')?'Tahun '.$d->tahun:'Tahun '.$GLOBALS['tahun_access']}} {{$d->nama_category}}</span></b>
     </span>
+    @php
+    @endphp
 
     <span class="progress-description text-muted one-line" >
      <span style="font-size:10px;"><b>{{$d->type!='INTEGRASI'?$d->nama_daerah.' - ':(null!==($d->def_nama_instansi??null)?$d->def_nama_instansi.' - ':'')}}</b></span><span style="font-size:8px;">{{$d->deskripsi}}</span>
