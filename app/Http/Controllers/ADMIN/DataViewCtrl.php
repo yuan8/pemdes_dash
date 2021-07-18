@@ -105,8 +105,8 @@ class DataViewCtrl extends Controller
 		}
 
 		if($request->q){
-			$where[]=['d.name','like','%'.$request->q.'%'];
-			$Orwhere[]=['d.description','like','%'.$request->q.'%'];
+			$where[]=['d.title','like','%'.$request->q.'%'];
+			$Orwhere[]=['d.deskripsi','like','%'.$request->q.'%'];
 		}
 
 		if($request->kategori){
