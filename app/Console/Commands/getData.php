@@ -94,6 +94,7 @@ class getData extends Command
                 $c=DB::table($table)->updateOrInsert(
                     [
                         'kode_desa'=>$v['kode_desa'],
+                        'tahun'=>$tahun
                     ],
                     $v
                 );
@@ -109,6 +110,7 @@ class getData extends Command
                 $c=DB::table($table)->where('kode_desa',$id)->updateOrInsert(
                     [
                         'kode_desa'=>$id,
+                        'tahun'=>$tahun
                     ],
                     [
 
