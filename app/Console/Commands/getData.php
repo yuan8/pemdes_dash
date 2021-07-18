@@ -83,6 +83,8 @@ class getData extends Command
                 $v=(array)$v;
                 $v['updated_at']=Carbon::now();
                 $v['tahun']=$tahun;
+                // $v['status_validasi']=5;
+                // $v['validasi_date']=Carbon::now();
 
                 $c=DB::table($table)->updateOrInsert(
                     [
