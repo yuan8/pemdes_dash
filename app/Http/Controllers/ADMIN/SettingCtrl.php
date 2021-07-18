@@ -31,8 +31,8 @@ class SettingCtrl extends Controller
     }
 
     public function public_tentang($tahun){
-    	$data=(array)(DB::table('settings')->where('flag','TENTANG')->first()??['value'=>'','flag'=>'TENTANG']);
-    	return view('admin.setting.public_tentang')->with('data',$data);
+    	;
+    	return view('admin.setting.public_tentang');
     }
 
     // public function index($tahun){
