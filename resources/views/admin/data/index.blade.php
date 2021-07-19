@@ -112,9 +112,23 @@
 					<tr class="{{$d->status==0?"bg-maroon":($d->status==2?'bg-yellow':'')}}">
 						<td class="bg-gray">
 							<div class="btn-group-vertical">
-								<a href="{{route('data.vis.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>Str::slug($d->title),'preview'=>true])}}" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
+								@switch($d->type)
+								    @case('VISUALISASI')
+								    <a href="{{route('data.vis.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>Str::slug($d->title),'preview'=>true])}}" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
+								        @break
+								      @case('TABLE')
+								    <a href="{{route('data.table.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>Str::slug($d->title),'preview'=>true])}}" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
+								        @break
+								      @case('INFOGRAFIS')
+								    <a href="{{route('data.infograp.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id,'slug'=>Str::slug($d->title),'preview'=>true])}}" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </a>
+								        @break
+								
+								    @default
+								@endswitch
+								
 							<a href="{{route('admin.dataset.edit',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}" class="btn btn-xs btn-warning"> <i class="fa fa-pen"></i> </a>
-							<button onclick="showForm('{{route('admin.dataview.form_delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}')" class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </buttom>
+							
+							<button onclick="showForm('{{route('admin.data.form_delete',['tahun'=>$GLOBALS['tahun_access'],'id'=>$d->id])}}','sm')" class="btn btn-xs btn-danger"> <i class="fa fa-trash"></i> </buttom>
 
 							</div>
 						</td>
@@ -124,14 +138,13 @@
 								       <i class="fa fa-table"></i> TABLE
 								        @break
 								      @case('VISUALISASI')
-								       <i class="fa fa-area-chart"></i> CHART VISUAL
+								       <i class="fa fa-chart"></i> CHART VISUAL
 								       @break
-								       @case('INFOGARFIS')
+								       @case('INFOGRAFIS')
 								       <i class="fa fa-picture"></i> INFOGRAFIS
 								       @break
 								
 								    @default
-								            Default case...
 								@endswitch
 								
 
@@ -214,6 +227,23 @@
 	@endif
 		},500);
 	});
+
+
+	function showFormDelete(url,size='lg'){
+		$.ajax({
+			url:url,
+			 beforeSend: function (xhr) {
+			        xhr.setRequestHeader('Authorization', 'Bearer {{Auth::User()->api_token}}')
+			    },
+			success:function(data){
+				 $('#modal_'+size+' .modal-content').html(res);
+	          setTimeout(function(){
+	              $('#modal_'+size).modal();
+
+	          },800);
+			}
+		})
+	}
 
 
 

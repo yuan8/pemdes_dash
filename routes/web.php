@@ -167,13 +167,23 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 	Route::prefix('data-view')->middleware('can:is_admin')->group(function(){
 		Route::get('/','ADMIN\DataViewCtrl@index')->name('admin.dataview.index');
 		Route::get('form-edit/{id}','ADMIN\DataViewCtrl@edit')->name('admin.dataview.edit');
-		Route::get('form-delete/{id}','ADMIN\DataViewCtrl@form_delete')->name('admin.dataview.form_delete');
-		Route::delete('form-delete/{id}','ADMIN\DataViewCtrl@delete')->name('admin.dataview.delete');
+		
+		
 		Route::get('form-new/','ADMIN\DataViewCtrl@create')->name('admin.dataview.create');
 		Route::post('form-new/','ADMIN\DataViewCtrl@store')->name('admin.dataview.store');
 		Route::put('form-edit/{id}','ADMIN\DataViewCtrl@update')->name('admin.dataview.update');
 
+		Route::delete('dataset/form-delete/{id}','ADMIN\DataViewCtrl@delete')->name('admin.dataview.delete');
+
+		Route::get('dataset/form-delete/{id}','ADMIN\DataViewCtrl@form_delete')->name('admin.dataview.form_delete');
+
 	});
+
+	
+
+	
+
+
 
 	Route::prefix('table-map')->group(function(){
 		Route::get('/','ADMIN\TableMapCtrl@index')->name('admin.tablemap.index');
@@ -232,13 +242,19 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 
 		Route::post('/data/create/{jenis}','ADMIN\DataCtrl@store')->name('admin.data.store');
 
-		
-
 		Route::get('/data-set/edit/{id}','ADMIN\DataCtrl@edit')->name('admin.dataset.edit');
 		Route::put('/data-set/update/{id}','ADMIN\DataCtrl@update_visual')->name('admin.dataset.update');
 
+		Route::put('/data-set-infografis/update/{id}','ADMIN\DataCtrl@update_infografis')->name('admin.infografis.update');
+
+		Route::put('/data-set-table/update/{id}','ADMIN\DataCtrl@update_table')->name('admin.table.update');
+
 		Route::get('/data/update/{id}','ADMIN\DataCtrl@edit')->name('admin.data.edit');
 		Route::put('/data/update/{id}','ADMIN\DataCtrl@update')->name('admin.data.update');
+
+		Route::delete('dataset/form-delete/{id}','ADMIN\DataCtrl@delete')->name('admin.data.delete');
+
+		Route::get('dataset/form-delete/{id}','ADMIN\DataCtrl@form_delete')->name('admin.data.form_delete');
 	});
 
 	Route::prefix('setting')->middleware('can:is_super')->group(function(){
@@ -267,7 +283,7 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 	Route::get('/data-integrasi/{id}/{slug}', 'DataCtrl@detail')->name('data.int.detail');
 	Route::get('/data-visual/{id}/{slug}', 'DataCtrl@visualisasi_index')->name('data.vis.detail');
 
-	Route::get('/data-table/{id}/{slug}', 'DataCtrl@table_index')->name('data.vis.detail');
+	Route::get('/dataset-table/{id}/{slug}', 'DataCtrl@table_index')->name('data.table.detail');
 
 	Route::get('/data-infografis/{id}/{slug}', 'DataCtrl@infografis_index')->name('data.infograp.detail');
 

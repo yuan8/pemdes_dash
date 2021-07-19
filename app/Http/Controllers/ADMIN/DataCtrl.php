@@ -166,6 +166,11 @@ class DataCtrl extends Controller
                     # code...
                     return static::edit_table($tahun,$id);
                     break;
+
+                case 'INFOGRAFIS':
+                    # code...
+                    return static::edit_infografis($tahun,$id);
+                    break;
                 
                 default:
                     # code...
@@ -174,6 +179,107 @@ class DataCtrl extends Controller
         }
     }
 
+    public function form_delete($tahun,$id){
+        $data=DB::table('tb_data as d')
+        ->where([
+            ['d.id','=',$id],
+        ])
+        ->whereIn('type',['VISUALISASI','TABLE','INFOGRAFIS'])->first();
+
+
+        if($data){
+            return view('admin.data.delete')->with('data',$data);
+        }
+    }
+
+     public function delete($tahun,$id){
+        $data=DB::table('tb_data as d')
+        ->where([
+            ['d.id','=',$id],
+        ])
+        ->whereIn('type',['VISUALISASI','TABLE','INFOGRAFIS'])
+        ->delete();
+
+
+        if($data){
+           Alert::success('Berhasil','Berhasil Menghapus Data');
+        }else{
+
+           Alert::error('Gagal','Gagal Menghapus Data');
+        }
+
+        return back();
+
+    }
+
+
+    static function edit_infografis($tahun,$id){
+      $Defwhere=[
+            "dt.tahun=".$tahun,
+            'dt.id='.$id,
+            "dt.type in ('INFOGRAFIS')"
+        ];
+        $pilih_kategori='';
+
+        $where=[];
+
+        if(Auth::User()->role>2){
+             $Defwhere[]="dt.kode_daerah =".Auth::User()->kode_daerah;
+        }
+
+        $U=Auth::User();
+
+       
+        $data=DB::table('tb_data as dt')
+        ->join('tb_data_detail_info_graph as vis','vis.id_data','=','dt.id')
+        ->leftJoin('tb_data_group as dg','dg.id_data','=','dt.id')
+        ->leftJoin('master_provinsi as pro','pro.kdprovinsi','=','dt.kode_daerah')
+        ->leftJoin('master_kabkota as kab','kab.kdkabkota','=','dt.kode_daerah')
+        ->leftJoin('master_kecamatan as kc','kc.kdkecamatan','=','dt.kode_daerah')
+        ->leftJoin('master_desa as ds','ds.kddesa','=','dt.kode_daerah')
+        ->leftJoin('master_category as c','c.id','=','dg.id_category')
+        ->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
+        ->leftjoin('master_instansi as i','i.id','=','di.id_instansi')
+        ->leftjoin('users as usc','usc.id','=','dt.id_user')
+        ->leftjoin('users as usu','usu.id','=','dt.id_user_update')
+        ->groupBy('dt.id')
+        ->orderBy('dt.updated_at')
+        ->selectRaw("dt.*,  
+                vis.path_file,
+                usc.name as nama_user_created,
+                usc.jabatan as jabatan_user_created,
+                i.name as nama_instansi,
+                (case when (i.type) then i.type else 'DAERAH' end) as jenis_instansi,
+                group_concat(c.type SEPARATOR ',') as tema,
+                group_concat(concat(c.id,'|||',c.type,'|||',c.name) SEPARATOR '------') as category,
+                case when (ds.kddesa is not null) then ds.nmdesa when (kc.nmkecamatan is not  null)  then kc.nmkecamatan when  (kab.nmkabkota is not null)  then kab.nmkabkota when (pro.nmprovinsi is not null)  then pro.nmprovinsi else '' end as nama_daerah")
+
+        ->whereRaw(implode(' and ', $Defwhere))->first();
+
+
+        $u=Auth::User();
+
+        $instansi=[];
+        if($u->role!=1){
+            $instansi=DB::table('master_instansi as c')
+            ->where(
+                'type','REGIONAL'
+            )->selectRaw('c.id, c.name as text')->get();
+          }else{
+            $instansi=DB::table('master_instansi as c')->selectRaw('c.id, c.name as text')->get();
+          }
+
+        if($data){
+            return view('admin.data.infografis.edit')->with([
+                'jenis'=>$data->type,
+                'data'=>$data,
+                'category'=>[],
+                'instansi'=>$instansi,
+            ]);
+        }
+        
+
+    }
 
     static function edit_table($tahun,$id){
         $Defwhere=[
@@ -239,6 +345,127 @@ class DataCtrl extends Controller
                 'instansi'=>$instansi,
             ]);
         }
+
+    }
+
+    public function update_table($tahun,$id,Request $request){
+         $req=$request->all();
+
+        $check=null;
+
+
+
+        $data=DB::table('tb_data')->where('id',$id)->first();
+
+        if(!$data){
+            return abort(404);
+        }
+
+
+
+         $valid=Validator::make($req,[
+            'name'=>'string|required',
+            'auth'=>'boolean|nullable',
+            'description'=>'nullable|string',
+            'keywords'=>'array|nullable',
+            'publish_date'=>'date|required',
+            'id_instansi'=>'numeric|required',
+        ]);
+
+
+
+         if($valid->fails()){
+            Alert::error('',$valid->errors()->first());
+
+            return back()->withInputs();
+         }
+         else{
+            if(Auth::User()->can('is_admin')){
+                if(!$request->id_instansi){
+                    Alert::error('','instansi Belum Terisi');
+                    return back()->withInputs();
+                }
+            }
+
+         }
+
+
+         $data=DB::table('tb_data')->where('id',$id)->update([
+                'title'=>$request->name,
+                'auth'=>$request->auth,
+                'deskripsi'=>$request->description,
+                'type'=>'TABLE',
+                'publish_date'=>$request->publish_date,
+                'status'=>0,
+                'tahun'=>$tahun,
+                'id_user_update'=>Auth::User()->id,
+                'updated_at'=>Carbon::now(),
+                'keywords'=>json_encode($request->keywords??[]),
+
+        ]);
+
+        if($data){
+            if(Auth::User()->can('is_admin')){
+               DB::table('tb_data_instansi')->insertOrIgnore([
+                'id_data'=>$data,
+                'id_instansi'=>$request->id_instansi
+               ]);
+
+            }
+
+            foreach ($request->category as $key => $k) {
+                    # code...
+                    DB::table('tb_data_group')->updateOrinsert([
+                        'id_data'=>$id,
+                        'id_category'=>$k
+                    ],[
+                        'id_data'=>$id,
+                        'id_category'=>$k
+                    ]);
+
+            }
+
+            if($request->category){
+                DB::table('tb_data_group')->where('id_data',$id)
+                ->whereNotIn('id_category',$request->category)
+                ->delete();
+            }else{
+                DB::table('tb_data_group')->where('id_data',$id)->delete();
+            }
+
+
+           if($request->file){
+             if($request->file){
+                $req['extension']=$request->file->getClientOriginalExtension();
+                }
+                $path=Storage::put('public/publication/DATASET_TABLE/'.$tahun.'/data-table-'.$data.'.'.$req['extension'],$request->file);
+                $path=Storage::url($path);
+                $size=filesize($request->file)??0;
+                $size=$size / 1048576;
+
+           
+                $check= DB::table('tb_data_detail_table')
+                ->updateOrInsert([
+                    'id_data'=>$id,
+                ],[
+                    'id_data'=>$id,
+                    'path_file'=>$path,
+                    'extension'=>$req['extension'],
+                    'size'=>$size,
+                ]);
+           }
+        }
+
+        Alert::success('Berhasil','Dataset Table diupdate');
+
+        if(isset($check) and $check ){
+
+            return redirect()->route('admin.data.index',['tahun'=>$tahun]);
+        }
+
+        return back();
+
+        
 
     }
 
@@ -340,49 +567,193 @@ class DataCtrl extends Controller
 
 	static function store_infografis($tahun,Request $request){
 
-		$path=Storage::put('public/publication/DATASET/'.$tahun,$request->file);
-		$path=Storage::url($path);
-		$ext = pathinfo($path, PATHINFO_EXTENSION);
+		$path='';
 		$size=filesize($request->file)??0;
 		$size=$size / 1048576;
 
+        $dat=['title'=>$request->name,
+            'type'=>'INFOGRAFIS',
+            'tahun'=>$tahun,
+            'publish_date'=>$request->publish_date,
+            'auth'=>(boolean)(($request->dashboard)?$request->auth:0),            
+            'deskripsi'=>$request->description,
+            'keywords'=>($request->keywords)?json_encode($request->keywords,true):'[]',
+            'id_user'=>Auth::User()->id,
+            'id_user_update'=>Auth::User()->id,
+            'kode_daerah'=>Auth::User()->kode_daerah,
+            'created_at'=>Carbon::now(),
+            'updated_at'=>Carbon::now(),
+        ];
 
-		$data=DB::table('tb_data')
-		->insertGetId([
-			'name'=>$request->name,
-			'type'=>'INFOGRAFIS',
-			'publish_date'=>$request->publish_date,
-			'extension'=>$ext,
-			'description'=>$request->description,
-			'organization_id'=>$request->id_instansi??15,
-			'year'=>$tahun,
-			'size'=>$size,
-			'dashboard'=>(boolean)(($request->dashboard)),
-			'auth'=>(boolean)(($request->dashboard)?$request->auth:0),
-			'keywords'=>($request->keywords)?json_encode($request->keywords,true):'[]',
-			'document_path'=>$path,
-			'created_at'=>Carbon::now(),
-			'updated_at'=>Carbon::now(),
-			'publish_date'=>Carbon::now(),
-			'id_user'=>Auth::User()->id
+       
 
-		]);
 
-		if($data){
-			Alert::success('Berhasil','Data Berhasil Ditambahkan');
-			foreach ($request->category as $key => $k) {
+		$id_=DB::table('tb_data')
+		->insertGetId($dat);
+
+
+		if($id_){
+			foreach ($request->category??[] as $key => $k) {
     				# code...
-    				DB::table('data_group')->insertOrIgnore([
-    					'id_data'=>$data,
+    				DB::table('tb_data_group')->insertOrIgnore([
+    					'id_data'=>$id_,
     					'id_category'=>$k
     				]);
 
     			}
-			return back();
-		}
+		
+            $ext = pathinfo($request->file('file')->getClientOriginalName(), PATHINFO_EXTENSION);
+            if(!$ext){
+                $ext='jpeg';
+            }
+
+
+            $path=Storage::put('public/publication/DATASET-INFOGRAFIS/'.$tahun.'/data-'.$id_.'.'.$ext,$request->file);
+            $path=Storage::url($path);
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+
+
+            DB::table('tb_data_detail_info_graph')->updateOrInsert([
+                'id_data'=>$id_
+
+            ],[
+                'id_data'=>$id_,
+                'path_file'=>$path,
+                'extension'=>$ext,
+                'size'=>$size,
+            ]);
+
+            Alert::success('Berhasil','Data Infografis berhasil ditambahkan');
+        }else{
+            Alert::error('Gagal','');
+
+        }
+
+        return back();
 
 
 	}
+
+
+    static function update_infografis($tahun,$id,Request $request){
+
+        $path='';
+
+
+        $data=DB::table('tb_data')
+        ->where('id',$id)
+        ->where('type','INFOGRAFIS')
+        ->first();
+
+        if(!$data){
+            return abort(404);
+        }
+
+
+        
+
+        $data_up=['title'=>$request->name,
+            'type'=>'INFOGRAFIS',
+            'tahun'=>$tahun,
+            'publish_date'=>$request->publish_date,
+            'auth'=>(boolean)(($request->dashboard)?$request->auth:0),            
+            'deskripsi'=>$request->description,
+            'keywords'=>($request->keywords)?json_encode($request->keywords,true):'[]',
+            'id_user_update'=>Auth::User()->id,
+            'created_at'=>Carbon::now(),
+            'updated_at'=>Carbon::now(),
+        ];
+
+        $v=[
+            'name'=>'string|required',
+            'auth'=>'boolean|nullable',
+            'description'=>'nullable|string',
+            'keywords'=>'array|nullable',
+            'publish_date'=>'date|required',
+            'id_instansi'=>'numeric|required',
+            'type'=>'required|string|in:VISUALISASI,TABLE,INFOGRAFIS'
+        ];
+
+
+        if(Auth::User()->can('is_wali_daerah_kab')){
+            $v['status']='required|numeric|in:0,1,2';
+            $data_up['status']=$request->status;
+
+        }
+
+       
+
+
+        $id_=DB::table('tb_data')->where('id',$id)
+        ->update($data_up);
+
+
+        if($id_){
+            foreach ($request->category??[] as $key => $k) {
+                    # code...
+                    DB::table('tb_data_group')->updateOrinsert([
+                        'id_data'=>$id,
+                        'id_category'=>$k
+                    ],
+                    [
+                        'id_data'=>$id,
+                        'id_category'=>$k
+                    ],
+
+                );
+
+             }
+
+             if($request->category){
+                 DB::table('tb_data_group')->where('id_data',$id)
+                ->whereNotIn('id_category',$request->category??[])->delete();
+             
+
+            }
+
+            
+
+
+             if(!$request->category){
+                 DB::table('tb_data_group')->where([[
+                        'id_data'=>$id,
+                    ]])->delete();
+             }
+        
+            if($request->file){
+                $ext = pathinfo($request->file('file')->getClientOriginalName(), PATHINFO_EXTENSION);
+                if(!$ext){
+                    $ext='jpeg';
+                }
+
+                $size=filesize($request->file)??0;
+                $size=$size / 1048576;
+                $path=Storage::put('public/publication/DATASET-INFOGRAFIS/'.$tahun.'/data-'.$id_.'.'.$ext,$request->file);
+                $path=Storage::url($path);
+                $ext = pathinfo($path, PATHINFO_EXTENSION);
+
+
+                DB::table('tb_data_detail_info_graph')->updateOrInsert([
+                    'id_data'=>$id
+
+                ],[
+                    'id_data'=>$id,
+                    'path_file'=>$path,
+                    'extension'=>$ext,
+                    'size'=>$size,
+                ]);
+            }
+
+            Alert::success('Berhasil','Data Infografis berhasil diupdate');
+        }else{
+            Alert::error('Gagal','');
+
+        }
+
+        return back();
+
+
+    }
 
 
 	static function build_map($head){
@@ -461,7 +832,7 @@ class DataCtrl extends Controller
                 'id_user'=>Auth::User()->id,
                 'created_at'=>Carbon::now(),
                 'updated_at'=>Carbon::now(),
-                'keywords'=>json_encode($request->keywords),
+                'keywords'=>json_encode($request->keywords??[]),
 
         ]);
 
@@ -567,7 +938,7 @@ class DataCtrl extends Controller
                 'id_user'=>Auth::User()->id,
                 'created_at'=>Carbon::now(),
                 'updated_at'=>Carbon::now(),
-    			'keywords'=>json_encode($request->keywords),
+    			'keywords'=>json_encode($request->keywords??[]),
 
     		]);
 
@@ -650,7 +1021,7 @@ class DataCtrl extends Controller
     public function index($tahun,Request $request){
     	$Defwhere=[
     		"dt.tahun=".$tahun,
-    		"dt.type in ('TABLE','VISUALISASI')"
+    		"dt.type in ('TABLE','VISUALISASI','INFOGRAFIS')"
     	];
     	$pilih_kategori='';
 
@@ -681,7 +1052,7 @@ class DataCtrl extends Controller
 
 
         if($request->jenis){
-            $where[]="dt.type = ".$request->jenis;
+            $where[]="dt.type = '".$request->jenis."'";
 
         }
 

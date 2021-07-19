@@ -606,33 +606,154 @@ class DataCtrl extends Controller
     }
 
 
+    public function build_table_json($path,$tahun,$id){
+        $inputFileName = './sampleData/example1.xls';
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(public_path($path));
+        $sheetCount=$spreadsheet->getSheetCount();
+
+        $table=[];
+
+        for($index=0;$index<$sheetCount;$index++){
+            $data=$spreadsheet->getSheet($index);
+            $data=$data->toArray();
+            $table[$index]=[
+                'title'=>$data[0][0],
+                'sub_title'=>$data[1][0],
+                'header'=>[],
+                'body'=>[]
+            ];
+            foreach($data[2]as $key=>$h){
+                if($h){
+                    $head=[
+                        'title'=>$h,
+                        'satuan'=>null,
+                        'col'=>1
+                    ];
+
+                    if($data[3][$key]){
+                        $head['col']=2;
+                        $head['satuan']=$data[3][$key];
+                    }else{
+                        $head['col']=1;
+                    }
+
+                    $table[$index]['header'][$key]=$head;
+                }
+            }
+
+            foreach($data as $i=>$d){
+
+                if($i>3){
+                    
+                    $table[$index]['body'][$i]=[];
+                    foreach($table[$index]['header'] as $c=>$h){
+                        $cv=$data[$i][$c];
+                        $table[$index]['body'][$i][$c]=[
+                            'head'=>isset($table[$index]['header'][$c])?$table[$index]['header'][$c]:null,
+                            'value'=>$cv
+                        ];
+                    }
+                }
+            }
+
+            $table[$index]['body']=array_values($table[$index]['body']);
+            $table[$index]['header']=array_values($table[$index]['header']);
+
+
+           
+        }
+
+
+
+        Storage::put('public/DATASET_TABLE/'.$tahun.'/data-'.$id.'.json',json_encode($table));
+
+        return $table;
+
+    }
+
+
     public function table_index($tahun,$id,$slug,Request $request){
          $whereRaw=[
-            "type = 'TABLE'"
+            "d.type = 'TABLE'"
         ];
 
         if($request->preview){
             if(Auth::User()->can('is_admin') ){
 
             }else{
-              $whereRaw[]='kode_daerah='.Auth::User()->kode_daerah;
+              $whereRaw[]='d.kode_daerah='.Auth::User()->kode_daerah;
+              $whereRaw[]='d.tahun='.$tahun;
+
             }
         }else{
-              $whereRaw[]='status=1';
-              $whereRaw[]="publish_date <= '".Carbon::now()."'";  
+              $whereRaw[]='d.status=1';
+              $whereRaw[]='d.tahun='.$tahun;
+              $whereRaw[]="d.publish_date <= '".Carbon::now()."'";  
         }
 
          $data=DB::table('tb_data as d')
+         ->join('tb_data_detail_table as tb','tb.id_data','=','d.id')
         ->where('tahun',($tahun))
+        ->selectRaw("d.*,tb.path_file,tb.size")
         ->whereRaw(implode(" and ", $whereRaw))
-        ->where('id',$id)->first();
+        ->where('d.id',$id)->first();
 
         if($data){
-            dd($data);
+            if(file_exists(public_path($data->path_file))){
+                if(!file_exists(storage_path('app/public/DATASET_TABLE/'.$tahun.'/data-'.$id.'.json'))){
+
+                    $table=static::build_table_json($data->path_file,$tahun,$id);
+
+                }else{
+                    $table=json_decode(file_get_contents(storage_path('app/public/DATASET_TABLE/'.$tahun.'/data-'.$id.'.json')),true);
+
+                }
+
+                return view('show_data.dataset_table')->with(['data'=>$data,'table'=>$table]);
+            }
 
         }else{
             return abort(404);
         }
+    }
+
+    public function infografis_index($tahun,$id,$slug,Request $request){
+        $whereRaw=[
+            "type = 'INFOGRAFIS'"
+        ];
+
+        if($request->preview){
+            if(Auth::User()->can('is_admin') ){
+
+            }else{
+              $whereRaw[]='d.kode_daerah='.Auth::User()->kode_daerah;
+            }
+        }else{
+              $whereRaw[]='d.status=1';
+              $whereRaw[]='d.tahun='.$tahun;
+              $whereRaw[]="d.publish_date <= '".Carbon::now()."'";  
+        }
+
+         $data=DB::table('tb_data as d')
+         ->join('tb_data_detail_info_graph as graph','graph.id_data','=','d.id')
+         ->selectRaw("d.*,graph.path_file,graph.extension")
+        ->where('d.tahun',($tahun))
+        ->whereRaw(implode(" and ", $whereRaw))
+        ->where('d.id',$id)->first();
+
+
+        if($data){
+            config([
+                'proepdeskel.meta.title'=>$data->title,
+                'proepdeskel.meta.description'=>$data->deskripsi,
+                'proepdeskel.meta.keywords'=>implode(',',json_decode($data->keywords??'[]')),
+            ]);
+
+            return view('show_data.dataset_infografis')->with('data',$data);
+        }else{
+            return abort(404);
+        }
+
     }
 
      public function visualisasi_index($tahun,$id,$slug,Request $request){
@@ -655,7 +776,6 @@ class DataCtrl extends Controller
         ->where('tahun',($tahun))
         ->whereRaw(implode(" and ", $whereRaw))
         ->where('id',$id)->first();
-
 
         if($data){
             config([

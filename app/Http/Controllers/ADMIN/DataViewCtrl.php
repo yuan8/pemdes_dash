@@ -342,16 +342,22 @@ class DataViewCtrl extends Controller
                 'id_instansi'=>$request->id_instansi
             ]);
 
-    		foreach ($request->category as $key => $k) {
+    		foreach ($request->category??[] as $key => $k) {
     				# code...
-    				DB::table('tb_data_group')->insertOrIgnore([
+    				DB::table('tb_data_group')->updateOrinsert([
     					'id_data'=>$data,
     					'id_category'=>$k
-    				]);
+    				],
+                    [
+                        'id_data'=>$data,
+                        'id_category'=>$k
+                    ],
 
-    			}
-    			DB::table('tb_data_group')->where('id_data',$data)
-    			->whereNotIn('id_category',$request->category)->delete();
+                );
+
+    		}
+    		DB::table('tb_data_group')->where('id_data',$data)
+    			->whereNotIn('id_category',$request->category??[])->delete();
 
     	}
 

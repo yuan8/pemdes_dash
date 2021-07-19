@@ -12,7 +12,7 @@
 		{{HP::status_verifikasi_dataset($data->status)}}
 	</div>
 
-	<form action="{{route('admin.table.update',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}" enctype='multipart/form-data' method="post">
+	<form action="{{route('admin.infografis.update',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id])}}" enctype='multipart/form-data' method="post">
 		@csrf
 		@method('PUT')
 
@@ -43,10 +43,10 @@
 								
 							</script>
 						</div>
-						<a style="margin-bottom: 10px;" href="" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> Download Data</a>
+						<a style="margin-bottom: 10px;" href="{{url($data->path_file)}}"  download="" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> Download Data</a>
 						<div class="form-group">
-							<label>Update Dokumen (.xlsx,.xls)</label>
-							<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" name="file" class="form-control" >
+							<label>Update Dokumen (Dokumen PDF / Gambar)</label>
+							<input type="file" accept="image/*, application/pdf " name="file" class="form-control" >
 						</div>
 					</div>
 				</div>
@@ -56,7 +56,7 @@
 				<div class="box-header with-border">
 					<div class="btn-group">
 						<button type="submit" class="btn btn-primary background-blue">UPDATE</button>
-						<a href="{{route('data.table.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title),'preview'=>($data->status==1?false:true)])}}" class="btn btn-info ">{{$data->status==1?'VIEW':'PREVIEW'}}</a>
+						<a href="{{route('data.infograp.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title),'preview'=>($data->status==1?false:true)])}}" class="btn btn-info ">{{$data->status==1?'VIEW':'PREVIEW'}}</a>
 					</div>
 				</div>
 				<div class="box-body">
@@ -110,7 +110,7 @@
 					<div class="form-group">
 						<label>Instansi</label>
 						
-						<select class="form-control" id="instansi"   name="id_instansi" required="">
+						<select class="form-control" id="instansi"   required="">
 							
 							@foreach ($instansi??[] as $i)
 								<option value="{{$i->id}}">{{$i->text}}</option>
