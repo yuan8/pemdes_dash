@@ -14,7 +14,7 @@ djskdjskdj',
   ),
   'wa' => 
   array (
-    'CHATAPI_TOKEN' => 'xluhkbm0rwv7bnc5',
-    'CHATAPI_URL' => 'https://api.chat-api.com/instance294760/',
+    'CHATAPI_TOKEN' => 'c1f07pa9fci13592',
+    'CHATAPI_URL' => 'https://api.chat-api.com/instance306711/',
   ),
 );

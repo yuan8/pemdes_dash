@@ -47,6 +47,10 @@ class WaBlash extends Notification
      */
     public function toChatAPI($notifiable)
     {   
+        $GLOBALS['_ENV']['CHATAPI_TOKEN']=config('setting_proepdeskel.wa.CHATAPI_TOKEN');
+        $GLOBALS['_ENV']['CHATAPI_URL']=config('setting_proepdeskel.wa.CHATAPI_URL');
+        config(['services.chatapi.token'=>config('setting_proepdeskel.wa.CHATAPI_TOKEN','')]);
+        config(['services.chatapi.api_url'=>config('setting_proepdeskel.wa.CHATAPI_URL','')]);
 
 
         return ChatAPIMessage::create()

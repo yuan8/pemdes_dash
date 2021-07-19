@@ -40,7 +40,16 @@ class BlashWa extends Command
     public function handle()
     {
         //
+        $token=config('services.chatapi.token');
+        $url=config('services.chatapi.api_url');
+
+
+        $this->info("token  ".$token);
+        $this->info("url ".$url);
         $n=NotifChangeDataCtrl::notifWa();
+        
+
+
         dd($n);
 
 

@@ -14,6 +14,8 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        $GLOBALS['chatapi_token']=config('setting_proepdeskel.wa.CHATAPI_TOKEN','');
+        $GLOBALS['chatapi_url']=config('setting_proepdeskel.wa.CHATAPI_URL','');
     }
 
     /**
@@ -23,6 +25,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        config(['services.chatapi.token'=>config('setting_proepdeskel.wa.CHATAPI_TOKEN','')]);
+        config(['services.chatapi.api_url'=>config('setting_proepdeskel.wa.CHATAPI_URL','')]);
+
+
+        // $GLOBALS['chatapi_token']=config('setting_proepdeskel.wa.CHATAPI_TOKEN','');
+        // $GLOBALS['chatapi_url']=config('setting_proepdeskel.wa.CHATAPI_URL','');
+
         //
+        // env(['CHATAPI_URL'=>config('setting_proepdeskel.wa.CHATAPI_URL')]);
+        // env(['CHATAPI_TOKEN'=>config('setting_proepdeskel.wa.CHATAPI_TOKEN')]);
+
     }
 }

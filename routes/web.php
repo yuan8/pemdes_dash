@@ -268,6 +268,10 @@ Route::prefix('admin/{tahun?}')->middleware(['auth:web','bindTahun','can:is_acti
 
 });
 
+Route::get('check-wa',function(){
+	dd(env('CHATAPI_TOKEN'),env('CHATAPI_URL'));
+});
+
 Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'').'v/{tahun?}/')->middleware(['bindTahun'])->group(function(){
 	Route::get('/', 'HomeCtrl@index')->name('index');
 
