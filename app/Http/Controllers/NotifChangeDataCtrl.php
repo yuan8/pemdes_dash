@@ -154,6 +154,10 @@ class NotifChangeDataCtrl extends Controller
     public static function notifWa(){
             $p=[];
 
+        DB::table('tb_notifikasi_wa')
+            ->where('status',1)
+            ->where('updated_at','<',Carbon::now()->addDays(-2))->delete();
+            
         set_time_limit(-1);
         ini_set('memory_limit', '3048M');
 
@@ -221,7 +225,8 @@ foreach ($value as $key => $v) {
             }
 
             DB::table('tb_notifikasi_wa')->where('id',$value->id)->update([
-                'status'=>1
+                'status'=>1,
+                'updated_at'=>Carbon::now()
             ]);
 
 

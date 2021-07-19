@@ -679,6 +679,7 @@
 				}
 
 				for (var i =0;this.data_column_array.length>i; i++) {
+					this.data_column['data_'+i]['interval_nilai']=this.data_column['data_'+i]['interval_nilai']??'';
 					if(this.data_column['data_'+i]['interval_nilai'].length>0){
 						if(!Array.isArray(this.data_column['data_'+i]['interval_nilai'])){
 						this.data_column['data_'+i]['interval_nilai']=this.data_column['data_'+i]['interval_nilai'].split('|;|');

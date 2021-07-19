@@ -1017,6 +1017,7 @@ class ValidasiCtrl extends Controller
             }
         }
 
+
         return $count_success;
     }
 
@@ -1173,6 +1174,9 @@ class ValidasiCtrl extends Controller
 
                 }
             }
+
+             NotifChangeDataCtrl::change($kode_daerah,$tahun,$data_id,Auth::User()->id);
+
         }
 
         Alert::success('Berhasil','Data Berhasil Diperbarui');
