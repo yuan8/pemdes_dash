@@ -184,7 +184,7 @@ return [
          App\Providers\ChatterServiceProvider::class,
          Kreait\Laravel\Firebase\ServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        // NotificationChannels\ChatAPI\ChatAPIServiceProvider::class,
+        NotificationChannels\ChatAPI\ChatAPIServiceProvider::class,
 
 
     ],

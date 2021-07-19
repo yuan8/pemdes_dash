@@ -14,8 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
-        $GLOBALS['chatapi_token']=config('setting_proepdeskel.wa.CHATAPI_TOKEN','');
-        $GLOBALS['chatapi_url']=config('setting_proepdeskel.wa.CHATAPI_URL','');
+        
     }
 
     /**

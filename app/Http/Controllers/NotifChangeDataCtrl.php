@@ -81,22 +81,23 @@ class NotifChangeDataCtrl extends Controller
 
     static function mes_them($key,$value,$desa=0){
         $mes='';
+       
         if($value){
             switch ($key) {
                 case 'unhandle':
-                    $mes='DATA BELUM DI VERIFIKASI '.$desa?'':':'.number_format($value).' DESA';
+                    $mes='DATA BELUM DI VERIFIKASI '.($desa?'':':').number_format($value).' DESA';
                     break;
                  case 'ver_10':
-                    $mes='DATA VERF DESA/KEL '.$desa?'':':'.number_format($value).' DESA';
+                    $mes='DATA VERF DESA/KEL '.($desa?'':':').number_format($value).' DESA';
                     break;
                  case 'ver_6':
-                    $mes='DATA VERF KEC '.$desa?'':':'.number_format($value).' DESA';
+                    $mes='DATA VERF KEC '.($desa?'':':').number_format($value).' DESA';
                     break;
                 // case 'ver_4':
                 //     $mes='DATA DIVERIFIKASI KOTA/KAB '.$desa?'':':'.number_format($value).' DESA';
                 //     break;
                   case 'valid':
-                    $mes='DATA VALID '.$desa?'':':'.number_format($value).' DESA';
+                    $mes='DATA VALID '.($desa?'':':').number_format($value).' DESA';
                     break;
                 
                 default:
@@ -104,7 +105,11 @@ class NotifChangeDataCtrl extends Controller
                     break;
             }
 
+             
+
         }
+
+
         return $mes;
     }
 
@@ -160,7 +165,8 @@ class NotifChangeDataCtrl extends Controller
         // ->where('updated_at','<=',$waktu_end)
         // ->where('tahun',date('Y'))
         ->where('status',0)
-        ->limit(10)->get();
+        ->get();
+
 
         foreach ($data as $keyi => $value) {
             $dmeta=static::level(strlen($value->kode_daerah));
@@ -179,15 +185,17 @@ REKAP DATA '.strtoupper($waktu->format('d F Y')).'
 ';
 $nom=0;
 foreach ($value as $key => $v) {
-    $stat=static::mes_them($key,$v);
-    if($stat){
-    $nom++;
+    
+        $stat=static::mes_them($key,$v);
+        if($stat){
+            $nom++;
 
-$message.='
-'.($nom).'. '.static::mes_them($key,$v).'';
+            $message.='
+            '.($nom).'. '.static::mes_them($key,$v).'';
 
 
-    }
+            }
+    
 }
 
 

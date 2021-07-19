@@ -57,6 +57,7 @@ class WaBlash extends Notification
             ->to($notifiable->routes['chatapi']) // your user phone
             // ->file(public_path('dist-web/logo.png'),'logo.png','sss')
             ->content($this->message['content']);
+            
     }
 
     /**
