@@ -9,6 +9,8 @@ Route::get('ping-pong-pemdes',function(){
 	return view('game.pingpong.index');
 })->name('game.pingpong');
 
+
+
 Route::get((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'/'),function(){
 	return redirect()->route('index',['tahun'=>env('TAHUN')]);
 })->name('home');
@@ -18,6 +20,7 @@ Route::get((config('proepdeskel.maintenance.status')?config('proepdeskel.mainten
 })->name('home.index');
 
 Route::get('init','InitCtrl@init');
+
 Route::get('check',function(){
 	dd(DB::table('master_desa')->count());
 });

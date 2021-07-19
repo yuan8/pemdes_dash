@@ -8,9 +8,7 @@ dsds',
   ),
   'running_text' => 
   array (
-    'popup_announcement_text' => 'dsdskkl
-dsdksjk
-djskdjskdj',
+    'popup_announcement_text' => NULL,
   ),
   'wa' => 
   array (

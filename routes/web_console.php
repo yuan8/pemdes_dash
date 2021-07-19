@@ -15,3 +15,10 @@ Route::prefix('init')->group(function(){
 	Route::get('data-table-drop','InitDataCtrl@drop');
 
 });
+
+
+
+Route::post('/api-sso','SSOCtrl@login');
+Route::get('/api-sso-test','SSOCtrl@test');
+
+
