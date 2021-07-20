@@ -323,6 +323,13 @@
                             });
                         }
                     }
+
+                    window.addEventListener('storage', function(e){
+                    
+                        attemp_sso();
+
+                    });
+
                 </script>
                 @php
             }
