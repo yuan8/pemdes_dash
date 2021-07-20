@@ -310,11 +310,11 @@
                     function attemp_sso(){
                         var check_session_sso=localStorage.getItem('_proepdeskel_sso_index_');
                         if((check_session_sso!='{{($A->kode_daerah.'-').$time_day}}')){
+                            console.log(check_session_sso,'{{($A->kode_daerah.'-').$time_day}}')
                             $.post('http://epdeskel.kemendagri.go.id/prodeskel/sso/api_sso',{
                                 'token':'{{$self_token}}',
                                 'id':'{{$A->kode_daerah}}'
                             },function(res){
-
                                 if(res.status_login==200){
                                     localStorage.setItem('_proepdeskel_sso_index_', '{{($A->kode_daerah.'-').$time_day}}');
                                 }
