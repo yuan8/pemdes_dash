@@ -297,7 +297,7 @@
                 $A=Auth::User();
                 $self_token=\Carbon\Carbon::now()->format('dmy').'.'.$A->kode_daerah.'.'.\Carbon\Carbon::now()->format('hi');
                 $self_token=Hash::make($self_token);
-                $time_day=Carbon::now()->parse('d');
+                $time_day=Carbon\Carbon::now()->parse('d');
 
                 @endphp
                 <script type="text/javascript">
