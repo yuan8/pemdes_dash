@@ -302,27 +302,26 @@
                 @endphp
                 <script type="text/javascript">
                     $(function(){
-                        var check_session_sso=localStorage.getItem('_proepdeskel_sso_index_');
-                        if((check_session_sso!='{{($A->kode_daerah.'-').$time_day}}')){
+                        
                             attemp_sso();
-                        }
+                        
                     });
 
                     function attemp_sso(){
-                        $.post('http://epdeskel.kemendagri.go.id/prodeskel/sso/api_sso',{
-                            'token':'{{$self_token}}',
-                            'id':'{{$A->kode_daerah}}'
-                        },function(res){
-                                console.log('sso',res);
+                        var check_session_sso=localStorage.getItem('_proepdeskel_sso_index_');
+                        if((check_session_sso!='{{($A->kode_daerah.'-').$time_day}}')){
+                            $.post('http://epdeskel.kemendagri.go.id/prodeskel/sso/api_sso',{
+                                'token':'{{$self_token}}',
+                                'id':'{{$A->kode_daerah}}'
+                            },function(res){
 
-                            if(res.login_status==200){
-                                localStorage.setItem('_proepdeskel_sso_index_', '{{($A->kode_daerah.'-').$time_day}}');
-                            }
+                                if(res.status_login==200){
+                                    localStorage.setItem('_proepdeskel_sso_index_', '{{($A->kode_daerah.'-').$time_day}}');
+                                }
 
-                            $.get('http://epdeskel.kemendagri.go.id/prodeskel',{},function(res){
-                                console.log(res);
+                               
                             });
-                        });
+                        }
                     }
                 </script>
                 @php
