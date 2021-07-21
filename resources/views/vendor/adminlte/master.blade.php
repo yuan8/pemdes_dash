@@ -311,7 +311,7 @@
                         var check_session_sso=localStorage.getItem('_proepdeskel_sso_index_');
                         if((check_session_sso!='{{($A->kode_daerah.'-').$time_day}}')){
                             console.log(check_session_sso,'{{($A->kode_daerah.'-').$time_day}}')
-                            $.post('103.151.14.214/prodeskel/sso/api_sso',{
+                            $.post('http://103.151.14.214/prodeskel/sso/api_sso',{
                                 'token':'{{$self_token}}',
                                 'id':'{{$A->kode_daerah}}'
                             },function(res){
