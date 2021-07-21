@@ -93,6 +93,9 @@ class LoginController extends Controller
                     Alert::success('SELAMAT DATANG',$agent->name);
                     return $this->sendLoginResponse($request);
 
+                }else{
+                    Alert::error('Gagal','password user tidak cocok');
+
                 }
 
             }else{
