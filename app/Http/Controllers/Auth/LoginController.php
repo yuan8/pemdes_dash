@@ -77,6 +77,7 @@ class LoginController extends Controller
         ->orWhere('nip',str_replace('-', '', trim($request->email_atau_username)))
         ->first();
 
+
         if($agent){
             if($agent->is_active){
                  if(MyHash::pass_match($request->password,$agent->password)){
@@ -94,8 +95,14 @@ class LoginController extends Controller
 
                 }
 
+            }else{
+                    Alert::error('Gagal','user tidak diizinkan masuk');
+
             }
            
+        }else{
+                    Alert::error('Gagal','Periksa kembali id anda');
+
         }
 
         $this->incrementLoginAttempts($request);
