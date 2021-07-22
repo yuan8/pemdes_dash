@@ -361,16 +361,37 @@ class DataCtrl extends Controller
             return abort(404);
         }
 
-
-
-         $valid=Validator::make($req,[
+        $v=[
             'name'=>'string|required',
             'auth'=>'boolean|nullable',
             'description'=>'nullable|string',
             'keywords'=>'array|nullable',
             'publish_date'=>'date|required',
             'id_instansi'=>'numeric|required',
-        ]);
+            'type'=>'required|string|in:VISUALISASI,TABLE,INFOGRAFIS'
+        ];
+
+         $data_up=[
+                'title'=>$request->name,
+                'auth'=>$request->auth,
+                'deskripsi'=>$request->description,
+                'type'=>'TABLE',
+                'publish_date'=>$request->publish_date,
+                'tahun'=>$tahun,
+                'id_user_update'=>Auth::User()->id,
+                'updated_at'=>Carbon::now(),
+                'keywords'=>json_encode($request->keywords??[]),
+
+        ];
+         if(Auth::User()->can('is_wali_daerah_kab')){
+            $v['status']='required|numeric|in:0,1,2';
+            $data_up['status']=$request->status;
+
+        }
+
+
+
+         $valid=Validator::make($req,$v);
 
 
 
@@ -388,21 +409,9 @@ class DataCtrl extends Controller
             }
 
          }
+        
 
-
-         $data=DB::table('tb_data')->where('id',$id)->update([
-                'title'=>$request->name,
-                'auth'=>$request->auth,
-                'deskripsi'=>$request->description,
-                'type'=>'TABLE',
-                'publish_date'=>$request->publish_date,
-                'status'=>0,
-                'tahun'=>$tahun,
-                'id_user_update'=>Auth::User()->id,
-                'updated_at'=>Carbon::now(),
-                'keywords'=>json_encode($request->keywords??[]),
-
-        ]);
+         $data=DB::table('tb_data')->where('id',$id)->update($data_up);
 
         if($data){
             if(Auth::User()->can('is_admin')){
