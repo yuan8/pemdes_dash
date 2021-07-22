@@ -193,7 +193,7 @@ class DataCtrl extends Controller
     }
 
      public function delete($tahun,$id){
-        $data=DB::table('tb_data as d')
+        $data=DB::table('tb_data')
         ->where([
             ['d.id','=',$id],
         ])
