@@ -588,12 +588,12 @@ class HelperP extends ServiceProvider
                 break;
 
             case 'TABLE':
-             return route('data.vis.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title)]);
+             return route('data.table.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title)]);
                 # code...
                 break;  
                           
             case 'INFOGRAFIS':
-             return route('data.vis.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title)]);
+             return route('data.infograp.detail',['tahun'=>$GLOBALS['tahun_access'],'id'=>$data->id,'slug'=>Str::slug($data->title)]);
                 # code...
                 break;
             default:

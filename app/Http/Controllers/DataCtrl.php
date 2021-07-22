@@ -696,8 +696,7 @@ class DataCtrl extends Controller
         ->where('tahun',($tahun))
         ->selectRaw("d.*,tb.path_file,tb.size")
         ->whereRaw(implode(" and ", $whereRaw))
-        ->where('d.id',$id)->tosql();
-        dd($data);
+        ->where('d.id',$id)->first();
 
         if($data){
             if(file_exists(public_path($data->path_file))){
