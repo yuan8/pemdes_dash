@@ -215,7 +215,7 @@ class DataCtrl extends Controller
         $now=Carbon::now();
         $Defwhere=[
             "dt.status=1",
-            "di.id=".$id,
+            "i.id=".$id,
             "dt.publish_date <= '".$now."'"
         ];
 
