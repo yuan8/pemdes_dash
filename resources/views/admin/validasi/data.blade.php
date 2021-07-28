@@ -114,11 +114,15 @@
 		
 			@elseif($berita_acara['access'])
 				@if($berita_acara['berita_acara'])
+
+					
 					<a href="{{$berita_acara['berita_acara']}}" download="" class="btn btn-primary">DOWNLOAD BERITA ACARA</a>
-						@if($time_count_down and (strlen($kode_daerah)==4))
+						@if($time_count_down and (strlen($kode_daerah)==4) and ($berita_acara['pengesahan']==null))
+
 
 							<button onclick="hapus_berita_acara('{{route('admin.validasi.berita_acara.delete',array_merge(['tahun'=>$GLOBALS['tahun_access'],'kdkabkota'=>$req['kdkabkota'],'data'=>$req['data']]))}}')" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS BERITA ACARA</button>
 						@else
+
 						@can('is_admin')
 						@if((strlen($kode_daerah)==4))
 						<button onclick="hapus_berita_acara('{{route('admin.validasi.berita_acara.delete',array_merge(['tahun'=>$GLOBALS['tahun_access'],'kdkabkota'=>$req['kdkabkota'],'data'=>$req['data']]))}}')" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS BERITA ACARA</button>
@@ -158,7 +162,30 @@
 @php
 @endphp
 @if($berita_acara['berita_acara'] and in_array(Auth::User()->role,[1,2,4]) )
+<div id="data-edited"></div>
+<table class="table-bordered table" id="data-table"></table>
+	
+	<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#data-b">DATA BERITA ACARA</a></li>
+  @if($berita_acara['pengesahan'])
+
+  <li><a data-toggle="tab" href="#pengesahan-b">LEMBAR PENGESAHAN</a></li>
+  @endif
+</ul>
+
+<div class="tab-content">
+  <div id="data-b" class="tab-pane fade in active">
 <iframe src="{{$berita_acara['berita_acara']}}" style="width:100%; border:none; height: 500px;" ></iframe>
+   
+  </div>
+  @if($berita_acara['pengesahan'])
+  <div id="pengesahan-b" class="tab-pane fade">
+<iframe src="{{$berita_acara['pengesahan']}}" style="width:100%; border:none; height: 500px;" ></iframe>
+   
+  </div>
+  @endif
+  
+</div>
 @else
 <div class="box box-primary">
 	<div id="data-edited">

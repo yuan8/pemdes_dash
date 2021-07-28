@@ -658,20 +658,28 @@ class HelperP extends ServiceProvider
 
         $berita=file_exists(storage_path('app/public/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-full.pdf'));
         
-     
+        $pengesahan=null;
+        if($berita){
+            $pengesahan=file_exists(storage_path('app/public/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-ttd.pdf'));
+        }
+
         if($len==4){
              return [
                 'access'=>true,
                 'access_form'=>false,
                 'access_berita_acara'=>Auth::User()->can('is_daerah_kabkota_n_admin'),
-                'berita_acara'=>$berita?url('storage/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-full.pdf?v='.date('d-m-y-h:i')):null
+                'berita_acara'=>$berita?url('storage/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-full.pdf?v='.date('d-m-y-h:i')):null,
+                'pengesahan'=>$pengesahan?url('storage/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-ttd.pdf?v='.date('d-m-y-h:i')):null
+
+
             ];
          }else if($len>4){
             return [
                 'access'=>true,
                 'access_form'=>false,
                 'access_berita_acara'=>Auth::User()->can('is_daerah_kabkota_n_admin'),
-                'berita_acara'=>$berita?route('admin.validasi.berita_acara.build_daerah',['tahun'=>$tahun,'data'=>$id_table,'kode_daerah'=>$kode_daerah]):null
+                'berita_acara'=>$berita?route('admin.validasi.berita_acara.build_daerah',['tahun'=>$tahun,'data'=>$id_table,'kode_daerah'=>$kode_daerah]):null,
+                'pengesahan'=>$pengesahan?url('storage/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-ttd.pdf?v='.date('d-m-y-h:i')):null
             ];
          }
 
@@ -680,7 +688,8 @@ class HelperP extends ServiceProvider
             return ['access'=>false,
                 'access_form'=>false,
                 'access_berita_acara'=>false,
-                'berita_acara'=>null
+                'berita_acara'=>null,
+                'pengesahan'=>$pengesahan?url('storage/berita-acara/'.$kode_kota.'/'.$tahun.'/data-'.static::kode_data($kode_kota,$id_table).'-ttd.pdf?v='.date('d-m-y-h:i')):null
             ];
          }
        
