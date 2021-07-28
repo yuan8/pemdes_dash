@@ -302,15 +302,29 @@ class ValidasiCtrl extends Controller
 
             $defwhere_rekap=$defwhere;
     		
+            if($maping['level_data']['child']['count']==10){
+                $defJoin=[
+                    [
+                        DB::raw("dt.kode_desa"),
+                        '=',
+                        $maping['level_data']['child']['column_id']
+                    ],
+                    ['dt.tahun','=',DB::raw($tahun)]
+                ];
 
-    		$defJoin=[
-    			[
-					DB::raw("left(dt.kode_desa,".($maping['level_data']['child']['count']==0?2:$maping['level_data']['child']['count']).")"),
-					'=',
-					$maping['level_data']['child']['column_id']
-				],
-				['dt.tahun','=',DB::raw($tahun)]
-    		];
+            }else{
+                $defJoin=[
+                        [
+                            DB::raw("left(dt.kode_desa,".($maping['level_data']['child']['count']==0?2:$maping['level_data']['child']['count']).")"),
+                            '=',
+                            $maping['level_data']['child']['column_id']
+                        ],
+                        ['dt.tahun','=',DB::raw($tahun)]
+                 ];
+
+            }
+
+    		
 
     		$OrWhere=[];
 

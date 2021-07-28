@@ -234,7 +234,6 @@ class BeritaAcaraCtrl extends Controller
 
         }
 
-        dd($data);
         return view('admin.beritaacara.rekap.index')->with(['rekap'=>$rekap,'count'=>count($data)]);
 
     }
@@ -421,6 +420,8 @@ class BeritaAcaraCtrl extends Controller
 
                 }
             }
+
+            
 
 
             if(isset($data_q[$kdkecamatan])){

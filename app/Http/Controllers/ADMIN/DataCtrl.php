@@ -166,7 +166,6 @@ class DataCtrl extends Controller
                     # code...
                     return static::edit_table($tahun,$id);
                     break;
-
                 case 'INFOGRAFIS':
                     # code...
                     return static::edit_infografis($tahun,$id);
