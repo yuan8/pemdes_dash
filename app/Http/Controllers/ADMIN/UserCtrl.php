@@ -24,19 +24,25 @@ class UserCtrl extends Controller
 
 
     public function index($tahun,Request $request){
-        $data=User::where('id','!=',Auth::User()->id);
         
+        $U=Auth::User();
+        if($U->can('ac_super')){
+        $data=User::where('id','!=',Auth::User()->id);
 
-        if(Auth::User()->role==4 && Auth::User()->main_daerah){
-            $data=User::where('kode_daerah','like',Auth::User()->kode_daerah.'%');
-        }else{
         }
+        else if($U->can('ac_daerah') && Auth::User()->main_daerah){
+            $data=User::where('kode_daerah','like',Auth::User()->kode_daerah.'%');
+        }else if($U->can('ac_admin')){
+            return abort(404);
+        }
+
+        
 
         if($request->q){
             $data=$data->where('name','like','%'.$request->q.'%');
         }
 
-        $data=$data->orderBy('kode_daerah','asc')->paginate(10);
+        $data=$data->where('id','!=',Auth::User()->id)->orderBy('kode_daerah','asc')->paginate(10);
 
         return view('admin.users.index')->with(['data'=>$data]);
 
@@ -65,14 +71,13 @@ class UserCtrl extends Controller
                 'nomer_telpon'=>$request->nomer_telpon,
                 'wa_number'=>$request->wa_number=='on'?true:false,
                 'wa_notif'=>$request->wa_notif=='on'?true:false,
-                'is_active'=>$request->is_active?true:false,
                 'nik'=>$request->nik?str_replace('-', '', trim($request->nik)):null,
                 'nip'=>$request->nip?trim($request->nip):null,
                 'api_access'=>$request->api_access?(true):false,
 
             ];
 
-            if($u->can('is_admin')){
+            if($u->can('ac_super')){
                     $data['role']=$request->role;
             }else if($ue->role){
                     $data['role']=$ue->role;
@@ -114,21 +119,22 @@ class UserCtrl extends Controller
 
 
             if($valid->fails()){
-
                 Alert::error('Gagal',$valid->errors()->first());
                 return back();
             }
 
-
-
+           
             $check=DB::table('users')->whereRaw(
                 "
                 (id != ".$id.") and (username ='".$data['username']."') OR 
-                (id != ".$id.") and (email ='".$data['email']."')
+                (id != ".$id.") and (email ='".$data['email']."') OR
+                (id != ".$id.") and (nik ='".$data['nik']."') OR
+                (id != ".$id.") and (nip ='".$data['nip']."') 
                 "
             )->first();
+
             if($check){
-                 Alert::error('Gagal','username atau email telah digunakan sebelumya');
+                 Alert::error('Gagal','username / email / NIK / NIP telah digunakan sebelumya');
                  return back();
             }
 
@@ -144,20 +150,31 @@ class UserCtrl extends Controller
           
 
             if($u->can('is_super') ){
+                if($request->id_instansi){
+                    DB::table('tb_user_instansi')->updateOrInsert(
+                        ['id_user'=>
 
-                 foreach ($request->instansi??[] as $key => $value) {
-                     DB::table('user_instansi')->insertOrIgnore([
-                        'user_id'=>$id,
-                        'instansi_id'=>$value,
-
-                     ]);
+                        $id]
+                        ,[
+                        'id_user'=>$id,
+                        'id_instansi'=>$request->id_instansi
+                    ]);
                 }
 
-                if($request->instansi){
-                     DB::table('user_instansi')
-                      ->where('user_id',$id)
-                      ->whereNotIn('instansi_id',$request->instansi??[])->delete();
-                }
+
+                // foreach ($request->instansi??[] as $key => $value) {
+                //      DB::table('user_instansi')->insertOrIgnore([
+                //         'user_id'=>$id,
+                //         'instansi_id'=>$value,
+
+                //      ]);
+                // }
+
+                // if($request->instansi){
+                //      DB::table('user_instansi')
+                //       ->where('user_id',$id)
+                //       ->whereNotIn('instansi_id',$request->instansi??[])->delete();
+                // }
                 
                 foreach ($request->role_group??[] as $key => $value) {
                     DB::table('users_group')->insertOrIgnore([
@@ -262,7 +279,10 @@ class UserCtrl extends Controller
     }
 
     public function show($tahun,$id){
-        $data=DB::table('users')->find($id);
+        $data=DB::table('users as u')
+        ->leftJoin('tb_user_instansi as ui','ui.id_user','=','u.id')
+        ->selectRaw('u.*,ui.id_instansi as id_instansi')->where('u.id',$id)->first();
+
         $daerah_access=null;
         if($data){
             $data_regional=[];
@@ -330,14 +350,10 @@ class UserCtrl extends Controller
             }
 
 
-            // dd($data);
-            // 
             $instansi=DB::table('master_instansi as c')
             ->get();
 
-            // dd($instansi);
-             // $instansi_user=DB::table('user_instansi')
-             // ->where('user_id',$id)->select('instansi_id')->get()->pluck('instansi_id')->toArray();
+             
 
             $daerah=DB::table('master_kabkota as k')->join(
                 'master_provinsi as p','p.kdprovinsi','=',DB::raw("LEFT(k.kdkabkota,2)")
@@ -464,6 +480,7 @@ class UserCtrl extends Controller
                 'list_daerah_access'=>static::access_daerah($tahun),
                 'regional_list_acc'=>DB::table('master_regional')->get()->pluck('id'),
                 'regional_list'=>DB::table('master_regional')->get(),
+                'instansi'=>DB::table('master_instansi')->get()
 
             ]);
     }

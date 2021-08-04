@@ -26,6 +26,23 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::define('ac_admin', function ($user) {
+            return $user->role==2;
+        });
+         Gate::define('ac_super', function ($user) {
+            return $user->role==1;
+        });
+
+        Gate::define('ac_daerah', function ($user) {
+            return $user->role==4;
+        });
+
+        Gate::define('ac_regional', function ($user) {
+            return $user->role==3;
+        });
+
+
+
         Gate::define('is_active', function ($user) {
             return $user->is_active;
         });
@@ -81,7 +98,7 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role==4;
         });
 
-         Gate::define('is_daerah_admin', function ($user) {
+        Gate::define('is_daerah_admin', function ($user) {
             return (($user->role==4 and  (!empty($user->kode_daerah)) and $user->main_daerah==true) or ($user->role<=2));
         });
 

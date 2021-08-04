@@ -19,12 +19,15 @@
       </form>
 @else
     @php
-    $m_access=true;
+    $m_access=false;
     if(isset($item['can'])){
        if(Auth::check()){
          if(is_array($item['can'])){
             foreach ($item['can']??[] as $ac){
-                $m_access=($m_access and Auth::User()->can($ac));
+                if(!$m_access){
+                    $m_access=(Auth::User()->can($ac));
+
+                }
             }
         }else{
             if(!empty($item['can'])){
@@ -32,6 +35,8 @@
             }
         }
        }
+    }else{
+        $m_access=true;
     }
 
     if($m_access){

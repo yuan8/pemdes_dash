@@ -18,6 +18,8 @@
 <div class="box box-solid">
 	<div class="box-header with-border">
 		<h4 class="text-center" ><b>{{strtoupper($data->title)}} - {{$GLOBALS['tahun_access']}}</b></h4>
+			
+
 			<div class="box-solid box btn-ov " style="border: 1px solid #fa090a">
 	  		<div class="box-body">
 	  			<p>{!!nl2br($data->deskripsi)!!}</p>

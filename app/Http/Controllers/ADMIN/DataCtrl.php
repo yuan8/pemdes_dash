@@ -40,7 +40,7 @@ class DataCtrl extends Controller
             'type'=>'required|string|in:VISUALISASI,TABLE,INFOGRAFIS'
         ];
 
-        if(Auth::User()->can('is_wali_daerah_kab')){
+        if(Auth::User()->can('ac_super')){
             $v['status']='required|numeric|in:0,1,2';
             $data_up['status']=$request->status;
 
@@ -153,26 +153,39 @@ class DataCtrl extends Controller
 
     public function edit($tahun,$id){
 
-        $data=DB::table('tb_data as dt')->where('id',$id)
-        ->where('tahun',$tahun)->first();
+        $data=DB::table('tb_data as dt')
+        ->join('tb_data_instansi as i','i.id_data','=','dt.id')
+        ->selectRaw('dt.*,i.id_instansi as id_instansi')
+        ->where('dt.id',$id)
+        ->where('dt.tahun',$tahun)->first();
 
+        $U=Auth::User();
         if($data){
+            if($U->can('ac_admin')){
+                $inp=$U->instansi_pusat();
+                if($inp and ($inp->id==$data->id_instansi)){
+
+                }else{
+                    return abort(404);
+                }
+
+            }else if($U->can('ac_daerah')){
+                if($data->kode_daerah!=$U->kode_daerah){
+                    return abort(404);
+                }
+            }
+
             switch ($data->type) {
                 case 'VISUALISASI':
-                    # code...
                     return static::edit_visual($tahun,$id);
                     break;
                 case 'TABLE':
-                    # code...
                     return static::edit_table($tahun,$id);
                     break;
                 case 'INFOGRAFIS':
-                    # code...
                     return static::edit_infografis($tahun,$id);
                     break;
-                
                 default:
-                    # code...
                     break;
             }
         }
@@ -382,7 +395,7 @@ class DataCtrl extends Controller
                 'keywords'=>json_encode($request->keywords??[]),
 
         ];
-         if(Auth::User()->can('is_wali_daerah_kab')){
+         if(Auth::User()->can('ac_super')){
             $v['status']='required|numeric|in:0,1,2';
             $data_up['status']=$request->status;
 
@@ -555,6 +568,7 @@ class DataCtrl extends Controller
             ->where(
                 'type','REGIONAL'
             )->selectRaw('c.id, c.name as text')->get();
+
           }else{
             $instansi=DB::table('master_instansi as c')->selectRaw('c.id, c.name as text')->get();
           }
@@ -683,7 +697,7 @@ class DataCtrl extends Controller
         ];
 
 
-        if(Auth::User()->can('is_wali_daerah_kab')){
+        if(Auth::User()->can('ac_super')){
             $v['status']='required|numeric|in:0,1,2';
             $data_up['status']=$request->status;
 
@@ -1054,8 +1068,14 @@ class DataCtrl extends Controller
             ->first();
         }
 
-        if(Auth::User()->role>3){
+        if(Auth::User()->role==4){
         	 $Defwhere[]="dt.kode_daerah =".Auth::User()->kode_daerah;
+        }
+
+        
+        if(Auth::User()->role==2){
+                $inp=Auth::User()->instansi_pusat();
+             $Defwhere[]="i.id =".($inp?$inp->id:0);
         }
 
 
@@ -1098,15 +1118,16 @@ class DataCtrl extends Controller
 
 
     	$data=DB::table('tb_data as dt')
-        ->leftJoin('tb_data_group as dg','dg.id_data','=','dt.id')
+        ->join('tb_data_group as dg','dg.id_data','=','dt.id')
         ->leftJoin('master_provinsi as pro','pro.kdprovinsi','=','dt.kode_daerah')
         ->leftJoin('master_kabkota as kab','kab.kdkabkota','=','dt.kode_daerah')
         ->leftJoin('master_kecamatan as kc','kc.kdkecamatan','=','dt.kode_daerah')
         ->leftJoin('master_desa as ds','ds.kddesa','=','dt.kode_daerah')
-        ->leftJoin('master_category as c','c.id','=','dg.id_category')
+        ->join('master_category as c','c.id','=','dg.id_category')
         ->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
-        ->leftjoin('master_instansi as i','i.id','=','di.id_instansi')
+        ->join('master_instansi as i','i.id','=','di.id_instansi')
         ->leftjoin('users as usc','usc.id','=','dt.id_user')
+
         ->leftjoin('users as usu','usu.id','=','dt.id_user_update')
         ->whereRaw(implode(' OR ',$whereRaw))
         ->groupBy('dt.id')

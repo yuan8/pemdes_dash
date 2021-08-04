@@ -2,13 +2,13 @@
 @section('content_header')
 <h4>DATA</h4>
 <div class="btn-group">
-	@can('is_only_daerah')
+	@if(Auth::User()->role!=1)
 <a href="{{route('admin.data.create',['tahun'=>$GLOBALS['tahun_access'],'type'=>'VISUALISASI'])}}" class="btn btn-success">TAMBAH DATA VISUALISASI</a>
 <a href="{{route('admin.data.create',['tahun'=>$GLOBALS['tahun_access'],'type'=>'TABLE'])}}" class="btn btn-success">TAMBAH DATA TABLE</a>
 
 
 <a href="{{route('admin.data.create',['tahun'=>$GLOBALS['tahun_access'],'type'=>'INFOGRAFIS'])}}" class="btn btn-success">TAMBAH DATA INFOGRAFIS</a>
-	@endcan
+	@endif
 	
 </div>
 <style type="text/css">

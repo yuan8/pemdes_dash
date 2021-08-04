@@ -112,6 +112,15 @@ $CONF_MENU=MENUS::admin();
                 </div>
                 @endcan
 
+            @can('ac_admin')
+                @if(Auth::User()->instansi_pusat())
+                    <div class="bg-yellow text-center" style=" color:#222!important; margin-top: 10px;">
+                        <b>INSTANSI {{Auth::User()->instansi_pusat()->name}}</b>
+                </div>
+                @endif
+
+            @endcan
+
             @if(config($CONF_THEM.'.layout') == 'top-nav')
             <div class="container-full">
             @endif

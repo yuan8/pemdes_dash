@@ -20,10 +20,10 @@
 					<div class="box-body">
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group">
+								{{-- <div class="form-group">
 									<label>Akses API</label>
 									<p><span>	<input type="checkbox" name="api_access"  class="flat-red"  v-model="user.api_access"></span> @{{user.api_access?'Dapat Diakses':'Tidak'}}</p>
-								</div>
+								</div> --}}
 								
 								<div class="form-group">
 									<label>Email</label>
@@ -155,18 +155,20 @@
 				  	<div class="row">
 				      @csrf
 
-				      <div class="col-md-12" v-if="user.role==3||user.role==4">
+				      <div class="col-md-12" v-if="user.role==3||user.role==4||user.role==2">
 				        <div class="box box-solid">
 
+				         
 				          <div class="box-header with-header">
-				            <h5><b>AKSES DAERAH - 
+				            <h5><b>AKSES @{{user.role==2?'':'DAERAH'}} - 
 				                 </b>  <small>@{{user.role==3?'REGIONAL':'	'}}</small></h5> 
 				                <input type="hidden" name="action_to" class="action_to" value="">
 
 				          </div>
 				          <div class="box-body">
-				 		 @can('is_super')
 
+				 		 @can('is_super')
+				 		
 				            <div v-if="user.role==3" >
 				            	<div class="form-group">
 
@@ -179,10 +181,16 @@
 				            </div>
 
 				            </div>
-				    @endcan
-				    		@can('is_admin')
+				   	 @endcan
+				    		@can('is_super')
 				    		<div class="form-group" v-if="parseInt(user.role)==4">
 				    			<label>Level User</label>
+				    			<select class="form-control" v-model="scope">
+				    				<option v-for="i in list_scope" v-if=""  v-bind:value="i.id">@{{i.text}}</option>	
+				    			</select>
+				    		</div>
+				    		<div class="form-group" v-if="parseInt(user.role)==2">
+				    			<label>Instansi</label>
 				    			<select class="form-control" v-model="scope">
 				    				<option v-for="i in list_scope" v-if=""  v-bind:value="i.id">@{{i.text}}</option>	
 				    			</select>
@@ -264,7 +272,8 @@ var headVue=new Vue({
 				nik:'{{old('nik')}}',
 				nip:'{{old('nip')}}',
 				name:'{{old('name')}}',
-				role:{{Auth::User()->role==4?4:old('role')??0}},
+				id_instansi:{{old('id_instansi')??0}},
+				role:{{Auth::User()->role==4?4:(old('role')??4)}},
 				daerah_selected:null,
 				daerah_selected_regional:null,
 				main_daerah:{!!old('main_daerah')?'true':'false'!!},
@@ -282,7 +291,9 @@ var headVue=new Vue({
 			},
 			disabled_account:false,
 			listing_daerah:[],
-			scope:{{strlen(Auth::User()->kode_daerah)}},
+			instansi_list:<?=json_encode($instansi)?>,
+
+			scope:{{strlen(Auth::User()->kode_daerah)??4}},
 			list_scope:[
 
 			

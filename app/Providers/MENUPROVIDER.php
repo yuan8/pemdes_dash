@@ -117,7 +117,6 @@ class MENUPROVIDER extends ServiceProvider
             'top'=>[],
             'side_left'=>[
 
-
                 'Tahun Data '.$GLOBALS['tahun_access'],
                 [
                     'text'=>('MANAJEMEN INSTANSI'),
@@ -142,14 +141,14 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.users.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-users',
-                    'can'=>['is_daerah_admin']
+                    'can'=>['ac_super','ac_daerah']
                 ],
                  [
                     'text'=>('KATEGORI'),
                     'href'=>route('admin.kategori.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-circle',
-                    'can'=>['is_super']
+                    'can'=>['ac_super']
 
 
                 ],
@@ -160,7 +159,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.tablemap.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-code',
-                    'can'=>['is_super']
+                    'can'=>['ac_super']
 
                 ],
 
@@ -184,7 +183,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.dataview.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
-                    'can'=>['is_super']
+                    'can'=>['ac_super']
 
                 ],
                  [
@@ -192,7 +191,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.data.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
-                    'can'=>['is_daerah_admin']
+                    'can'=>['ac_admin','ac_daerah','ac_super']
 
                 ],
                   [
@@ -200,7 +199,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.validasi.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-check',
-                    'can'=>['all_daerah_data'],
+                    'can'=>['ac_super','ac_daerah','ac_regional','ac_admin'],
 
                 ],
 
@@ -231,7 +230,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.faq.c.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-map',
-                    'can'=>['is_admin']
+                    'can'=>['ac_super']
                     
 
                 ],
@@ -240,7 +239,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.faq.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-map',
-                    'can'=>['is_admin']
+                    'can'=>['ac_super']
                     
 
                 ],
@@ -249,7 +248,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.forum.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-users',
-                    'can'=>['is_admin']
+                    'can'=>['ac_super']
                     
 
                 ],
@@ -260,7 +259,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.session.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-circle',
-                    'can'=>['is_super']
+                    'can'=>['ac_super']
 
 
                 ],
@@ -269,7 +268,7 @@ class MENUPROVIDER extends ServiceProvider
                     'href'=>route('admin.setting.index',['tahun'=>$tahun]),
                     'class'=>'',
                     'icon'=>'fa fa-file',
-                    'can'=>['is_admin']
+                    'can'=>['ac_super']
 
                 ],
                 

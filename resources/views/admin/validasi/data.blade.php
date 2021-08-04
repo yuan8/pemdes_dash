@@ -635,11 +635,11 @@
 									</span>
 								</div>
 							</div>
-							<div class="form-group" v-if="(column.interval_nilai.length>0)">
+								<div class="form-group" v-if="(column.interval_nilai.length>0)">
 								<label>@{{column.name}}</label>
 								<div class="input-group">
 									<select  name="" class="form-control" v-model="data[i]">
-										<option v-bind:value="i" v-for="(v) in column.interval_nilai">@{{i}}</option>
+										<option v-bind:value="vi" v-for="vi in column.interval_nilai">@{{vi}}</option>
 									</select>
 									<span class="input-group-btn">
 										<button type="button" class="btn" disabled="">@{{column.satuan}}</button>
@@ -664,7 +664,7 @@
 								<label>@{{column.name}}</label>
 								<div class="input-group">
 									<select  name="" class="form-control" v-model="data[i]">
-										<option v-bind:value="v" v-for="(v) in column.interval_nilai">@{{v}}</option>
+										<option v-bind:value="vi" v-for="vi in column.interval_nilai">@{{vi}}</option>
 									</select>
 									<span class="input-group-btn">
 										<button type="button" class="btn" disabled="">@{{column.satuan}}</button>
@@ -717,7 +717,9 @@
 					}else{
 						this.data_column_2['data_'+i]=this.data_column['data_'+i];
 					}
-				}				
+				}		
+
+				console.log(this.data_column);		
 
 
 				$("#modal-edit").modal();

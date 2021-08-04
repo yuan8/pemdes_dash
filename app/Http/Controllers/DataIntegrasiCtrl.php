@@ -45,8 +45,7 @@ class DataIntegrasiCtrl extends Controller
 
 
 
-        	
-
+ 
 
 	        $data_query=
 	        DB::table($maping['level_data']['child']['table'].' as da')
@@ -64,8 +63,9 @@ class DataIntegrasiCtrl extends Controller
 			->groupBy($maping['level_data']['child']['column_id'])
 			->orderBy($maping['level_data']['child']['column_id'],'asc')
 			->where('dt.tahun','=',DB::raw($tahun))
-			->where('dt.kode_desa','like',DB::raw("'".$maping['level_data']['kode_daerah'].'%'."'"))
-			->get();
+			->where('dt.kode_desa','like',DB::raw("'".$maping['level_data']['kode_daerah'].'%'."'"));
+
+			$data_query=$data_query->get();
 
 
 		}
@@ -73,7 +73,6 @@ class DataIntegrasiCtrl extends Controller
 		return view('show_data.view.table_desa')->with([
 			'data'=>$data_query,
 			'table_meta'=>$maping,
-			''
 		]);
 
 
@@ -124,9 +123,16 @@ class DataIntegrasiCtrl extends Controller
 			->groupBy($maping['level_data']['child']['column_id'])
 			->orderBy($maping['level_data']['child']['column_id'],'asc')
 			->where('dt.tahun','=',DB::raw($tahun))
-			->where('dt.kode_desa','like',DB::raw("'".$maping['level_data']['kode_daerah'].'%'."'"))
-			->where('dt.status_validasi',5)			
-			->get();
+			->where('dt.kode_desa','like',DB::raw("'".$maping['level_data']['kode_daerah'].'%'."'"));
+
+			if($maping['validate']){
+						
+				$data_query=$data_query->where('dt.status_validasi',5);
+			}
+
+			$data_query=$data_query->get();
+
+
 
 
 

@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use HP;
+use DB;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -44,6 +45,13 @@ class User extends Authenticatable
         }else{
             return null;
         }
+    }
+
+    public function instansi_pusat(){
+        return DB::table('tb_user_instansi as ui')
+        ->selectRaw('i.*')
+        ->join('master_instansi as i','i.id','=','ui.id_instansi')
+        ->where('ui.id_user',$this->id)->first();
     }
 
     public function routeNotificationForChatAPI(){

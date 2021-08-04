@@ -84,7 +84,7 @@ class DataCtrl extends Controller
         ->leftJoin('master_desa as ds','ds.kddesa','=','dt.kode_daerah')
         ->leftJoin('master_category as c','c.id','=','dg.id_category')
         ->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
-        ->leftjoin('master_instansi as i','i.id','=','di.id_instansi')
+        ->join('master_instansi as i','i.id','=','di.id_instansi')
         ->whereRaw(implode(' OR ',$whereRaw))
         ->groupBy('dt.id')
         ->orderBy('dt.updated_at')
@@ -146,7 +146,6 @@ class DataCtrl extends Controller
             $where[]="kc.nmkecamatan like '%".$request->q."%' ";
             $where[]="ds.nmdesa like '%".$request->q."%' ";
             $where[]="replace(replace(c.type,'TEMA_',''),'_',' ') like '%".$request->q."%' ";
-
         }
 
         $whereRaw=[];
@@ -163,7 +162,6 @@ class DataCtrl extends Controller
                 if(count($q)){
                     $whereRaw[$key]='('.implode(' and ',$q).')';
                 }
-
 
             }
         }else{
@@ -182,7 +180,7 @@ class DataCtrl extends Controller
         ->leftJoin('master_desa as ds','ds.kddesa','=','dt.kode_daerah')
         ->leftJoin('master_category as c','c.id','=','dg.id_category')
         ->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
-        ->leftjoin('master_instansi as i','i.id','=','di.id_instansi')
+        ->join('master_instansi as i','i.id','=','di.id_instansi')
         ->whereRaw(implode(' OR ',$whereRaw))
         ->groupBy('dt.id')
         ->orderBy('dt.updated_at')
@@ -216,7 +214,8 @@ class DataCtrl extends Controller
         $Defwhere=[
             "dt.status=1",
             "i.id=".$id,
-            "dt.publish_date <= '".$now."'"
+            "dt.publish_date <= '".$now."'",
+            "(CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end)"
         ];
 
         $where=[];
@@ -232,7 +231,6 @@ class DataCtrl extends Controller
             $where[]="kc.nmkecamatan like '%".$request->q."%' ";
             $where[]="ds.nmdesa like '%".$request->q."%' ";
             $where[]="replace(replace(c.type,'TEMA_',''),'_',' ') like '%".$request->q."%' ";
-
         }
 
         $whereRaw=[];
@@ -268,7 +266,7 @@ class DataCtrl extends Controller
         ->leftJoin('master_desa as ds','ds.kddesa','=','dt.kode_daerah')
         ->leftJoin('master_category as c','c.id','=','dg.id_category')
         ->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
-        ->leftjoin('master_instansi as i','i.id','=','di.id_instansi')
+        ->join('master_instansi as i','i.id','=','di.id_instansi')
         ->whereRaw(implode(' OR ',$whereRaw))
         ->groupBy('dt.id')
         ->orderBy('dt.updated_at')
@@ -363,7 +361,7 @@ class DataCtrl extends Controller
         ->leftJoin('master_desa as ds','ds.kddesa','=','dt.kode_daerah')
         ->leftJoin('master_category as c','c.id','=','dg.id_category')
         ->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
-        ->leftjoin('master_instansi as i','i.id','=','di.id_instansi')
+        ->join('master_instansi as i','i.id','=','di.id_instansi')
         ->whereRaw(implode(' OR ',$whereRaw))
         ->groupBy('dt.id')
         ->orderBy('dt.updated_at')
@@ -498,11 +496,12 @@ class DataCtrl extends Controller
         ->leftJoin('master_desa as ds','ds.kddesa','=','dt.kode_daerah')
         ->leftJoin('master_category as c','c.id','=','dg.id_category')
         ->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
-        ->leftjoin('master_instansi as i','i.id','=','di.id_instansi')
+        ->join('master_instansi as i','i.id','=','di.id_instansi')
         ->whereRaw(implode(' OR ',$whereRaw))
         ->groupBy('dt.id')
         ->orderBy('dt.updated_at')
         ->selectRaw("dt.*,
+                i.name as i_nama,
                 (
                     (CASE WHEN(dt.type <> 'INTEGRASI') THEN (dt.tahun=".$tahun.") else dt.tahun<=".$tahun." end) 
                 ) as nn,
@@ -555,7 +554,8 @@ class DataCtrl extends Controller
 
 
     public function detail($tahun,$d,$slug,Request $request){
-        $data=DB::table('tb_data as dt')->where('dt.id',$d)
+        $data=DB::table('tb_data as dt')
+        ->where('dt.id',$d)
         ->leftJoin('tb_data_detail_map as dtm','dtm.id_data','=','dt.id')
         ->leftJoin('master_table_map as map','map.id','=','dtm.id_map')
         ->selectRaw("dt.*,dtm.id_map,map.inheritance,map.start_level,map.stop_level")
@@ -758,24 +758,27 @@ class DataCtrl extends Controller
 
      public function visualisasi_index($tahun,$id,$slug,Request $request){
         $whereRaw=[
-            "type = 'VISUALISASI'"
+            "dt.type = 'VISUALISASI'"
         ];
 
         if($request->preview){
             if(Auth::User()->can('is_admin') ){
 
             }else{
-              $whereRaw[]='kode_daerah='.Auth::User()->kode_daerah;
+              $whereRaw[]='dt.kode_daerah='.Auth::User()->kode_daerah;
             }
         }else{
-              $whereRaw[]='status=1';
-              $whereRaw[]="publish_date <= '".Carbon::now()."'";  
+              $whereRaw[]='dt.status=1';
+              $whereRaw[]="dt.publish_date <= '".Carbon::now()."'";  
         }
 
-         $data=DB::table('tb_data as d')
-        ->where('tahun',($tahun))
+         $data=DB::table('tb_data as dt')
+          ->leftJoin('tb_data_instansi as di','di.id_data','=','dt.id')
+        ->join('master_instansi as i','i.id','=','di.id_instansi')
+        ->where('dt.tahun',($tahun))
+        ->selectRaw('dt.*,i.name as i_nama')
         ->whereRaw(implode(" and ", $whereRaw))
-        ->where('id',$id)->first();
+        ->where('dt.id',$id)->first();
 
         if($data){
             config([

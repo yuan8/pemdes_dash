@@ -19,15 +19,12 @@ class DataGroup extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('id_data')->unsigned();
             $table->bigInteger('id_category')->unsigned();
-
             $table->foreign('id_category')
                   ->references('id')->on('master_category')
                   ->onDelete('cascade')->onUpdate('cascade');
-
              $table->foreign('id_data')
                   ->references('id')->on('tb_data')
                   ->onDelete('cascade')->onUpdate('cascade');
-
         });
     }
 

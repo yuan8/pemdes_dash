@@ -402,7 +402,6 @@ class HelperP extends ServiceProvider
             $column_map=$column_map->where('cm.validate',true);
         }else{
             $column_map=$column_map->where('cm.dashboard',true);
-
         }
 
 
@@ -474,6 +473,7 @@ class HelperP extends ServiceProvider
             'level_data'=>$datam[$count],
             'columns'=>$map_c,
             'column'=>$column,
+            'validate'=>$table_m->edit_daerah,
             'desk_table_map'=>isset($table_m->deskripsi)?$table_m->deskripsi:'',
             'id_map'=>$data->id_map,
             'data_table'=>$table_m->table.' as dt',
@@ -761,6 +761,7 @@ class HelperP extends ServiceProvider
             
             default:
                 # code...
+                return null;
                 break;
         }
 

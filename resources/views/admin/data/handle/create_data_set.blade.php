@@ -164,12 +164,18 @@
 					@if(Auth::User()->role<=3)
 					<div class="form-group">
 						<label>Instansi</label>
-						
 						<select class="form-control" id="instansi"   name="id_instansi" required="">
-							
-							@foreach ($instansi??[] as $i)
-								<option value="{{$i->id}}">{{$i->text}}</option>
-							@endforeach	
+							@can('ac_super')
+								@foreach ($instansi??[] as $i)
+									<option value="{{$i->id}}">{{$i->text}}</option>
+								@endforeach	
+							@endcan
+							@can('ac_admin')
+								@php
+									$inp=Auth::User()->instansi_pusat()
+								@endphp
+								<option value="{{$inp?$inp->id:''}}">{{$inp?$inp->name:''}}</option>
+							@endcan
 						</select>
 					</div>
 

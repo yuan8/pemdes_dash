@@ -18,6 +18,25 @@
 <div class="box box-solid">
 	<div class="box-header with-border">
 		<h4 class="text-center" ><b>{{strtoupper($data->title)}} - {{$GLOBALS['tahun_access']}}</b></h4>
+			<table id="data-meta-table">
+				<thead>
+					<tr>
+						<th><i class="fa fa-flag"></i> {{ $data->i_nama}}</th>
+						<th><i class="fa  fa-map-marker"></i> {{ HP::daerah_level($data->kode_daerah)??'PUSAT'}}</th>
+					</tr>
+				</thead>
+			</table>
+			<style type="text/css">
+				#data-meta-table{
+					margin-left: 20px;
+					max-width: 80%;
+
+					margin-bottom: 10px;
+				}
+				#data-meta-table th{
+					padding-right: 10px;
+				}
+			</style>
 			<div class="box-solid box btn-ov " style="border: 1px solid #fa090a">
 	  		<div class="box-body">
 	  			<p>{!!nl2br($data->deskripsi)!!}</p>

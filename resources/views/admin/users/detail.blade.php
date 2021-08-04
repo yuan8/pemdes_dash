@@ -140,17 +140,26 @@
 				  	<div class="row">
 				      @csrf
 
-				      <div class="col-md-12" v-if="user.role==3||user.role==4">
+				      <div class="col-md-12" v-if="user.role==3||user.role==4||user.role==2">
 				        <div class="box box-solid">
 
+
 				          <div class="box-header with-header">
-				            <h5><b>AKSES DAERAH - 
+				            <h5><b>AKSES @{{user.role==2?'':'DAERAH'}} - 
 				                 </b>  <small>@{{user.role==3?'REGIONAL':'	'}}</small></h5> 
 				                <input type="hidden" name="action_to" class="action_to" value="">
 
 				          </div>
 				          <div class="box-body">
+
 				 		 @can('is_super')
+				 		 <div class="form-group" v-if="user.role==2">
+				    			<label>Instansi</label>
+				    			<select class="form-control" v-model="user.id_instansi" required="">
+				    				<option v-for="i in instansi_list"  v-bind:value="i.id">@{{i.name}}</option>	
+				    			</select>
+				    		</div>
+				    		<input type="hidden" name="id_instansi" v-model="user.id_instansi">
 
 				            <div v-if="user.role==3" >
 				            	<div class="form-group">
@@ -169,18 +178,19 @@
 
 				            </div>
 				    @endcan
-				    		@can('is_admin')
+				    		@can('is_super')
 				    		<div class="form-group" v-if="user.role==4">
 				    			<label>Level User</label>
-				    			<select class="form-control" v-model="scope">
+				    			<select class="form-control" v-model="scope" required="">
 				    				<option v-for="i in list_scope"  v-bind:value="i.id">@{{i.text}}</option>	
 				    			</select>
 				    		</div>
+
 				    		@endcan
 
 				    		@can('is_daerah')
 				            <div class="form-group" v-if="user.role==4 && scope>=2">
-				              <select class="form-control" id="daerah_akses" name="kode_daerah"  v-model="user.kode_daerah">
+				              <select class="form-control" id="daerah_akses" name="kode_daerah"  v-model="user.kode_daerah" required="">
 				              @if(Auth::User()->role==4)
 				              		@foreach($list_daerah_access as $l)
 					               		 <option value="{{$l->id}}"   >{{$l->text}}</option>
@@ -286,6 +296,7 @@ var headVue=new Vue({
 			user:<?= json_encode($data)?>,
 			disabled_account:false,
 			listing_daerah:[],
+			instansi_list:<?=json_encode($instansi)?>,
 			scope:{{strlen(Auth::User()->kode_daerah)}},
 			list_scope:[
 
