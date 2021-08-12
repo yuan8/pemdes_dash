@@ -510,6 +510,7 @@ class UserCtrl extends Controller
             Alert::error('Gagal',$valid->errors()->first());
             return back()->withInput();
         }
+        $u=Auth::User();
 
 
         $data_insert=[
@@ -533,6 +534,22 @@ class UserCtrl extends Controller
          $data=DB::table('users')->insertOrIgnore($data_insert);
 
         if($data){
+
+            if($u->can('is_super') ){
+                if($request->id_instansi){
+                    DB::table('tb_user_instansi')->updateOrInsert(
+                        ['id_user'=>
+
+                        $id]
+                        ,[
+                        'id_user'=>$id,
+                        'id_instansi'=>$request->id_instansi
+                    ]);
+                }
+
+            }
+
+
             Alert::success('Berhasil','User Berhasil Ditambahkan');
             return redirect()->route('admin.users.index',['tahun'=>$GLOBALS['tahun_access']]);
         }else{

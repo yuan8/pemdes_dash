@@ -168,20 +168,31 @@
 				          <div class="box-body">
 
 				 		 @can('is_super')
-				 		
+				 		 <div class="form-group" v-if="user.role==2">
+				    			<label>Instansi</label>
+				    			<select class="form-control" v-model="user.id_instansi" required="">
+				    				<option v-for="i in instansi_list"  v-bind:value="i.id">@{{i.name}}</option>	
+				    			</select>
+				    		</div>
+				    		<input type="hidden" name="id_instansi" v-model="user.id_instansi">
+
 				            <div v-if="user.role==3" >
 				            	<div class="form-group">
+				            		@php
+				            		// dd(count($regional_list_acc)>0?$regional_list_acc->toArray():['x']);
+				              	@endphp
 
 				              <select class="form-control" id="regional" name="role_group[]" multiple="">
-				                @foreach($regional_list as $l)
-				                <option value="{{$l->id}}" {{in_array($l->id,$regional_list_acc->toArray())?'selected':''}}>{{$l->name}}</option>
+				              	
+				                @foreach($regional_list??[] as $l)
+				                <option value="{{$l->id}}" {{in_array($l->id,count($regional_list_acc)>0?$regional_list_acc->toArray():['x'])?'selected':''}}>{{$l->name}}</option>
 				                @endforeach
 				              </select>
 				             
 				            </div>
 
-				            </div>
-				   	 @endcan
+				          </div>
+				   		 @endcan
 				    		@can('is_super')
 				    		<div class="form-group" v-if="parseInt(user.role)==4">
 				    			<label>Level User</label>
@@ -189,12 +200,7 @@
 				    				<option v-for="i in list_scope" v-if=""  v-bind:value="i.id">@{{i.text}}</option>	
 				    			</select>
 				    		</div>
-				    		<div class="form-group" v-if="parseInt(user.role)==2">
-				    			<label>Instansi</label>
-				    			<select class="form-control" v-model="scope">
-				    				<option v-for="i in list_scope" v-if=""  v-bind:value="i.id">@{{i.text}}</option>	
-				    			</select>
-				    		</div>
+				    		
 				    		@endcan
 
 				    		@can('is_daerah')

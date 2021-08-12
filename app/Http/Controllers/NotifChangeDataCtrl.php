@@ -85,19 +85,19 @@ class NotifChangeDataCtrl extends Controller
         if($value){
             switch ($key) {
                 case 'unhandle':
-                    $mes='DATA BELUM DI VERIFIKASI '.($desa?'':':').number_format($value).' DESA';
+                    $mes='Data Belum Terverifikasi '.($desa?'':':').number_format($value).' Desa';
                     break;
                  case 'ver_10':
-                    $mes='DATA VERF DESA/KEL '.($desa?'':':').number_format($value).' DESA';
+                    $mes='Data Verifikasi Desa/Kel '.($desa?'':':').number_format($value).' Desa';
                     break;
                  case 'ver_6':
-                    $mes='DATA VERF KEC '.($desa?'':':').number_format($value).' DESA';
+                    $mes='Data Verifikasi Kecamatan '.($desa?'':':').number_format($value).' Desa';
                     break;
                 // case 'ver_4':
                 //     $mes='DATA DIVERIFIKASI KOTA/KAB '.$desa?'':':'.number_format($value).' DESA';
                 //     break;
                   case 'valid':
-                    $mes='DATA VALID '.($desa?'':':').number_format($value).' DESA';
+                    $mes='Data Valid '.($desa?'':':').number_format($value).' Desa';
                     break;
                 
                 default:
@@ -183,8 +183,8 @@ class NotifChangeDataCtrl extends Controller
             $table=DB::table('master_table_map')->where('id',$value->id_table_map)->pluck('name')->first();
 
 $message='
-REKAP DATA '.strtoupper($waktu->format('d F Y')).'
-'.$table.' TAHUN '.$value->tahun.' DAERAH '.$daerah.' 
+Rekap Data '.strtoupper($waktu->format('d F Y')).'
+'.ucfirst(strtolower($table)).' Tahun '.$value->tahun.' Daerah '.ucfirst(strtolower($daerah)).' 
 
 ';
 $nom=0;
@@ -201,6 +201,11 @@ foreach ($value as $key => $v) {
             }
     
 }
+
+dd($message);
+
+
+
 
 
     $user=DB::table('users')->where([
@@ -220,7 +225,7 @@ foreach ($value as $key => $v) {
                 $p[]=[$u->nomer_telpon,$table];
                 $m='HALLO '.strtoupper($u->name).' :-)
 '.$message;
-                 $not=Notification::route('chatapi', $u->nomer_telpon)
+                $not=Notification::route('chatapi', $u->nomer_telpon)
                  ->notify(new WaBlash(['content'=>($m)]));
             }
 
