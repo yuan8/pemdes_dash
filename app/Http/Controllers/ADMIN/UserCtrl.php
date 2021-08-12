@@ -532,6 +532,7 @@ class UserCtrl extends Controller
             'is_active'=>((boolean)$request->is_active)==true?true:false
         ];
          $data=DB::table('users')->insertOrIgnore($data_insert);
+         $data=DB::table('users')->where('username',$request->username)->first();
 
         if($data){
 
@@ -540,7 +541,7 @@ class UserCtrl extends Controller
                     DB::table('tb_user_instansi')->updateOrInsert(
                         ['id_user'=>
 
-                        $id]
+                        $data->id]
                         ,[
                         'id_user'=>$id,
                         'id_instansi'=>$request->id_instansi
