@@ -543,7 +543,7 @@ class UserCtrl extends Controller
 
                         $data->id]
                         ,[
-                        'id_user'=>$id,
+                        'id_user'=>$data->id,
                         'id_instansi'=>$request->id_instansi
                     ]);
                 }
