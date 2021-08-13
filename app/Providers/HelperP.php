@@ -127,16 +127,24 @@ class HelperP extends ServiceProvider
         }
     }
 
-    static function maping_row($data,$map){
-        $start_data_col=1;
+    static function maping_row($data,$map,$context=null){
+         $start_data_col=1;
+
         $data_return=[];
          $start_data_row=9;
 
 
+
+        if($context=='HASIL'){
+         $start_data_row=8;
+        }
+
         foreach ($data as $row => $d) {
             $d=(array)$d;
             $start_data_row+=1;
-            $data_build=[
+            
+            if($context!='HASIL'){
+                $data_build=[
                 [
                     'val'=>$d['id'],
                     'row'=>$start_data_row,
@@ -206,8 +214,62 @@ class HelperP extends ServiceProvider
                 
 
             ];
+        }else{
+            $data_build=[
+                 [
+                    'val'=>$row+1,
+                    'row'=>$start_data_row,
+                    'col'=>$start_data_col,
+                    'type'=>'META',
 
-            $col=$start_data_col+8;
+                ],
+                [
+                    'val'=>$d['id'],
+                    'row'=>$start_data_row,
+                    'col'=>$start_data_col+1,
+                    'type'=>'META',
+
+                ],
+                [
+                    'val'=>$d['name'],
+                    'row'=>$start_data_row,
+                    'col'=>$start_data_col+2,
+                    'type'=>'META',
+
+                ],
+                 [
+                    'val'=>$d['nama_kecamatan'],
+                    'row'=>$start_data_row,
+                    'col'=>$start_data_col+3,
+                    'type'=>'META',
+
+                ],
+                [
+                    'val'=>$d['nama_kota'],
+                    'row'=>$start_data_row,
+                    'col'=>$start_data_col+4,
+                    'type'=>'META',
+
+                ],
+                 [
+                    'val'=>static::verifikasi_status($d['status_data']),
+                    'row'=>$start_data_row,
+                    'col'=>$start_data_col+5,
+                    'type'=>'META',
+
+                ],
+                [
+                    'val'=>$d['updated_at']?Carbon::parse($d['updated_at'])->format('Y/m/d'):'',
+                    'row'=>$start_data_row,
+                    'col'=>$start_data_col+6,
+                    'type'=>'META',
+
+                ]
+               
+            ];
+        }
+
+            $col=($start_data_col-1)+count($data_build);
 
             foreach ($map['columns'] as $key => $dx) {
                     $col+=1;
@@ -235,6 +297,10 @@ class HelperP extends ServiceProvider
 
             $data_return[]=$data_build;
         }
+      
+
+
+        
 
 
 

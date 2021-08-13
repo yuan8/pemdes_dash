@@ -109,13 +109,15 @@
 	<div class="col-md-12">
 		<h5>AKSI</h5>
 		<div class="btn-group">
+			@php
+				$reque=(Object)$req;
+			@endphp
+			<a target="_blank" href="{{route('admin.validasi.data',['tahun'=>$GLOBALS['tahun_access'],'data'=>$reque->data,'kdprovinsi'=>$reque->kdprovinsi,'kdkabkota'=>$reque->kdkabkota,'kdkecamatan'=>$reque->kdkecamatan,'kddesa'=>$reque->kddesa,'export_format'=>'HASIL'])}}"  class="btn btn-primary"><i class="fa fa-download"></i> Download Data</a>
 			
 			@if($berita_acara==null)
-		
+			
 			@elseif($berita_acara['access'])
 				@if($berita_acara['berita_acara'])
-
-					
 					<a href="{{$berita_acara['berita_acara']}}" download="" class="btn btn-primary">DOWNLOAD BERITA ACARA</a>
 						@if($time_count_down and (strlen($kode_daerah)==4) and ($berita_acara['pengesahan']==null))
 
@@ -143,11 +145,6 @@
 				<a href="{{url()->full().'&export_format=FORM'}}" download="" class="btn btn-primary"> DOWNLOAD FORM</a>
 					<a href="{{route('admin.validasi.upload',['tahun'=>$GLOBALS['tahun_access'],'kdprovinsi'=>$req['kdprovinsi'],'kdkabkota'=>$req['kdkabkota'],'kdkecamatan'=>$req['kdkecamatan'],'kddesa'=>$req['kddesa'],'data'=>$req['data']])}}" class="btn btn-success ">UPLOAD DATA PERUBAHAN</a>
 			@endif
-	
-			
-			
-
-			
 		</div>
 	</div>
 </div>

@@ -17,6 +17,10 @@ class ValidasiCtrl extends Controller
 {
     
 
+    public function download_data($tahun,Request $request){
+
+    }
+
     public function rekap_verifikasi($tahun){
         $U=Auth::User();
        $map=(array)DB::table('master_table_map as t')->where('edit_daerah',true)->get()->toArray();
@@ -45,9 +49,6 @@ class ValidasiCtrl extends Controller
             }
        }
        return view('admin.validasi.rekap_verifikasi.index')->with('data',$m_r);
-
-       // dd($map);
-
     }
 
     static function daerah_level($kode_daerah){
@@ -238,9 +239,8 @@ class ValidasiCtrl extends Controller
             Alert::warning('','Data Tidak Dapat Dilihat Untuk Saat Ini');
             return back();
         }
-
-
-         $dif=0;
+        
+        $dif=0;
         if($time_input){
             $now=Carbon::now();
             $last=Carbon::parse($time_input->selesai);
@@ -249,42 +249,33 @@ class ValidasiCtrl extends Controller
                 $dif=($dif->total('milliseconds'));
             }else{
                 $dif=0;
-               
             }
-
-
         }
 
-
-
-
-        $jadwal_status=HP::check_jadwal_pengisian($access_data_daerah,$tahun);
-        $expt_jadwal=[
-            'status_jadwal'=>isset($jadwal_status['status_jadwal'])?$jadwal_status['status_jadwal']:false,
-            'jadwal'=>$jadwal_status,
-            'nama_data'=>$mapTb->name
-        ];
-
-
-
-
-        if( $expt_jadwal['status_jadwal']<1){
-                return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
+        $j=false;
+        if($request->export_format){
+            if($request->export_format!='HASIL'){
+                $j=true;
+            }
         }
 
-        // dd($jadwal_status);
-
-
-
+       if(!$j){
+            $jadwal_status=HP::check_jadwal_pengisian($access_data_daerah,$tahun);
+            $expt_jadwal=[
+                'status_jadwal'=>isset($jadwal_status['status_jadwal'])?$jadwal_status['status_jadwal']:false,
+                'jadwal'=>$jadwal_status,
+                'nama_data'=>$mapTb->name
+            ];
+            if( $expt_jadwal['status_jadwal']<1){
+                    return view('admin.validasi.jadwal_excpt')->with($expt_jadwal);
+            }
+       }
 
     	if($check_access and $mapTb){
-
     		$table=DB::table('master_table_map')->where('edit_daerah',true)->get();
-
     		$maping=HP::level_build($mapTb,$access_data_daerah,1,1);
     		$maping['column'][]="da.kddesa as id";
     		$maping['column'][]="da.nmdesa as name";
-
     		$maping['column'][]="da.stapem as status_desa";
     		$maping['column'][]="da.nmkabkota as nama_kota";
     		$maping['column'][]="da.nmkecamatan as nama_kecamatan";
@@ -360,9 +351,6 @@ class ValidasiCtrl extends Controller
 
 					");
 
-
-
-
     		 $data_query=
 		        DB::table($maping['level_data']['child']['table'].' as da')
 				->leftJoin($maping['data_table'],$defJoin)
@@ -377,7 +365,7 @@ class ValidasiCtrl extends Controller
 						// $rekap=$rekap->where($value);
 
 					}
-						$data_query=$data_query->orWhere($value);
+					$data_query=$data_query->orWhere($value);
 						// $rekap=$rekap->orWhere($value);
 
 
@@ -391,7 +379,12 @@ class ValidasiCtrl extends Controller
 
             $rekap=$rekap->where($defwhere_rekap);
 
-            if(in_array(Auth::User()->role,[1,2,3]) or strlen($access_data_daerah)==2){
+            if($request->export_format){
+                $data_query=$data_query->get();
+                $paginate=false;
+
+            }else{
+                if(in_array(Auth::User()->role,[1,2,3]) or strlen($access_data_daerah)==2){
                 $data_query=$data_query->paginate(50);
                 $data_query->appends($request->all());
                 $paginate=true;
@@ -399,13 +392,8 @@ class ValidasiCtrl extends Controller
                 }else{
                 $data_query=$data_query->get();
                 $paginate=false;
-
-
-                }
-
-
-
-           
+                 }
+            }
 
 			if($request->export_format){
                 
@@ -416,7 +404,7 @@ class ValidasiCtrl extends Controller
 
                         break;
                     case 'HASIL':
-                    return static::build_excel('HASIL',$data_query,$maping,$check_access,static::check_form_abl(),$tahun);
+                    static::build_excel('HASIL',$data_query,$maping,$check_access,static::check_form_abl(),$tahun);
                         # code...
                         break;
                     
@@ -447,6 +435,7 @@ class ValidasiCtrl extends Controller
 				'belum'=>((int)$rekap['total'] - (int)$rekap['jumlah_desa_valid']),
 				'verifikasi'=>$rekap['jumlah_desa_ver_'.(strlen($access_data_daerah)<=6?6:strlen($access_data_daerah))]
 			];
+
 
             
 
@@ -539,8 +528,172 @@ class ValidasiCtrl extends Controller
     }
 
 
-    public function build_excel($ext,$data,$maping,$access,$abl_aksi,$tahun){
-    	$rows=HP::maping_row($data,$maping);
+    public static function build_excel_hasil($data,$maping,$daerah_ac,$tahun){
+        $rows=HP::maping_row($data,$maping,'HASIL');
+
+        $HEADSTYLE=[
+            'font' => [
+                'bold' => true,
+                'color'=>[
+                    'argb'=>'FFFFFFFF'
+                ]
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'FF327da8',
+                ],
+                'endColor' => [
+                    'argb' => 'FFFFFFFF',
+                ],
+            ],
+        ];
+
+        $HEADNUMBERSTYLE=[
+            'font' => [
+                'bold' => true,
+                'color'=>[
+                    'argb'=>'FFFFFFFF'
+                ]
+            ],
+            'alignment'=>[
+                'wrapText'=>true,
+                'horizontal'=>'center'
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'FF000000',
+                ],
+                'endColor' => [
+                    'argb' => 'FFFFFFFF',
+                ],
+            ],
+        ];
+
+        $spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('dist-web/HASIL_DATA.xlsx'));
+        $sheet=$spreadsheet->setActiveSheetIndex(1);
+
+        $DATASTYLE=[
+            'font' => [
+                'bold' => true,
+
+            ],
+            'alignment'=>[
+                'wrapText'=>true,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+            
+        ];
+
+        $row_start=7;
+        $them_interval=[];
+        foreach (['NAMA DATA','SATUAN','DEFINISI','TIPE DATA','INTERVAL NILAI'] as $key => $value) {
+            # code...
+            $sheet->getCell(static::nta($key+2).($row_start-1))
+                                ->setValue($value);
+        }
+
+        $nomer=0;
+        foreach ($maping['columns'] as $key => $c) {
+            $nomer+=1;
+            $sheet->getCell(static::nta(1).($row_start))
+                                ->setValue($nomer);
+
+            foreach(['name','satuan','definisi','tipe_data','interval_nilai'] as $col=>$v){
+
+                if($v=='interval_nilai'){
+                    if($c['interval_nilai']){
+                        $interval=explode('|;|',$c['interval_nilai']);
+                        if(count($interval)>0){
+                            $them_interval[$key]=$spreadsheet->getActiveSheet()->getCell(static::nta($col+2).($row_start))
+                             ->getDataValidation();
+                            $them_interval[$key]->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
+                            $them_interval[$key]->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION );
+                            $them_interval[$key]->setAllowBlank(false);
+                            $them_interval[$key]->setShowInputMessage(true);
+                            $them_interval[$key]->setShowErrorMessage(true);
+                            $them_interval[$key]->setShowDropDown(true);
+                            $them_interval[$key]->setErrorTitle('Input error');
+                            $them_interval[$key]->setError('Value is not in list.');
+                            $them_interval[$key]->setPromptTitle('Pick from list');
+                            $them_interval[$key]->setPrompt('Please pick a value from the drop-down list.');
+                            $them_interval[$key]->setFormula1('"'.implode(',',$interval).'"');
+                       
+                            $sheet->getCell(static::nta($col+2).($row_start))
+                                ->setValue($interval[0]);
+                        }
+                    }
+                }else{
+
+                     $sheet->getCell(static::nta($col+2).($row_start))
+                                ->setValue($c[$v]);
+                }
+            }
+
+
+            $row_start++;
+        }
+
+         $sheet->getStyle(static::nta(1).'7:'.static::nta($col+2).($row_start-1))->applyFromArray($DATASTYLE);
+
+         // DATA
+        // HEADER DATA
+        $sheet=$spreadsheet->setActiveSheetIndex(0);
+
+        $start_col_head=8;
+        $start_row_head=4;
+        foreach ($maping['columns'] as $key => $row) {
+            $sheet->getCell(static::nta($start_col_head).($start_row_head))
+                                ->setValue($row['name']);
+            $sheet->getCell(static::nta($start_col_head).($start_row_head+1))
+                                ->setValue('Satuan ('.$row['satuan'].')');
+            $sheet->getCell(static::nta($start_col_head).($start_row_head+2))
+                                ->setValue($start_col_head);
+            $start_col_head+=1;
+        }
+
+        $sheet->getStyle(static::nta(1).'4:'.static::nta($start_col_head-1).'5')->applyFromArray($HEADSTYLE);
+
+        $sheet->getStyle(static::nta(1).'6:'.static::nta($start_col_head-1).'6')->applyFromArray($HEADNUMBERSTYLE);
+        $index_data=7;
+
+        foreach ($rows as $key => $row) {
+            dd($row);
+            
+        }
+
+        // $sheet->getStyle(static::nta(1).'10:'.static::nta($d['col']).($d['row']))->applyFromArray($DATASTYLE);
+        // $sheet->setAutoFilter(static::nta(1).'9:'.static::nta($d['col']).($d['row']));
+
+        // $sheet->getStyle(static::nta(3).'10:'.static::nta(4).($d['row']))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+        //  $sheet->getStyle(static::nta(4).'10:'.static::nta(4).($d['row']))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDDSLASH)
+
+
+
+
+    }
+
+
+
+
+
+    public static function build_excel($ext,$data,$maping,$access,$abl_aksi,$tahun){
+    	$rows=HP::maping_row($data,$maping,$ext);
     	$HEADSTYLE=[
 			'font' => [
         		'bold' => true,
@@ -594,8 +747,13 @@ class ValidasiCtrl extends Controller
 
 		//META
 
+    	if($ext=='HASIL'){
+            $spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('dist-web/HASIL_DATA.xlsx'));
+        }else{
+            $spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('dist-web/format-validasi3.xlsx'));
+        }
     	
-    	$spreadsheet=\PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('dist-web/format-validasi3.xlsx'));
+
 		$sheet=$spreadsheet->setActiveSheetIndex(1);
 
 		$DATASTYLE=[
@@ -613,6 +771,33 @@ class ValidasiCtrl extends Controller
 		    ],
 		    
 		];
+
+        // nama $file=
+
+        $poin_daerah=ucwords(strtolower($access['nama_daerah']));
+
+         $sheet->getCell(static::nta(1).'2')
+                                ->setValue(Carbon::now());
+
+         if($ext!='HASIL'){
+            $sheet->getCell(static::nta(1).'3')
+                                ->setValue(($abl_aksi['valid']?'FORM VALIDASI ':'FORM VERIFIKASI').' '.$maping['data_name'].' TAHUN '.$tahun);
+                $sheet->getCell(static::nta(1).'4')
+                                ->setValue($poin_daerah);
+             $title=ucwords(strtolower(($abl_aksi['valid']?'FORM VALIDASI ':'FORM VERIFIKASI').' '.$maping['data_name'].' TAHUN '.$tahun.' '.$poin_daerah));
+        }else{
+
+            $sheet->getCell(static::nta(1).'3')
+            ->setValue(ucwords(strtolower('export '.$maping['data_name'].' TAHUN '.$tahun)));
+            $sheet->getCell(static::nta(1).'4')
+            ->setValue($poin_daerah);
+
+             $title=ucwords(strtolower(('Export '.$maping['data_name'].' TAHUN '.$tahun.' '.$poin_daerah)));
+        }
+
+    
+       
+
 
 		$row_start=7;
 		$them_interval=[];
@@ -672,35 +857,76 @@ class ValidasiCtrl extends Controller
         // HEADER DATA
         $sheet=$spreadsheet->setActiveSheetIndex(0);
 
-        $code_excel=($abl_aksi['valid']?'FORM-VALIDASI':'FORM-VERIFIKASI').'||'.$maping['level_data']['kode_daerah'].'||'.strlen($maping['level_data']['kode_daerah']);
+     
 
-        $sheet->getCell(static::nta(1).(1))
-        ->setValue($code_excel);
+        $sheet->getCell(static::nta(1).'2')
+                                ->setValue(Carbon::now());
 
+         if($ext!='HASIL'){
 
+            $code_excel=($abl_aksi['valid']?'FORM-VALIDASI':'FORM-VERIFIKASI').'||'.$maping['level_data']['kode_daerah'].'||'.strlen($maping['level_data']['kode_daerah']);
 
-        $start_col_head=10;
-        $start_row_head=5;
-        foreach ($maping['columns'] as $key => $row) {
-            $sheet->getCell(static::nta($start_col_head).($start_row_head))
-                                ->setValue($row['name_column']);
-            $sheet->getCell(static::nta($start_col_head).($start_row_head+1))
-                                ->setValue($row['tipe_data']);
-            $sheet->getCell(static::nta($start_col_head).($start_row_head+2))
-                                ->setValue($row['satuan']);
-            $sheet->getCell(static::nta($start_col_head).($start_row_head+3))
-                                ->setValue($row['name']);
-            $sheet->getCell(static::nta($start_col_head).($start_row_head+4))
-                                ->setValue($start_col_head);
+            $sheet->getCell(static::nta(1).(1))
+            ->setValue($code_excel);
+            $sheet->getCell(static::nta(1).'3')
+                                ->setValue(($abl_aksi['valid']?'FORM VALIDASI ':'FORM VERIFIKASI').' '.$maping['data_name'].' TAHUN '.$tahun);
+                $sheet->getCell(static::nta(1).'4')
+                                ->setValue($poin_daerah);
+             $title=ucwords(strtolower(($abl_aksi['valid']?'FORM VALIDASI ':'FORM VERIFIKASI').' '.$maping['data_name'].' TAHUN '.$tahun.' '.$poin_daerah));
+        }else{
 
-            $start_col_head+=1;
+            $sheet->getCell(static::nta(1).'3')
+            ->setValue(ucwords(strtolower('export '.$maping['data_name'].' TAHUN '.$tahun)));
+            $sheet->getCell(static::nta(1).'4')
+            ->setValue($poin_daerah);
+
+             $title=ucwords(strtolower(('Export '.$maping['data_name'].' TAHUN '.$tahun.' '.$poin_daerah)));
         }
 
-        $sheet->getStyle(static::nta(10).'5:'.static::nta($start_col_head-1).'8')->applyFromArray($HEADSTYLE);
-
-        $sheet->getStyle(static::nta(10).'9:'.static::nta($start_col_head-1).'9')->applyFromArray($HEADNUMBERSTYLE);
 
 
+
+        if($ext!='HASIL'){
+            $start_col_head=10;
+            $start_row_head=5;
+
+            foreach ($maping['columns'] as $key => $row) {
+                $sheet->getCell(static::nta($start_col_head).($start_row_head))
+                                    ->setValue($row['name_column']);
+                $sheet->getCell(static::nta($start_col_head).($start_row_head+1))
+                                    ->setValue($row['tipe_data']);
+                $sheet->getCell(static::nta($start_col_head).($start_row_head+2))
+                                    ->setValue($row['satuan']);
+                $sheet->getCell(static::nta($start_col_head).($start_row_head+3))
+                                    ->setValue($row['name']);
+                $sheet->getCell(static::nta($start_col_head).($start_row_head+4))
+                                    ->setValue($start_col_head);
+
+                $start_col_head+=1;
+            }
+
+            $sheet->getStyle(static::nta(10).'5:'.static::nta($start_col_head-1).'8')->applyFromArray($HEADSTYLE);
+
+                $sheet->getStyle(static::nta(10).'9:'.static::nta($start_col_head-1).'9')->applyFromArray($HEADNUMBERSTYLE);
+            
+        }else{
+            $start_col_head=8;
+            $start_row_head=6;
+            foreach ($maping['columns'] as $key => $row) {
+                $sheet->getCell(static::nta($start_col_head).($start_row_head))
+                                    ->setValue($row['name']);
+                $sheet->getCell(static::nta($start_col_head).($start_row_head+1))
+                                    ->setValue('Satuan ('.$row['satuan'].')');
+                $sheet->getCell(static::nta($start_col_head).($start_row_head+2))
+                                    ->setValue($start_col_head);
+                $start_col_head+=1;
+            }
+
+            $sheet->getStyle(static::nta(1).'6:'.static::nta($start_col_head-1).'7')->applyFromArray($HEADSTYLE);
+
+            $sheet->getStyle(static::nta(1).'8:'.static::nta($start_col_head-1).'8')->applyFromArray($HEADNUMBERSTYLE);
+            
+        }
 
 
 		$index_data=10;
@@ -736,26 +962,22 @@ class ValidasiCtrl extends Controller
             
         }
 
-        $sheet->getStyle(static::nta(1).'10:'.static::nta($d['col']).($d['row']))->applyFromArray($DATASTYLE);
+       if($ext!='HASIL'){
+         $sheet->getStyle(static::nta(1).'10:'.static::nta($d['col']).($d['row']))->applyFromArray($DATASTYLE);
         $sheet->setAutoFilter(static::nta(1).'9:'.static::nta($d['col']).($d['row']));
 
         $sheet->getStyle(static::nta(3).'10:'.static::nta(4).($d['row']))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
          $sheet->getStyle(static::nta(4).'10:'.static::nta(4).($d['row']))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+         }else{
+             $sheet->getStyle(static::nta(1).'9:'.static::nta($d['col']).($d['row']))->applyFromArray($DATASTYLE);
+            $sheet->setAutoFilter(static::nta(1).'8:'.static::nta($d['col']).($d['row']));
+
+         
+            
+         }
 
 
-        $poin_daerah=$access['nama_daerah'];
-
-         $sheet->getCell(static::nta(1).'2')
-                                ->setValue(Carbon::now());
-         $sheet->getCell(static::nta(1).'3')
-                                ->setValue(($abl_aksi['valid']?'FORM VALIDASI ':'FORM VERIFIKASI').' '.$maping['data_name'].' TAHUN '.$tahun);
-        $sheet->getCell(static::nta(1).'4')
-                                ->setValue($poin_daerah);
-
-    
-        $title=($abl_aksi['valid']?'FORM VALIDASI ':'FORM VERIFIKASI').' '.$maping['data_name'].' TAHUN '.$tahun.' '.$poin_daerah;
-
-
+        
 
 		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
         header('Content-Type: application/vnd.ms-excel');
