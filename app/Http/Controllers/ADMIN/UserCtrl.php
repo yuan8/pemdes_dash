@@ -62,7 +62,9 @@ class UserCtrl extends Controller
              $whereRaw[]="(".implode(') AND (',$def).')';
         }
 
-        $data=User::whereRaw('('.implode(') OR (',$whereRaw).')')->orderBy('username','asc')->paginate(10);
+        $data=User::whereRaw('('.implode(') OR (',$whereRaw).')')->orderBy('username','asc')->paginate(50);
+
+        $data->appends(['q'=>$request->q]);
 
        
         return view('admin.users.index')->with(['data'=>$data]);
