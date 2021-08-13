@@ -26,24 +26,45 @@ class UserCtrl extends Controller
     public function index($tahun,Request $request){
         
         $U=Auth::User();
+        $def=['id != '.$U->id];
         if($U->can('ac_super')){
-        $data=User::where('id','!=',Auth::User()->id);
+            
+
 
         }
         else if($U->can('ac_daerah') && Auth::User()->main_daerah){
-            $data=User::where('kode_daerah','like',Auth::User()->kode_daerah.'%');
+            $def[]="kode_daerah like '".$U->kode_daerah."'";
+
+
         }else if($U->can('ac_admin')){
             return abort(404);
         }
 
         
-
+        $where=[];
         if($request->q){
-            $data=$data->where('name','like','%'.$request->q.'%');
+
+            $where[]="name like '%".$request->q."%'";
+            $where[]="username like '%".$request->q."%'";
+            $where[]="email like '%".$request->q."%'";
+
+        }
+        $whereRaw=[];
+
+        if(count($where)){
+            foreach($where as $w){
+                $d=$def;
+                $d[]=$w;
+                $whereRaw[]="(".implode(') AND (',$d).')';
+            }
+
+        }else{
+             $whereRaw[]="(".implode(') AND (',$def).')';
         }
 
-        $data=$data->where('id','!=',Auth::User()->id)->orderBy('kode_daerah','asc')->paginate(10);
+        $data=User::whereRaw('('.implode(') OR (',$whereRaw).')')->orderBy('username','asc')->paginate(10);
 
+       
         return view('admin.users.index')->with(['data'=>$data]);
 
 
