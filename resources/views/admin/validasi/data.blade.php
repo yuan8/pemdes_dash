@@ -134,16 +134,18 @@
 				@else
 					@can('is_daerah_kabkota_n_admin')
 					@if((strlen($kode_daerah)==4))
-					<a href="javascript:void(0)" onclick="build_berita_acara('{{route('admin.validasi.berita_acara.build',array_merge(['tahun'=>$GLOBALS['tahun_access'],'kdkabkota'=>$req['kdkabkota'],'data'=>$req['data']]))}}')" class="btn btn-danger">BUAT BERITA ACARA</a>
+					<a href="javascript:void(0)" onclick="build_berita_acara('{{route('admin.validasi.berita_acara.build',array_merge(['tahun'=>$GLOBALS['tahun_access'],'kdkabkota'=>$req['kdkabkota'],'data'=>$req['data']]))}}')" class="btn btn-danger"><i class="fa fa-file"></i>BUAT BERITA ACARA</a>
 					@endif
 					@endcan
 
-					<a href="{{url()->full().'&export_format=FORM'}}" download="" class="btn btn-primary"> DOWNLOAD FORM PERUBAHAN DATA</a>
+					<a href="{{url()->full().'&export_format=FORM'}}" download="" class="btn btn-primary"><i class="fa fa-trash"></i> DOWNLOAD FORM PERUBAHAN DATA</a>
 					<a href="{{route('admin.validasi.upload',['tahun'=>$GLOBALS['tahun_access'],'kdprovinsi'=>$req['kdprovinsi'],'kdkabkota'=>$req['kdkabkota'],'kdkecamatan'=>$req['kdkecamatan'],'kddesa'=>$req['kddesa'],'data'=>$req['data']])}}" class="btn btn-success ">UPLOAD DATA PERUBAHAN</a>
 				@endif
 			@elseif($berita_acara['access_form'])
-				<a href="{{url()->full().'&export_format=FORM'}}" download="" class="btn btn-primary"> DOWNLOAD FORM PERUBAHAN</a>
-					<a href="{{route('admin.validasi.upload',['tahun'=>$GLOBALS['tahun_access'],'kdprovinsi'=>$req['kdprovinsi'],'kdkabkota'=>$req['kdkabkota'],'kdkecamatan'=>$req['kdkecamatan'],'kddesa'=>$req['kddesa'],'data'=>$req['data']])}}" class="btn btn-success ">UPLOAD DATA PERUBAHAN</a>
+				<a href="{{url()->full().'&export_format=FORM'}}" download="" class="btn btn-primary">
+				<i class="fa fa-trash"></i> DOWNLOAD FORM PERUBAHAN</a>
+					<a href="{{route('admin.validasi.upload',['tahun'=>$GLOBALS['tahun_access'],'kdprovinsi'=>$req['kdprovinsi'],'kdkabkota'=>$req['kdkabkota'],'kdkecamatan'=>$req['kdkecamatan'],'kddesa'=>$req['kddesa'],'data'=>$req['data']])}}" class="btn btn-success ">
+						<i class="fa fa-upload"></i>UPLOAD DATA PERUBAHAN</a>
 			@endif
 		</div>
 	</div>
