@@ -61,6 +61,9 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 
     Route::get('instansi','API\InstansiCtrl@getInstansi')->name('api.get.instansi');
 
+    Route::get('data-des/{id}','API\APIDATACtrl@get_des')->name('api.data.desc');
+
+
     
 
 });
@@ -70,9 +73,6 @@ Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.main
 Route::prefix((config('proepdeskel.maintenance.status')?config('proepdeskel.maintenance.prefix').'/':'').'v/{tahun}')->middleware(['bindTahun','auth:api'])->group(function(){
     Route::post('get-data/{id}/{kodedaerah}','API\APIDATACtrl@getData')->name('api.public.getdata');
     Route::post('get-data-list-user-daerah/{kodedaerah}','ADMIN\UserCtrl@list_user_daerah')->name('api.list.user.daerah');
-
-
-
 
 });
 

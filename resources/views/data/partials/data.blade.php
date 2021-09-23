@@ -1,12 +1,14 @@
-<a href="{{HP::data_link($d)}}">
 	<div class="info-box btn-ov hover-scale hh" style="overflow: hidden;">
   <span class="info-box-icon background-danger-y text-white hover-point">
     @include('data.partials.icon-data',['type'=>$d->type])
   </span>
   <div class="info-box-content">
     <span class="info-box-text">
+<a href="{{HP::data_link($d)}}">
+
      <b>{{$d->title}}  <span style="font-size:10px">{{($d->type!='INTEGRASI')?'Tahun '.$d->tahun:'Tahun '.$GLOBALS['tahun_access']}} {{$d->nama_category}}</span></b>
     </span>
+  </a>
     @php
     @endphp
 
@@ -40,4 +42,3 @@
   </div>
 
 </div>
-</a>

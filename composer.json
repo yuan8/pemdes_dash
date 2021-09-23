@@ -14,6 +14,7 @@
         "dompdf/dompdf": "^1.0",
         "fideloper/proxy": "^4.0",
         "graham-campbell/markdown": "10.3",
+        "guzzlehttp/guzzle": "^7.3",
         "intervention/gif": "0.5.0",
         "jxlwqq/quill": "^1.0",
         "kreait/laravel-firebase": "2.4.0",
@@ -21,7 +22,6 @@
         "laravel/tinker": "^1.0",
         "mikehaertl/php-pdftk": "^0.10.0",
         "nahid/jsonq": "^6.0",
-        "nexmo/laravel": "^2.4",
         "pbmedia/laravel-ffmpeg": "4.*",
         "php-ffmpeg/php-ffmpeg": "^0.18.0",
         "phpoffice/phpspreadsheet": "^1.16",
@@ -31,8 +31,7 @@
         "realrashid/sweet-alert": "^3.2",
         "shetabit/visitor": "^3.1",
         "spatie/pdf-to-image": "^2.1",
-        "unisharp/laravel-ckeditor": "^4.7",
-        "wilsonglasser/laravel-chatapi-whatsapp": "^1.0"
+        "unisharp/laravel-ckeditor": "^4.7"
     },
     "require-dev": {
         "andyabih/laravel-to-uml": "^1.0",

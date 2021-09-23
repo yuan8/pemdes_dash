@@ -16,6 +16,15 @@ class APIDATACtrl extends Controller
 {
     //
 
+    public function get_des($tahun,$id){
+        $data=DB::table('tb_data')->where('id',$id)->first();
+
+        if($data){
+            return view('api.data.description')->with(['data'=>$data->deskripsi]);
+        }
+
+    }
+
     public function index($tahun){
         // if(file_exists(storage_path('app/public/json_desa.json'))){
         //     $desa=json_decode(file_get_contents(storage_path('app/public/json_desa.json')));

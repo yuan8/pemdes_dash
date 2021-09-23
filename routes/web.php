@@ -21,9 +21,9 @@ Route::get((config('proepdeskel.maintenance.status')?config('proepdeskel.mainten
 
 Route::get('init','InitCtrl@init');
 
-Route::get('check',function(){
-	dd(DB::table('master_desa')->count());
-});
+
+
+Route::get('check','WAAPICTRL@init');
 
 if(config('proepdeskel.maintenance.status')){
 	Route::get('/','MaintenanceModeCtrl@index');
